@@ -21,10 +21,10 @@ timezone: Asia/Seoul
 
 title: Infinity Blog                          # the main title
 
-tagline:    # it will display as the sub-title
+tagline: "∞"   # it will display as the sub-title
 
 description: >-                        # used by seo meta and the atom feed
-  A minimal, responsive, and powerful Jekyll theme for presenting professional writing.
+  The Blog.
 
 # fill in the protocol & hostname for your site, e.g., 'https://username.github.io'
 url: 'https://daun4168.github.io'
@@ -81,30 +81,31 @@ theme_mode:   # [light|dark]
 img_cdn:
 
 # the avatar on sidebar, support local or CORS resources
-avatar:
+avatar: /assets/img/favicons/avatar.png
 
 # boolean type, the global switch for ToC in posts.
 toc: true
 
 comments:
-  active:         # The global switch for posts comments, e.g., 'disqus'.  Keep it empty means disable
+  active: giscus       # The global switch for posts comments, e.g., 'disqus'.  Keep it empty means disable
   # The active options are as follows:
   disqus:
     shortname:    # fill with the Disqus shortname. › https://help.disqus.com/en/articles/1717111-what-s-a-shortname
   # utterances settings › https://utteranc.es/
   utterances:
-    repo:         # <gh-username>/<repo>
-    issue_term:   # < url | pathname | title | ...>
+    repo: ""        
+    issue_term: "pathname"  # < url | pathname | title | ...>
+    # label: "💬"
   # Giscus options › https://giscus.app
   giscus:
-    repo:              # <gh-username>/<repo>
-    repo_id:
-    category:
-    category_id:
-    mapping:           # optional, default to 'pathname'
-    input_position:    # optional, default to 'bottom'
-    lang:              # optional, default to the value of `site.lang`
-    reactions_enabled: # optional, default to the value of `1`
+    repo: "daun4168/giscus"             # <gh-username>/<repo>
+    repo_id: "R_kgDOIZWbrQ"
+    category: "Announcements"
+    category_id: "DIC_kwDOIZWbrc4CScSs"
+    mapping: "pathname"          # optional, default to 'pathname'
+    input_position: "bottom"    # optional, default to 'bottom'
+    lang: "ko"             # optional, default to the value of `site.lang`
+    reactions_enabled: "1" # optional, default to the value of `1`
 
 # Self-hosted static assets, optional › https://github.com/cotes2020/chirpy-static-assets
 assets:

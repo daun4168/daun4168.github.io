@@ -40,8 +40,9 @@ jobs:
 
       - name: Setup Ruby
         uses: ruby/setup-ruby@v1
-        with:
-          bundler-cache: true
+
+      - name: Bundle Install
+        run: bundle install
 
       - name: Build site
         run: bundle exec jekyll b -d "_site${{ steps.pages.outputs.base_path }}"

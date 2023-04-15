@@ -93,15 +93,15 @@ comments:
     shortname:    # fill with the Disqus shortname. › https://help.disqus.com/en/articles/1717111-what-s-a-shortname
   # utterances settings › https://utteranc.es/
   utterances:
-    repo: ""        
+    repo: ""
     issue_term: "pathname"  # < url | pathname | title | ...>
     # label: "💬"
   # Giscus options › https://giscus.app
   giscus:
     repo: "daun4168/giscus"             # <gh-username>/<repo>
-    repo_id: "R_kgDOIZWbrQ"
+    repo_id: "R_kgDOJXEiEw"
     category: "Announcements"
-    category_id: "DIC_kwDOIZWbrc4CScSs"
+    category_id: "DIC_kwDOJXEiE84CVy5y"
     mapping: "pathname"          # optional, default to 'pathname'
     input_position: "bottom"    # optional, default to 'bottom'
     lang: "ko"             # optional, default to the value of `site.lang`

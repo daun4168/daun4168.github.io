@@ -14,7 +14,17 @@
         <h1>REPL Python!</h1>
 
         <hr>
-        <script type="mpy" src="repl2.py?v=25.11.10" terminal worker></script>
+        <script type="mpy" src="repl.py" terminal worker></script>
+
+        <hr>
+        <script type="mpy" terminal worker>
+            import code
+
+            code.interact(
+                banner="Welcome to the Escape REPL! Type your commands below.",
+                exitmsg="Exiting the Escape REPL. Goodbye!"
+            )
+        </script>
 
     </body>
 </html>

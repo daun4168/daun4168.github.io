@@ -11,8 +11,10 @@
     </head>
     <body>
         <h1>Escape Python!</h1>
+        <hr>
 
         <script type="mpy" src="main.py"></script>
+        <hr>
 
         <py-script>
         import sys
@@ -21,5 +23,13 @@
 
         display(sys.version)
         </py-script>
+        <hr>
+
+        <script type="py" terminal worker>
+        name = input("What is your name? ")
+        print(f"Hello, {name}")
+        </script>
+        <hr>
+
     </body>
 </html>

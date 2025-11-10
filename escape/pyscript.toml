@@ -1,0 +1,5 @@
+name = "Escape"
+description = "-"
+
+[files]
+"./escape.py" = ""

@@ -1,0 +1,6 @@
+name = "The Little Prince"
+description = "-"
+
+[files]
+"./main.py" = ""
+"./game.py" = ""

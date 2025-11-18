@@ -1,12 +1,11 @@
 /* 기본 리셋 및 폰트 설정 */
 :root {
-    --color-primary: #3d3d3d; /* 기본 텍스트 색상 */
-    --color-accent: #f5a623; /* 노란색 강조 (어린왕자 머리색) */
+    --color-primary: #3d3d3d;
+    --color-accent: #f5a623;
     --color-background: #fdfdfd;
     --color-input-bg: #fff;
     --font-family: 'Noto Sans KR', sans-serif;
-    --header-height: 10vh; /* 상단 헤더 높이 */
-    --footer-height: 8vh;  /* 하단 입력창 높이 */
+    /* 높이 변수는 Flex 레이아웃을 사용하므로 제거해도 무방하나, 참고용으로 유지 */
 }
 
 * {
@@ -19,35 +18,44 @@ body {
     font-family: var(--font-family);
     background-color: var(--color-background);
     color: var(--color-primary);
-    /* 모바일 환경에서 화면 높이를 100vh로 설정 */
-    height: 100vh;
-    overflow: hidden; /* 전체 스크롤 방지 */
+
+    /* 중요: 100vh 대신 100dvh 사용 (모바일 주소창 대응) */
+    height: 100dvh;
+    width: 100%;
+
+    /* Flex로 중앙 정렬 (PC 화면 대응) */
     display: flex;
     justify-content: center;
     align-items: center;
+    overflow: hidden; /* body 스크롤 방지 */
 }
 
-/* === 1. 전체 레이아웃 컨테이너 (모바일 화면처럼 보이게) === */
+/* === 1. 전체 레이아웃 컨테이너 === */
 #game-wrapper {
     display: flex;
-    flex-direction: column;
+    flex-direction: column; /* 세로 방향 배치 */
     width: 100%;
-    max-width: 500px; /* 모바일 장치 최대 폭 */
+    max-width: 500px;
+
+    /* 중요: 부모(body)의 높이를 꽉 채움 */
     height: 100%;
+
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-    position: relative;
     background-color: white;
+    position: relative;
 }
 
-/* === 2. 상단 위치 정보 영역 === */
+/* === 2. 상단 위치 정보 영역 (Header) === */
 #location-info {
-    height: var(--header-height);
-    padding: 10px 15px;
+    /* 고정 높이 대신 내용물에 따라 유동적으로 하거나 min-height 권장 */
+    padding: 15px;
     background-color: var(--color-primary);
     color: white;
-    font-size: 0.9em;
     border-bottom: 3px solid var(--color-accent);
-    flex-shrink: 0; /* 내용이 줄어들지 않게 */
+
+    /* Flex Item 설정: 크기가 줄어들지 않음 */
+    flex-shrink: 0;
+
     display: flex;
     flex-direction: column;
     justify-content: center;
@@ -56,18 +64,24 @@ body {
 #location-info h2 {
     font-size: 1.2em;
     font-weight: 700;
-    margin-bottom: 2px;
+    margin-bottom: 4px;
 }
 
-/* === 3. 메인 콘텐츠 및 퍼즐 영역 (스크롤 영역) === */
+#location-info p {
+    font-size: 0.9em;
+}
+
+/* === 3. 메인 콘텐츠 (Main) === */
 #content-scroll-area {
-    /* 전체 높이에서 헤더와 푸터 높이를 뺀 나머지 영역을 차지 */
-    height: calc(100% - var(--header-height) - var(--footer-height));
-    overflow-y: auto; /* 이 영역만 스크롤 가능 */
+    /* 중요: 남은 공간을 모두 차지 (Flex-grow: 1) */
+    flex: 1;
+
+    /* 내부 스크롤 설정 */
+    overflow-y: auto;
     padding: 15px;
     line-height: 1.6;
-    flex-grow: 1;
-    /* 모바일 스크롤링 개선 */
+
+    /* 모바일 스크롤 부드럽게 */
     -webkit-overflow-scrolling: touch;
 }
 
@@ -78,11 +92,11 @@ body {
 }
 
 #puzzle-area {
-    padding: 10px 0;
     border: 1px dashed #ddd;
     margin-top: 15px;
     padding: 15px;
     background-color: #fafafa;
+    border-radius: 8px; /* 모서리 둥글게 살짝 추가 */
 }
 
 .puzzle-title {
@@ -95,9 +109,9 @@ body {
 
 .puzzle-hint {
     margin-top: 10px;
+    font-size: 0.95em;
 }
 
-/* 가상 시각 힌트 요소 */
 .visual-hint {
     background-color: #eee;
     height: 120px;
@@ -110,30 +124,26 @@ body {
     border-radius: 5px;
 }
 
-/* === 4. 사용자 입력 영역 (하단 고정) === */
+/* === 4. 사용자 입력 영역 (Footer) === */
 #input-area {
-    /* 기존 속성 삭제 또는 주석 처리 */
-    /* height: var(--footer-height); */
-
-    /* 👇 이 부분을 추가/수정하여 고정시킵니다. */
-    position: fixed; /* 뷰포트 기준 고정 */
-    bottom: 0;       /* 하단에 붙이기 */
-    width: 100%;     /* 너비 전체 차지 */
-    max-width: 500px; /* #game-wrapper의 최대 너비와 일치시킵니다. */
-
-    /* 기존 속성 유지 */
+    /* position: fixed 삭제! Flex 흐름에 맡김 */
     background-color: var(--color-input-bg);
     border-top: 2px solid #ddd;
-    padding: 5px 10px;
+    padding: 10px;
     display: flex;
     align-items: center;
+
+    /* Flex Item 설정: 크기가 줄어들지 않음 */
     flex-shrink: 0;
+
+    /* 안전 영역 확보 (아이폰 홈바 등) */
+    padding-bottom: calc(10px + env(safe-area-inset-bottom));
 }
 
 #user-input {
-    flex-grow: 1; /* 남은 공간을 모두 차지 */
-    padding: 8px;
-    font-size: 1em;
+    flex-grow: 1;
+    padding: 10px; /* 터치 영역 확보를 위해 조금 키움 */
+    font-size: 1em; /* 모바일에서 16px 미만이면 확대되므로 1em(보통 16px) 유지 */
     border: 1px solid #ccc;
     border-radius: 4px;
     margin-right: 10px;
@@ -147,21 +157,20 @@ body {
 }
 
 #submit-button {
-    padding: 8px 15px;
+    padding: 10px 15px;
     background-color: var(--color-accent);
     color: white;
     border: none;
     border-radius: 4px;
     cursor: pointer;
     font-weight: 700;
-    transition: background-color 0.3s;
+    white-space: nowrap; /* 버튼 텍스트 줄바꿈 방지 */
 }
 
 #submit-button:active {
     background-color: #d8901a;
 }
 
-/* 접근성 헬퍼 */
 .visually-hidden {
     position: absolute;
     width: 1px;
@@ -170,21 +179,5 @@ body {
     margin: -1px;
     overflow: hidden;
     clip: rect(0, 0, 0, 0);
-    white-space: nowrap;
-    border-width: 0;
+    border: 0;
 }
-
-/* === 모바일 키보드 대응 CSS 트릭 === */
-/*
-    모바일에서 키보드가 올라올 때 레이아웃이 밀리는 현상(특히 Android)은
-    JS나 VHA(Visual Height) 단위를 사용해야 정확히 제어 가능하며,
-    순수 CSS로는 한계가 있습니다.
-    위의 flex/fixed 구조는 iOS에서 잘 작동하며, Android에서 문제가 발생하면
-    다음과 같은 JS 코드를 추가하여 VHA 높이를 재계산해야 합니다.
-*/
-/*
-// JavaScript (키보드 대응 예시)
-// window.addEventListener('resize', () => {
-//    document.documentElement.style.setProperty('--vh', `${window.innerHeight * 0.01}px`);
-// });
-*/

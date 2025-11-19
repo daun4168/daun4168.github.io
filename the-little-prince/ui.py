@@ -2,104 +2,90 @@ from pyscript import document
 import markdown
 
 
-def get_josa(word, josa_pair):
+def get_josa(word: str, josa_pair: str) -> str:
     """
-    단어의 마지막 글자의 받침 유무에 따라 적절한 조사를 선택합니다.
-    예: get_josa("연필", "을/를") -> "을"
+    한글 단어의 마지막 글자 받침 유무에 따라 적절한 조사를 선택하여 반환합니다.
     """
     particles = josa_pair.split('/')
-    if len(particles) != 2:
-        return ""
-
+    if len(particles) != 2: return ""
     last_char = word[-1]
-    # 한글 음절의 유니코드 범위: 0xAC00(가) ~ 0xD7A3(힣)
     if '가' <= last_char <= '힣':
-        # 마지막 글자의 받침 유무 확인
         has_jongseong = (ord(last_char) - 0xAC00) % 28 != 0
         return particles[0] if has_jongseong else particles[1]
     else:
-        # 한글이 아니면 기본적으로 받침이 없는 경우의 조사를 반환
         return particles[1]
 
 
 class UIManager:
-    """
-    DOM 조작 및 화면 출력을 전담하는 클래스.
-    텍스트 박스 생성, 스타일 적용, 스크롤 관리 등을 수행합니다.
-    """
+    """DOM 조작 및 화면 출력을 전담하는 클래스."""
+
     def __init__(self):
-        # 필수 DOM 요소 참조
         self.main_text_output = document.getElementById("main-text-output")
-        self.puzzle_area = document.getElementById("puzzle-area")
-        self.inventory_status = document.getElementById("inventory-status")
+        self.bag_status = document.getElementById("bag-status")
         self.location_name = document.getElementById("location-name")
         self.hr_divider = document.querySelector("#main-text-output + hr")
 
     def set_initial_bag_status(self):
-        """게임 시작 시 가방 상태를 '???'로 설정합니다."""
-        self.inventory_status.innerText = "가방: ???"
+        self.bag_status.innerText = "가방: ???"
 
     def set_location_name(self, name: str):
-        """현재 위치 이름을 설정합니다."""
         self.location_name.innerText = f"현재 위치: {name}"
 
     def show_hr_divider(self):
-        """구분선을 표시합니다."""
         self.hr_divider.style.display = "block"
 
     def _create_text_element(self, parent, text: str, classes: list, is_markdown: bool = False):
-        """공통 텍스트 요소 생성 및 추가 로직"""
         p = document.createElement("p")
-        for cls in classes:
-            p.classList.add(cls)
-
-        if is_markdown:
-            html_content = markdown.markdown(text)
-            p.innerHTML = html_content
-        else:
-            p.innerText = text
-        
+        for cls in classes: p.classList.add(cls)
+        p.innerHTML = markdown.markdown(text) if is_markdown else text
         parent.appendChild(p)
         self.scroll_to_bottom()
-        return p
 
     def print_user_log(self, text: str):
-        """사용자 입력 로그 출력 (> 명령)"""
-        self._create_text_element(self.main_text_output, f"{text}", ["user-input-log"])
+        self._create_text_element(self.main_text_output, text, ["user-input-log"])
 
     def print_system_message(self, text: str, is_markdown: bool = True):
-        """시스템 메시지 출력 (기능적 피드백)"""
         self._create_text_element(self.main_text_output, text, ["system-message"], is_markdown=is_markdown)
 
     def print_narrative(self, text: str, is_markdown: bool = True):
-        """스토리/내러티브 텍스트 출력"""
         self._create_text_element(self.main_text_output, text, ["narrative-text"], is_markdown=is_markdown)
 
     def create_puzzle(self, title: str, hint: str, content: str):
-        """수수께끼 영역을 동적으로 생성합니다."""
-        self.puzzle_area.innerHTML = ""
+        """메인 출력 영역에 수수께끼 스타일의 블록을 생성합니다."""
+        puzzle_container = document.createElement("div")
+        puzzle_container.classList.add("puzzle-container")
 
         h3 = document.createElement("h3")
         h3.classList.add("puzzle-title")
         h3.innerHTML = markdown.markdown(title)
-        self.puzzle_area.appendChild(h3)
+        puzzle_container.appendChild(h3)
 
-        self._create_text_element(self.puzzle_area, hint, ["puzzle-hint"], is_markdown=True)
+        hint_p = document.createElement("p")
+        hint_p.classList.add("puzzle-hint")
+        hint_p.innerHTML = markdown.markdown(hint)
+        puzzle_container.appendChild(hint_p)
 
         content_div = document.createElement("div")
         content_div.id = "puzzle-content"
-        content_div.innerHTML = content
-        self.puzzle_area.appendChild(content_div)
+        content_div.innerHTML = markdown.markdown(content)
+        puzzle_container.appendChild(content_div)
         
+        self.main_text_output.appendChild(puzzle_container)
         self.scroll_to_bottom()
 
-    def update_inventory_ui(self, items_dict: dict):
-        """상단 가방 표시줄 업데이트"""
-        item_list = ', '.join(items_dict.keys())
-        text = f"가방: {item_list if item_list else '비어 있음'}"
-        self.inventory_status.innerText = text
+    def update_bag_status(self, items: dict):
+        """상단 가방 상태 표시줄을 아이템의 단축어로 업데이트합니다."""
+        if not items:
+            display_list = ["비어 있음"]
+        else:
+            display_list = []
+            for item in items.values():
+                display_name = item.aliases[0] if item.aliases else item.name
+                display_list.append(display_name)
+        
+        text = f"가방: {', '.join(display_list)}"
+        self.bag_status.innerText = text
 
     def scroll_to_bottom(self):
-        """스크롤을 최하단으로 이동"""
         scroll_area = document.getElementById("content-scroll-area")
         scroll_area.scrollTop = scroll_area.scrollHeight

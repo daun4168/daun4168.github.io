@@ -7,10 +7,10 @@
     <script src="/mini-coi.js"></script>
     <link rel="stylesheet" href="https://pyscript.net/releases/2025.11.1/core.css">
     <script type="module" src="https://pyscript.net/releases/2025.11.1/core.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
 
-    <title>어린 왕자 방탈출 어드벤처</title>
-    <link rel="stylesheet" href="style.css?v=0001"> <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;700&display=swap" rel="stylesheet">
+    <title>어린 왕자: 사막의 별</title>
+    <link rel="stylesheet" href="style.css?v=0001">
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;700&display=swap" rel="stylesheet">
 </head>
 <body>
     <script type="py" src="./main.py" config="./pyscript.toml"></script>
@@ -18,19 +18,14 @@
     <div id="game-wrapper">
         <header id="location-info">
             <h2 id="location-name"></h2>
-            <p id="inventory-status"></p>
+            <p id="bag-status"></p>
         </header>
 
         <main id="content-scroll-area">
             <section id="main-text-output">
-                <!-- 게임 시작 시 동적으로 내용이 채워집니다. -->
+                <!-- 모든 콘텐츠가 여기에 동적으로 추가됩니다. -->
             </section>
-
             <hr style="display: none;">
-
-            <section id="puzzle-area">
-                <!-- 수수께끼가 동적으로 여기에 추가됩니다. -->
-            </section>
         </main>
 
         <footer id="input-area">
@@ -38,7 +33,6 @@
             <input type="text" id="user-input" placeholder="명령이나 정답을 입력하세요..." autocomplete="off">
             <button id="submit-button">입력</button>
         </footer>
-
     </div>
 </body>
 </html>

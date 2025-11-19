@@ -2,6 +2,26 @@ from pyscript import document
 import markdown
 
 
+def get_josa(word, josa_pair):
+    """
+    단어의 마지막 글자의 받침 유무에 따라 적절한 조사를 선택합니다.
+    예: get_josa("연필", "을/를") -> "을"
+    """
+    particles = josa_pair.split('/')
+    if len(particles) != 2:
+        return ""
+
+    last_char = word[-1]
+    # 한글 음절의 유니코드 범위: 0xAC00(가) ~ 0xD7A3(힣)
+    if '가' <= last_char <= '힣':
+        # 마지막 글자의 받침 유무 확인
+        has_jongseong = (ord(last_char) - 0xAC00) % 28 != 0
+        return particles[0] if has_jongseong else particles[1]
+    else:
+        # 한글이 아니면 기본적으로 받침이 없는 경우의 조사를 반환
+        return particles[1]
+
+
 class UIManager:
     """
     DOM 조작 및 화면 출력을 전담하는 클래스.
@@ -70,9 +90,9 @@ class UIManager:
         self.scroll_to_bottom()
 
     def update_inventory_ui(self, items_dict: dict):
-        """상단 인벤토리 표시줄 업데이트"""
+        """상단 가방 표시줄 업데이트"""
         item_list = ', '.join(items_dict.keys())
-        text = f"인벤토리: {item_list if item_list else '비어 있음'}"
+        text = f"가방: {item_list if item_list else '비어 있음'}"
         self.inventory_status.innerText = text
 
     def scroll_to_bottom(self):

@@ -5,7 +5,6 @@
     --color-background: #fdfdfd;
     --color-input-bg: #fff;
     --font-family: 'Noto Sans KR', sans-serif;
-    /* 높이 변수는 Flex 레이아웃을 사용하므로 제거해도 무방하나, 참고용으로 유지 */
 }
 
 * {
@@ -47,7 +46,6 @@ body {
 
 /* === 2. 상단 위치 정보 영역 (Header) === */
 #location-info {
-    /* 고정 높이 대신 내용물에 따라 유동적으로 하거나 min-height 권장 */
     padding: 15px;
     background-color: var(--color-primary);
     color: white;
@@ -85,18 +83,60 @@ body {
     -webkit-overflow-scrolling: touch;
 }
 
-#main-text-output .story-text {
+/* === 3.1. 스토리/내러티브 텍스트 스타일 (.narrative-text) - 이야기 흐름 === */
+.narrative-text {
     margin-bottom: 1em;
     font-weight: 400;
     color: #555;
+    padding: 8px 10px;
+    border-left: 3px solid #ccc;
+    background-color: #fcfcfc;
+    border-radius: 0 4px 4px 0;
 }
 
+/* === 3.2. 시스템 메시지 스타일 (.system-message) - 기능적 피드백 === */
+.system-message {
+    margin: 0.8em 0;
+    font-style: italic;
+    font-size: 0.9em;
+    color: #888;
+    padding: 8px 15px;
+    background-color: #f0f0f0;
+    border-radius: 4px;
+    border: 1px dashed #ccc;
+    text-align: center;
+}
+
+
+/* === 3.3. 사용자 입력 로그 스타일 (.user-input-log) - 명령 기록 === */
+.user-input-log {
+    margin: 0.8em 0;
+    font-weight: 500;
+    color: var(--color-primary);
+    background-color: #fff8e8;
+    padding: 8px 15px;
+    border-radius: 4px;
+    border: 1px solid var(--color-accent);
+    border-left: 5px solid var(--color-accent);
+    white-space: pre-wrap;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+}
+
+.user-input-log::before {
+    content: '> ';
+    color: var(--color-primary);
+    margin-right: 5px;
+    font-weight: 700;
+}
+
+
+/* === 3.4. 퍼즐 영역 === */
 #puzzle-area {
     border: 1px dashed #ddd;
     margin-top: 15px;
     padding: 15px;
     background-color: #fafafa;
-    border-radius: 8px; /* 모서리 둥글게 살짝 추가 */
+    border-radius: 8px;
 }
 
 .puzzle-title {
@@ -122,11 +162,11 @@ body {
     color: #aaa;
     font-style: italic;
     border-radius: 5px;
+    box-shadow: inset 0 0 8px rgba(0, 0, 0, 0.1);
 }
 
 /* === 4. 사용자 입력 영역 (Footer) === */
 #input-area {
-    /* position: fixed 삭제! Flex 흐름에 맡김 */
     background-color: var(--color-input-bg);
     border-top: 2px solid #ddd;
     padding: 10px;
@@ -142,8 +182,8 @@ body {
 
 #user-input {
     flex-grow: 1;
-    padding: 10px; /* 터치 영역 확보를 위해 조금 키움 */
-    font-size: 1em; /* 모바일에서 16px 미만이면 확대되므로 1em(보통 16px) 유지 */
+    padding: 10px;
+    font-size: 1em;
     border: 1px solid #ccc;
     border-radius: 4px;
     margin-right: 10px;
@@ -164,11 +204,17 @@ body {
     border-radius: 4px;
     cursor: pointer;
     font-weight: 700;
-    white-space: nowrap; /* 버튼 텍스트 줄바꿈 방지 */
+    white-space: nowrap;
+    transition: background-color 0.15s, transform 0.1s;
+}
+
+#submit-button:hover {
+    background-color: #e59a1f;
 }
 
 #submit-button:active {
     background-color: #d8901a;
+    transform: translateY(1px);
 }
 
 .visually-hidden {

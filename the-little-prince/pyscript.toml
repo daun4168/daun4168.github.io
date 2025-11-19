@@ -1,6 +1,10 @@
 name = "The Little Prince"
 description = "-"
 
+packages = ["markdown"]
+
 [files]
 "./main.py" = ""
 "./game.py" = ""
+"./entity.py" = ""
+"./ui.py" = ""

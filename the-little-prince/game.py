@@ -1,7 +1,9 @@
 import re
+import asyncio
 from pyscript import document
 from ui import UIManager, get_josa
 from entity import Entity, Item, Bag
+from test import TestRunner
 
 # --- 상수 정의 ---
 CMD_LOOK_AROUND = "둘러보기"
@@ -12,6 +14,7 @@ CMD_USE = ["사용", "사용하기"]
 CMD_ANSWER = ["정답"]
 CMD_DIAL = ["다이얼"]
 CMD_START = "시작"
+CMD_HINT = "힌트"
 
 INITIAL_ITEM_DATA = {
     "연필": ("평범한 연필입니다.", []),
@@ -47,6 +50,9 @@ class Game:
         self.investigated_items = set()
         self.has_been_told_to_combine = False
         self.diary_riddles_solved = 0
+        self.should_combine_tools = False
+        
+        self.test_runner = TestRunner(self)
 
         self.ui.print_narrative(
             "**어린 왕자: 사막의 별**\n\n"
@@ -59,7 +65,7 @@ class Game:
     def _handle_click(self, event):
         content = self.user_input.value.strip()
         if not content: return
-        self.process_command(content)
+        asyncio.ensure_future(self.process_command(content))
         self.user_input.value = ""
         self.user_input.focus()
 
@@ -70,8 +76,12 @@ class Game:
         args = re.findall(r'"[^"]+"|\'[^\']+\'|\S+', arg_string)
         return [arg.strip("'\"") for arg in args]
 
-    def process_command(self, command: str):
+    async def process_command(self, command: str):
         self.ui.print_user_log(command)
+
+        if await self.test_runner.run_test_command(command):
+            return
+
         parts = command.strip().split()
         if not parts: return
 
@@ -95,6 +105,7 @@ class Game:
         elif verb in CMD_USE: self._use_item(args)
         elif verb in CMD_ANSWER: self._check_answer(arg_string)
         elif verb in CMD_DIAL: self._dial_combination(arg_string)
+        elif verb == CMD_HINT: self._show_hint()
         elif verb == CMD_LOOK_AROUND: self.ui.print_system_message("이미 주변을 둘러보았다. 특별한 것은 보이지 않는다.")
         else:
             josa = get_josa(command, "은/는")
@@ -144,6 +155,7 @@ class Game:
                 "자세히 보니 희미하게 선들이 남아있다. 어쩌면... 연필로 빈 곳을 채우면 그림의 비밀을 풀 수 있을지도 모른다.",
                 is_markdown=True
             )
+            self.ui.print_system_message(f"어떻게 할지 모르겠다면 `{CMD_HINT}`를 입력해보자.")
             return
         
         if item.name == "수수께끼가 담긴 일기장":
@@ -155,8 +167,9 @@ class Game:
         if item.name in INITIAL_ITEM_DATA:
             self.investigated_items.add(item.name)
             if len(self.investigated_items) == len(INITIAL_ITEM_DATA) and not self.has_been_told_to_combine:
-                self.ui.print_system_message(f"이제 각 도구의 단축어를 알게 되었다. `{CMD_COMBINE}` 명령어로 도구들을 조합해보자.\n(예: `{CMD_COMBINE} 돋보기 거울`)")
+                self.ui.print_system_message(f"이제 각 도구의 단축어를 알게 되었다. `{CMD_COMBINE}` 명령어로 도구들을 조합해보자.\n어떻게 할지 모르겠다면 `{CMD_HINT}`를 입력해보자.")
                 self.has_been_told_to_combine = True
+                self.should_combine_tools = True
 
     def _combine_items(self, args: list[str]):
         if len(args) != 2:
@@ -189,9 +202,10 @@ class Game:
             
             self.ui.print_narrative("두 조각을 합쳐 **태양열 집광 장치**를 만들었습니다!", is_markdown=True)
             self.ui.print_system_message(f"'{new_item.name}'(단축어: `{new_item.aliases[0]}`)를 가방에 추가했습니다.")
+            self.should_combine_tools = False
 
             self.current_puzzle = "rusty_pin"
-            self.ui.create_puzzle("수수께끼: 비행기 잔해", "비행기 동체에 무언가를 고정했던 것으로 보이는 **녹슨 핀**이 박혀있다. 손으로는 뽑을 수 없다.", f"방금 만든 도구를 `{CMD_USE[0]}` 명령어로 사용해볼 수 있을 것 같다.\n(예: `{CMD_USE[0]} 집광기 녹슨핀`)")
+            self.ui.create_puzzle("수수께끼: 비행기 잔해", "비행기 동체에 무언가를 고정했던 것으로 보이는 `녹슨핀`이 박혀있다. 손으로는 뽑을 수 없다.", f"방금 만든 도구를 `사용`해볼 수 있을 것 같다.\n어떻게 할지 모르겠다면 `{CMD_HINT}`를 입력해보자.")
         elif self._is_target_tuple(keys, ["연필", "낡은 일기장"]):
             self.bag.remove(item_a.name)
             self.bag.remove(item_b.name)
@@ -216,7 +230,7 @@ class Game:
             self.ui.print_system_message(f"'{tool_name}'{get_josa(tool_name, '은/는')} 가방에 없는 도구입니다.")
             return
 
-        if self.current_puzzle == "rusty_pin" and tool.name == "태양열 집광 장치" and target_name in ["녹슨핀"]:
+        if self.current_puzzle == "rusty_pin" and tool.name == "태양열 집광 장치" and target_name in ["녹슨핀", "핀"]:
             self.bag.remove(tool.name)
             self.ui.update_bag_status(self.bag.items)
             
@@ -273,7 +287,7 @@ class Game:
         self.ui.create_puzzle(
             "퍼즐: 조종사의 상자",
             "오래된 금속 상자. 3자리 다이얼 자물쇠로 잠겨있다.",
-            f"지금까지의 여정에서 단서를 찾을 수 있을 것 같다. `{CMD_DIAL[0]} <숫자>` 로 번호를 맞출 수 있다."
+            f"지금까지의 여정에서 단서를 찾을 수 있을 것 같다. `{CMD_DIAL[0]} <숫자>` 로 번호를 맞출 수 있다.\n어떻게 할지 모르겠다면 `{CMD_HINT}`를 입력해보자."
         )
 
     def _dial_combination(self, combination: str):
@@ -291,6 +305,21 @@ class Game:
             # 다음 스토리 진행...
         else:
             self.ui.print_system_message("번호가 맞지 않는다. 딸깍거리는 소리만 날 뿐이다.")
+
+    def _show_hint(self):
+        hint_message = "지금은 특별한 힌트가 없다."
+        if self.should_combine_tools:
+            hint_message = f"힌트: `{CMD_COMBINE} 돋보기 거울`"
+        elif self.current_puzzle == "rusty_pin":
+            hint_message = f"힌트: `{CMD_USE[0]} 집광기 녹슨핀`"
+        elif self._find_item_in_bag("낡은 일기장") and not self._find_item_in_bag("수수께끼가 담긴 일기장"):
+             hint_message = f"힌트: `{CMD_COMBINE} 연필 일기`"
+        elif self.current_puzzle == "diary_1":
+            hint_message = "힌트: 어른들은 상상력이 부족해서 보이는 대로만 말하곤 하죠."
+        elif self.current_puzzle == "locked_box":
+            hint_message = f"힌트: 비행기 꼬리 숫자({self.clues['tail_number']}), 첫 번째 수수께끼를 푼 페이지({self.clues['diary_page']}), 조종사의 별에 있던 화산의 개수({self.clues['volcanoes']})를 순서대로 조합해보자."
+
+        self.ui.print_system_message(hint_message)
 
     def _find_item_in_bag(self, name: str) -> Item | None:
         name_lower = name.lower()

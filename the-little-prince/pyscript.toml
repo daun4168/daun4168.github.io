@@ -1,10 +1,11 @@
 name = "The Little Prince"
 description = "-"
 
-packages = ["markdown"]
+packages = ["markdown", "asyncio"]
 
 [files]
 "./main.py" = ""
 "./game.py" = ""
 "./entity.py" = ""
 "./ui.py" = ""
+"./test.py" = ""

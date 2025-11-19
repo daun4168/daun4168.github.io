@@ -14,7 +14,7 @@ CMD_USE = ["사용", "사용하기"]
 CMD_ANSWER = ["정답"]
 CMD_DIAL = ["다이얼"]
 CMD_START = "시작"
-CMD_HINT = "힌트"
+CMD_HINT = ["힌트"]
 
 INITIAL_ITEM_DATA = {
     "연필": ("평범한 연필입니다.", []),
@@ -25,7 +25,13 @@ INITIAL_ITEM_DATA = {
 DIARY_RIDDLES = [
     {"id": "diary_1", "title": "첫 번째 페이지: 어른들의 세상", "hint": "어릴 적, 나는 코끼리를 삼킨 보아뱀을 그렸다. 하지만 어른들은 그저 OO라고 말했다.", "content": "<img src='assets/boa_hat.png' alt='코끼리를 삼킨 보아뱀 그림' style='max-width: 300px; display: block; margin: 1rem auto;'>", "answer": "모자"},
     {"id": "diary_2", "title": "두 번째 페이지: 사막의 목소리", "hint": "나는 입이 없지만 소리를 따라 하고, 몸이 없지만 골짜기를 채운다. 나는 무엇일까?", "content": "[소리가 울려퍼지는 사막 협곡 그림]", "answer": "메아리"},
-    {"id": "diary_3", "title": "마지막 페이지: 밤의 보석", "hint": "밤이 되면 수억 개의 내가 떠오르지만, 그 누구도 나를 가질 수는 없다. 나는 무엇일까?", "content": "[별이 가득한 사막의 밤하늘 그림]", "answer": "별"}
+    {
+        "id": "diary_3",
+        "title": "세 번째 페이지: 별을 향한 나침반",
+        "hint": "어른들은 지도를 보라고 하지만, 나는 마음의 나침반을 믿어. 나의 비행기는 **해가 뜨는 곳(East)**을 등지고, **가장 추운 바람이 불어오는 곳(North)**을 향해 날아오를 거야. 그곳에 나의 꿈이 있으니까.",
+        "content": "<img src='assets/useless_puzzle.jpg' alt='비행기와 나침반 그림' style='max-width: 300px; display: block; margin: 1rem auto;'>",
+        "answer": "없음"
+    }
 ]
 
 
@@ -105,7 +111,7 @@ class Game:
         elif verb in CMD_USE: self._use_item(args)
         elif verb in CMD_ANSWER: self._check_answer(arg_string)
         elif verb in CMD_DIAL: self._dial_combination(arg_string)
-        elif verb == CMD_HINT: self._show_hint()
+        elif verb in CMD_HINT: self._show_hint(args)
         elif verb == CMD_LOOK_AROUND: self.ui.print_system_message("이미 주변을 둘러보았다. 특별한 것은 보이지 않는다.")
         else:
             josa = get_josa(command, "은/는")
@@ -155,7 +161,7 @@ class Game:
                 "자세히 보니 희미하게 선들이 남아있다. 어쩌면... 연필로 빈 곳을 채우면 그림의 비밀을 풀 수 있을지도 모른다.",
                 is_markdown=True
             )
-            self.ui.print_system_message(f"어떻게 할지 모르겠다면 `{CMD_HINT}`를 입력해보자.")
+            self.ui.print_system_message(f"어떻게 할지 모르겠다면 `{CMD_HINT[0]}`를 입력해보자.")
             return
         
         if item.name == "수수께끼가 담긴 일기장":
@@ -167,7 +173,7 @@ class Game:
         if item.name in INITIAL_ITEM_DATA:
             self.investigated_items.add(item.name)
             if len(self.investigated_items) == len(INITIAL_ITEM_DATA) and not self.has_been_told_to_combine:
-                self.ui.print_system_message(f"이제 각 도구의 단축어를 알게 되었다. `{CMD_COMBINE}` 명령어로 도구들을 조합해보자.\n어떻게 할지 모르겠다면 `{CMD_HINT}`를 입력해보자.")
+                self.ui.print_system_message(f"이제 각 도구의 단축어를 알게 되었다. `{CMD_COMBINE}` 명령어로 도구들을 조합해보자.\n어떻게 할지 모르겠다면 `{CMD_HINT[0]}`를 입력해보자.")
                 self.has_been_told_to_combine = True
                 self.should_combine_tools = True
 
@@ -205,7 +211,7 @@ class Game:
             self.should_combine_tools = False
 
             self.current_puzzle = "rusty_pin"
-            self.ui.create_puzzle("수수께끼: 비행기 잔해", "비행기 동체에 무언가를 고정했던 것으로 보이는 `녹슨핀`이 박혀있다. 손으로는 뽑을 수 없다.", f"방금 만든 도구를 `사용`해볼 수 있을 것 같다.\n어떻게 할지 모르겠다면 `{CMD_HINT}`를 입력해보자.")
+            self.ui.create_puzzle("수수께끼: 비행기 잔해", "비행기 동체에 무언가를 고정했던 것으로 보이는 `녹슨핀`이 박혀있다. 손으로는 뽑을 수 없다.", f"방금 만든 도구를 `사용`해볼 수 있을 것 같다.\n어떻게 할지 모르겠다면 `{CMD_HINT[0]}`를 입력해보자.")
         elif self._is_target_tuple(keys, ["연필", "낡은 일기장"]):
             self.bag.remove(item_a.name)
             self.bag.remove(item_b.name)
@@ -263,9 +269,15 @@ class Game:
         
         riddle = DIARY_RIDDLES[self.diary_riddles_solved]
         if answer == riddle["answer"]:
+            is_trap_puzzle = self.current_puzzle == "diary_3"
+            
             self.diary_riddles_solved += 1
             self.current_puzzle = None
-            self.ui.print_narrative("정답이다! 머릿속이 맑아지는 기분이다.", is_markdown=True)
+
+            if is_trap_puzzle:
+                self.ui.print_narrative("...정답? 때로는 정답이 없는 것이 정답일 때도 있다. 중요한 것은 질문을 던지는 것을 멈추지 않는 것이다.", is_markdown=True)
+            else:
+                self.ui.print_narrative("정답이다! 머릿속이 맑아지는 기분이다.", is_markdown=True)
 
             if self.diary_riddles_solved < len(DIARY_RIDDLES):
                 self.ui.print_system_message(f"`{CMD_EXAMINE[0]} 일기`로 다음 페이지를 확인하자.")
@@ -287,7 +299,7 @@ class Game:
         self.ui.create_puzzle(
             "퍼즐: 조종사의 상자",
             "오래된 금속 상자. 3자리 다이얼 자물쇠로 잠겨있다.",
-            f"지금까지의 여정에서 단서를 찾을 수 있을 것 같다. `{CMD_DIAL[0]} <숫자>` 로 번호를 맞출 수 있다.\n어떻게 할지 모르겠다면 `{CMD_HINT}`를 입력해보자."
+            f"지금까지의 여정에서 단서를 찾을 수 있을 것 같다. `{CMD_DIAL[0]} <숫자>` 로 번호를 맞출 수 있다.\n어떻게 할지 모르겠다면 `{CMD_HINT[0]}`를 입력해보자."
         )
 
     def _dial_combination(self, combination: str):
@@ -306,7 +318,7 @@ class Game:
         else:
             self.ui.print_system_message("번호가 맞지 않는다. 딸깍거리는 소리만 날 뿐이다.")
 
-    def _show_hint(self):
+    def _show_hint(self, args: list[str]):
         hint_message = "지금은 특별한 힌트가 없다."
         if self.should_combine_tools:
             hint_message = f"힌트: `{CMD_COMBINE} 돋보기 거울`"
@@ -315,7 +327,29 @@ class Game:
         elif self._find_item_in_bag("낡은 일기장") and not self._find_item_in_bag("수수께끼가 담긴 일기장"):
              hint_message = f"힌트: `{CMD_COMBINE} 연필 일기`"
         elif self.current_puzzle == "diary_1":
-            hint_message = "힌트: 어른들은 상상력이 부족해서 보이는 대로만 말하곤 하죠."
+            if not args:
+                hint_message = f"`{CMD_HINT[0]} 1` 또는 `{CMD_HINT[0]} 2`를 입력하여 힌트를 얻을 수 있습니다."
+            elif args[0] == "1":
+                hint_message = f"힌트 1: 어른들은 상상력이 부족해서 보이는 대로만 말하곤 하죠. 정답을 알고 싶다면 `{CMD_HINT[0]} 2`를 입력하세요."
+            elif args[0] == "2":
+                riddle = DIARY_RIDDLES[0]
+                hint_message = f"힌트 2: 정답은 '{riddle['answer']}'입니다."
+            else:
+                hint_message = f"잘못된 힌트 요청입니다. `{CMD_HINT[0]} 1` 또는 `{CMD_HINT[0]} 2`를 입력하세요."
+        elif self.current_puzzle == "diary_3":
+            if not args:
+                hint_message = f"힌트는 총 4개입니다. `{CMD_HINT[0]} 1`부터 `{CMD_HINT[0]} 4`까지 입력해보세요."
+            elif args[0] == "1":
+                hint_message = "힌트 1: 해가 뜨는 곳은 동쪽, 추운 바람은 북쪽에서 불어옵니다. 비행기는 동쪽을 '등지고' 북쪽을 '향해' 날아갑니다. 두 방향을 조합하면 어디일까요?"
+            elif args[0] == "2":
+                hint_message = "힌트 2: 나침반의 N극은 항상 북쪽을 가리키지만, S극은 남쪽을 가리킵니다. 하지만 '마음의 나침반'은 자성에 영향을 받지 않을지도 모릅니다."
+            elif args[0] == "3":
+                hint_message = "힌트 3: 그림 속 비행기의 꼬리날개는 나침반의 남서쪽을 향하고 있습니다. 이것이 뭔가 단서가 되지 않을까요?"
+            elif args[0] == "4":
+                riddle = DIARY_RIDDLES[2]
+                hint_message = f"힌트 4: 아직도 고민하고 계셨군요? 대단한 끈기입니다. 하지만... 혹시 논리가 없는 곳에서 논리를 찾고 있지는 않으신가요? 이 그림은 사실 AI에게 '논리적으로 말이 안 되는 수수께끼'를 그려달라고 해서 받은 이미지입니다. 네, 당신은 지금 AI가 만든 낚시 문제에 시간을 쏟고 있었습니다. 허무하신가요? 정답은... 그냥 '{riddle['answer']}'입니다. 어서 입력하고 다음으로 넘어가세요."
+            else:
+                hint_message = f"잘못된 힌트 요청입니다. `{CMD_HINT[0]} 1`부터 `{CMD_HINT[0]} 4`까지 시도해보세요."
         elif self.current_puzzle == "locked_box":
             hint_message = f"힌트: 비행기 꼬리 숫자({self.clues['tail_number']}), 첫 번째 수수께끼를 푼 페이지({self.clues['diary_page']}), 조종사의 별에 있던 화산의 개수({self.clues['volcanoes']})를 순서대로 조합해보자."
 

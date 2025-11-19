@@ -30,8 +30,13 @@ COMMANDS_CHAPTER_1 = [
     "정답",
     "힌트1",
     "모자",
-    "힌트2",
-
+    "힌트",
+    "힌트 1",
+    "힌트 2",
+    "정답 모자",
+    "조사 일기",
+    "정답 메아리",
+    "조사 일기",
 ]
 
 
@@ -39,6 +44,7 @@ class TestRunner:
     def __init__(self, game):
         self.game = game
         self.test_sequences = {
+            "test0": self._run_test0_sequence,
             "test1": self._run_test1_sequence,
         }
 
@@ -58,5 +64,10 @@ class TestRunner:
             await self.game.process_command(cmd)
             await asyncio.sleep(0.05)
 
-    async def _run_test1_sequence(self):
+    async def _run_test0_sequence(self):
         await self._execute_sequence(COMMANDS_GAME_START)
+
+    async def _run_test1_sequence(self):
+        await self._execute_sequence(COMMANDS_GAME_START + COMMANDS_CHAPTER_1)
+
+

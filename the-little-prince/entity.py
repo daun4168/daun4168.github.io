@@ -46,12 +46,13 @@ class Bag(Entity):
         self._items[item.name] = item
         if self._ui:
             josa = get_josa(item.name, "을/를")
-            self._ui.update_inventory_ui(self._items)
+            # 상단 UI 자동 업데이트 로직 제거
             self._ui.print_system_message(f"'{item.name}'{josa} 가방에 추가했습니다.")
 
     def remove(self, item_name: str) -> Item | None:
         item = self._items.pop(item_name, None)
         if item and self._ui:
+            # 아이템 제거 시에는 상단 UI를 업데이트합니다.
             self._ui.update_inventory_ui(self._items)
         return item
 

@@ -35,6 +35,10 @@ class UIManager:
         self.location_name = document.getElementById("location-name")
         self.hr_divider = document.querySelector("#main-text-output + hr")
 
+    def set_initial_bag_status(self):
+        """게임 시작 시 가방 상태를 '???'로 설정합니다."""
+        self.inventory_status.innerText = "가방: ???"
+
     def set_location_name(self, name: str):
         """현재 위치 이름을 설정합니다."""
         self.location_name.innerText = f"현재 위치: {name}"

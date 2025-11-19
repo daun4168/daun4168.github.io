@@ -24,7 +24,7 @@ INITIAL_ITEM_DATA = {
 
 DIARY_RIDDLES = [
     {"id": "diary_1", "title": "첫 번째 페이지: 어른들의 세상", "hint": "어릴 적, 나는 코끼리를 삼킨 보아뱀을 그렸다. 하지만 어른들은 그저 OO라고 말했다.", "content": "<img src='assets/boa_hat.png' alt='코끼리를 삼킨 보아뱀 그림' style='max-width: 300px; display: block; margin: 1rem auto;'>", "answer": "모자"},
-    {"id": "diary_2", "title": "두 번째 페이지: 사막의 목소리", "hint": "나는 입이 없지만 소리를 따라 하고, 몸이 없지만 골짜기를 채운다. 나는 무엇일까?", "content": "[소리가 울려퍼지는 사막 협곡 그림]", "answer": "메아리"},
+    {"id": "diary_2", "title": "두 번째 페이지: 사막의 목소리", "hint": "나는 입이 없지만 소리를 따라 하고, 몸이 없지만 골짜기를 채운다. 나는 무엇일까?", "content": "<img src='assets/echo.png' alt='소리가 울려퍼지는 사막 협곡 그림' style='max-width: 300px; display: block; margin: 1rem auto;'>", "answer": "메아리"},
     {
         "id": "diary_3",
         "title": "세 번째 페이지: 별을 향한 나침반",
@@ -336,6 +336,18 @@ class Game:
                 hint_message = f"힌트 2: 정답은 '{riddle['answer']}'입니다."
             else:
                 hint_message = f"잘못된 힌트 요청입니다. `{CMD_HINT[0]} 1` 또는 `{CMD_HINT[0]} 2`를 입력하세요."
+        elif self.current_puzzle == "diary_2":
+            if not args:
+                hint_message = f"힌트는 총 3개입니다. `{CMD_HINT[0]} 1`부터 `{CMD_HINT[0]} 3`까지 입력해보세요."
+            elif args[0] == "1":
+                hint_message = "힌트 1: 세 글자입니다."
+            elif args[0] == "2":
+                hint_message = "힌트 2: 산에 가서 '야호'라고 외치면 들리는 그것은 무엇일까요?"
+            elif args[0] == "3":
+                riddle = DIARY_RIDDLES[1]
+                hint_message = f"힌트 3: 정답은 '{riddle['answer']}'입니다."
+            else:
+                hint_message = f"잘못된 힌트 요청입니다. `{CMD_HINT[0]} 1`부터 `{CMD_HINT[0]} 3`까지 시도해보세요."
         elif self.current_puzzle == "diary_3":
             if not args:
                 hint_message = f"힌트는 총 4개입니다. `{CMD_HINT[0]} 1`부터 `{CMD_HINT[0]} 4`까지 입력해보세요."

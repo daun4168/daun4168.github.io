@@ -16,7 +16,7 @@ CMD_START = "시작"
 INITIAL_ITEM_DATA = {
     "연필": ("평범한 연필입니다.", []),
     "돋보기": ("작은 것들을 관찰할 수 있는 돋보기입니다.", []),
-    "깨진 거울 조각": ("빛을 반사하는 날카로운 조각입니다.", ["거울", "조각"]),
+    "깨진 거울 조각": ("빛을 반사하는 날카로운 조각입니다.", ["거울"]),
 }
 
 DIARY_RIDDLES = [
@@ -138,9 +138,18 @@ class Game:
             return
         
         if item.name == "낡은 일기장":
+            self.ui.print_narrative(
+                "일기장을 펼치자, 오래된 잉크 냄새와 함께 낡은 종이가 모습을 드러낸다.\n"
+                "첫 페이지에는 무언가 그려져 있었던 것 같지만, 세월의 흔적인지 잉크가 번져 형체를 알아보기 어렵다.\n"
+                "자세히 보니 희미하게 선들이 남아있다. 어쩌면... 연필로 빈 곳을 채우면 그림의 비밀을 풀 수 있을지도 모른다.",
+                is_markdown=True
+            )
+            return
+        
+        if item.name == "수수께끼가 담긴 일기장":
             self._read_diary()
             return
-            
+
         item.show()
         
         if item.name in INITIAL_ITEM_DATA:
@@ -182,7 +191,17 @@ class Game:
             self.ui.print_system_message(f"'{new_item.name}'(단축어: `{new_item.aliases[0]}`)를 가방에 추가했습니다.")
 
             self.current_puzzle = "rusty_pin"
-            self.ui.create_puzzle("수수께끼: 비행기 잔해", "비행기 동체에 무언가를 고정했던 것으로 보이는 **녹슨 핀**이 박혀있다. 손으로는 뽑을 수 없다.", f"방금 만든 도구를 `{CMD_USE[0]}` 명령어로 사용해볼 수 있을 것 같다.\n(예: `{CMD_USE[0]} 집광기 핀`)")
+            self.ui.create_puzzle("수수께끼: 비행기 잔해", "비행기 동체에 무언가를 고정했던 것으로 보이는 **녹슨 핀**이 박혀있다. 손으로는 뽑을 수 없다.", f"방금 만든 도구를 `{CMD_USE[0]}` 명령어로 사용해볼 수 있을 것 같다.\n(예: `{CMD_USE[0]} 집광기 녹슨핀`)")
+        elif self._is_target_tuple(keys, ["연필", "낡은 일기장"]):
+            self.bag.remove(item_a.name)
+            self.bag.remove(item_b.name)
+            
+            new_item = Item("수수께끼가 담긴 일기장", "연필로 그림의 윤곽을 채우자 희미한 글자들이 드러났다.", ["일기"])
+            self.bag.add(new_item, silent=True)
+            self.ui.update_bag_status(self.bag.items)
+            
+            self.ui.print_narrative("연필로 일기장의 빈 곳을 칠하자, 숨겨져 있던 글자들이 드러나기 시작했다!", is_markdown=True)
+            self.ui.print_system_message(f"**수수께끼가 담긴 일기장** (단축어: `일기`)을 얻었다. `{CMD_EXAMINE[0]} 일기`로 내용을 확인해보자.")
         else:
             self.ui.print_system_message("두 아이템을 조합했지만 아무 일도 일어나지 않았습니다.")
 
@@ -197,7 +216,7 @@ class Game:
             self.ui.print_system_message(f"'{tool_name}'{get_josa(tool_name, '은/는')} 가방에 없는 도구입니다.")
             return
 
-        if self.current_puzzle == "rusty_pin" and tool.name == "태양열 집광 장치" and target_name in ["핀", "녹슨핀"]:
+        if self.current_puzzle == "rusty_pin" and tool.name == "태양열 집광 장치" and target_name in ["녹슨핀"]:
             self.bag.remove(tool.name)
             self.ui.update_bag_status(self.bag.items)
             

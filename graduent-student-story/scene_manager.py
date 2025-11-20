@@ -2,6 +2,7 @@ from typing import Dict, Type
 from scene import Scene
 from ui import get_josa
 
+
 class SceneFactory:
     """장면(Scene) 인스턴스 생성을 책임지는 팩토리 클래스입니다."""
 
@@ -54,16 +55,16 @@ class SceneManager:
         # 1. 인벤토리에 있는 아이템인가?
         if self.scene_factory.inventory.has(part):
             return True
-        
+
         # 2. 현재 씬의 발견된 키워드인가?
         if self.current_scene:
             for name, data in self.current_scene.scene_data["keywords"].items():
                 # 별명(alias)도 확인
                 is_alias = data.get("type") == "Alias"
                 target_name = data.get("target", "").lower()
-                
+
                 # 키워드 이름 또는 별명이 일치하고, 상태가 'discovered'인지 확인
-                if (part == name.lower() or (is_alias and part == target_name)):
+                if part == name.lower() or (is_alias and part == target_name):
                     # 원본 키워드 데이터 가져오기
                     original_keyword_name = target_name if is_alias else name
                     original_data = self.current_scene.scene_data["keywords"].get(original_keyword_name, {})
@@ -74,8 +75,8 @@ class SceneManager:
     async def process_command(self, command: str):
         """현재 장면에 명령어를 전달하고 처리합니다."""
         if self.current_scene:
-            if '+' in command:
-                parts = [p.strip().lower() for p in command.split('+')]
+            if "+" in command:
+                parts = [p.strip().lower() for p in command.split("+")]
                 if len(parts) == 2:
                     part1, part2 = parts
                     # 조합 유효성 검사

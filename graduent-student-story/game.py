@@ -21,16 +21,18 @@ CMD_LOOK_AROUND = "둘러보기"
 INTRO_TEXT = [
     "당신은 10년차 대학원생입니다.\n...아니, 사실 '학생'이라 불리기엔 너무 늙었고, '연구원'이라 불리기엔 통장에 찍히는 돈이 너무 적습니다.",
     "동기들은 5년 전에 모두 탈출했습니다. 대기업 과장, 스타트업 대표...\n하지만 당신은 아직 이곳에 남아있습니다.",
-    "왜냐고요?\n\"자네, 이번 데이터만 잘 나오면 졸업 시켜주겠네.\"\n매 학기 반복되는 그 달콤한 거짓말. 희망 고문.",
+    '왜냐고요?\n"자네, 이번 데이터만 잘 나오면 졸업 시켜주겠네."\n매 학기 반복되는 그 달콤한 거짓말. 희망 고문.',
     "당신의 몸은 커피와 핫식스로 이루어져 있고,\n당신의 영혼은 이미 연구실 서버실 어딘가에 저당 잡혔습니다.",
     "그리고 오늘...\n드디어 운명의 날이 밝았습니다.",
 ]
+
 
 class Game:
     """
     게임의 주요 로직을 관리하고, 각 컴포넌트를 초기화하고 연결합니다.
     (Composition Root 역할)
     """
+
     def __init__(self, ui_manager: UIManager, inventory: Inventory, test_runner: TestRunner):
         # --- 의존성 주입 ---
         self.ui = ui_manager
@@ -51,7 +53,7 @@ class Game:
         # --- 게임 상태 초기화 ---
         self.health = 100.0
         self.max_health = 100.0
-        self.current_scene_id: str | None = None # SceneManager가 관리하지만, 기존 로직 유지를 위해 남겨둠
+        self.current_scene_id: str | None = None  # SceneManager가 관리하지만, 기존 로직 유지를 위해 남겨둠
         self.game_started = False
 
         self.test_runner.set_game(self)
@@ -90,9 +92,9 @@ class Game:
     def _start_game(self):
         """게임의 첫 장면을 시작합니다."""
         self.game_started = True
-        self.health = 15.0 # 기존 로직 유지
+        self.health = 15.0  # 기존 로직 유지
         self.update_health_status()
-        self.scene_manager.switch_scene("scene0") # 첫 장면 ID
+        self.scene_manager.switch_scene("scene0")  # 첫 장면 ID
 
     def update_health_status(self):
         """UI의 체력 상태를 업데이트합니다."""

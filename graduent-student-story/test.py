@@ -43,7 +43,7 @@ COMMANDS_SCENE_1 = [
     "에탄올 + 바닥",
     "빗자루 + 바닥",
     "에탄올 + 의문의 액체",
-    "빗자루 + 바닥"
+    "빗자루 + 바닥",
 ]
 
 COMMANDS_SCENE_2 = [
@@ -82,12 +82,12 @@ class TestRunner:
         """
         if "localhost" not in window.location.hostname or not command.startswith("test"):
             return False
-        
+
         if not self.game:
             print("TestRunner: Game object not set.")
             return False
 
-        match = re.match(r'test(\d+)(?:-(\d+))?', command)
+        match = re.match(r"test(\d+)(?:-(\d+))?", command)
         if not match:
             return False
 
@@ -95,12 +95,14 @@ class TestRunner:
         end_index = int(match.group(2)) if match.group(2) else start_index
 
         if start_index >= len(self.sequences) or end_index >= len(self.sequences):
-            self.game.ui.print_system_message(f"오류: 존재하지 않는 테스트 번호입니다. (사용 가능한 범위: 0-{len(self.sequences) - 1})")
+            self.game.ui.print_system_message(
+                f"오류: 존재하지 않는 테스트 번호입니다. (사용 가능한 범위: 0-{len(self.sequences) - 1})"
+            )
             return True
 
         for i in range(start_index, end_index + 1):
             await self.sequences[i]()
-        
+
         self.game.ui.print_system_message(f"테스트 실행 완료: {command}")
         return True
 
@@ -108,7 +110,7 @@ class TestRunner:
         """주어진 명령어 목록을 순차적으로 실행합니다."""
         for cmd in commands:
             await self.game.process_command(cmd)
-            await asyncio.sleep(0.1) # 각 명령어 사이의 최소 딜레이
+            await asyncio.sleep(0.1)  # 각 명령어 사이의 최소 딜레이
 
     async def _run_scene0_sequence(self):
         await self._execute_sequence(COMMANDS_SCENE_0)

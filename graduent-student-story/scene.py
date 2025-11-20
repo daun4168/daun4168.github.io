@@ -1,6 +1,7 @@
 from abc import ABC, abstractmethod
 from ui import get_josa
 
+
 class Scene(ABC):
     """모든 장면의 기반이 되는 추상 클래스입니다."""
 
@@ -10,14 +11,14 @@ class Scene(ABC):
         self.inventory = inventory
         # scene_data를 깊은 복사하여 원본 데이터가 수정되지 않도록 함
         import copy
+
         self.scene_data = copy.deepcopy(scene_data)
         self.state = {}
         self._initialize_state()
 
     def match_pair(self, part1: str, part2: str, target1: str, target2: str) -> bool:
         """두 쌍의 문자열이 순서에 상관없이 일치하는지 확인합니다."""
-        return (part1 == target1 and part2 == target2) or \
-               (part1 == target2 and part2 == target1)
+        return (part1 == target1 and part2 == target2) or (part1 == target2 and part2 == target1)
 
     def _discover_keyword(self, keyword_name: str, show_sight_widened_message: bool = False) -> bool:
         """
@@ -28,7 +29,10 @@ class Scene(ABC):
         if keyword_data and keyword_data.get("state") == "hidden":
             keyword_data["state"] = "discovered"
             self.ui.update_sight_status(self.scene_data["keywords"])
-            self.ui.print_system_message(f"**[{keyword_name}]**{get_josa(keyword_name, '을/를')} 발견하여 **시야**에 추가합니다.", is_markdown=True)
+            self.ui.print_system_message(
+                f"**[{keyword_name}]**{get_josa(keyword_name, '을/를')} 발견하여 **시야**에 추가합니다.",
+                is_markdown=True,
+            )
             if show_sight_widened_message:
                 self.ui.print_system_message("시야가 넓어진 것 같다.", is_markdown=True)
             return True

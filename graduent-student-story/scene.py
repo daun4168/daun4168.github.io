@@ -47,6 +47,9 @@ class Scene:
         if not keyword_data:
             return False
 
+        if keyword_data.get("state") == KeywordState.INACTIVE:
+            return False
+
         silent_discovery = keyword_data.get("silent_discovery", False)
         self._discover_keyword(original_keyword, silent=silent_discovery)
 

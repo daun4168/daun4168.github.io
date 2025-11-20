@@ -9,12 +9,18 @@ CH0_SCENE1_DATA = {
         "wall_inspected": False,
         "liquid_cleaned": False,
         "box_opened": False,
+        "cabinet_unlocked": False,  # 시약장 잠금 해제 상태 추가
     },
     "keywords": {
         # --- Aliases ---
         KeywordId.WALL_ALIAS: {"type": KeywordType.ALIAS, "target": KeywordId.WALL},
         KeywordId.COMPUTER_ALIAS: {"type": KeywordType.ALIAS, "target": KeywordId.OLD_COMPUTER},
         # --- Objects ---
+        KeywordId.DOOR: {
+            "type": KeywordType.OBJECT,
+            "state": KeywordState.HIDDEN,
+            "description": "이미 끔찍한 곳에 와있는데, 굳이 돌아갈 필요는 없어 보인다.",
+        },
         KeywordId.TRASH_CAN: {
             "type": KeywordType.OBJECT,
             "state": KeywordState.HIDDEN,
@@ -94,14 +100,25 @@ CH0_SCENE1_DATA = {
                     "actions": [
                         {
                             "type": ActionType.PRINT_NARRATIVE,
-                            "value": "벽지를 자세히 보니, 구석에 작은 **[메모]**가 붙어있다.",
+                            "value": "벽지를 자세히 보니, 구석에 작은 메모가 붙어있다.",
                         },
                         {"type": ActionType.UPDATE_STATE, "value": {"key": "wall_inspected", "value": True}},
                         {
                             "type": ActionType.UPDATE_STATE,
-                            "value": {"keyword": KeywordId.MEMO, "state": KeywordState.DISCOVERED},
+                            # 입력은 가능해지지만(HIDDEN), 시야 목록(UI)에는 아직 안 뜸
+                            "value": {"keyword": KeywordId.MEMO, "state": KeywordState.HIDDEN},
                         },
-                        {"type": ActionType.PRINT_SYSTEM, "value": "**[메모]**가 시야에 추가되었습니다."},
+                        # 숨겨진 오브젝트의 존재 알림
+                        {
+                            "type": ActionType.PRINT_SYSTEM,
+                            "value": "새롭게 눈에 띄는 것이 있는 것 같습니다.",
+                        },
+
+                        # 텍스트 속 단어도 입력 가능함을 알림
+                        {
+                            "type": ActionType.PRINT_SYSTEM,
+                            "value": "**[시야]** 에 새로운 [?] 가 추가되었습니다. 사물의 설명 텍스트에 등장하는 단어를 직접 입력하여 조사할 수 있습니다.",
+                        },
                     ],
                 },
                 {"actions": [{"type": ActionType.PRINT_NARRATIVE, "value": "구석에 작은 메모가 붙어있다."}]},
@@ -109,7 +126,7 @@ CH0_SCENE1_DATA = {
         },
         KeywordId.MEMO: {
             "type": KeywordType.OBJECT,
-            "state": KeywordState.HIDDEN,
+            "state": KeywordState.INACTIVE,
             "silent_discovery": True,
             "description": "벽에 붙어있는 메모에는 '컴퓨터 비밀번호: 1에서 시작하고 8로 끝나는 여덟자리 숫자' 라고 적혀있다.",
         },
@@ -143,7 +160,25 @@ CH0_SCENE1_DATA = {
         KeywordId.CABINET: {
             "type": KeywordType.OBJECT,
             "state": KeywordState.HIDDEN,
-            "description": "자물쇠가 걸려있다. `시약장 + [비밀번호]` 형식으로 열 수 있을 것 같다.",
+            "interactions": [
+                {
+                    "conditions": [{"type": ConditionType.STATE_IS, "target": "cabinet_unlocked", "value": True}],
+                    "actions": [
+                        {
+                            "type": ActionType.PRINT_NARRATIVE,
+                            "value": "시약장 안에는 잡다한 약품들이 널려있다.",
+                        }
+                    ],
+                },
+                {
+                    "actions": [
+                        {
+                            "type": ActionType.PRINT_NARRATIVE,
+                            "value": "자물쇠가 걸려있다. `시약장 + [비밀번호]` 형식으로 열 수 있을 것 같다.",
+                        }
+                    ],
+                },
+            ],
         },
         KeywordId.MYSTERY_LIQUID: {
             "type": KeywordType.OBJECT,
@@ -160,15 +195,14 @@ CH0_SCENE1_DATA = {
             "state": KeywordState.HIDDEN,
             "description": "평범한 빗자루다. 바닥을 청소할 수 있을 것 같다.",
         },
-        # [수정됨] 아이템이 아닌 시야에서 볼 수 있는 오브젝트로 설정
         KeywordId.LAB_COAT: {
             "type": KeywordType.OBJECT,
-            "state": KeywordState.HIDDEN,
+            "state": KeywordState.INACTIVE,
             "description": "새하얀 랩 가운이다. 입으면 왠지 졸업에 한 발짝 다가간 기분이 든다.",
         },
         KeywordId.ETHANOL: {
             "type": KeywordType.ITEM,
-            "state": KeywordState.HIDDEN,
+            "state": KeywordState.INACTIVE,
             "description": "소독 및 청소용. 마시지 마시오.",
         },
     },
@@ -194,7 +228,7 @@ CH0_SCENE1_DATA = {
                     "value": "철컥, 소리와 함께 **[시약장]** 문이 열렸다. 안에서 **[에탄올]** 병을 발견했다.",
                 },
                 {"type": ActionType.ADD_ITEM, "value": {"name": KeywordId.ETHANOL, "description": "강력한 세정제입니다."}},
-                {"type": ActionType.REMOVE_KEYWORD, "target": KeywordId.CABINET},
+                {"type": ActionType.UPDATE_STATE, "value": {"key": "cabinet_unlocked", "value": True}},
             ],
         },
         # 3. 박스 + 법인카드 -> 랩 가운 발견 (시야 추가)

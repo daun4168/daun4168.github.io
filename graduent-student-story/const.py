@@ -14,7 +14,7 @@ class KeywordId:
     SPANNER = "스패너"
 
     # Scene 0
-    DOOR_0 = "문"
+    DOOR = "문"
     THESIS = "논문"
     DESK = "책상"
     GLASSES = "안경알"
@@ -45,6 +45,7 @@ class KeywordId:
 class KeywordState:
     HIDDEN = "hidden"
     DISCOVERED = "discovered"
+    INACTIVE = "inactive"
 
 
 class ConditionType:

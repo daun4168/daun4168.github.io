@@ -63,7 +63,7 @@ CH0_SCENE0_DATA = {
                 {"actions": [{"type": ActionType.PRINT_SYSTEM, "value": "이미 가지고 있습니다."}]},
             ],
         },
-        KeywordId.DOOR_0: {
+        KeywordId.DOOR: {
             "type": KeywordType.PORTAL,
             "state": KeywordState.HIDDEN,
             "interactions": [

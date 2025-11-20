@@ -1,6 +1,7 @@
-from typing import List, Dict, Any, Optional
+from typing import Any
+
+from const import ActionType, ConditionType, KeywordState, KeywordType, SceneID
 from pydantic import BaseModel, Field
-from const import SceneID, KeywordType, KeywordState, ConditionType, ActionType
 
 # --- 하위 모델 정의 ---
 
@@ -17,24 +18,24 @@ class Action(BaseModel):
 
 
 class Interaction(BaseModel):
-    conditions: List[Condition] = Field(default_factory=list)
-    actions: List[Action]
+    conditions: list[Condition] = Field(default_factory=list)
+    actions: list[Action]
 
 
 class KeywordData(BaseModel):
     type: KeywordType = KeywordType.OBJECT
     state: KeywordState = KeywordState.HIDDEN
-    display_name: Optional[str] = None
-    description: Optional[str] = None
-    interactions: List[Interaction] = Field(default_factory=list)
+    display_name: str | None = None
+    description: str | None = None
+    interactions: list[Interaction] = Field(default_factory=list)
     silent_discovery: bool = False
-    target: Optional[str] = None  # Alias일 경우 원본 타겟
+    target: str | None = None  # Alias일 경우 원본 타겟
 
 
 class Combination(BaseModel):
-    targets: List[str]
-    conditions: List[Condition] = Field(default_factory=list)
-    actions: List[Action]
+    targets: list[str]
+    conditions: list[Condition] = Field(default_factory=list)
+    actions: list[Action]
 
 
 # --- 메인 씬 데이터 모델 ---
@@ -44,7 +45,7 @@ class SceneData(BaseModel):
     id: SceneID
     name: str
     initial_text: str
-    initial_state: Dict[str, Any] = Field(default_factory=dict)
-    keywords: Dict[str, KeywordData] = Field(default_factory=dict)
-    combinations: List[Combination] = Field(default_factory=list)
-    on_enter_actions: List[Action] = Field(default_factory=list)
+    initial_state: dict[str, Any] = Field(default_factory=dict)
+    keywords: dict[str, KeywordData] = Field(default_factory=dict)
+    combinations: list[Combination] = Field(default_factory=list)
+    on_enter_actions: list[Action] = Field(default_factory=list)

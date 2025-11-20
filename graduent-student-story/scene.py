@@ -1,8 +1,9 @@
 import copy
-from ui import get_josa
+
 from const import KeywordState, KeywordType
 from logic_handlers import ACTION_HANDLERS, CONDITION_HANDLERS
 from schemas import SceneData  # 타입 힌팅용
+from ui import get_josa
 
 
 class Scene:

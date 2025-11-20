@@ -1,16 +1,16 @@
 import asyncio
-from pyscript import document
 
-from ui import UIManager
-from entity import Entity, Item, Inventory
+from const import CommandType, SceneID  # 상수를 사용하기 위해 임포트
+from entity import Entity, Inventory
+from pyscript import document
+from scene import Scene
 from scene_manager import SceneFactory, SceneManager
-from test import TestRunner
-from const import SceneID, CommandType  # 상수를 사용하기 위해 임포트
 
 # --- 장면 클래스와 데이터 임포트 ---
 # 데이터 파일 임포트
 from story.chapter0 import CH0_SCENE0_DATA, CH0_SCENE1_DATA, CH0_SCENE2_DATA
-from scene import Scene
+from test import TestRunner
+from ui import UIManager
 
 # --- 게임 데이터 ---
 INTRO_TEXT = [

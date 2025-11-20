@@ -1,7 +1,7 @@
 from abc import ABC, abstractmethod
-from entity import Item
-from const import ActionType, ConditionType, KeywordState
 
+from const import ActionType, ConditionType
+from entity import Item
 
 # --- Base Interfaces ---
 

@@ -1,7 +1,7 @@
-from typing import Dict, Type
+
+from const import CommandType
 from scene import Scene
 from ui import get_josa
-from const import CommandType
 
 
 class SceneFactory:
@@ -23,9 +23,9 @@ class SceneFactory:
         self.ui = ui
         self.inventory = inventory
         # _scene_registry는 장면 ID를 키로, (장면 클래스, 장면 데이터) 튜플을 값으로 저장합니다.
-        self._scene_registry: Dict[str, (Type[Scene], Dict)] = {}
+        self._scene_registry: dict[str, (type[Scene], dict)] = {}
 
-    def register_scene(self, scene_id: str, scene_class: Type[Scene], scene_data: Dict):
+    def register_scene(self, scene_id: str, scene_class: type[Scene], scene_data: dict):
         """
         팩토리에 장면 생성에 필요한 정보를 등록합니다.
 
@@ -81,7 +81,7 @@ class SceneManager:
         self.scene_factory = scene_factory
         self.ui = ui
         # 장면 인스턴스를 캐시하여 불필요한 재생성을 방지합니다.
-        self.scenes: Dict[str, Scene] = {}
+        self.scenes: dict[str, Scene] = {}
         # 현재 활성화된 장면 인스턴스입니다.
         self.current_scene: Scene | None = None
 

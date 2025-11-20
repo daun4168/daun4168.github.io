@@ -32,12 +32,8 @@ class Scene2(Scene):
 
             if cmd_lower == keyword_name.lower() or (is_alias and cmd_lower == target_name):
                 original_keyword_name = target_name if is_alias else keyword_name
-                original_keyword_data = scene_keywords.get(original_keyword_name, {})
-
-                if original_keyword_data.get("state") == "hidden":
-                    original_keyword_data["state"] = "discovered"
-                    self.ui.update_sight_status(scene_keywords)
-                    self.ui.print_system_message(f"**[{original_keyword_name}]**{get_josa(original_keyword_name, '을/를')} 발견하여 **시야**에 추가합니다.", is_markdown=True)
+                
+                self._discover_keyword(original_keyword_name)
 
                 if original_keyword_name == "교수님":
                     if self.state["professor_called_out"] and not self.state["card_returned"]:
@@ -68,8 +64,7 @@ class Scene2(Scene):
         return False
 
     async def process_combination(self, item1: str, item2: str) -> bool:
-        if ("탑승구" in item1 and "스패너" in item2) or \
-           ("탑승구" in item2 and "스패너" in item1):
+        if self.match_pair(item1, item2, "탑승구", "스패너"):
             if self.inventory.has("스패너"):
                 if not self.state["professor_called_out"]:
                     self.ui.print_narrative("**[스패너]**로 **[탑승구]**의 뻑뻑한 부분을 조이려 하자, 갑자기 교수님이 나를 부른다.", is_markdown=True)
@@ -86,8 +81,7 @@ class Scene2(Scene):
                 self.ui.print_system_message("**주머니**에 **[스패너]**가 없습니다. **[탑승구]**를 조일 수 없습니다.", is_markdown=True)
             return True
 
-        if ("교수님" in item1 and "법인카드" in item2) or \
-           ("교수님" in item2 and "법인카드" in item1):
+        if self.match_pair(item1, item2, "교수님", "법인카드"):
             if self.state["professor_called_out"] and not self.state["card_returned"]:
                 if self.inventory.has("법인카드"):
                     self.ui.print_narrative("교수님께 **[법인카드]**를 건네자, 교수님은 만족스러운 표정으로 고개를 끄덕인다.", is_markdown=True)

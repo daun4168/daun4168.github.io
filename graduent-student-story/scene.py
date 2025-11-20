@@ -14,6 +14,11 @@ class Scene(ABC):
         self.state = {}
         self._initialize_state()
 
+    def match_pair(self, part1: str, part2: str, target1: str, target2: str) -> bool:
+        """두 쌍의 문자열이 순서에 상관없이 일치하는지 확인합니다."""
+        return (part1 == target1 and part2 == target2) or \
+               (part1 == target2 and part2 == target1)
+
     def _discover_keyword(self, keyword_name: str, show_sight_widened_message: bool = False) -> bool:
         """
         새로운 키워드를 발견 처리하고 관련 메시지를 출력합니다.

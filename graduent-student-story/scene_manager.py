@@ -1,5 +1,6 @@
 from typing import Dict, Type
 from scene import Scene
+from ui import get_josa
 
 class SceneFactory:
     """장면(Scene) 인스턴스 생성을 책임지는 팩토리 클래스입니다."""
@@ -45,10 +46,30 @@ class SceneManager:
             self.scenes[scene_id] = scene_instance
 
         self.current_scene = self.scenes[scene_id]
-        # game 객체에 직접 접근하는 대신, current_scene을 통해 scene_id를 관리하도록 할 수 있으나,
-        # 기존 동작 유지를 위해 game의 속성을 직접 수정하는 부분은 남겨둡니다.
         self.scene_factory.game.current_scene_id = scene_id
         self.current_scene.on_enter()
+
+    def _is_valid_combination_part(self, part: str) -> bool:
+        """조합에 사용된 요소가 유효한지(인벤토리 아이템 또는 발견된 키워드) 확인합니다."""
+        # 1. 인벤토리에 있는 아이템인가?
+        if self.scene_factory.inventory.has(part):
+            return True
+        
+        # 2. 현재 씬의 발견된 키워드인가?
+        if self.current_scene:
+            for name, data in self.current_scene.scene_data["keywords"].items():
+                # 별명(alias)도 확인
+                is_alias = data.get("type") == "Alias"
+                target_name = data.get("target", "").lower()
+                
+                # 키워드 이름 또는 별명이 일치하고, 상태가 'discovered'인지 확인
+                if (part == name.lower() or (is_alias and part == target_name)):
+                    # 원본 키워드 데이터 가져오기
+                    original_keyword_name = target_name if is_alias else name
+                    original_data = self.current_scene.scene_data["keywords"].get(original_keyword_name, {})
+                    if original_data.get("state") == "discovered":
+                        return True
+        return False
 
     async def process_command(self, command: str):
         """현재 장면에 명령어를 전달하고 처리합니다."""
@@ -56,13 +77,21 @@ class SceneManager:
             if '+' in command:
                 parts = [p.strip().lower() for p in command.split('+')]
                 if len(parts) == 2:
-                    if not await self.current_scene.process_combination(parts[0], parts[1]):
+                    part1, part2 = parts
+                    # 조합 유효성 검사
+                    if not self._is_valid_combination_part(part1):
+                        self.ui.print_system_message(f"'{part1}'{get_josa(part1, '은/는')} 사용할 수 없는 대상입니다.")
+                        return
+                    if not self._is_valid_combination_part(part2):
+                        self.ui.print_system_message(f"'{part2}'{get_josa(part2, '은/는')} 사용할 수 없는 대상입니다.")
+                        return
+
+                    if not await self.current_scene.process_combination(part1, part2):
                         self.ui.print_system_message("아무 일도 일어나지 않았습니다.")
                 else:
                     self.ui.print_system_message("잘못된 조합 형식입니다. `아이템 + 대상` 형식으로 입력해주세요.")
             else:
                 if not await self.current_scene.process_keyword(command):
-                    from ui import get_josa
                     josa = get_josa(command, "으로는/로는")
                     self.ui.print_system_message(f"'{command}'{josa} 아무것도 할 수 없습니다.")
         else:

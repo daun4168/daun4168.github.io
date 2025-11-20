@@ -10,7 +10,8 @@ class Scene1(Scene):
             "쓰레기통": {"type": "Object", "state": "hidden"}, "박스": {"type": "Object", "state": "hidden"},
             "빗자루": {"type": "Object", "state": "hidden"}, "오래된 컴퓨터": {"type": "Object", "state": "hidden"},
             "의문의 액체": {"type": "Object", "state": "hidden"}, "시약장": {"type": "Object", "state": "hidden"},
-            "바닥": {"type": "Object", "state": "hidden"}, "벽": {"type": "Object", "state": "hidden", "sub_keyword": "메모"},
+            "바닥": {"type": "Object", "state": "hidden"}, "벽": {"type": "Object", "state": "hidden"},
+            # '메모'는 동적으로 추가되므로 여기서 제외
             "벽면": {"type": "Alias", "target": "벽"}, "문": {"type": "Object", "state": "hidden"},
             "컴퓨터": {"type": "Alias", "target": "오래된 컴퓨터"}
         }
@@ -23,8 +24,8 @@ class Scene1(Scene):
     def _initialize_state(self):
         self.state.update({
             "is_liquid_cleaned": False,
-            "trash_can_state": "initial",  # initial, searched_once, empty
-            "wall_state": "initial",      # initial, memo_discovered
+            "trash_can_state": "initial",
+            "wall_state": "initial",
             "combination_tutorial_shown": False,
             "keyword_tutorial_shown": False
         })
@@ -32,7 +33,6 @@ class Scene1(Scene):
     async def process_keyword(self, keyword: str) -> bool:
         cmd_lower = keyword.lower()
         
-        # 일반 키워드 처리 루프
         for keyword_name, keyword_data in self.scene_data["keywords"].items():
             is_alias = keyword_data.get("type") == "Alias"
             target_name = keyword_data.get("target", "").lower()
@@ -40,10 +40,44 @@ class Scene1(Scene):
             if cmd_lower == keyword_name.lower() or (is_alias and cmd_lower == target_name):
                 original_keyword_name = target_name if is_alias else keyword_name
                 
-                # 숨겨진 키워드 발견 처리 (메시지 출력은 각 로직에서 제어)
-                is_newly_discovered = self._discover_keyword(original_keyword_name)
+                original_data = self.scene_data["keywords"].get(original_keyword_name)
+                if not original_data: return False # 키워드가 없으면 무시
 
-                if original_keyword_name == "쓰레기통":
+                # 숨겨진 키워드는 직접 상호작용 불가 (단, '벽'처럼 다른 키워드를 드러내는 경우는 예외)
+                if original_data.get("state") == "hidden" and original_keyword_name not in ["벽", "메모"]:
+                    return False
+
+                # '벽'과 '메모'가 아닌 다른 키워드들은 발견 시 일반 메시지만 출력
+                if original_keyword_name not in ["벽", "메모"]:
+                    self._discover_keyword(original_keyword_name)
+
+                if original_keyword_name == "벽":
+                    self._discover_keyword("벽")
+                    if self.state["wall_state"] == "initial":
+                        self.ui.print_narrative("벽지를 자세히 보니, 구석에 작은 메모가 붙어있다.", is_markdown=True)
+                        self.state["wall_state"] = "discovered"
+                        
+                        # '메모' 키워드를 hidden 상태로 추가하여 [?]가 나타나게 함
+                        self.scene_data["keywords"]["메모"] = {"type": "Object", "state": "hidden"}
+                        self.ui.update_sight_status(self.scene_data["keywords"])
+                        
+                        self.ui.print_system_message("시야에 무언가 새로운 것이 포착되었다.", is_markdown=True)
+                        
+                        if not self.state.get("keyword_tutorial_shown"):
+                            self.ui.print_system_message("새롭게 발견한 것은 관련된 키워드를 입력하여 조사할 수 있습니다.", is_markdown=True)
+                            self.state["keyword_tutorial_shown"] = True
+                    else:
+                        self.ui.print_narrative("구석에 작은 메모가 붙어있다.", is_markdown=True)
+
+                elif original_keyword_name == "메모":
+                    # '메모' 키워드를 발견 처리하고, 특별 메시지를 함께 출력
+                    is_newly_discovered = self._discover_keyword("메모", show_sight_widened_message=True)
+                    
+                    # 새로 발견했든 아니든 내용을 보여줌
+                    self.ui.print_narrative("벽에 붙어있는 메모에는 '컴퓨터 비밀번호: 1에서 시작하고 8로 끝나는 여덟자리 숫자' 라고 적혀있다.", is_markdown=True)
+
+                elif original_keyword_name == "쓰레기통":
+                    # (이하 다른 키워드 로직은 동일)
                     trash_state = self.state["trash_can_state"]
                     if trash_state == "initial":
                         self.ui.print_narrative("쓰레기통을 뒤적거리자, 먹다 남은 **[에너지바 껍질]**을 찾았다. 쓰레기 더미 아래에 무언가 더 있는 것 같다.", is_markdown=True)
@@ -83,54 +117,29 @@ class Scene1(Scene):
                     self.ui.print_narrative("바닥에 끈적하게 눌어붙은 액체다. 무슨 성분인지 알 수 없지만, 달콤한 향이 나는 것 같다. 핥아볼까?", is_markdown=True)
                 elif original_keyword_name == "바닥":
                     self.ui.print_narrative("바닥 한쪽에 **[의문의 액체]**가 흥건하다. 끈적해서 밟고 싶지 않다.", is_markdown=True)
-                elif original_keyword_name == "벽":
-                    if self.state["wall_state"] == "initial":
-                        self.ui.print_narrative("벽지를 자세히 보니, 구석에 작은 메모가 붙어있다.", is_markdown=True)
-                        self.state["wall_state"] = "memo_discovered"
-                        
-                        # 새로운 키워드 '메모'를 동적으로 추가하고, 발견 메시지를 특별하게 처리
-                        self.scene_data["keywords"]["메모"] = {"type": "Object", "state": "hidden"}
-                        self._discover_keyword("메모", show_sight_widened_message=True)
-                        
-                        # 튜토리얼 메시지는 한 번만 출력
-                        if not self.state.get("keyword_tutorial_shown"):
-                            self.ui.print_system_message("어떤 **[키워드]**는 또 다른 **[키워드]**로 이어지기도 합니다. `메모`를 입력해서 내용을 확인해 보세요.", is_markdown=True)
-                            self.state["keyword_tutorial_shown"] = True
-                    else:
-                        self.ui.print_narrative("구석에 작은 메모가 붙어있다.", is_markdown=True)
-                elif original_keyword_name == "메모":
-                    # '메모' 키워드 자체는 그냥 내용을 보여주기만 함
-                    if not is_newly_discovered:
-                         self.ui.print_narrative("벽에 붙어있는 메모에는 '컴퓨터 비밀번호: 1에서 시작하고 8로 끝나는 여덟자리 숫자' 라고 적혀있다.", is_markdown=True)
-
                 elif original_keyword_name == "문":
                     self.ui.print_narrative("이미 끔찍한 곳에 와있는데, 굳이 돌아갈 필요는 없어 보인다.", is_markdown=True)
                 else:
-                    # 특별한 상호작용이 없는 키워드 (이미 발견 메시지는 위에서 처리됨)
                     pass 
                 
-                return True # 키워드 처리 완료
-        return False # 일치하는 키워드 없음
+                return True
+        return False
 
     async def process_combination(self, item1: str, item2: str) -> bool:
-        # (조합 로직은 변경 없음)
-        # ... (이하 생략)
-        if ("컴퓨터" in item1 and item2 == "12345678") or \
-           ("컴퓨터" in item2 and item1 == "12345678"):
+        # 성공 조합
+        if self.match_pair(item1, item2, "컴퓨터", "12345678"):
             self.ui.print_narrative("암호가 맞았다! 컴퓨터 화면에 메모장 파일 하나가 띄워져 있다.\n\n`시약장 비밀번호: 내 생일 (0815)`", is_markdown=True)
             self.scene_data["keywords"]["오래된 컴퓨터"]["state"] = "solved"
             return True
         
-        if ("시약장" in item1 and item2 == "0815") or \
-           ("시약장" in item2 and item1 == "0815"):
+        if self.match_pair(item1, item2, "시약장", "0815"):
             self.ui.print_narrative("철컥, 소리와 함께 **[시약장]** 문이 열렸다. 안에서 **[에탄올]** 병을 발견했다.", is_markdown=True)
             if not self.inventory.has("에탄올"): self.inventory.add(Item("에탄올", "소독 및 청소용. 마시지 마시오."))
             if "시약장" in self.scene_data["keywords"]: del self.scene_data["keywords"]["시약장"]
             self.ui.update_sight_status(self.scene_data["keywords"])
             return True
 
-        if ("박스" in item1 and "법인카드" in item2) or \
-           ("박스" in item2 and "법인카드" in item1):
+        if self.match_pair(item1, item2, "박스", "법인카드"):
             if self.inventory.has("법인카드"):
                 self.ui.print_narrative("**[법인카드]** 모서리로 테이프를 잘라냅니다. 안에서 새하얀 **[실험용 랩 가운]**을 발견했습니다!", is_markdown=True)
                 self.scene_data["keywords"]["박스"]["state"] = "opened"
@@ -140,8 +149,7 @@ class Scene1(Scene):
                 self.ui.print_system_message("**주머니**에 **[법인카드]**가 없습니다.")
             return True
 
-        if ("에탄올" in item1 and "의문의 액체" in item2) or \
-           ("에탄올" in item2 and item1 == "의문의 액체"):
+        if self.match_pair(item1, item2, "에탄올", "의문의 액체"):
             if self.inventory.has("에탄올"):
                 self.ui.print_narrative("**[에탄올]**을 붓자, 끈적한 **[의문의 액체]**가 녹아내리며 바닥이 깨끗해졌다!", is_markdown=True)
                 self.state["is_liquid_cleaned"] = True
@@ -153,8 +161,7 @@ class Scene1(Scene):
                 self.ui.print_system_message("**주머니**에 **[에탄올]**이 없습니다.")
             return True
 
-        if ("빗자루" in item1 and "바닥" in item2) or \
-           ("빗자루" in item2 and "바닥" in item1):
+        if self.match_pair(item1, item2, "빗자루", "바닥"):
             if self.state["is_liquid_cleaned"] and self.state["trash_can_state"] == "empty":
                 self.ui.print_narrative("깨끗해진 바닥을 **[빗자루]**로 쓸어 마무리 청소를 합니다...", is_markdown=True)
                 self.game.scene_manager.switch_scene("scene2")

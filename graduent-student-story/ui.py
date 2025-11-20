@@ -41,11 +41,14 @@ class UIManager:
         for name, data in keywords.items():
             if data.get("type") == "Alias":
                 continue  # 별명은 시야에 표시하지 않음
-            
-            if data.get("state") == "hidden":
+
+            state = data.get("state")
+            if state == "discovered":
+                # display_name이 있으면 그것을, 없으면 키워드 이름을 사용
+                display_name = data.get("display_name", name)
+                display_list.append(f"[{display_name}]")
+            elif state == "hidden":
                 display_list.append("[?]")
-            else:
-                display_list.append(f"[{name}]")
         
         self.sight_status.innerText = f"시야: {', '.join(display_list)}"
 

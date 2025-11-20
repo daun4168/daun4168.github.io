@@ -28,9 +28,9 @@ CH1_SCENE0_DATA = SceneData(
         Action(type=ActionType.SAVE_CHECKPOINT, value=None),
         Action(
             type=ActionType.PRINT_SYSTEM,
-            value="<System> 낯선 환경에 진입했습니다. 현재 상태가 **체크포인트**에 저장됩니다.",
+            value="[System] 낯선 환경에 진입했습니다. 현재 상태가 **체크포인트**에 저장됩니다.",
         ),
-        Action(type=ActionType.PRINT_SYSTEM, value="<Tip> 체력이 0이 되면 이 지점에서 다시 시작합니다."),
+        Action(type=ActionType.PRINT_SYSTEM, value="[Tip] 체력이 0이 되면 이 지점에서 다시 시작합니다."),
     ],
     keywords={
         KeywordId.SANDY_BEACH: KeywordData(type=KeywordType.ALIAS, target=KeywordId.SAND),

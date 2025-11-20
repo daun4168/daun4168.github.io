@@ -128,7 +128,9 @@ class Ch0Scene1(Scene):
                 self.ui.print_narrative("평범한 빗자루다. 바닥을 청소할 수 있을 것 같다.", is_markdown=True)
             elif original_keyword_name == "오래된 컴퓨터":
                 if self.scene_data["keywords"]["오래된 컴퓨터"].get("state") != "solved":
-                    self.ui.print_narrative("전원 버튼을 누르자, 잠시 팬이 돌다가 암호 입력창이 뜬다.", is_markdown=True)
+                    self.ui.print_narrative(
+                        "전원 버튼을 누르자, 잠시 팬이 돌다가 암호 입력창이 뜬다.", is_markdown=True
+                    )
                     self.ui.print_system_message(
                         "암호를 알아내어 `컴퓨터 + [비밀번호]` 형식으로 입력해야 할 것 같다.", is_markdown=True
                     )

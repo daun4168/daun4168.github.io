@@ -27,14 +27,15 @@ class Scene(ABC):
                 return k  # 원본 키워드의 원래 대소문자를 반환
         return keyword  # 일치하는 키워드가 없으면 원본 입력 반환
 
-    def match_pair(self, part1: str, part2: str, target1: str, target2:str) -> bool:
+    def match_pair(self, part1: str, part2: str, target1: str, target2: str) -> bool:
         """두 쌍의 문자열이 순서에 상관없이 일치하는지 확인합니다. 별칭을 자동으로 처리합니다."""
         p1 = self.resolve_alias(part1)
         p2 = self.resolve_alias(part2)
         t1 = self.resolve_alias(target1)
         t2 = self.resolve_alias(target2)
-        return (p1.lower() == t1.lower() and p2.lower() == t2.lower()) or \
-               (p1.lower() == t2.lower() and p2.lower() == t1.lower())
+        return (p1.lower() == t1.lower() and p2.lower() == t2.lower()) or (
+            p1.lower() == t2.lower() and p2.lower() == t1.lower()
+        )
 
     def _discover_keyword(self, keyword_name: str, show_sight_widened_message: bool = False) -> bool:
         """

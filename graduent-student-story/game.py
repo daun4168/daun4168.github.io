@@ -120,8 +120,9 @@ class Game:
         # 공용 명령어 처리
         cmd_lower = command.lower()
         if cmd_lower == CMD_INVENTORY.lower():
-            self.inventory.show()
-            return
+            # 현재 '주머니' 키워드는 아무 일도 하지 않습니다.
+            pass
+
         if cmd_lower == CMD_LOOK_AROUND.lower():
             self.scene_manager.redisplay_current_scene()
             return

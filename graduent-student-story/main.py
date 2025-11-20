@@ -1,5 +1,5 @@
 import sys
-from game import Game, SceneLoader
+from game import Game
 from ui import UIManager
 from entity import Inventory
 from test import TestRunner
@@ -9,13 +9,12 @@ if __name__ == "__main__":
     
     # 의존성 주입 (Dependency Injection)
     ui_manager = UIManager()
-    scene_loader = SceneLoader()
     inventory = Inventory()
     test_runner = TestRunner()
     
+    # Game 클래스는 필요한 의존성을 주입받아 생성됨
     game = Game(
         ui_manager=ui_manager,
-        scene_loader=scene_loader,
         inventory=inventory,
         test_runner=test_runner
     )

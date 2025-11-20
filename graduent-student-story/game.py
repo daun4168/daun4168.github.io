@@ -193,7 +193,7 @@ class Game:
             elif ("빗자루" in part1 and "바닥" in part2) or ("빗자루" in part2 and "바닥" in part1):
                 if self.scene_states["scene1"]["is_liquid_cleaned"] and self.scene_states["scene1"]["trash_can_state"] == "empty":
                     self.ui.print_narrative("깨끗해진 바닥을 **[빗자루]**로 쓸어 마무리 청소를 합니다...", is_markdown=True)
-                    await asyncio.sleep(2)
+                    # await asyncio.sleep(2) # 딜레이 제거
                     self._load_scene("scene2")
                 elif not self.scene_states["scene1"]["is_liquid_cleaned"]:
                     self.ui.print_narrative("바닥의 끈적한 **[의문의 액체]** 때문에 **[빗자루]**질을 할 수가 없다. 저걸 먼저 어떻게든 해야 한다.", is_markdown=True)
@@ -221,7 +221,7 @@ class Game:
                         self.scene_states["scene2"]["professor_called_out"] = True
                     elif self.scene_states["scene2"]["card_returned"]:
                         self.ui.print_narrative("**[스패너]**로 **[탑승구]**를 단단히 조였다. 이제 정말 출발할 시간이다!", is_markdown=True)
-                        await asyncio.sleep(2)
+                        await asyncio.sleep(2) # 최종 메시지 출력을 위해 잠시 대기
                         self.ui.print_system_message("프롤로그가 성공적으로 마무리되었습니다. 이 게임은 여기까지 완성되었습니다. 플레이해주셔서 감사합니다!", is_markdown=True)
                         self.user_input.disabled = True
                         self.submit_button.disabled = True

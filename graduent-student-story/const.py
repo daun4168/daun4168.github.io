@@ -2,9 +2,11 @@ from enum import StrEnum
 
 
 class SceneID(StrEnum):
-    CH0_SCENE0 = "ch0scene0"
-    CH0_SCENE1 = "ch0scene1"
-    CH0_SCENE2 = "ch0scene2"
+    CH0_SCENE0 = "ch0_scene0"
+    CH0_SCENE1 = "ch0_scene1"
+    CH0_SCENE2 = "ch0_scene2"
+    CH1_SCENE0 = "ch1_scene0"  # Chapter 1 Intro
+    CH1_SCENE1 = "ch1_scene1"  # Chapter 1 Main
 
 
 class KeywordId(StrEnum):
@@ -41,11 +43,17 @@ class KeywordId(StrEnum):
     OUTLET = "콘센트"
     HATCH = "탑승구"
 
+    # Chapter 1
+    COMMS = "통신기"
+    SEA = "바다"
+    SUN = "태양"
+
 
 class KeywordState(StrEnum):
     HIDDEN = "hidden"
     DISCOVERED = "discovered"
     INACTIVE = "inactive"
+    NORMAL = "normal"
 
 
 class ConditionType(StrEnum):
@@ -53,6 +61,7 @@ class ConditionType(StrEnum):
     NOT_HAS_ITEM = "not_has_item"
     STATE_IS = "state_is"
     STATE_NOT = "state_not"
+    STAMINA_MIN = "stamina_min"
 
 
 class ActionType(StrEnum):
@@ -64,6 +73,10 @@ class ActionType(StrEnum):
     REMOVE_KEYWORD = "remove_keyword"
     UPDATE_STATE = "update_state"
     GAME_END = "game_end"
+    MODIFY_STAMINA = "modify_stamina"
+    SAVE_CHECKPOINT = "save_checkpoint"
+    RELOAD_CHECKPOINT = "reload_checkpoint"
+    SHOW_STAMINA_UI = "show_stamina_ui"  # [추가] 체력 UI 표시 여부 토글
 
 
 class KeywordType(StrEnum):
@@ -80,7 +93,8 @@ class CommandType(StrEnum):
     WAKE_UP = "일어나기"
     LOOK_AROUND = "둘러보기"
 
+
 # 조합의 성격을 구분하는 Enum
 class CombinationType(StrEnum):
-    DEFAULT = "default"   # 일반 아이템 조합 (+)
-    PASSWORD = "password" # 비밀번호 입력 (:)
+    DEFAULT = "default"  # 일반 아이템 조합 (+)
+    PASSWORD = "password"  # 비밀번호 입력 (:)

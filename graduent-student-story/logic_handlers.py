@@ -1,34 +1,23 @@
 from abc import ABC, abstractmethod
-
 from const import ActionType, ConditionType
 from entity import Item
 
-# --- Base Interfaces ---
 
+# --- Base Interfaces ---
 
 class ActionHandler(ABC):
     @abstractmethod
     def execute(self, scene, value):
-        """
-        :param scene: 동작을 수행할 Scene 인스턴스
-        :param value: 데이터 파일에 정의된 액션의 value
-        """
         pass
 
 
 class ConditionHandler(ABC):
     @abstractmethod
     def check(self, scene, target, value) -> bool:
-        """
-        :param scene: 검사를 수행할 Scene 인스턴스
-        :param target: 검사 대상
-        :param value: 비교할 값
-        """
         pass
 
 
 # --- Condition Implementations ---
-
 
 class HasItemHandler(ConditionHandler):
     def check(self, scene, target, value) -> bool:
@@ -42,7 +31,6 @@ class NotHasItemHandler(ConditionHandler):
 
 class StateIsHandler(ConditionHandler):
     def check(self, scene, target, value) -> bool:
-        # scene.state는 여전히 dict이므로 ["key"] 접근이 맞습니다.
         return scene.state.get(target) == value
 
 
@@ -51,8 +39,12 @@ class StateNotHandler(ConditionHandler):
         return scene.state.get(target) != value
 
 
-# --- Action Implementations ---
+class StaminaMinHandler(ConditionHandler):
+    def check(self, scene, target, value) -> bool:
+        return scene.player.current_stamina >= int(value)
 
+
+# --- Action Implementations ---
 
 class PrintNarrativeHandler(ActionHandler):
     def execute(self, scene, value):
@@ -79,7 +71,6 @@ class RemoveItemHandler(ActionHandler):
 class RemoveKeywordHandler(ActionHandler):
     def execute(self, scene, value):
         target = value
-        # [수정] 객체 접근 방식(.keywords)으로 변경
         if target in scene.scene_data.keywords:
             del scene.scene_data.keywords[target]
             scene.ui.update_sight_status(scene.scene_data.keywords)
@@ -87,16 +78,12 @@ class RemoveKeywordHandler(ActionHandler):
 
 class UpdateStateHandler(ActionHandler):
     def execute(self, scene, value):
-        # 1. 게임 상태 변수 업데이트 (scene.state는 dict임)
         if "key" in value:
             scene.state[value["key"]] = value["value"]
 
-        # 2. 키워드(오브젝트) 상태 업데이트
         if "keyword" in value:
             k_name = value["keyword"]
-            # [수정] 객체 접근 방식(.keywords)으로 변경
             if k_name in scene.scene_data.keywords:
-                # [수정] KeywordData 객체의 속성(.state)을 변경
                 scene.scene_data.keywords[k_name].state = value["state"]
                 scene.ui.update_sight_status(scene.scene_data.keywords)
 
@@ -109,10 +96,41 @@ class MoveSceneHandler(ActionHandler):
 class GameEndHandler(ActionHandler):
     def execute(self, scene, value):
         scene.ui.print_narrative(value, is_markdown=True)
-        scene.ui.print_system_message("--- GAME OVER ---", is_markdown=True)
+        scene.ui.print_system_message("--- GAME OVER ---\n(새로고침하여 다시 시작하세요)", is_markdown=True)
         if scene.game:
             scene.game.user_input.disabled = True
             scene.game.submit_button.disabled = True
+
+
+class ModifyStaminaHandler(ActionHandler):
+    def execute(self, scene, value):
+        amount = int(value)
+        scene.player.modify_stamina(amount)
+
+        # 사망 체크 및 부활 로직
+        if scene.player.is_dead():
+            scene.ui.print_narrative(
+                "\n**[시야가 암전됩니다...]**\n극심한 피로와 탈진으로 의식을 잃었습니다.\n\n(가장 최근의 체크포인트로 되돌아갑니다.)",
+                is_markdown=True
+            )
+            if scene.game:
+                scene.game.load_checkpoint()
+
+
+class SaveCheckpointHandler(ActionHandler):
+    def execute(self, scene, value):
+        scene.game.save_checkpoint(scene.scene_id)
+
+
+class ReloadCheckpointHandler(ActionHandler):
+    def execute(self, scene, value):
+        scene.game.load_checkpoint()
+
+
+class ShowStaminaUIHandler(ActionHandler):
+    def execute(self, scene, value):
+        """체력 UI 표시 여부를 제어합니다. value: bool"""
+        scene.ui.toggle_stamina_ui(value)
 
 
 # --- Registries (Strategy Mapping) ---
@@ -122,6 +140,7 @@ CONDITION_HANDLERS = {
     ConditionType.NOT_HAS_ITEM: NotHasItemHandler(),
     ConditionType.STATE_IS: StateIsHandler(),
     ConditionType.STATE_NOT: StateNotHandler(),
+    ConditionType.STAMINA_MIN: StaminaMinHandler(),
 }
 
 ACTION_HANDLERS = {
@@ -133,4 +152,8 @@ ACTION_HANDLERS = {
     ActionType.UPDATE_STATE: UpdateStateHandler(),
     ActionType.MOVE_SCENE: MoveSceneHandler(),
     ActionType.GAME_END: GameEndHandler(),
+    ActionType.MODIFY_STAMINA: ModifyStaminaHandler(),
+    ActionType.SAVE_CHECKPOINT: SaveCheckpointHandler(),
+    ActionType.RELOAD_CHECKPOINT: ReloadCheckpointHandler(),
+    ActionType.SHOW_STAMINA_UI: ShowStaminaUIHandler(),  # 등록
 }

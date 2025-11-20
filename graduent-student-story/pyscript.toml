@@ -14,8 +14,15 @@ packages = ["markdown", "asyncio", "pydantic"]
 "./const.py" = ""
 "./logic_handlers.py" = ""
 "./schemas.py" = ""
+
+# Story
 "story/__init__.py" = "story/__init__.py"
+# Chapter 0
 "story/chapter0/__init__.py" = "story/chapter0/__init__.py"
 "story/chapter0/scene0.py" = "story/chapter0/scene0.py"
 "story/chapter0/scene1.py" = "story/chapter0/scene1.py"
 "story/chapter0/scene2.py" = "story/chapter0/scene2.py"
+# Chapter 1
+"story/chapter1/__init__.py" = "story/chapter1/__init__.py"
+"story/chapter1/scene0.py" = "story/chapter1/scene0.py"
+

@@ -47,14 +47,21 @@ body {
 
 #location-container {
     display: flex;
-    justify-content: space-between;
-    align-items: baseline;
+    justify-content: space-between; /* 양 끝 정렬 */
+    align-items: baseline; /* 텍스트 베이스라인 정렬 */
     margin-bottom: 4px;
 }
 
 #location-name {
     font-size: 1.2em;
     font-weight: 700;
+}
+
+/* [추가] 체력 상태 스타일 */
+#stamina-status {
+    font-size: 0.85em; /* 작은 글씨 */
+    color: rgba(255, 255, 255, 0.9); /* 약간 투명한 흰색 */
+    font-weight: 400;
 }
 
 #inventory-status {
@@ -114,7 +121,7 @@ body {
 /* === 퍼즐 컨테이너 스타일 === */
 .puzzle-container {
     border: 1px dashed #ddd;
-    margin: 15px 0; /* 상하 여백 추가 */
+    margin: 15px 0;
     padding: 15px;
     background-color: #fafafa;
     border-radius: 8px;

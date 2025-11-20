@@ -12,7 +12,7 @@ class Scene:
     장면의 데이터, 상태, 키워드 및 상호작용 로직을 관리합니다.
     """
 
-    def __init__(self, game, ui, inventory, scene_data: SceneData):
+    def __init__(self, game, ui, inventory, player, scene_data: SceneData):
         """
         Scene 클래스의 생성자입니다.
 
@@ -25,6 +25,7 @@ class Scene:
         self.game = game
         self.ui = ui
         self.inventory = inventory
+        self.player = player
         # Pydantic 모델은 mutable하므로 deepcopy를 사용하여 원본 데이터의 변경을 방지합니다.
         # (혹은 scene_data.model_copy(deep=True)를 사용할 수도 있습니다.)
         self.scene_data = copy.deepcopy(scene_data)
@@ -228,12 +229,18 @@ class Scene:
     def _execute_actions(self, actions: list):
         """
         주어진 액션 목록을 순차적으로 실행합니다.
-
-        Args:
-            actions (list): Action 객체들의 리스트.
+        액션 실행 중 씬이 전환되면(예: 사망, 이동) 즉시 중단합니다.
         """
         for action in actions:
-            # Pydantic 모델이므로 .type, .value 속성으로 접근합니다.
-            handler = ACTION_HANDLERS.get(action.type)  # 액션 타입에 맞는 핸들러를 가져옵니다.
+            # 액션을 실행하기 전에 현재 씬이 유효한지(활성 상태인지) 확인
+            # (Game -> SceneManager -> Current Scene 비교)
+            if self.game.scene_manager.current_scene != self:
+                break
+
+            handler = ACTION_HANDLERS.get(action.type)
             if handler:
-                handler.execute(self, action.value)  # 핸들러를 통해 액션을 실행합니다.
+                handler.execute(self, action.value)
+
+            # 핸들러 실행 후에도 씬이 변경되었는지 확인 (예: ModifyStamina로 인한 사망)
+            if self.game.scene_manager.current_scene != self:
+                break

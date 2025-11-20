@@ -4,6 +4,8 @@ from entity import Inventory
 from game import Game
 from test import TestRunner
 from ui import UIManager
+from entity import Player
+
 
 if __name__ == "__main__":
     print(sys.version)
@@ -13,5 +15,8 @@ if __name__ == "__main__":
     inventory = Inventory()
     test_runner = TestRunner()
 
+    # 초기 체력을 70으로 설정하여 생성
+    player = Player(max_stamina=70)
+
     # Game 클래스는 필요한 의존성을 주입받아 생성됨
-    game = Game(ui_manager=ui_manager, inventory=inventory, test_runner=test_runner)
+    game = Game(ui_manager=ui_manager, inventory=inventory, player=player, test_runner=test_runner)

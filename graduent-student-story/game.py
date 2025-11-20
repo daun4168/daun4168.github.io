@@ -1,14 +1,16 @@
 import asyncio
+import copy
 
 from const import CommandType, SceneID  # 상수를 사용하기 위해 임포트
-from entity import Entity, Inventory
+from entity import Entity, Inventory, Player  # Player 추가 확인
 from pyscript import document
 from scene import Scene
 from scene_manager import SceneFactory, SceneManager
 
 # --- 장면 클래스와 데이터 임포트 ---
-# 데이터 파일 임포트
+# 데이터 파일 임포트 (chapter1 추가)
 from story.chapter0 import CH0_SCENE0_DATA, CH0_SCENE1_DATA, CH0_SCENE2_DATA
+from story.chapter1 import CH1_SCENE0_DATA
 from test import TestRunner
 from ui import UIManager
 
@@ -28,20 +30,18 @@ class Game:
     이 클래스는 게임의 전체적인 흐름을 제어하는 Composition Root 역할을 합니다.
     """
 
-    def __init__(self, ui_manager: UIManager, inventory: Inventory, test_runner: TestRunner):
+    def __init__(self, ui_manager: UIManager, inventory: Inventory, player: Player, test_runner: TestRunner):
         """
         Game 클래스의 생성자입니다. 필요한 의존성을 주입받고 게임 컴포넌트를 초기화합니다.
-
-        Args:
-            ui_manager (UIManager): 사용자 인터페이스 관리를 위한 객체.
-            inventory (Inventory): 플레이어의 아이템 인벤토리 관리를 위한 객체.
-            test_runner (TestRunner): 테스트 명령 처리를 위한 객체.
         """
         # --- 의존성 주입 ---
         # 외부에서 주입받은 객체들을 내부 필드로 저장합니다.
         self.ui = ui_manager
         self.inventory = inventory
+        self.player = player  # Player 필드 저장
         self.test_runner = test_runner
+        self.checkpoint_data = None  # 체크포인트 데이터
+
         # 모든 Entity 객체가 UI 매니저를 사용할 수 있도록 설정합니다.
         Entity.set_ui_manager(self.ui)
 
@@ -75,13 +75,15 @@ class Game:
         Returns:
             SceneFactory: 모든 장면이 등록된 SceneFactory 객체.
         """
-        # 게임 인스턴스, UI 매니저, 인벤토리를 사용하여 SceneFactory를 초기화합니다.
-        factory = SceneFactory(self, self.ui, self.inventory)
+        # 게임 인스턴스, UI 매니저, 인벤토리, 플레이어를 사용하여 SceneFactory를 초기화합니다.
+        factory = SceneFactory(self, self.ui, self.inventory, self.player)
 
         # 각 장면 ID에 해당하는 장면 클래스와 데이터를 팩토리에 등록합니다.
         factory.register_scene(SceneID.CH0_SCENE0, Scene, CH0_SCENE0_DATA)
         factory.register_scene(SceneID.CH0_SCENE1, Scene, CH0_SCENE1_DATA)
         factory.register_scene(SceneID.CH0_SCENE2, Scene, CH0_SCENE2_DATA)
+        # 챕터 1 씬 등록
+        factory.register_scene(SceneID.CH1_SCENE0, Scene, CH1_SCENE0_DATA)
 
         return factory
 
@@ -98,6 +100,9 @@ class Game:
         # 시야 상태와 인벤토리 상태를 초기화하여 UI에 반영합니다.
         self.ui.update_sight_status({})
         self.ui.update_inventory_status(self.inventory.items)
+        # 초기 체력 표시
+        self.ui.update_stamina_status(self.player.current_stamina, self.player.max_stamina)
+
         # 비동기적으로 인트로 텍스트를 실행합니다.
         asyncio.ensure_future(self.run_intro())
 
@@ -109,7 +114,7 @@ class Game:
         # 정의된 인트로 텍스트의 각 문단을 출력합니다.
         for paragraph in INTRO_TEXT:
             self.ui.print_narrative(paragraph, is_markdown=True)
-            await asyncio.sleep(0.5)  # 각 문단 출력 후 0.5초 대기
+            await asyncio.sleep(0.2)  # 각 문단 출력 후 0.5초 대기
 
         # 인트로가 끝난 후 사용자에게 게임 시작 명령을 안내합니다.
         self.ui.print_system_message(f"`{CommandType.WAKE_UP}`를 입력하면 눈을 뜹니다...")
@@ -151,10 +156,6 @@ class Game:
     async def process_command(self, command: str):
         """
         사용자로부터 입력받은 명령을 처리합니다.
-        테스트 명령, 게임 시작 전 명령, 인벤토리/둘러보기 명령, 아이템 설명 보기, 장면 명령 등을 처리합니다.
-
-        Args:
-            command (str): 사용자가 입력한 명령 문자열.
         """
         self.ui.print_user_log(command)  # 사용자가 입력한 명령을 UI에 출력합니다.
 
@@ -169,9 +170,8 @@ class Game:
 
         cmd_lower = command.lower()  # 명령어를 소문자로 변환하여 비교에 용이하게 합니다.
 
-        # 인벤토리 명령 처리 (현재는 아무것도 하지 않음, 인벤토리 UI는 자동으로 업데이트됨)
+        # 인벤토리 명령 처리
         if cmd_lower == CommandType.INVENTORY:
-            # 인벤토리 명령은 현재 별도의 로직 없이 UI 업데이트만으로 충분합니다.
             pass
 
         # 둘러보기 명령 처리
@@ -186,3 +186,36 @@ class Game:
 
         # 위의 모든 명령에 해당하지 않으면 현재 장면의 명령 처리기로 전달합니다.
         await self.scene_manager.process_command(command)
+
+    def save_checkpoint(self, scene_id: str):
+        """현재 상태를 체크포인트로 저장합니다."""
+        self.checkpoint_data = {
+            "inventory_items": copy.deepcopy(self.inventory.items),
+            "player_stamina": self.player.current_stamina,
+            "player_max_stamina": self.player.max_stamina,
+            "scene_id": scene_id
+        }
+
+    def load_checkpoint(self):
+        """체크포인트 상태로 복구하고 해당 장면을 새로 시작합니다."""
+        if not self.checkpoint_data:
+            self.ui.print_system_message("저장된 체크포인트가 없습니다. 처음부터 시작합니다.")
+            self.start_game()
+            return
+
+        # 1. 인벤토리 복구
+        self.inventory._items = copy.deepcopy(self.checkpoint_data["inventory_items"])
+        self.ui.update_inventory_status(self.inventory.items)
+
+        # 2. 체력 복구
+        self.player.current_stamina = self.checkpoint_data["player_stamina"]
+        self.player.max_stamina = self.checkpoint_data["player_max_stamina"]
+        self.ui.update_stamina_status(self.player.current_stamina, self.player.max_stamina)
+
+        # 3. 씬 초기화 및 이동
+        target_scene = self.checkpoint_data["scene_id"]
+
+        # [핵심 수정] 장면을 리셋하여 키워드 상태([?])를 초기화하고 새로운 인스턴스를 생성함
+        self.scene_manager.reset_scene(target_scene)
+
+        self.scene_manager.switch_scene(target_scene)

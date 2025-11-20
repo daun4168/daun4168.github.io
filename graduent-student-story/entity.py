@@ -64,3 +64,38 @@ class Inventory(Entity):
     @property
     def items(self) -> dict:
         return self._items
+
+
+class Player(Entity):
+    """
+    플레이어의 생명력(체력)과 상태를 관리하는 클래스입니다.
+    """
+
+    def __init__(self, max_stamina: int = 100):
+        self.max_stamina = max_stamina
+        self.current_stamina = max_stamina
+
+    def modify_stamina(self, amount: int) -> int:
+        """
+        체력을 증감시키고 결과를 반환합니다.
+        0 이하로 떨어지거나 최대치를 넘지 않도록 보정합니다.
+        """
+        prev_stamina = self.current_stamina
+        # 체력 보정 로직 (0 ~ Max 사이 유지)
+        self.current_stamina = max(0, min(self.current_stamina + amount, self.max_stamina))
+
+        if self._ui:
+            # UI 업데이트
+            self._ui.update_stamina_status(self.current_stamina, self.max_stamina)
+
+            # 체력 변화 시스템 메시지 출력
+            if amount < 0:
+                self._ui.print_system_message(f"체력이 {-amount} 감소했습니다.", is_markdown=True)
+            elif amount > 0:
+                self._ui.print_system_message(f"체력이 {amount} 회복되었습니다.", is_markdown=True)
+
+        return self.current_stamina
+
+    def is_dead(self) -> bool:
+        """체력이 0 이하인지 확인합니다."""
+        return self.current_stamina <= 0

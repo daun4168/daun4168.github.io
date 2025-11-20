@@ -23,27 +23,42 @@ class UIManager:
         self.inventory_status = document.getElementById("inventory-status")
         self.location_name = document.getElementById("location-name")
         self.sight_status = document.getElementById("sight-status")
+        # [추가] 체력 UI 바인딩
+        self.stamina_status = document.getElementById("stamina-status")
 
     def set_location_name(self, name: str):
         self.location_name.innerText = f"지역: {name}" if name else ""
 
+    def update_stamina_status(self, current: int, maximum: int):
+        """체력 상태 UI를 업데이트합니다."""
+        if self.stamina_status:
+            self.stamina_status.innerText = f"체력: {current} / {maximum}"
+
+            # 체력이 30% 이하일 때 붉은색으로 경고 표시
+            if current <= (maximum * 0.3):
+                self.stamina_status.style.color = "#ff6b6b"  # 밝은 붉은색
+                self.stamina_status.style.fontWeight = "bold"
+            else:
+                self.stamina_status.style.color = "rgba(255, 255, 255, 0.9)"  # 기본색 복구
+                self.stamina_status.style.fontWeight = "400"
+
+    def toggle_stamina_ui(self, show: bool):
+        """체력 UI의 표시 여부를 결정합니다."""
+        if self.stamina_status:
+            self.stamina_status.style.display = "block" if show else "none"
+
     def update_sight_status(self, keywords: dict):
-        """
-        keywords: Dict[str, KeywordData] 형태의 Pydantic 모델 딕셔너리를 받습니다.
-        """
         if not keywords:
             self.sight_status.innerText = "시야: "
             return
 
         display_list = []
         for name, data in keywords.items():
-            # Pydantic 모델 속성 접근 (.type, .state)
             if data.type == KeywordType.ALIAS:
                 continue
 
             state = data.state
             if state == KeywordState.DISCOVERED:
-                # display_name이 없으면(None) name을 사용
                 display_name = data.display_name if data.display_name else name
                 display_list.append(f"[{display_name}]")
             elif state == KeywordState.HIDDEN:

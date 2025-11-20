@@ -9,7 +9,7 @@ class SceneFactory:
     등록된 장면 데이터를 기반으로 Scene 객체를 생성합니다.
     """
 
-    def __init__(self, game, ui, inventory):
+    def __init__(self, game, ui, inventory, player):
         """
         SceneFactory의 생성자입니다.
 
@@ -17,10 +17,12 @@ class SceneFactory:
             game: 게임의 메인 인스턴스 (Game 클래스).
             ui: 사용자 인터페이스 관리 객체 (UIManager).
             inventory: 플레이어의 인벤토리 객체 (Inventory).
+            player: 플레이어 객체 (Player).
         """
         self.game = game
         self.ui = ui
         self.inventory = inventory
+        self.player = player
         # _scene_registry는 장면 ID를 키로, (장면 클래스, 장면 데이터) 튜플을 값으로 저장합니다.
         self._scene_registry: dict[str, (type[Scene], dict)] = {}
 
@@ -60,7 +62,8 @@ class SceneFactory:
         scene_class, scene_data = self._scene_registry[scene_id]
 
         # Scene 인스턴스를 생성하여 반환합니다.
-        return scene_class(self.game, self.ui, self.inventory, scene_data)
+        # [수정] player 인자 전달 확인
+        return scene_class(self.game, self.ui, self.inventory, self.player, scene_data)
 
 
 class SceneManager:
@@ -109,6 +112,15 @@ class SceneManager:
         self.current_scene = self.scenes[scene_id]
         # 새로운 장면의 진입 로직을 실행합니다.
         self.current_scene.on_enter()
+
+    # [추가] 장면 초기화 메서드
+    def reset_scene(self, scene_id: str):
+        """
+        지정된 장면을 캐시에서 제거하여, 다음 진입 시 초기 상태로 새로 생성되게 합니다.
+        체크포인트 로드 시 사용됩니다.
+        """
+        if scene_id in self.scenes:
+            del self.scenes[scene_id]
 
     async def process_command(self, command: str):
         """

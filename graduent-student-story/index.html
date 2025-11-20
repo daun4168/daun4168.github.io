@@ -9,7 +9,7 @@
     <script type="module" src="https://pyscript.net/releases/2025.11.1/core.js"></script>
 
     <title>대학원생 이야기</title>
-    <link rel="stylesheet" href="style.css?v=0001">
+    <link rel="stylesheet" href="style.css?v=0002">
     <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;700&display=swap" rel="stylesheet">
 </head>
 <body>
@@ -19,6 +19,8 @@
         <header id="location-info">
             <div id="location-container">
                 <h2 id="location-name"></h2>
+                <!-- [추가] 체력 표시용 스판 (기본적으로 숨김) -->
+                <span id="stamina-status" style="display: none;">체력: 100</span>
             </div>
             <p id="sight-status"></p>
             <p id="inventory-status"></p>

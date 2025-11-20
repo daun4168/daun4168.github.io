@@ -1,5 +1,5 @@
-name = "대학원생의 생존기"
-description = "텍스트 어드벤처 게임"
+name = "Graduent Student Story"
+description = "-"
 
 packages = ["markdown", "asyncio"]
 
@@ -8,3 +8,4 @@ packages = ["markdown", "asyncio"]
 "./game.py" = ""
 "./entity.py" = ""
 "./ui.py" = ""
+"./test.py" = ""

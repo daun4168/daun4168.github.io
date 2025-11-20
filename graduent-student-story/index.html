@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover, interactive-widget=resizes-content">
+
+    <script src="/mini-coi.js"></script>
+    <link rel="stylesheet" href="https://pyscript.net/releases/2025.11.1/core.css">
+    <script type="module" src="https://pyscript.net/releases/2025.11.1/core.js"></script>
+
+    <title>대학원생 이야기</title>
+    <link rel="stylesheet" href="style.css?v=0001">
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <script type="py" src="./main.py" config="./pyscript.toml"></script>
+
+    <div id="game-wrapper">
+        <header id="location-info">
+            <div id="location-container">
+                <h2 id="location-name"></h2>
+                <p id="health-status"></p>
+            </div>
+            <p id="sight-status"></p>
+            <p id="inventory-status"></p>
+        </header>
+
+        <main id="content-scroll-area">
+            <section id="main-text-output">
+                <!-- 모든 콘텐츠가 여기에 동적으로 추가됩니다. -->
+            </section>
+            <hr style="display: none;">
+        </main>
+
+        <footer id="input-area">
+            <label for="user-input" class="visually-hidden">명령 또는 정답:</label>
+            <input type="text" id="user-input" placeholder="명령이나 정답을 입력하세요..." autocomplete="off">
+            <button id="submit-button">입력</button>
+        </footer>
+    </div>
+</body>
+</html>

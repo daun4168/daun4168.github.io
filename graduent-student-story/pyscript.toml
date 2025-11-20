@@ -12,6 +12,7 @@ packages = ["markdown", "asyncio"]
 "./scene.py" = ""
 "./scene_manager.py" = ""
 "./const.py" = ""
+"./logic_handlers.py" = ""
 "story/__init__.py" = "story/__init__.py"
 "story/chapter0/__init__.py" = "story/chapter0/__init__.py"
 "story/chapter0/scene0.py" = "story/chapter0/scene0.py"

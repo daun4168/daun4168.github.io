@@ -5,17 +5,12 @@ from ui import UIManager
 from entity import Entity, Item, Inventory
 from scene_manager import SceneFactory, SceneManager
 from test import TestRunner
-from const import SceneID  # 상수를 사용하기 위해 임포트
+from const import SceneID, CommandType  # 상수를 사용하기 위해 임포트
 
 # --- 장면 클래스와 데이터 임포트 ---
 # 데이터 파일 임포트
 from story.chapter0 import CH0_SCENE0_DATA, CH0_SCENE1_DATA, CH0_SCENE2_DATA
 from scene import Scene
-
-# --- 상수 정의 ---
-CMD_INVENTORY = "주머니"
-CMD_START = "일어나기"
-CMD_LOOK_AROUND = "둘러보기"
 
 # --- 게임 데이터 ---
 INTRO_TEXT = [
@@ -66,7 +61,6 @@ class Game:
         return factory
 
     def _initialize_game_ui(self):
-        """게임 시작 전 UI를 초기화합니다."""
         self.user_input.disabled = True
         self.submit_button.disabled = True
         self.ui.set_location_name("어둠 속")
@@ -75,19 +69,18 @@ class Game:
         asyncio.ensure_future(self.run_intro())
 
     async def run_intro(self):
-        """게임 인트로를 비동기적으로 실행합니다."""
         for paragraph in INTRO_TEXT:
             self.ui.print_narrative(paragraph, is_markdown=True)
             await asyncio.sleep(0.5)
-        self.ui.print_system_message(f"`{CMD_START}`를 입력하면 눈을 뜹니다...")
+
+        # CommandType.WAKE_UP 사용
+        self.ui.print_system_message(f"`{CommandType.WAKE_UP}`를 입력하면 눈을 뜹니다...")
         self.user_input.disabled = False
         self.submit_button.disabled = False
         self.user_input.focus()
 
     def start_game(self):
-        """게임의 첫 장면을 시작합니다."""
         self.game_started = True
-        # 상수 ID를 사용하여 시작
         self.scene_manager.switch_scene(SceneID.CH0_SCENE0)
 
     def _handle_click(self, event):
@@ -105,31 +98,26 @@ class Game:
             self._handle_click(event)
 
     async def process_command(self, command: str):
-        """사용자 입력을 받아 적절한 핸들러로 전달합니다."""
         self.ui.print_user_log(command)
         if await self.test_runner.run_test_command(command):
             return
 
-        # 게임 시작 전 명령어 처리
         if not self.game_started:
-            # SceneManager가 current_scene이 없을 때 '일어나기'를 처리함
             await self.scene_manager.process_command(command)
             return
 
-        # 공용 명령어 처리
         cmd_lower = command.lower()
-        if cmd_lower == CMD_INVENTORY.lower():
-            # 현재 '주머니' 키워드는 아무 일도 하지 않습니다.
+
+        # CommandType Enum 사용
+        if cmd_lower == CommandType.INVENTORY:
             pass
 
-        if cmd_lower == CMD_LOOK_AROUND.lower():
+        if cmd_lower == CommandType.LOOK_AROUND:
             self.scene_manager.redisplay_current_scene()
             return
 
-        # 아이템 설명 보기
         if self.inventory.has(cmd_lower):
             self.inventory.get(cmd_lower).show_description()
             return
 
-        # 그 외 모든 명령어는 SceneManager를 통해 현재 장면에 위임
         await self.scene_manager.process_command(command)

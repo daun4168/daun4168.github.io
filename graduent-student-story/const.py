@@ -1,20 +1,19 @@
-# const.py (업데이트)
+from enum import StrEnum
 
 
-class SceneID:
+class SceneID(StrEnum):
     CH0_SCENE0 = "ch0scene0"
     CH0_SCENE1 = "ch0scene1"
     CH0_SCENE2 = "ch0scene2"
 
-
-class KeywordId:
+class KeywordId(StrEnum):
     # Common
     PROFESSOR = "교수님"
     CORP_CARD = "법인카드"
     SPANNER = "스패너"
+    DOOR = "문"
 
     # Scene 0
-    DOOR = "문"
     THESIS = "논문"
     DESK = "책상"
     GLASSES = "안경알"
@@ -35,27 +34,24 @@ class KeywordId:
     LAB_COAT = "실험용 랩 가운"
     ETHANOL = "에탄올"
 
-    # Scene 2 (New)
+    # Scene 2
     MK_II = "MK-II"
     WIRE = "전선"
     OUTLET = "콘센트"
     HATCH = "탑승구"
 
-
-class KeywordState:
+class KeywordState(StrEnum):
     HIDDEN = "hidden"
     DISCOVERED = "discovered"
     INACTIVE = "inactive"
 
-
-class ConditionType:
+class ConditionType(StrEnum):
     HAS_ITEM = "has_item"
     NOT_HAS_ITEM = "not_has_item"
     STATE_IS = "state_is"
     STATE_NOT = "state_not"
 
-
-class ActionType:
+class ActionType(StrEnum):
     PRINT_NARRATIVE = "print_narrative"
     PRINT_SYSTEM = "print_system"
     ADD_ITEM = "add_item"
@@ -63,12 +59,17 @@ class ActionType:
     MOVE_SCENE = "move_scene"
     REMOVE_KEYWORD = "remove_keyword"
     UPDATE_STATE = "update_state"
-    GAME_END = "game_end"  # 게임 엔딩 처리용
+    GAME_END = "game_end"
 
-
-class KeywordType:
+class KeywordType(StrEnum):
     ITEM = "Item"
     OBJECT = "Object"
     NPC = "NPC"
     ALIAS = "Alias"
     PORTAL = "Portal"
+
+# [신규 추가] 명령어 관리용 Enum
+class CommandType(StrEnum):
+    INVENTORY = "주머니"
+    WAKE_UP = "일어나기"
+    LOOK_AROUND = "둘러보기"

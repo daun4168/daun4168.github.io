@@ -1,7 +1,7 @@
 from typing import Dict, Type
 from scene import Scene
 from ui import get_josa
-
+from const import CommandType
 
 class SceneFactory:
     """장면(Scene) 인스턴스 생성을 책임지는 팩토리 클래스입니다."""
@@ -50,7 +50,6 @@ class SceneManager:
         self.current_scene.on_enter()
 
     async def process_command(self, command: str):
-        """현재 장면에 명령어를 전달하고 처리합니다."""
         if self.current_scene:
             if "+" in command:
                 parts = [p.strip().lower() for p in command.split("+")]
@@ -65,11 +64,11 @@ class SceneManager:
                     josa = get_josa(command, "으로는/로는")
                     self.ui.print_system_message(f"'{command}'{josa} 아무것도 할 수 없습니다.")
         else:
-            # 게임 시작 전 등 current_scene이 없을 때의 처리
-            if command.lower() == "일어나기":
+            # CommandType Enum 사용
+            if command.lower() == CommandType.WAKE_UP:
                 self.scene_factory.game.start_game()
             else:
-                self.ui.print_system_message("`일어나기`를 입력해야 합니다.")
+                self.ui.print_system_message(f"`{CommandType.WAKE_UP}`를 입력해야 합니다.")
 
     def redisplay_current_scene(self):
         """현재 장면을 다시 표시합니다."""

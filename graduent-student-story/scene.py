@@ -1,13 +1,11 @@
-# scene.py
 import copy
 from ui import get_josa
-from entity import Item
 from const import KeywordState, ActionType, ConditionType, KeywordType
+# [신규] 핸들러 레지스트리 임포트
+from logic_handlers import ACTION_HANDLERS, CONDITION_HANDLERS
 
 
 class Scene:
-    """데이터 기반(Data-Driven) 장면 엔진"""
-
     def __init__(self, game, ui, inventory, scene_data):
         self.game = game
         self.ui = ui
@@ -67,7 +65,6 @@ class Scene:
 
     async def process_combination(self, item1: str, item2: str) -> bool:
         combinations = self.scene_data.get("combinations", [])
-
         r_item1 = self.resolve_alias(item1)
         r_item2 = self.resolve_alias(item2)
 
@@ -76,8 +73,8 @@ class Scene:
             if len(targets) != 2:
                 continue
 
-            input_set = {r_item1.lower(), r_item2.lower()}
-            target_set = {t.lower() for t in targets}
+            input_set = {str(r_item1).lower(), str(r_item2).lower()}
+            target_set = {str(t).lower() for t in targets}
 
             if input_set == target_set:
                 if not self._check_keyword_visible(r_item1) or not self._check_keyword_visible(r_item2):
@@ -90,11 +87,9 @@ class Scene:
         return False
 
     def _check_keyword_visible(self, keyword: str) -> bool:
-        # 1. 인벤토리에 있는 아이템이면 무조건 사용 가능
         if self.inventory.has(keyword):
             return True
 
-        # 2. 데이터에 없는 단순 문자열(비번 등)은 True
         if keyword not in self.scene_data["keywords"]:
             return True
 
@@ -102,7 +97,6 @@ class Scene:
         if k_data.get("type") == KeywordType.ALIAS:
             return True
 
-            # 3. Hidden 상태면 사용 불가
         if k_data.get("state") == KeywordState.HIDDEN:
             return False
 
@@ -115,77 +109,47 @@ class Scene:
             self.ui.update_sight_status(self.scene_data["keywords"])
             if not silent:
                 self.ui.print_system_message(
-                    f"**[{keyword_name}]**{get_josa(keyword_name, '을/를')} 발견하여 **시야**에 추가합니다.",
+                    f"**[{keyword_name}]**{get_josa(str(keyword_name), '을/를')} 발견하여 **시야**에 추가합니다.",
                     is_markdown=True,
                 )
+
+    # --- [변경됨] 전략 패턴이 적용된 메서드들 ---
 
     def _check_conditions(self, conditions: list) -> bool:
         if not conditions:
             return True
 
         for cond in conditions:
-            ctype = cond.get("type")
-            target = cond.get("target")
-            val = cond.get("value")
+            # Enum 변환 (안전 장치)
+            try:
+                ctype = ConditionType(cond.get("type"))
+            except ValueError:
+                ctype = cond.get("type")
 
-            if ctype == ConditionType.HAS_ITEM:
-                if not self.inventory.has(target):
-                    return False
-            elif ctype == ConditionType.NOT_HAS_ITEM:
-                if self.inventory.has(target):
-                    return False
-            elif ctype == ConditionType.STATE_IS:
-                # 상태값이 일치하지 않으면 False
-                if self.state.get(target) != val:
-                    return False
-            elif ctype == ConditionType.STATE_NOT:
-                if self.state.get(target) == val:
-                    return False
+            handler = CONDITION_HANDLERS.get(ctype)
+
+            if not handler:
+                print(f"Warning: No handler for condition type '{ctype}'")
+                continue  # 혹은 return False 처리
+
+            # 핸들러에게 위임 (Delegate)
+            if not handler.check(self, cond.get("target"), cond.get("value")):
+                return False
 
         return True
 
     def _execute_actions(self, actions: list):
         for action in actions:
-            atype = action.get("type")
-            val = action.get("value")
+            # Enum 변환
+            try:
+                atype = ActionType(action.get("type"))
+            except ValueError:
+                atype = action.get("type")
 
-            if atype == ActionType.PRINT_NARRATIVE:
-                self.ui.print_narrative(val, is_markdown=True)
+            handler = ACTION_HANDLERS.get(atype)
 
-            elif atype == ActionType.PRINT_SYSTEM:
-                self.ui.print_system_message(val, is_markdown=True)
-
-            elif atype == ActionType.ADD_ITEM:
-                new_item = Item(val["name"], val["description"])
-                is_silent = val.get("silent", False)
-                self.inventory.add(new_item, silent=is_silent)
-
-            elif atype == ActionType.REMOVE_ITEM:
-                self.inventory.remove(val)
-
-            elif atype == ActionType.REMOVE_KEYWORD:
-                target = action.get("target")
-                if target in self.scene_data["keywords"]:
-                    del self.scene_data["keywords"][target]
-                    self.ui.update_sight_status(self.scene_data["keywords"])
-
-            elif atype == ActionType.UPDATE_STATE:
-                if "key" in val:
-                    self.state[val["key"]] = val["value"]
-                if "keyword" in val:
-                    k_name = val["keyword"]
-                    if k_name in self.scene_data["keywords"]:
-                        self.scene_data["keywords"][k_name]["state"] = val["state"]
-                        self.ui.update_sight_status(self.scene_data["keywords"])
-
-            elif atype == ActionType.MOVE_SCENE:
-                self.game.scene_manager.switch_scene(val)
-
-            # [중요] 엔딩 처리가 여기에 포함되어 있어야 합니다.
-            elif atype == ActionType.GAME_END:
-                self.ui.print_narrative(val, is_markdown=True)
-                self.ui.print_system_message("--- GAME OVER ---", is_markdown=True)
-                # 입력 막기
-                if self.game:
-                    self.game.user_input.disabled = True
-                    self.game.submit_button.disabled = True
+            if handler:
+                # 핸들러에게 위임 (Delegate)
+                handler.execute(self, action.get("value"))
+            else:
+                print(f"Warning: No handler for action type '{atype}'")

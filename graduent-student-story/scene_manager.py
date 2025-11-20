@@ -67,7 +67,7 @@ class SceneManager:
         else:
             # 게임 시작 전 등 current_scene이 없을 때의 처리
             if command.lower() == "일어나기":
-                self.scene_factory.game._start_game()
+                self.scene_factory.game.start_game()
             else:
                 self.ui.print_system_message("`일어나기`를 입력해야 합니다.")
 

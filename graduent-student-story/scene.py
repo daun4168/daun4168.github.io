@@ -1,121 +1,188 @@
-from abc import ABC, abstractmethod
+# scene.py
+import copy
 from ui import get_josa
+from entity import Item
+from const import KeywordState, ActionType, ConditionType, KeywordType
 
 
-class Scene(ABC):
-    """모든 장면의 기반이 되는 추상 클래스입니다."""
+class Scene:
+    """데이터 기반(Data-Driven) 장면 엔진"""
 
     def __init__(self, game, ui, inventory, scene_data):
         self.game = game
         self.ui = ui
         self.inventory = inventory
-        # scene_data를 깊은 복사하여 원본 데이터가 수정되지 않도록 함
-        import copy
-
         self.scene_data = copy.deepcopy(scene_data)
-        self.state = {}
-        self._initialize_state()
-
-    def resolve_alias(self, keyword: str) -> str:
-        """키워드가 별칭인 경우 원본 키워드를 반환하고, 그렇지 않으면 원래 키워드를 반환합니다."""
-        # 소문자로 일관성 있게 처리
-        keyword_lower = keyword.lower()
-        for k, v in self.scene_data["keywords"].items():
-            if k.lower() == keyword_lower:
-                if v.get("type") == "Alias":
-                    return v.get("target", keyword)
-                return k  # 원본 키워드의 원래 대소문자를 반환
-        return keyword  # 일치하는 키워드가 없으면 원본 입력 반환
-
-    def match_pair(self, part1: str, part2: str, target1: str, target2: str) -> bool:
-        """두 쌍의 문자열이 순서에 상관없이 일치하는지 확인합니다. 별칭을 자동으로 처리합니다."""
-        p1 = self.resolve_alias(part1)
-        p2 = self.resolve_alias(part2)
-        t1 = self.resolve_alias(target1)
-        t2 = self.resolve_alias(target2)
-        return (p1.lower() == t1.lower() and p2.lower() == t2.lower()) or (
-            p1.lower() == t2.lower() and p2.lower() == t1.lower()
-        )
-
-    def _discover_keyword(self, keyword_name: str, show_sight_widened_message: bool = False) -> bool:
-        """
-        새로운 키워드를 발견 처리하고 관련 메시지를 출력합니다.
-        키워드가 새로 발견되었으면 True를 반환합니다.
-        """
-        # resolve_alias를 통해 원본 키워드 이름을 가져옴
-        original_keyword = self.resolve_alias(keyword_name)
-        keyword_data = self.scene_data["keywords"].get(original_keyword)
-
-        if keyword_data and keyword_data.get("state") == "hidden":
-            keyword_data["state"] = None  # 'hidden'이 아닌 상태로 변경
-            self.ui.update_sight_status(self.scene_data["keywords"])
-            self.ui.print_system_message(
-                f"**[{original_keyword}]**{get_josa(original_keyword, '을/를')} 발견하여 **시야**에 추가합니다.",
-                is_markdown=True,
-            )
-            if show_sight_widened_message:
-                self.ui.print_system_message("시야가 넓어진 것 같다.", is_markdown=True)
-            return True
-        return False
-
-    async def handle_combination(self, item1: str, item2: str) -> bool:
-        """
-        process_combination의 래퍼. 조합 전에 발견되지 않은 키워드가 있는지 확인합니다.
-        """
-        resolved_item1 = self.resolve_alias(item1)
-        resolved_item2 = self.resolve_alias(item2)
-
-        # 조합에 사용된 키워드가 'hidden' 상태인지 확인
-        keyword1_data = self.scene_data["keywords"].get(resolved_item1)
-        if keyword1_data and keyword1_data.get("state") == "hidden":
-            return False  # 발견되지 않았으면 "아무 일도 일어나지 않았습니다" 출력
-
-        keyword2_data = self.scene_data["keywords"].get(resolved_item2)
-        if keyword2_data and keyword2_data.get("state") == "hidden":
-            return False  # 발견되지 않았으면 "아무 일도 일어나지 않았습니다" 출력
-
-        # 검사를 통과하면 실제 조합 로직 호출
-        return await self.process_combination(item1, item2)
+        self.state = self.scene_data.get("initial_state", {})
 
     @property
-    @abstractmethod
     def scene_id(self) -> str:
-        """각 장면의 고유 ID를 반환합니다."""
-        pass
+        return self.scene_data.get("id", "unknown")
 
     def on_enter(self):
-        """장면에 처음 진입했을 때 호출됩니다."""
         self.ui.set_location_name(self.scene_data["name"])
         self.ui.print_narrative(self.scene_data["initial_text"], is_markdown=True)
         self.ui.update_sight_status(self.scene_data["keywords"])
-        self.run_enter_logic()
+
+        if "on_enter_actions" in self.scene_data:
+            self._execute_actions(self.scene_data["on_enter_actions"])
 
     def on_redisplay(self):
-        """사용자가 '둘러보기'를 입력했을 때 호출됩니다."""
         self.ui.print_system_message("주변을 다시 둘러봅니다.", is_markdown=True)
         self.ui.print_narrative(self.scene_data["initial_text"], is_markdown=True)
 
-    @abstractmethod
-    def _initialize_state(self):
-        """장면의 내부 상태를 초기화합니다."""
-        pass
+    def resolve_alias(self, keyword: str) -> str:
+        cmd_lower = keyword.lower()
+        for k, v in self.scene_data["keywords"].items():
+            if k.lower() == cmd_lower:
+                if v.get("type") == KeywordType.ALIAS:
+                    return v.get("target", k)
+                return k
+        return keyword
 
-    def run_enter_logic(self):
-        """장면 진입 시 실행될 추가적인 로직 (선택 사항)."""
-        pass
-
-    @abstractmethod
     async def process_keyword(self, keyword: str) -> bool:
-        """
-        키워드 입력을 처리합니다.
-        처리되었으면 True, 아니면 False를 반환합니다.
-        """
-        pass
+        original_keyword = self.resolve_alias(keyword)
+        keyword_data = self.scene_data["keywords"].get(original_keyword)
 
-    @abstractmethod
+        if not keyword_data:
+            return False
+
+        silent_discovery = keyword_data.get("silent_discovery", False)
+        self._discover_keyword(original_keyword, silent=silent_discovery)
+
+        if "interactions" in keyword_data:
+            for interaction in keyword_data["interactions"]:
+                if self._check_conditions(interaction.get("conditions", [])):
+                    self._execute_actions(interaction.get("actions", []))
+                    return True
+
+        if "description" in keyword_data:
+            self.ui.print_narrative(keyword_data["description"], is_markdown=True)
+            return True
+
+        return True
+
     async def process_combination(self, item1: str, item2: str) -> bool:
-        """
-        아이템 조합을 처리합니다.
-        처리되었으면 True, 아니면 False를 반환합니다.
-        """
-        pass
+        combinations = self.scene_data.get("combinations", [])
+
+        r_item1 = self.resolve_alias(item1)
+        r_item2 = self.resolve_alias(item2)
+
+        for combo in combinations:
+            targets = combo.get("targets", [])
+            if len(targets) != 2:
+                continue
+
+            input_set = {r_item1.lower(), r_item2.lower()}
+            target_set = {t.lower() for t in targets}
+
+            if input_set == target_set:
+                if not self._check_keyword_visible(r_item1) or not self._check_keyword_visible(r_item2):
+                    return False
+
+                if self._check_conditions(combo.get("conditions", [])):
+                    self._execute_actions(combo.get("actions", []))
+                    return True
+
+        return False
+
+    def _check_keyword_visible(self, keyword: str) -> bool:
+        # 1. 인벤토리에 있는 아이템이면 무조건 사용 가능
+        if self.inventory.has(keyword):
+            return True
+
+        # 2. 데이터에 없는 단순 문자열(비번 등)은 True
+        if keyword not in self.scene_data["keywords"]:
+            return True
+
+        k_data = self.scene_data["keywords"][keyword]
+        if k_data.get("type") == KeywordType.ALIAS:
+            return True
+
+            # 3. Hidden 상태면 사용 불가
+        if k_data.get("state") == KeywordState.HIDDEN:
+            return False
+
+        return True
+
+    def _discover_keyword(self, keyword_name: str, silent: bool = False):
+        data = self.scene_data["keywords"].get(keyword_name)
+        if data and data.get("state") == KeywordState.HIDDEN:
+            data["state"] = KeywordState.DISCOVERED
+            self.ui.update_sight_status(self.scene_data["keywords"])
+            if not silent:
+                self.ui.print_system_message(
+                    f"**[{keyword_name}]**{get_josa(keyword_name, '을/를')} 발견하여 **시야**에 추가합니다.",
+                    is_markdown=True,
+                )
+
+    def _check_conditions(self, conditions: list) -> bool:
+        if not conditions:
+            return True
+
+        for cond in conditions:
+            ctype = cond.get("type")
+            target = cond.get("target")
+            val = cond.get("value")
+
+            if ctype == ConditionType.HAS_ITEM:
+                if not self.inventory.has(target):
+                    return False
+            elif ctype == ConditionType.NOT_HAS_ITEM:
+                if self.inventory.has(target):
+                    return False
+            elif ctype == ConditionType.STATE_IS:
+                # 상태값이 일치하지 않으면 False
+                if self.state.get(target) != val:
+                    return False
+            elif ctype == ConditionType.STATE_NOT:
+                if self.state.get(target) == val:
+                    return False
+
+        return True
+
+    def _execute_actions(self, actions: list):
+        for action in actions:
+            atype = action.get("type")
+            val = action.get("value")
+
+            if atype == ActionType.PRINT_NARRATIVE:
+                self.ui.print_narrative(val, is_markdown=True)
+
+            elif atype == ActionType.PRINT_SYSTEM:
+                self.ui.print_system_message(val, is_markdown=True)
+
+            elif atype == ActionType.ADD_ITEM:
+                new_item = Item(val["name"], val["description"])
+                is_silent = val.get("silent", False)
+                self.inventory.add(new_item, silent=is_silent)
+
+            elif atype == ActionType.REMOVE_ITEM:
+                self.inventory.remove(val)
+
+            elif atype == ActionType.REMOVE_KEYWORD:
+                target = action.get("target")
+                if target in self.scene_data["keywords"]:
+                    del self.scene_data["keywords"][target]
+                    self.ui.update_sight_status(self.scene_data["keywords"])
+
+            elif atype == ActionType.UPDATE_STATE:
+                if "key" in val:
+                    self.state[val["key"]] = val["value"]
+                if "keyword" in val:
+                    k_name = val["keyword"]
+                    if k_name in self.scene_data["keywords"]:
+                        self.scene_data["keywords"][k_name]["state"] = val["state"]
+                        self.ui.update_sight_status(self.scene_data["keywords"])
+
+            elif atype == ActionType.MOVE_SCENE:
+                self.game.scene_manager.switch_scene(val)
+
+            # [중요] 엔딩 처리가 여기에 포함되어 있어야 합니다.
+            elif atype == ActionType.GAME_END:
+                self.ui.print_narrative(val, is_markdown=True)
+                self.ui.print_system_message("--- GAME OVER ---", is_markdown=True)
+                # 입력 막기
+                if self.game:
+                    self.game.user_input.disabled = True
+                    self.game.submit_button.disabled = True

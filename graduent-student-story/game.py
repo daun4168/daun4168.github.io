@@ -5,12 +5,12 @@ from ui import UIManager
 from entity import Entity, Item, Inventory
 from scene_manager import SceneFactory, SceneManager
 from test import TestRunner
+from const import SceneID  # 상수를 사용하기 위해 임포트
 
 # --- 장면 클래스와 데이터 임포트 ---
-from story.chapter0.scene0 import Ch0Scene0
-from story.chapter0.scene1 import Ch0Scene1
-from story.chapter0.scene2 import Ch0Scene2
-
+# 데이터 파일 임포트
+from story.chapter0 import CH0_SCENE0_DATA, CH0_SCENE1_DATA, CH0_SCENE2_DATA
+from scene import Scene
 
 # --- 상수 정의 ---
 CMD_INVENTORY = "주머니"
@@ -57,13 +57,11 @@ class Game:
         self._initialize_game_ui()
 
     def _create_and_register_scenes(self) -> SceneFactory:
-        """SceneFactory를 생성하고 모든 장면을 등록합니다."""
         factory = SceneFactory(self, self.ui, self.inventory)
 
-        # 장면에 필요한 모든 클래스와 데이터를 팩토리에 등록
-        factory.register_scene("ch0scene0", Ch0Scene0, Ch0Scene0.DATA)
-        factory.register_scene("ch0scene1", Ch0Scene1, Ch0Scene1.DATA)
-        factory.register_scene("ch0scene2", Ch0Scene2, Ch0Scene2.DATA)
+        factory.register_scene(SceneID.CH0_SCENE0, Scene, CH0_SCENE0_DATA)
+        factory.register_scene(SceneID.CH0_SCENE1, Scene, CH0_SCENE1_DATA)
+        factory.register_scene(SceneID.CH0_SCENE2, Scene, CH0_SCENE2_DATA)
 
         return factory
 
@@ -86,10 +84,11 @@ class Game:
         self.submit_button.disabled = False
         self.user_input.focus()
 
-    def _start_game(self):
+    def start_game(self):
         """게임의 첫 장면을 시작합니다."""
         self.game_started = True
-        self.scene_manager.switch_scene("ch0scene0")  # 첫 장면 ID
+        # 상수 ID를 사용하여 시작
+        self.scene_manager.switch_scene(SceneID.CH0_SCENE0)
 
     def _handle_click(self, event):
         """입력 버튼 클릭 이벤트를 처리합니다."""

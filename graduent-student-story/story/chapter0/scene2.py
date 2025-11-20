@@ -1,4 +1,4 @@
-from const import SceneID, ItemID, KeywordState, ActionType, ConditionType, KeywordType
+from const import SceneID, KeywordId, KeywordState, ActionType, ConditionType, KeywordType
 
 CH0_SCENE2_DATA = {
     "id": SceneID.CH0_SCENE2,
@@ -12,7 +12,7 @@ CH0_SCENE2_DATA = {
         # --- Aliases ---
         # 필요시 추가
         # --- Objects & NPC ---
-        ItemID.PROFESSOR: {
+        KeywordId.PROFESSOR: {
             "type": KeywordType.NPC,
             "state": KeywordState.HIDDEN,
             "interactions": [
@@ -50,12 +50,12 @@ CH0_SCENE2_DATA = {
                 },
             ],
         },
-        ItemID.MK_II: {
+        KeywordId.MK_II: {
             "type": KeywordType.OBJECT,
             "state": KeywordState.HIDDEN,
             "interactions": [
                 {
-                    "conditions": [{"type": ConditionType.HAS_ITEM, "target": ItemID.SPANNER}],
+                    "conditions": [{"type": ConditionType.HAS_ITEM, "target": KeywordId.SPANNER}],
                     "actions": [
                         {
                             "type": ActionType.PRINT_NARRATIVE,
@@ -77,23 +77,23 @@ CH0_SCENE2_DATA = {
                 },
             ],
         },
-        ItemID.HATCH: {
+        KeywordId.HATCH: {
             "type": KeywordType.OBJECT,
             "state": KeywordState.HIDDEN,
             "description": "육중한 해치다. 경첩이 헐거워 제대로 닫히지 않을 것 같다. **주머니**에 있는 **[스패너]**로 조이면 될 것 같다.",
         },
-        ItemID.OUTLET: {
+        KeywordId.OUTLET: {
             "type": KeywordType.OBJECT,
             "state": KeywordState.HIDDEN,
             "description": "벽에 꽂힌 **[MK-II]**의 **[콘센트]**다. 헐거워 보이지만, 건드리면 큰일 날 것 같다.",
         },
-        ItemID.WIRE: {
+        KeywordId.WIRE: {
             "type": KeywordType.OBJECT,
             "state": KeywordState.HIDDEN,
             "description": "청테이프로 대충 감아놓은 **[전선]**이다. 교수님의 공학적 감각은 일반인의 상식을 뛰어넘는다.",
         },
         # [요청사항 반영] Scene 2 진입 시 실험용 랩 가운 시야 추가
-        ItemID.LAB_COAT: {
+        KeywordId.LAB_COAT: {
             "type": KeywordType.ITEM,
             "state": KeywordState.DISCOVERED,
             "description": "주머니에 챙겨둔 실험용 랩 가운이다. 마지막 순간에 격식을 갖추기 위해 꺼내두었다.",
@@ -103,9 +103,9 @@ CH0_SCENE2_DATA = {
         # 1. 탑승구 + 스패너 (핵심 진행)
         # 1-1. 처음 시도 (교수님이 방해함)
         {
-            "targets": [ItemID.HATCH, ItemID.SPANNER],
+            "targets": [KeywordId.HATCH, KeywordId.SPANNER],
             "conditions": [
-                {"type": ConditionType.HAS_ITEM, "target": ItemID.SPANNER},
+                {"type": ConditionType.HAS_ITEM, "target": KeywordId.SPANNER},
                 {"type": ConditionType.STATE_IS, "target": "professor_called_out", "value": False},
             ],
             "actions": [
@@ -119,9 +119,9 @@ CH0_SCENE2_DATA = {
         },
         # 1-2. 방해받은 후, 카드 아직 안 줌 (진행 불가)
         {
-            "targets": [ItemID.HATCH, ItemID.SPANNER],
+            "targets": [KeywordId.HATCH, KeywordId.SPANNER],
             "conditions": [
-                {"type": ConditionType.HAS_ITEM, "target": ItemID.SPANNER},
+                {"type": ConditionType.HAS_ITEM, "target": KeywordId.SPANNER},
                 {"type": ConditionType.STATE_IS, "target": "professor_called_out", "value": True},
                 {"type": ConditionType.STATE_IS, "target": "card_returned", "value": False},
             ],
@@ -134,9 +134,9 @@ CH0_SCENE2_DATA = {
         },
         # 1-3. 카드 반납 후 재시도 (성공 -> 게임 엔딩)
         {
-            "targets": [ItemID.HATCH, ItemID.SPANNER],
+            "targets": [KeywordId.HATCH, KeywordId.SPANNER],
             "conditions": [
-                {"type": ConditionType.HAS_ITEM, "target": ItemID.SPANNER},
+                {"type": ConditionType.HAS_ITEM, "target": KeywordId.SPANNER},
                 {"type": ConditionType.STATE_IS, "target": "card_returned", "value": True},
             ],
             "actions": [
@@ -153,9 +153,9 @@ CH0_SCENE2_DATA = {
         # 2. 교수님 + 법인카드 (반납 로직)
         # 2-1. 교수님이 달라고 했을 때 (성공)
         {
-            "targets": [ItemID.PROFESSOR, ItemID.CORP_CARD],
+            "targets": [KeywordId.PROFESSOR, KeywordId.CORP_CARD],
             "conditions": [
-                {"type": ConditionType.HAS_ITEM, "target": ItemID.CORP_CARD},
+                {"type": ConditionType.HAS_ITEM, "target": KeywordId.CORP_CARD},
                 {"type": ConditionType.STATE_IS, "target": "professor_called_out", "value": True},
                 {"type": ConditionType.STATE_IS, "target": "card_returned", "value": False},
             ],
@@ -164,16 +164,16 @@ CH0_SCENE2_DATA = {
                     "type": ActionType.PRINT_NARRATIVE,
                     "value": "교수님께 **[법인카드]**를 건네자, 교수님은 만족스러운 표정으로 고개를 끄덕인다.",
                 },
-                {"type": ActionType.REMOVE_ITEM, "value": ItemID.CORP_CARD},
+                {"type": ActionType.REMOVE_ITEM, "value": KeywordId.CORP_CARD},
                 {"type": ActionType.UPDATE_STATE, "value": {"key": "card_returned", "value": True}},
                 {"type": ActionType.PRINT_SYSTEM, "value": "이제 **[탑승구]**를 마저 조여야 할 것 같다."},
             ],
         },
         # 2-2. 아직 달라고 안 했을 때
         {
-            "targets": [ItemID.PROFESSOR, ItemID.CORP_CARD],
+            "targets": [KeywordId.PROFESSOR, KeywordId.CORP_CARD],
             "conditions": [
-                {"type": ConditionType.HAS_ITEM, "target": ItemID.CORP_CARD},
+                {"type": ConditionType.HAS_ITEM, "target": KeywordId.CORP_CARD},
                 {"type": ConditionType.STATE_IS, "target": "professor_called_out", "value": False},
             ],
             "actions": [

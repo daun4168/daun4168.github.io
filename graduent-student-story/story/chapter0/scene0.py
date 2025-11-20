@@ -1,5 +1,5 @@
 # story/chapter0/scene0_data.py
-from const import SceneID, ItemID, KeywordState, ActionType, ConditionType
+from const import SceneID, KeywordId, KeywordState, ActionType, ConditionType, KeywordType
 
 CH0_SCENE0_DATA = {
     "id": SceneID.CH0_SCENE0,
@@ -12,8 +12,8 @@ CH0_SCENE0_DATA = {
         }
     ],
     "keywords": {
-        ItemID.PROFESSOR: {
-            "type": "NPC",
+        KeywordId.PROFESSOR: {
+            "type": KeywordType.NPC,
             "state": KeywordState.HIDDEN,
             "interactions": [
                 {
@@ -30,15 +30,14 @@ CH0_SCENE0_DATA = {
                 }
             ],
         },
-        ItemID.CORP_CARD: {
-            "type": "Item",
+        KeywordId.CORP_CARD: {
+            "type": KeywordType.ITEM,
             "state": KeywordState.HIDDEN,
             "display_name": "법인카드",
-            # [추가됨] 발견 시 "시야에 추가되었습니다" 시스템 메시지 끄기
             "silent_discovery": True,
             "interactions": [
                 {
-                    "conditions": [{"type": ConditionType.NOT_HAS_ITEM, "target": ItemID.CORP_CARD}],
+                    "conditions": [{"type": ConditionType.NOT_HAS_ITEM, "target": KeywordId.CORP_CARD}],
                     "actions": [
                         # 원하는 메시지 1
                         {
@@ -53,23 +52,23 @@ CH0_SCENE0_DATA = {
                         {
                             "type": ActionType.ADD_ITEM,
                             "value": {
-                                "name": ItemID.CORP_CARD,
+                                "name": KeywordId.CORP_CARD,
                                 "description": "긁히지는 않지만 날카로워서 무기나 도구로 쓸 수 있습니다.",
                                 "silent": True,  # [추가됨] "주머니에 넣었습니다" 시스템 메시지 끄기
                             },
                         },
-                        {"type": ActionType.REMOVE_KEYWORD, "target": ItemID.CORP_CARD},
+                        {"type": ActionType.REMOVE_KEYWORD, "target": KeywordId.CORP_CARD},
                     ],
                 },
                 {"actions": [{"type": ActionType.PRINT_SYSTEM, "value": "이미 가지고 있습니다."}]},
             ],
         },
-        ItemID.DOOR_0: {
-            "type": "Portal",
+        KeywordId.DOOR_0: {
+            "type": KeywordType.PORTAL,
             "state": KeywordState.HIDDEN,
             "interactions": [
                 {
-                    "conditions": [{"type": ConditionType.HAS_ITEM, "target": ItemID.CORP_CARD}],
+                    "conditions": [{"type": ConditionType.HAS_ITEM, "target": KeywordId.CORP_CARD}],
                     "actions": [
                         {
                             "type": ActionType.PRINT_SYSTEM,
@@ -88,18 +87,18 @@ CH0_SCENE0_DATA = {
                 },
             ],
         },
-        ItemID.THESIS: {
-            "type": "Object",
+        KeywordId.THESIS: {
+            "type": KeywordType.OBJECT,
             "state": KeywordState.HIDDEN,
             "description": "읽어야 할 논문이 산더미처럼 쌓여있다. 보기만 해도 숨이 막힌다.",
         },
-        ItemID.DESK: {
-            "type": "Object",
+        KeywordId.DESK: {
+            "type": KeywordType.OBJECT,
             "state": KeywordState.HIDDEN,
             "description": "교수님의 책상이다. 각종 서류와 논문이 어지럽게 널려있다.",
         },
-        ItemID.GLASSES: {
-            "type": "Object",
+        KeywordId.GLASSES: {
+            "type": KeywordType.OBJECT,
             "state": KeywordState.HIDDEN,
             "description": "교수님의 안경알이 빛을 번뜩인다. 저 너머의 눈은 웃고 있는지, 화를 내고 있는지 알 수 없다.",
         },

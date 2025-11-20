@@ -7,7 +7,7 @@ class SceneID:
     CH0_SCENE2 = "ch0scene2"
 
 
-class ItemID:
+class KeywordId:
     # Common
     PROFESSOR = "교수님"
     CORP_CARD = "법인카드"

@@ -1,4 +1,4 @@
-from const import SceneID, ItemID, KeywordState, ActionType, ConditionType, KeywordType
+from const import SceneID, KeywordId, KeywordState, ActionType, ConditionType, KeywordType
 
 CH0_SCENE1_DATA = {
     "id": SceneID.CH0_SCENE1,
@@ -12,10 +12,10 @@ CH0_SCENE1_DATA = {
     },
     "keywords": {
         # --- Aliases ---
-        ItemID.WALL_ALIAS: {"type": KeywordType.ALIAS, "target": ItemID.WALL},
-        ItemID.COMPUTER_ALIAS: {"type": KeywordType.ALIAS, "target": ItemID.OLD_COMPUTER},
+        KeywordId.WALL_ALIAS: {"type": KeywordType.ALIAS, "target": KeywordId.WALL},
+        KeywordId.COMPUTER_ALIAS: {"type": KeywordType.ALIAS, "target": KeywordId.OLD_COMPUTER},
         # --- Objects ---
-        ItemID.TRASH_CAN: {
+        KeywordId.TRASH_CAN: {
             "type": KeywordType.OBJECT,
             "state": KeywordState.HIDDEN,
             "interactions": [
@@ -29,7 +29,7 @@ CH0_SCENE1_DATA = {
                         },
                         {
                             "type": ActionType.ADD_ITEM,
-                            "value": {"name": ItemID.WRAPPER, "description": "눅눅하고 비어있다."},
+                            "value": {"name": KeywordId.WRAPPER, "description": "눅눅하고 비어있다."},
                         },
                         {"type": ActionType.PRINT_SYSTEM, "value": "`쓰레기통`을 다시 한번 입력해 보세요."},
                         {"type": ActionType.UPDATE_STATE, "value": {"key": "trash_step", "value": 1}},
@@ -45,7 +45,7 @@ CH0_SCENE1_DATA = {
                         },
                         {
                             "type": ActionType.ADD_ITEM,
-                            "value": {"name": ItemID.SPANNER, "description": "녹슬었지만 쓸만해 보인다."},
+                            "value": {"name": KeywordId.SPANNER, "description": "녹슬었지만 쓸만해 보인다."},
                         },
                         {"type": ActionType.UPDATE_STATE, "value": {"key": "trash_step", "value": 2}},
                     ],
@@ -62,7 +62,7 @@ CH0_SCENE1_DATA = {
                 },
             ],
         },
-        ItemID.BOX: {
+        KeywordId.BOX: {
             "type": KeywordType.OBJECT,
             "state": KeywordState.HIDDEN,
             "interactions": [
@@ -85,7 +85,7 @@ CH0_SCENE1_DATA = {
                 },
             ],
         },
-        ItemID.WALL: {
+        KeywordId.WALL: {
             "type": KeywordType.OBJECT,
             "state": KeywordState.HIDDEN,
             "interactions": [
@@ -99,7 +99,7 @@ CH0_SCENE1_DATA = {
                         {"type": ActionType.UPDATE_STATE, "value": {"key": "wall_inspected", "value": True}},
                         {
                             "type": ActionType.UPDATE_STATE,
-                            "value": {"keyword": ItemID.MEMO, "state": KeywordState.DISCOVERED},
+                            "value": {"keyword": KeywordId.MEMO, "state": KeywordState.DISCOVERED},
                         },
                         {"type": ActionType.PRINT_SYSTEM, "value": "**[메모]**가 시야에 추가되었습니다."},
                     ],
@@ -107,13 +107,13 @@ CH0_SCENE1_DATA = {
                 {"actions": [{"type": ActionType.PRINT_NARRATIVE, "value": "구석에 작은 메모가 붙어있다."}]},
             ],
         },
-        ItemID.MEMO: {
+        KeywordId.MEMO: {
             "type": KeywordType.OBJECT,
             "state": KeywordState.HIDDEN,
             "silent_discovery": True,
             "description": "벽에 붙어있는 메모에는 '컴퓨터 비밀번호: 1에서 시작하고 8로 끝나는 여덟자리 숫자' 라고 적혀있다.",
         },
-        ItemID.OLD_COMPUTER: {
+        KeywordId.OLD_COMPUTER: {
             "type": KeywordType.OBJECT,
             "state": KeywordState.HIDDEN,
             "interactions": [
@@ -140,33 +140,33 @@ CH0_SCENE1_DATA = {
                 },
             ],
         },
-        ItemID.CABINET: {
+        KeywordId.CABINET: {
             "type": KeywordType.OBJECT,
             "state": KeywordState.HIDDEN,
             "description": "자물쇠가 걸려있다. `시약장 + [비밀번호]` 형식으로 열 수 있을 것 같다.",
         },
-        ItemID.MYSTERY_LIQUID: {
+        KeywordId.MYSTERY_LIQUID: {
             "type": KeywordType.OBJECT,
             "state": KeywordState.HIDDEN,
             "description": "바닥에 끈적하게 눌어붙은 액체다. 무슨 성분인지 알 수 없지만, 달콤한 향이 나는 것 같다.",
         },
-        ItemID.FLOOR: {
+        KeywordId.FLOOR: {
             "type": KeywordType.OBJECT,
             "state": KeywordState.HIDDEN,
             "description": "바닥 한쪽에 **[의문의 액체]**가 흥건하다. 끈적해서 밟고 싶지 않다.",
         },
-        ItemID.BROOM: {
+        KeywordId.BROOM: {
             "type": KeywordType.OBJECT,
             "state": KeywordState.HIDDEN,
             "description": "평범한 빗자루다. 바닥을 청소할 수 있을 것 같다.",
         },
         # [수정됨] 아이템이 아닌 시야에서 볼 수 있는 오브젝트로 설정
-        ItemID.LAB_COAT: {
+        KeywordId.LAB_COAT: {
             "type": KeywordType.OBJECT,
             "state": KeywordState.HIDDEN,
             "description": "새하얀 랩 가운이다. 입으면 왠지 졸업에 한 발짝 다가간 기분이 든다.",
         },
-        ItemID.ETHANOL: {
+        KeywordId.ETHANOL: {
             "type": KeywordType.ITEM,
             "state": KeywordState.HIDDEN,
             "description": "소독 및 청소용. 마시지 마시오.",
@@ -176,7 +176,7 @@ CH0_SCENE1_DATA = {
     "combinations": [
         # 1. 컴퓨터 비밀번호 해제
         {
-            "targets": [ItemID.OLD_COMPUTER, "12345678"],
+            "targets": [KeywordId.OLD_COMPUTER, "12345678"],
             "actions": [
                 {
                     "type": ActionType.PRINT_NARRATIVE,
@@ -187,20 +187,20 @@ CH0_SCENE1_DATA = {
         },
         # 2. 시약장 비밀번호 해제 -> 에탄올 획득
         {
-            "targets": [ItemID.CABINET, "0815"],
+            "targets": [KeywordId.CABINET, "0815"],
             "actions": [
                 {
                     "type": ActionType.PRINT_NARRATIVE,
                     "value": "철컥, 소리와 함께 **[시약장]** 문이 열렸다. 안에서 **[에탄올]** 병을 발견했다.",
                 },
-                {"type": ActionType.ADD_ITEM, "value": {"name": ItemID.ETHANOL, "description": "강력한 세정제입니다."}},
-                {"type": ActionType.REMOVE_KEYWORD, "target": ItemID.CABINET},
+                {"type": ActionType.ADD_ITEM, "value": {"name": KeywordId.ETHANOL, "description": "강력한 세정제입니다."}},
+                {"type": ActionType.REMOVE_KEYWORD, "target": KeywordId.CABINET},
             ],
         },
         # 3. 박스 + 법인카드 -> 랩 가운 발견 (시야 추가)
         {
-            "targets": [ItemID.BOX, ItemID.CORP_CARD],
-            "conditions": [{"type": ConditionType.HAS_ITEM, "target": ItemID.CORP_CARD}],
+            "targets": [KeywordId.BOX, KeywordId.CORP_CARD],
+            "conditions": [{"type": ConditionType.HAS_ITEM, "target": KeywordId.CORP_CARD}],
             "actions": [
                 {
                     "type": ActionType.PRINT_NARRATIVE,
@@ -209,31 +209,31 @@ CH0_SCENE1_DATA = {
                 # [수정됨] ADD_ITEM 제거 -> UPDATE_STATE로 시야에 추가
                 {
                     "type": ActionType.UPDATE_STATE,
-                    "value": {"keyword": ItemID.LAB_COAT, "state": KeywordState.DISCOVERED},
+                    "value": {"keyword": KeywordId.LAB_COAT, "state": KeywordState.DISCOVERED},
                 },
                 {"type": ActionType.PRINT_SYSTEM, "value": "**[실험용 랩 가운]**이 시야에 추가되었습니다."},
                 {"type": ActionType.UPDATE_STATE, "value": {"key": "box_opened", "value": True}},
-                {"type": ActionType.UPDATE_STATE, "value": {"keyword": ItemID.BOX, "state": KeywordState.DISCOVERED}},
+                {"type": ActionType.UPDATE_STATE, "value": {"keyword": KeywordId.BOX, "state": KeywordState.DISCOVERED}},
             ],
         },
         # 4. 에탄올 + 의문의 액체 -> 청소
         {
-            "targets": [ItemID.ETHANOL, ItemID.MYSTERY_LIQUID],
-            "conditions": [{"type": ConditionType.HAS_ITEM, "target": ItemID.ETHANOL}],
+            "targets": [KeywordId.ETHANOL, KeywordId.MYSTERY_LIQUID],
+            "conditions": [{"type": ConditionType.HAS_ITEM, "target": KeywordId.ETHANOL}],
             "actions": [
                 {
                     "type": ActionType.PRINT_NARRATIVE,
                     "value": "**[에탄올]**을 붓자, 끈적한 **[의문의 액체]**가 녹아내리며 바닥이 깨끗해졌다!",
                 },
-                {"type": ActionType.REMOVE_ITEM, "value": ItemID.ETHANOL},
-                {"type": ActionType.REMOVE_KEYWORD, "target": ItemID.MYSTERY_LIQUID},
+                {"type": ActionType.REMOVE_ITEM, "value": KeywordId.ETHANOL},
+                {"type": ActionType.REMOVE_KEYWORD, "target": KeywordId.MYSTERY_LIQUID},
                 {"type": ActionType.UPDATE_STATE, "value": {"key": "liquid_cleaned", "value": True}},
                 {"type": ActionType.PRINT_SYSTEM, "value": "이제 **[빗자루]**로 **[바닥]**을 청소할 수 있을 것 같다."},
             ],
         },
         # 5. 빗자루 + 바닥 -> 탈출 (Scene 2 이동)
         {
-            "targets": [ItemID.BROOM, ItemID.FLOOR],
+            "targets": [KeywordId.BROOM, KeywordId.FLOOR],
             "conditions": [
                 {"type": ConditionType.STATE_IS, "target": "liquid_cleaned", "value": True},
                 {"type": ConditionType.STATE_IS, "target": "trash_step", "value": 2},
@@ -248,7 +248,7 @@ CH0_SCENE1_DATA = {
         },
         # 5-1. 빗자루 실패 (액체 남음)
         {
-            "targets": [ItemID.BROOM, ItemID.FLOOR],
+            "targets": [KeywordId.BROOM, KeywordId.FLOOR],
             "conditions": [{"type": ConditionType.STATE_IS, "target": "liquid_cleaned", "value": False}],
             "actions": [
                 {
@@ -259,7 +259,7 @@ CH0_SCENE1_DATA = {
         },
         # 5-2. 빗자루 실패 (쓰레기통 남음)
         {
-            "targets": [ItemID.BROOM, ItemID.FLOOR],
+            "targets": [KeywordId.BROOM, KeywordId.FLOOR],
             "conditions": [
                 {"type": ConditionType.STATE_IS, "target": "liquid_cleaned", "value": True},
                 {"type": ConditionType.STATE_NOT, "target": "trash_step", "value": 2},

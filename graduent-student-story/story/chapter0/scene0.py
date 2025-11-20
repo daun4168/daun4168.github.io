@@ -3,14 +3,14 @@ from ui import get_josa
 from entity import Item
 
 
-class Scene0(Scene):
+class Ch0Scene0(Scene):
     DATA = {
         "name": "교수님 오피스",
         "initial_text": '눈을 뜨자 익숙한 풍경이 보인다. 책상 위에 쌓인 논문 탑, 그리고 그 뒤에서 번뜩이는 안경알.\n\n"자네, 정신이 드나? 서서 조는 기술이 아주 일취월장했어."\n\n교수님이 혀를 차며 나를 바라본다. 10년째 듣는 잔소리다. 타격감도 없다.\n\n"연구실 제2섹터 청소나 하게. 외부 손님이 온다니까. 필요한 물건 있으면 저기 법인카드 가져가서 사고. 한도는 초과됐지만 포인트는 남았을 거야."\n\n교수님은 턱짓으로 책상을 가리켰다.\n\n"다 챙겼으면 뒤에 있는 문으로 나가. 난 사우나... 아니, 미팅 준비해야 하니까."',
         "keywords": {
             "교수님": {"type": "NPC", "state": "hidden"},
             "법인카드": {"type": "Item", "state": "hidden"},
-            "문": {"type": "Portal", "state": "hidden", "target": "scene1"},
+            "문": {"type": "Portal", "state": "hidden", "target": "ch0scene1"},
             "논문": {"type": "Object", "state": "hidden"},
             "책상": {"type": "Object", "state": "hidden"},
             "안경알": {"type": "Object", "state": "hidden"},
@@ -19,7 +19,7 @@ class Scene0(Scene):
 
     @property
     def scene_id(self) -> str:
-        return "scene0"
+        return "ch0scene0"
 
     def _initialize_state(self):
         self.state["look_around_tutorial_shown"] = False
@@ -70,8 +70,6 @@ class Scene0(Scene):
 
                 # 키워드별 로직
                 if original_keyword_name == "교수님":
-                    self.game.health -= 1
-                    self.game.update_health_status()
                     self.ui.print_narrative(
                         "뭘 꾸물거려? 빨리 가서 청소 안 하고! 이번 학기 졸업하기 싫나?", is_markdown=True
                     )
@@ -86,14 +84,12 @@ class Scene0(Scene):
                             "문을 나섭니다. 새로운 장소에서는 **시야**가 초기화되지만, **주머니** 속의 물건은 그대로 유지됩니다.",
                             is_markdown=True,
                         )
-                        self.game.scene_manager.switch_scene("scene1")
+                        self.game.scene_manager.switch_scene("ch0scene1")
                     else:
                         self.ui.print_system_message(
                             "이 문으로 나갈 수 있을 것 같다. 하지만 아직 무언가 잊은 기분이 든다."
                         )
                 elif original_keyword_name == "논문":
-                    self.game.health -= 0.5
-                    self.game.update_health_status()
                     self.ui.print_narrative(
                         "읽어야 할 논문이 산더미처럼 쌓여있다. 보기만 해도 숨이 막힌다.", is_markdown=True
                     )

@@ -19,21 +19,10 @@ class UIManager:
         self.main_text_output = document.getElementById("main-text-output")
         self.inventory_status = document.getElementById("inventory-status")
         self.location_name = document.getElementById("location-name")
-        self.health_status = document.getElementById("health-status")
         self.sight_status = document.getElementById("sight-status")
-        self.hide_health_status()
 
     def set_location_name(self, name: str):
         self.location_name.innerText = f"지역: {name}" if name else ""
-
-    def update_health_status(self, health: float, max_health: float):
-        self.health_status.innerText = f"졸업 의지: {int(health)}/{int(max_health)}"
-
-    def show_health_status(self):
-        self.health_status.style.display = "block"
-
-    def hide_health_status(self):
-        self.health_status.style.display = "none"
 
     def update_sight_status(self, keywords: dict):
         if not keywords:

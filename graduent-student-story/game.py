@@ -7,13 +7,13 @@ from scene_manager import SceneFactory, SceneManager
 from test import TestRunner
 
 # --- 장면 클래스와 데이터 임포트 ---
-from story.chapter0.scene0 import Scene0
-from story.chapter0.scene1 import Scene1
-from story.chapter0.scene2 import Scene2
+from story.chapter0.scene0 import Ch0Scene0
+from story.chapter0.scene1 import Ch0Scene1
+from story.chapter0.scene2 import Ch0Scene2
 
 
 # --- 상수 정의 ---
-CMD_INVENTORY = ["주머니"]
+CMD_INVENTORY = "주머니"
 CMD_START = "일어나기"
 CMD_LOOK_AROUND = "둘러보기"
 
@@ -51,9 +51,6 @@ class Game:
         self.submit_button.onclick = self._handle_click
 
         # --- 게임 상태 초기화 ---
-        self.health = 100.0
-        self.max_health = 100.0
-        self.current_scene_id: str | None = None  # SceneManager가 관리하지만, 기존 로직 유지를 위해 남겨둠
         self.game_started = False
 
         self.test_runner.set_game(self)
@@ -64,9 +61,9 @@ class Game:
         factory = SceneFactory(self, self.ui, self.inventory)
 
         # 장면에 필요한 모든 클래스와 데이터를 팩토리에 등록
-        factory.register_scene("scene0", Scene0, Scene0.DATA)
-        factory.register_scene("scene1", Scene1, Scene1.DATA)
-        factory.register_scene("scene2", Scene2, Scene2.DATA)
+        factory.register_scene("ch0scene0", Ch0Scene0, Ch0Scene0.DATA)
+        factory.register_scene("ch0scene1", Ch0Scene1, Ch0Scene1.DATA)
+        factory.register_scene("ch0scene2", Ch0Scene2, Ch0Scene2.DATA)
 
         return factory
 
@@ -92,13 +89,7 @@ class Game:
     def _start_game(self):
         """게임의 첫 장면을 시작합니다."""
         self.game_started = True
-        self.health = 15.0  # 기존 로직 유지
-        self.update_health_status()
-        self.scene_manager.switch_scene("scene0")  # 첫 장면 ID
-
-    def update_health_status(self):
-        """UI의 체력 상태를 업데이트합니다."""
-        self.ui.update_health_status(self.health, self.max_health)
+        self.scene_manager.switch_scene("ch0scene0")  # 첫 장면 ID
 
     def _handle_click(self, event):
         """입력 버튼 클릭 이벤트를 처리합니다."""
@@ -128,7 +119,7 @@ class Game:
 
         # 공용 명령어 처리
         cmd_lower = command.lower()
-        if cmd_lower in CMD_INVENTORY:
+        if cmd_lower == CMD_INVENTORY.lower():
             self.inventory.show()
             return
         if cmd_lower == CMD_LOOK_AROUND.lower():

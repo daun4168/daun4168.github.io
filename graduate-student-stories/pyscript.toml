@@ -1,0 +1,10 @@
+name = "대학원생의 생존기"
+description = "텍스트 어드벤처 게임"
+
+packages = ["markdown", "asyncio"]
+
+[files]
+"./main.py" = ""
+"./game.py" = ""
+"./entity.py" = ""
+"./ui.py" = ""

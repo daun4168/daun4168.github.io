@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>대학원생의 생존기</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@picocss/pico@1/css/pico.min.css">
+    <link rel="stylesheet" href="style.css">
+    <script type="module" src="https://pyscript.net/releases/2024.1.1/core.js"></script>
+</head>
+<body>
+    <main class="container">
+        <div id="game-container">
+            <div id="status-display" class="grid">
+                <div><strong>지역:</strong> <span id="location">???</span></div>
+                <div><strong>졸업 의지:</strong> <span id="hp">100</span></div>
+                <div>
+                    <strong>지역 키워드:</strong>
+                    <ul id="keywords"><li>[???]</li></ul>
+                </div>
+                <div>
+                    <strong>인벤토리:</strong>
+                    <ul id="inventory"><li>비어 있음</li></ul>
+                </div>
+            </div>
+
+            <div id="content-scroll-area">
+                <div id="main-text-output"></div>
+            </div>
+
+            <div id="input-area" class="grid">
+                <input type="text" id="user-input" placeholder="무엇을 하시겠습니까?">
+                <button id="submit-button">입력</button>
+            </div>
+        </div>
+    </main>
+    <py-config src="./pyscript.toml"></py-config>
+    <py-script src="./main.py"></py-script>
+</body>
+</html>

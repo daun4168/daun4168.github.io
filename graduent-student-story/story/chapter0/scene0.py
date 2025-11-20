@@ -39,8 +39,12 @@ CH0_SCENE0_DATA = SceneData(
                 Interaction(
                     conditions=[Condition(type=ConditionType.NOT_HAS_ITEM, target=KeywordId.CORP_CARD)],
                     actions=[
-                        Action(type=ActionType.PRINT_SYSTEM, value="**[법인카드]**를 발견하여 **주머니**에 추가합니다."),
-                        Action(type=ActionType.PRINT_SYSTEM, value="어떤 아이템은 이렇게 **주머니**에 보관할 수 있습니다."),
+                        Action(
+                            type=ActionType.PRINT_SYSTEM, value="**[법인카드]**를 발견하여 **주머니**에 추가합니다."
+                        ),
+                        Action(
+                            type=ActionType.PRINT_SYSTEM, value="어떤 아이템은 이렇게 **주머니**에 보관할 수 있습니다."
+                        ),
                         Action(
                             type=ActionType.ADD_ITEM,
                             value={

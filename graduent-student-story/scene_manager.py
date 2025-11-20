@@ -3,6 +3,7 @@ from scene import Scene
 from ui import get_josa
 from const import CommandType
 
+
 class SceneFactory:
     """장면(Scene) 인스턴스 생성을 책임지는 팩토리 클래스입니다."""
 

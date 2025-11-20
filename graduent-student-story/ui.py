@@ -1,7 +1,9 @@
 from pyscript import document
 import markdown
+
 # const에서 Enum 임포트 (타입 비교용)
 from const import KeywordType, KeywordState
+
 
 def get_josa(word: str, josa_pair: str) -> str:
     particles = josa_pair.split("/")

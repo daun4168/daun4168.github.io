@@ -16,7 +16,6 @@ CH0_SCENE1_DATA = SceneData(
     keywords={
         KeywordId.WALL_ALIAS: KeywordData(type=KeywordType.ALIAS, target=KeywordId.WALL),
         KeywordId.COMPUTER_ALIAS: KeywordData(type=KeywordType.ALIAS, target=KeywordId.OLD_COMPUTER),
-
         KeywordId.DOOR: KeywordData(
             type=KeywordType.OBJECT,
             state=KeywordState.HIDDEN,
@@ -57,7 +56,11 @@ CH0_SCENE1_DATA = SceneData(
                 ),
                 Interaction(
                     conditions=[Condition(type=ConditionType.STATE_IS, target="trash_step", value=2)],
-                    actions=[Action(type=ActionType.PRINT_NARRATIVE, value="텅 빈 쓰레기통이다. 더는 아무것도 나오지 않는다.")],
+                    actions=[
+                        Action(
+                            type=ActionType.PRINT_NARRATIVE, value="텅 빈 쓰레기통이다. 더는 아무것도 나오지 않는다."
+                        )
+                    ],
                 ),
             ],
         ),
@@ -90,7 +93,9 @@ CH0_SCENE1_DATA = SceneData(
                 Interaction(
                     conditions=[Condition(type=ConditionType.STATE_IS, target="wall_inspected", value=False)],
                     actions=[
-                        Action(type=ActionType.PRINT_NARRATIVE, value="벽지를 자세히 보니, 구석에 작은 메모가 붙어있다."),
+                        Action(
+                            type=ActionType.PRINT_NARRATIVE, value="벽지를 자세히 보니, 구석에 작은 메모가 붙어있다."
+                        ),
                         Action(type=ActionType.UPDATE_STATE, value={"key": "wall_inspected", "value": True}),
                         Action(
                             type=ActionType.UPDATE_STATE,
@@ -272,7 +277,9 @@ CH0_SCENE1_DATA = SceneData(
                 Condition(type=ConditionType.STATE_IS, target="liquid_cleaned", value=True),
                 Condition(type=ConditionType.STATE_NOT, target="trash_step", value=2),
             ],
-            actions=[Action(type=ActionType.PRINT_SYSTEM, value="아직 **[쓰레기통]**이 정리되지 않은 것 같다. 마저 치우자.")],
+            actions=[
+                Action(type=ActionType.PRINT_SYSTEM, value="아직 **[쓰레기통]**이 정리되지 않은 것 같다. 마저 치우자.")
+            ],
         ),
     ],
 )

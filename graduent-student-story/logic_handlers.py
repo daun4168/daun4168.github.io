@@ -5,6 +5,7 @@ from const import ActionType, ConditionType, KeywordState
 
 # --- Base Interfaces ---
 
+
 class ActionHandler(ABC):
     @abstractmethod
     def execute(self, scene, value):
@@ -28,6 +29,7 @@ class ConditionHandler(ABC):
 
 # --- Condition Implementations ---
 
+
 class HasItemHandler(ConditionHandler):
     def check(self, scene, target, value) -> bool:
         return scene.inventory.has(target)
@@ -50,6 +52,7 @@ class StateNotHandler(ConditionHandler):
 
 
 # --- Action Implementations ---
+
 
 class PrintNarrativeHandler(ActionHandler):
     def execute(self, scene, value):

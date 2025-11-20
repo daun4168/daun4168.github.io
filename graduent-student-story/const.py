@@ -6,6 +6,7 @@ class SceneID(StrEnum):
     CH0_SCENE1 = "ch0scene1"
     CH0_SCENE2 = "ch0scene2"
 
+
 class KeywordId(StrEnum):
     # Common
     PROFESSOR = "교수님"
@@ -40,16 +41,19 @@ class KeywordId(StrEnum):
     OUTLET = "콘센트"
     HATCH = "탑승구"
 
+
 class KeywordState(StrEnum):
     HIDDEN = "hidden"
     DISCOVERED = "discovered"
     INACTIVE = "inactive"
+
 
 class ConditionType(StrEnum):
     HAS_ITEM = "has_item"
     NOT_HAS_ITEM = "not_has_item"
     STATE_IS = "state_is"
     STATE_NOT = "state_not"
+
 
 class ActionType(StrEnum):
     PRINT_NARRATIVE = "print_narrative"
@@ -61,12 +65,14 @@ class ActionType(StrEnum):
     UPDATE_STATE = "update_state"
     GAME_END = "game_end"
 
+
 class KeywordType(StrEnum):
     ITEM = "Item"
     OBJECT = "Object"
     NPC = "NPC"
     ALIAS = "Alias"
     PORTAL = "Portal"
+
 
 # [신규 추가] 명령어 관리용 Enum
 class CommandType(StrEnum):

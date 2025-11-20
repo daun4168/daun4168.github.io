@@ -4,6 +4,7 @@ from const import KeywordState, KeywordType
 from logic_handlers import ACTION_HANDLERS, CONDITION_HANDLERS
 from schemas import SceneData  # 타입 힌팅용
 
+
 class Scene:
     def __init__(self, game, ui, inventory, scene_data: SceneData):
         self.game = game
@@ -20,7 +21,7 @@ class Scene:
     def on_enter(self):
         self.ui.set_location_name(self.scene_data.name)
         self.ui.print_narrative(self.scene_data.initial_text, is_markdown=True)
-        self.ui.update_sight_status(self.scene_data.keywords) # ui.py 수정 필요 (아래 참조)
+        self.ui.update_sight_status(self.scene_data.keywords)  # ui.py 수정 필요 (아래 참조)
 
         if self.scene_data.on_enter_actions:
             self._execute_actions(self.scene_data.on_enter_actions)
@@ -33,7 +34,7 @@ class Scene:
         cmd_lower = keyword.lower()
         for k, v in self.scene_data.keywords.items():
             if k.lower() == cmd_lower:
-                if v.type == KeywordType.ALIAS: # 객체 속성 접근
+                if v.type == KeywordType.ALIAS:  # 객체 속성 접근
                     return v.target or k
                 return k
         return keyword

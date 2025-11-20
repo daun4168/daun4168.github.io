@@ -74,8 +74,13 @@ class KeywordType(StrEnum):
     PORTAL = "Portal"
 
 
-# [신규 추가] 명령어 관리용 Enum
+# 명령어 관리용 Enum
 class CommandType(StrEnum):
     INVENTORY = "주머니"
     WAKE_UP = "일어나기"
     LOOK_AROUND = "둘러보기"
+
+# 조합의 성격을 구분하는 Enum
+class CombinationType(StrEnum):
+    DEFAULT = "default"   # 일반 아이템 조합 (+)
+    PASSWORD = "password" # 비밀번호 입력 (:)

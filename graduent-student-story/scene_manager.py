@@ -1,5 +1,4 @@
-
-from const import CommandType
+from const import CommandType, CombinationType
 from scene import Scene
 from ui import get_josa
 
@@ -113,38 +112,54 @@ class SceneManager:
 
     async def process_command(self, command: str):
         """
-        사용자 명령을 현재 활성화된 장면에 전달하여 처리합니다.
-        조합 명령(예: '아이템 + 대상')과 일반 키워드 명령을 구분하여 처리합니다.
-
-        Args:
-            command (str): 사용자가 입력한 명령 문자열.
+        사용자 명령을 처리합니다. 기호에 따라 조합 타입을 구분합니다.
         """
-        # 현재 활성화된 장면이 있는지 확인합니다.
         if self.current_scene:
-            # 명령에 '+' 문자가 포함되어 있으면 조합 명령으로 간주합니다.
+            # 1. 비밀번호 입력 처리 (콜론 ':' 사용) -> Type: PASSWORD
+            if ":" in command:
+                parts = [p.strip().lower() for p in command.split(":")]
+                if len(parts) == 2:
+                    part1, part2 = parts
+
+                    # [수정] process_combination 호출 시 match_type을 PASSWORD로 지정
+                    success = await self.current_scene.process_combination(
+                        part1, part2, match_type=CombinationType.PASSWORD
+                    )
+
+                    if not success:
+                        # 실패 시 피드백 (첫 번째 제안 반영)
+                        self.ui.print_system_message("비밀번호가 일치하지 않거나, 대상을 찾을 수 없습니다.")
+                else:
+                    self.ui.print_system_message("잘못된 입력 형식입니다. `대상 : 비밀번호` 형식으로 입력해주세요.")
+                return
+
+            # 2. 아이템 조합 명령 처리 (더하기 '+' 사용) -> Type: DEFAULT
             if "+" in command:
-                # '+'를 기준으로 명령을 분리하고 소문자로 변환합니다.
                 parts = [p.strip().lower() for p in command.split("+")]
                 if len(parts) == 2:
                     part1, part2 = parts
-                    # 현재 장면의 process_combination 메서드를 호출하여 조합 명령을 처리합니다.
-                    if not await self.current_scene.process_combination(part1, part2):
+
+                    # [수정] process_combination 호출 시 match_type을 DEFAULT로 지정 (기본값)
+                    success = await self.current_scene.process_combination(
+                        part1, part2, match_type=CombinationType.DEFAULT
+                    )
+
+                    if not success:
                         self.ui.print_system_message("아무 일도 일어나지 않았습니다.")
                 else:
-                    # 조합 명령 형식이 잘못된 경우 오류 메시지를 출력합니다.
                     self.ui.print_system_message("잘못된 조합 형식입니다. `아이템 + 대상` 형식으로 입력해주세요.")
-            else:
-                # 일반 키워드 명령인 경우 현재 장면의 process_keyword 메서드를 호출합니다.
-                if not await self.current_scene.process_keyword(command):
-                    # 처리할 수 없는 키워드인 경우 시스템 메시지를 출력합니다.
-                    josa = get_josa(command, "으로는/로는")
-                    self.ui.print_system_message(f"'{command}'{josa} 아무것도 할 수 없습니다.")
+                return
+
+            # 3. 일반 키워드 명령 처리 (기존과 동일)
+            if not await self.current_scene.process_keyword(command):
+                josa = get_josa(command, "으로는/로는")
+                self.ui.print_system_message(f"'{command}'{josa} 아무것도 할 수 없습니다.")
+
         else:
-            # 현재 장면이 없는 경우 (게임 시작 전) '일어나기' 명령만 처리합니다.
+            # 게임 시작 전 (기존과 동일)
             if command.lower() == CommandType.WAKE_UP:
-                self.scene_factory.game.start_game()  # 게임 시작 메서드를 호출합니다.
+                self.scene_factory.game.start_game()
             else:
-                # '일어나기' 명령이 아니면 안내 메시지를 출력합니다.
                 self.ui.print_system_message(f"`{CommandType.WAKE_UP}`를 입력해야 합니다.")
 
     def redisplay_current_scene(self):

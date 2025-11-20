@@ -1,4 +1,4 @@
-from const import ActionType, ConditionType, KeywordId, KeywordState, KeywordType, SceneID
+from const import ActionType, ConditionType, KeywordId, KeywordState, KeywordType, SceneID, CombinationType
 from schemas import Action, Combination, Condition, Interaction, KeywordData, SceneData
 
 CH0_SCENE1_DATA = SceneData(
@@ -136,9 +136,10 @@ CH0_SCENE1_DATA = SceneData(
                             type=ActionType.PRINT_NARRATIVE,
                             value="전원 버튼을 누르자, 잠시 팬이 돌다가 암호 입력창이 뜬다.",
                         ),
+                        # [수정] 힌트 텍스트 변경: + 대신 : 사용
                         Action(
                             type=ActionType.PRINT_SYSTEM,
-                            value="암호를 알아내어 `컴퓨터 + [비밀번호]` 형식으로 입력해야 할 것 같다.",
+                            value="암호를 알아내어 `컴퓨터 : [비밀번호]` 형식으로 입력해야 할 것 같다.",
                         ),
                     ]
                 ),
@@ -156,7 +157,12 @@ CH0_SCENE1_DATA = SceneData(
                     actions=[
                         Action(
                             type=ActionType.PRINT_NARRATIVE,
-                            value="자물쇠가 걸려있다. `시약장 + [비밀번호]` 형식으로 열 수 있을 것 같다.",
+                            value="자물쇠가 걸려있다.",
+                        ),
+                        # [수정] 힌트 텍스트 변경: + 대신 : 사용
+                        Action(
+                            type=ActionType.PRINT_SYSTEM,
+                            value="`시약장 : [비밀번호]` 형식으로 열 수 있을 것 같다.",
                         )
                     ]
                 ),
@@ -189,7 +195,9 @@ CH0_SCENE1_DATA = SceneData(
         ),
     },
     combinations=[
+        # 1. 컴퓨터 비밀번호 (타입: PASSWORD)
         Combination(
+            type=CombinationType.PASSWORD,  # [중요] 비밀번호 타입 지정
             targets=[KeywordId.OLD_COMPUTER, "12345678"],
             actions=[
                 Action(
@@ -199,7 +207,9 @@ CH0_SCENE1_DATA = SceneData(
                 Action(type=ActionType.UPDATE_STATE, value={"key": "computer_solved", "value": True}),
             ],
         ),
+        # 2. 시약장 비밀번호 (타입: PASSWORD)
         Combination(
+            type=CombinationType.PASSWORD,  # [중요] 비밀번호 타입 지정
             targets=[KeywordId.CABINET, "0815"],
             actions=[
                 Action(

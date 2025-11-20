@@ -1,6 +1,6 @@
 from typing import Any
 
-from const import ActionType, ConditionType, KeywordState, KeywordType, SceneID
+from const import ActionType, ConditionType, KeywordState, KeywordType, SceneID, CombinationType
 from pydantic import BaseModel, Field
 
 # --- 하위 모델 정의 ---
@@ -33,6 +33,7 @@ class KeywordData(BaseModel):
 
 
 class Combination(BaseModel):
+    type: CombinationType = CombinationType.DEFAULT
     targets: list[str]
     conditions: list[Condition] = Field(default_factory=list)
     actions: list[Action]

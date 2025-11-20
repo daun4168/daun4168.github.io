@@ -1,7 +1,7 @@
 name = "Graduent Student Story"
 description = "-"
 
-packages = ["markdown", "asyncio"]
+packages = ["markdown", "asyncio", "pydantic"]
 
 [files]
 "./main.py" = ""
@@ -13,6 +13,7 @@ packages = ["markdown", "asyncio"]
 "./scene_manager.py" = ""
 "./const.py" = ""
 "./logic_handlers.py" = ""
+"./schemas.py" = ""
 "story/__init__.py" = "story/__init__.py"
 "story/chapter0/__init__.py" = "story/chapter0/__init__.py"
 "story/chapter0/scene0.py" = "story/chapter0/scene0.py"

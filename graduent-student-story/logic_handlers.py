@@ -10,7 +10,7 @@ class ActionHandler(ABC):
     def execute(self, scene, value):
         """
         :param scene: 동작을 수행할 Scene 인스턴스
-        :param value: 데이터 파일에 정의된 액션의 value (dict, str 등)
+        :param value: 데이터 파일에 정의된 액션의 value
         """
         pass
 
@@ -20,7 +20,7 @@ class ConditionHandler(ABC):
     def check(self, scene, target, value) -> bool:
         """
         :param scene: 검사를 수행할 Scene 인스턴스
-        :param target: 검사 대상 (item id, state key 등)
+        :param target: 검사 대상
         :param value: 비교할 값
         """
         pass
@@ -40,6 +40,7 @@ class NotHasItemHandler(ConditionHandler):
 
 class StateIsHandler(ConditionHandler):
     def check(self, scene, target, value) -> bool:
+        # scene.state는 여전히 dict이므로 ["key"] 접근이 맞습니다.
         return scene.state.get(target) == value
 
 
@@ -75,23 +76,26 @@ class RemoveItemHandler(ActionHandler):
 class RemoveKeywordHandler(ActionHandler):
     def execute(self, scene, value):
         target = value
-        if target in scene.scene_data["keywords"]:
-            del scene.scene_data["keywords"][target]
-            scene.ui.update_sight_status(scene.scene_data["keywords"])
+        # [수정] 객체 접근 방식(.keywords)으로 변경
+        if target in scene.scene_data.keywords:
+            del scene.scene_data.keywords[target]
+            scene.ui.update_sight_status(scene.scene_data.keywords)
 
 
 class UpdateStateHandler(ActionHandler):
     def execute(self, scene, value):
-        # 1. 게임 상태 변수 업데이트
+        # 1. 게임 상태 변수 업데이트 (scene.state는 dict임)
         if "key" in value:
             scene.state[value["key"]] = value["value"]
 
         # 2. 키워드(오브젝트) 상태 업데이트
         if "keyword" in value:
             k_name = value["keyword"]
-            if k_name in scene.scene_data["keywords"]:
-                scene.scene_data["keywords"][k_name]["state"] = value["state"]
-                scene.ui.update_sight_status(scene.scene_data["keywords"])
+            # [수정] 객체 접근 방식(.keywords)으로 변경
+            if k_name in scene.scene_data.keywords:
+                # [수정] KeywordData 객체의 속성(.state)을 변경
+                scene.scene_data.keywords[k_name].state = value["state"]
+                scene.ui.update_sight_status(scene.scene_data.keywords)
 
 
 class MoveSceneHandler(ActionHandler):

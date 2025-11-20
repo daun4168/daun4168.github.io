@@ -1,6 +1,7 @@
 from pyscript import document
 import markdown
-
+# const에서 Enum 임포트 (타입 비교용)
+from const import KeywordType, KeywordState
 
 def get_josa(word: str, josa_pair: str) -> str:
     particles = josa_pair.split("/")
@@ -25,21 +26,25 @@ class UIManager:
         self.location_name.innerText = f"지역: {name}" if name else ""
 
     def update_sight_status(self, keywords: dict):
+        """
+        keywords: Dict[str, KeywordData] 형태의 Pydantic 모델 딕셔너리를 받습니다.
+        """
         if not keywords:
             self.sight_status.innerText = "시야: "
             return
 
         display_list = []
         for name, data in keywords.items():
-            if data.get("type") == "Alias":
-                continue  # 별명은 시야에 표시하지 않음
+            # Pydantic 모델 속성 접근 (.type, .state)
+            if data.type == KeywordType.ALIAS:
+                continue
 
-            state = data.get("state")
-            if state == "discovered":
-                # display_name이 있으면 그것을, 없으면 키워드 이름을 사용
-                display_name = data.get("display_name", name)
+            state = data.state
+            if state == KeywordState.DISCOVERED:
+                # display_name이 없으면(None) name을 사용
+                display_name = data.display_name if data.display_name else name
                 display_list.append(f"[{display_name}]")
-            elif state == "hidden":
+            elif state == KeywordState.HIDDEN:
                 display_list.append("[?]")
 
         self.sight_status.innerText = f"시야: {', '.join(display_list)}"

@@ -57,6 +57,18 @@ TEST_SCENARIOS = {
         "교수님 + 법인카드",
         "탑승구 + 스패너",
     ],
+    3: [
+        "바다",
+        "모래사장",
+        "모래",
+        "MK-II",
+        "계기판",
+        "통신기",
+        "하늘",
+        "태양",
+        "스패너",
+        "통신기 + 스패너",
+    ],
 }
 
 
@@ -93,9 +105,7 @@ class TestRunner:
         # 3. 유효성 검사
         if not self._is_valid_range(start_idx, end_idx):
             max_idx = max(TEST_SCENARIOS.keys()) if TEST_SCENARIOS else 0
-            self.game.ui.print_system_message(
-                f"오류: 유효하지 않은 테스트 범위입니다. (가능 범위: 0-{max_idx})"
-            )
+            self.game.ui.print_system_message(f"오류: 유효하지 않은 테스트 범위입니다. (가능 범위: 0-{max_idx})")
             return True
 
         # 4. 시나리오 순차 실행

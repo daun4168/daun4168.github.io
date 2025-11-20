@@ -118,7 +118,9 @@ class Scene:
 
         return True  # 키워드 자체는 유효하므로 True 반환 (아무 액션도 없어도).
 
-    async def process_combination(self, item1: str, item2: str, match_type: CombinationType = CombinationType.DEFAULT) -> bool:
+    async def process_combination(
+        self, item1: str, item2: str, match_type: CombinationType = CombinationType.DEFAULT
+    ) -> bool:
         """
         두 개의 키워드(아이템 + 대상 등) 조합을 처리합니다.
         장면에 정의된 조합(combinations)을 확인하고, 조건이 충족되면 액션을 실행합니다.

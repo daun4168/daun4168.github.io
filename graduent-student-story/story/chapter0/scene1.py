@@ -163,7 +163,7 @@ CH0_SCENE1_DATA = SceneData(
                         Action(
                             type=ActionType.PRINT_SYSTEM,
                             value="`시약장 : [비밀번호]` 형식으로 열 수 있을 것 같다.",
-                        )
+                        ),
                     ]
                 ),
             ],

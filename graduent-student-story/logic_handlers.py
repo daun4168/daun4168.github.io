@@ -5,6 +5,7 @@ from entity import Item
 
 # --- Base Interfaces ---
 
+
 class ActionHandler(ABC):
     @abstractmethod
     def execute(self, scene, value):
@@ -18,6 +19,7 @@ class ConditionHandler(ABC):
 
 
 # --- Condition Implementations ---
+
 
 class HasItemHandler(ConditionHandler):
     def check(self, scene, target, value) -> bool:
@@ -45,6 +47,7 @@ class StaminaMinHandler(ConditionHandler):
 
 
 # --- Action Implementations ---
+
 
 class PrintNarrativeHandler(ActionHandler):
     def execute(self, scene, value):
@@ -111,7 +114,7 @@ class ModifyStaminaHandler(ActionHandler):
         if scene.player.is_dead():
             scene.ui.print_narrative(
                 "\n**[시야가 암전됩니다...]**\n극심한 피로와 탈진으로 의식을 잃었습니다.\n\n(가장 최근의 체크포인트로 되돌아갑니다.)",
-                is_markdown=True
+                is_markdown=True,
             )
             if scene.game:
                 scene.game.load_checkpoint()

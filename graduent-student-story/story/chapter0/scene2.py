@@ -123,7 +123,6 @@ CH0_SCENE2_DATA = SceneData(
                 )
             ],
         ),
-
         # [수정] 여기가 핵심 변경 부분입니다.
         Combination(
             targets=[KeywordId.HATCH, KeywordId.SPANNER],
@@ -134,7 +133,7 @@ CH0_SCENE2_DATA = SceneData(
             actions=[
                 Action(
                     type=ActionType.PRINT_NARRATIVE,
-                    value="**[스패너]**로 **[탑승구]**를 단단히 조이자마자, 기계가 요란한 소리를 내며 진동하기 시작한다!\n\n교수님: \"좋아! 가동 시작! 좌표는... 어... 대충 거기로 설정했어! 살아서 돌아오게!\"\n\n시야가 하얗게 점멸하고, 엄청난 중력이 몸을 짓누른다. 의식이 희미해진다...",
+                    value='**[스패너]**로 **[탑승구]**를 단단히 조이자마자, 기계가 요란한 소리를 내며 진동하기 시작한다!\n\n교수님: "좋아! 가동 시작! 좌표는... 어... 대충 거기로 설정했어! 살아서 돌아오게!"\n\n시야가 하얗게 점멸하고, 엄청난 중력이 몸을 짓누른다. 의식이 희미해진다...',
                 ),
                 # 게임 종료 대신 씬 이동 액션 사용
                 Action(
@@ -143,7 +142,6 @@ CH0_SCENE2_DATA = SceneData(
                 ),
             ],
         ),
-
         Combination(
             targets=[KeywordId.PROFESSOR, KeywordId.CORP_CARD],
             conditions=[

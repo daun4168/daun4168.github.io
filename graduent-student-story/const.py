@@ -47,6 +47,9 @@ class KeywordId(StrEnum):
     COMMS = "통신기"
     SEA = "바다"
     SUN = "태양"
+    SKY = "하늘"
+    SAND = "모래"
+    SANDY_BEACH = "모래사장"
 
 
 class KeywordState(StrEnum):

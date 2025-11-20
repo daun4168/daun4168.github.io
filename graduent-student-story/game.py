@@ -193,7 +193,7 @@ class Game:
             "inventory_items": copy.deepcopy(self.inventory.items),
             "player_stamina": self.player.current_stamina,
             "player_max_stamina": self.player.max_stamina,
-            "scene_id": scene_id
+            "scene_id": scene_id,
         }
 
     def load_checkpoint(self):

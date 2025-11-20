@@ -35,7 +35,7 @@ SCENES = {
             "쓰레기통": {"type": "Object", "state": "hidden"}, "박스": {"type": "Object", "state": "hidden"},
             "빗자루": {"type": "Object", "state": "hidden"}, "오래된 컴퓨터": {"type": "Object", "state": "hidden"},
             "의문의 액체": {"type": "Object", "state": "hidden"}, "시약장": {"type": "Object", "state": "hidden"},
-            "바닥": {"type": "Object", "state": "hidden"}, "벽": {"type": "Object", "state": "hidden"},
+            "바닥": {"type": "Object", "state": "hidden"}, "벽": {"type": "Object", "state": "hidden", "sub_keyword": "메모"},
             "벽면": {"type": "Alias", "target": "벽"}, "문": {"type": "Object", "state": "hidden"},
             "컴퓨터": {"type": "Alias", "target": "오래된 컴퓨터"}
         }
@@ -193,7 +193,6 @@ class Game:
             elif ("빗자루" in part1 and "바닥" in part2) or ("빗자루" in part2 and "바닥" in part1):
                 if self.scene_states["scene1"]["is_liquid_cleaned"] and self.scene_states["scene1"]["trash_can_state"] == "empty":
                     self.ui.print_narrative("깨끗해진 바닥을 **[빗자루]**로 쓸어 마무리 청소를 합니다...", is_markdown=True)
-                    # await asyncio.sleep(2) # 딜레이 제거
                     self._load_scene("scene2")
                 elif not self.scene_states["scene1"]["is_liquid_cleaned"]:
                     self.ui.print_narrative("바닥의 끈적한 **[의문의 액체]** 때문에 **[빗자루]**질을 할 수가 없다. 저걸 먼저 어떻게든 해야 한다.", is_markdown=True)
@@ -221,7 +220,6 @@ class Game:
                         self.scene_states["scene2"]["professor_called_out"] = True
                     elif self.scene_states["scene2"]["card_returned"]:
                         self.ui.print_narrative("**[스패너]**로 **[탑승구]**를 단단히 조였다. 이제 정말 출발할 시간이다!", is_markdown=True)
-                        await asyncio.sleep(2) # 최종 메시지 출력을 위해 잠시 대기
                         self.ui.print_system_message("프롤로그가 성공적으로 마무리되었습니다. 이 게임은 여기까지 완성되었습니다. 플레이해주셔서 감사합니다!", is_markdown=True)
                         self.user_input.disabled = True
                         self.submit_button.disabled = True
@@ -294,7 +292,7 @@ class Game:
                         self.ui.print_narrative("읽어야 할 논문이 산더미처럼 쌓여있다. 보기만 해도 숨이 막힌다.", is_markdown=True)
                     elif original_keyword_name == "책상": self.ui.print_narrative("교수님의 책상이다. 각종 서류와 논문이 어지럽게 널려있다.", is_markdown=True)
                     elif original_keyword_name == "안경알": self.ui.print_narrative("교수님의 안경알이 빛을 번뜩인다. 저 너머의 눈은 웃고 있는지, 화를 내고 있는지 알 수 없다.", is_markdown=True)
-                
+
                 elif self.current_scene_id == "scene1":
                     if original_keyword_name == "쓰레기통":
                         state = self.scene_states["scene1"]["trash_can_state"]
@@ -315,7 +313,7 @@ class Game:
                         else:
                             self.ui.print_narrative("테이프로 칭칭 감겨 있다. 손톱으로는 뜯을 수 없을 것 같다. 날카로운 게 필요하다.", is_markdown=True)
                             if not self.scene_states["scene1"]["combination_tutorial_shown"]:
-                                self.ui.print_system_message("아이템을 조합하거나, 특정 대상에 아이템을 사용하여 새로운 행동을 할 수 있습니다. `+` 기호를 사용하여 두 대상을 묶어보세요.\n예시: `법인카드 + 박스`", is_markdown=True)
+                                self.ui.print_system_message("새로운 상호작용을 위해 `+` 기호를 사용할 수 있습니다. **주머니**의 아이템과 **시야**의 **[키워드]**를 조합해 보세요. 아이템끼리, 혹은 키워드끼리 조합하는 것도 가능합니다.\n예시: `법인카드 + 박스`", is_markdown=True)
                                 self.scene_states["scene1"]["combination_tutorial_shown"] = True
                     elif original_keyword_name == "실험용 랩 가운":
                         self.ui.print_narrative("새하얀 랩 가운이다. 입으면 왠지 졸업에 한 발짝 다가간 기분이 든다.", is_markdown=True)
@@ -335,8 +333,13 @@ class Game:
                         if state == "initial":
                             self.ui.print_narrative("벽지를 자세히 보니, 구석에 작은 메모가 붙어있다.", is_markdown=True)
                             self.scene_states["scene1"]["wall_state"] = "memo_discovered"
+                            SCENES["scene1"]["keywords"]["메모"] = {"type": "Object", "state": "hidden"}
+                            self.ui.update_sight_status(SCENES["scene1"]["keywords"])
+                            self.ui.print_system_message("시야가 넓어진 것 같다. 어떤 **[키워드]**는 또 다른 **[키워드]**로 이어지기도 합니다. `메모`를 입력해서 내용을 확인해 보세요.", is_markdown=True)
                         else:
-                            self.ui.print_narrative("벽에 붙어있는 메모에는 '컴퓨터 비밀번호: 1에서 시작하고 8로 끝나는 여덟자리 숫자' 라고 적혀있다.", is_markdown=True)
+                            self.ui.print_narrative("구석에 작은 메모가 붙어있다.", is_markdown=True)
+                    elif original_keyword_name == "메모":
+                        self.ui.print_narrative("벽에 붙어있는 메모에는 '컴퓨터 비밀번호: 1에서 시작하고 8로 끝나는 여덟자리 숫자' 라고 적혀있다.", is_markdown=True)
                     elif original_keyword_name == "문":
                         self.ui.print_narrative("이미 끔찍한 곳에 와있는데, 굳이 돌아갈 필요는 없어 보인다.", is_markdown=True)
 
@@ -347,14 +350,13 @@ class Game:
                         elif self.scene_states["scene2"]["card_returned"]:
                             self.ui.print_narrative("교수님은 이미 **[법인카드]**를 받아갔다. 이제 **[탑승구]**를 조이는 일만 남았다.", is_markdown=True)
                         else:
-                            self.ui.print_narrative("교수님은 **[MK-II]** 옆에서 나를 지켜보고 있다. 빨리 **[탑승구]**에 들어가라는 무언의 압박이다.", is_markdown=True)
+                            self.ui.print_narrative("교수님: \"뭘 꾸물거려? 어서 **[탑승구]**로 들어가! 아, 그리고 그거 좀 뻑뻑하던데, 알아서 잘 조이고. 공대생이 그정돈 하겠지?\"", is_markdown=True)
                     elif original_keyword_name == "MK-II":
-                        self.ui.print_narrative("교수님의 역작 **[MK-II]**다. 초공간 양자 전송 장치라는데, 전선 마감이 청테이프인 것이 불안하다.", is_markdown=True)
+                        self.ui.print_narrative("교수님의 역작 **[MK-II]**다. 초공간 양자 전송 장치라는데, 전선 마감이 청테이프인 것이 불안하다. **[탑승구]** 쪽 경첩이 덜 조여진 것처럼 보인다.", is_markdown=True)
                         if self.inventory.has("스패너"):
                             self.ui.print_system_message("**[스패너]**로 대충 고쳐볼까 했지만, 더 망가뜨릴 것 같다.", is_markdown=True)
                     elif original_keyword_name == "탑승구":
-                        self.ui.print_narrative("**[MK-II]**의 **[탑승구]**가 아직 좀 뻑뻑하다. 들어가서 직접 **[스패너]**로 조여야 할 것 같다.", is_markdown=True)
-                        self.ui.print_system_message("`탑승구 + 스패너`를 입력해 보세요.", is_markdown=True)
+                        self.ui.print_narrative("육중한 해치다. 경첩이 헐거워 제대로 닫히지 않을 것 같다. **주머니**에 있는 **[스패너]**로 조이면 될 것 같다.", is_markdown=True)
                     elif original_keyword_name == "콘센트":
                         self.ui.print_narrative("벽에 꽂힌 **[MK-II]**의 **[콘센트]**다. 헐거워 보이지만, 건드리면 큰일 날 것 같다.", is_markdown=True)
                     elif original_keyword_name == "전선":

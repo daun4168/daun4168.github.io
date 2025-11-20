@@ -43,7 +43,7 @@ class UIManager:
                 continue  # 별명은 시야에 표시하지 않음
             
             if data.get("state") == "hidden":
-                display_list.append("[???]")
+                display_list.append("[?]")
             else:
                 display_list.append(f"[{name}]")
         

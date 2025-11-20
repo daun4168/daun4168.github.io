@@ -1,6 +1,10 @@
 import asyncio
+import re
 from js import window
 
+# --- 테스트 케이스별 명령어 목록 ---
+
+# Scene 0: 교수님 오피스
 COMMANDS_SCENE_0 = [
     "일어나기",
     "교수님",
@@ -23,6 +27,8 @@ COMMANDS_SCENE_1 = [
     "박스",
     "법인카드 + 박스",
     "벽면",
+    "벽",
+    "메모",
     "벽",
     "빗자루",
     "의문의 액체",
@@ -53,30 +59,51 @@ COMMANDS_SCENE_2 = [
     "탑승구 + 스패너",
 ]
 
+
 class TestRunner:
     def __init__(self, game):
         self.game = game
-        self.test_sequences = {
-            "test0": self._run_scene0_sequence,
-            "test1": self._run_scene1_sequence,
-            "test2": self._run_scene2_sequence,
-        }
+        # 테스트 함수들을 리스트로 관리하여 확장성 확보
+        self.sequences = [
+            self._run_scene0_sequence,
+            self._run_scene1_sequence,
+            self._run_scene2_sequence,
+        ]
 
     async def run_test_command(self, command: str):
+        """
+        'test'로 시작하는 명령어를 파싱하여 해당 테스트를 실행합니다.
+        - `test0`: 0번 테스트 실행
+        - `test0-2`: 0번, 1번, 2번 테스트를 순차적으로 실행
+        """
         if "localhost" not in window.location.hostname or not command.startswith("test"):
             return False
 
-        test_func = self.test_sequences.get(command)
-        if test_func:
-            await test_func()
+        match = re.match(r'test(\d+)(?:-(\d+))?', command)
+        if not match:
+            return False
+
+        start_index = int(match.group(1))
+        end_index = int(match.group(2)) if match.group(2) else start_index
+
+        if start_index >= len(self.sequences) or end_index >= len(self.sequences):
+            self.game.ui.print_system_message(f"오류: 존재하지 않는 테스트 번호입니다. (사용 가능한 범위: 0-{len(self.sequences) - 1})")
             return True
-            
-        return False
+
+        # --- 테스트 실행 ---
+        await self.game.process_command("일어나기") # 게임 시작
+
+        for i in range(start_index, end_index + 1):
+            await self.sequences[i]()
+        
+        self.game.ui.print_system_message(f"테스트 실행 완료: {command}")
+        return True
 
     async def _execute_sequence(self, commands):
+        """주어진 명령어 목록을 순차적으로 실행합니다."""
         for cmd in commands:
             await self.game.process_command(cmd)
-            await asyncio.sleep(0.5)
+            await asyncio.sleep(0.1) # 각 명령어 사이의 최소 딜레이
 
     async def _run_scene0_sequence(self):
         await self._execute_sequence(COMMANDS_SCENE_0)

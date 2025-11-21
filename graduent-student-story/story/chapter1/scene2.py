@@ -19,7 +19,7 @@ CH1_SCENE2_DATA = SceneData(
         "door_frozen": False,
         "door_opened": False,
         "underground_inspected": False,
-        "bucket_found": False, # [신규] 양동이 발견 여부
+        "bucket_found": False,  # [신규] 양동이 발견 여부
     },
     keywords={
         KeywordId.BASECAMP: KeywordData(type=KeywordType.ALIAS, target=KeywordId.BEACH),
@@ -146,9 +146,7 @@ CH1_SCENE2_DATA = SceneData(
             description="난파선 가장 깊은 곳으로 이어지는 어둡고 축축한 계단입니다. 썩은 기름 냄새가 올라옵니다.",
             interactions=[
                 Interaction(
-                    conditions=[
-                        Condition(type=ConditionType.STATE_IS, target="underground_inspected", value=False)
-                    ],
+                    conditions=[Condition(type=ConditionType.STATE_IS, target="underground_inspected", value=False)],
                     actions=[
                         Action(
                             type=ActionType.PRINT_NARRATIVE,
@@ -165,9 +163,7 @@ CH1_SCENE2_DATA = SceneData(
                     ],
                 ),
                 Interaction(
-                    conditions=[
-                        Condition(type=ConditionType.STATE_IS, target="underground_inspected", value=True)
-                    ],
+                    conditions=[Condition(type=ConditionType.STATE_IS, target="underground_inspected", value=True)],
                     actions=[
                         Action(
                             type=ActionType.REQUEST_CONFIRMATION,
@@ -219,7 +215,7 @@ CH1_SCENE2_DATA = SceneData(
                             },
                         ),
                         Action(type=ActionType.UPDATE_STATE, value={"key": "bucket_found", "value": True}),
-                    ]
+                    ],
                 ),
                 Interaction(
                     actions=[
@@ -228,7 +224,7 @@ CH1_SCENE2_DATA = SceneData(
                             value="차가운 금속 파이프들입니다. 더 이상 쓸만한 건 없습니다.",
                         )
                     ]
-                )
+                ),
             ],
         ),
         # 5. 바닥 전선 (단순 조사)

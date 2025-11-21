@@ -133,11 +133,11 @@ CH1_SCENE1_DATA = SceneData(
                     actions=[
                         Action(
                             type=ActionType.PRINT_NARRATIVE,
-                            value="울창한 밀림이다. 억센 덩굴이 그물처럼 얽혀 있어 맨몸으로는 뚫고 지나갈 수 없다.\n무언가 **날카롭고 무거운 도구**가 있다면 길을 낼 수 있을 것 같다."
+                            value="울창한 밀림이다. 억센 덩굴이 그물처럼 얽혀 있어 맨몸으로는 뚫고 지나갈 수 없다.\n무언가 **날카롭고 무거운 도구**가 있다면 길을 낼 수 있을 것 같다.",
                         )
                     ]
-                )
-            ]
+                ),
+            ],
         ),
         # 7. MK-II (수리 대상)
         KeywordId.MK_II: KeywordData(
@@ -210,13 +210,12 @@ CH1_SCENE1_DATA = SceneData(
             actions=[
                 Action(
                     type=ActionType.PRINT_NARRATIVE,
-                    value="손에 묵직한 **[소방 도끼]**를 쥐었다. 붉은 날이 햇빛을 받아 번뜩인다.\n\n\"길이 없으면 만들면 그만이지.\"\n\n기합과 함께 도끼를 휘둘렀다. *퍼억! 툭!* 질긴 덩굴들이 허무하게 잘려 나간다.\n몇 번의 도끼질 끝에, 사람이 지나갈 만한 통로가 확보되었다."
+                    value='손에 묵직한 **[소방 도끼]**를 쥐었다. 붉은 날이 햇빛을 받아 번뜩인다.\n\n"길이 없으면 만들면 그만이지."\n\n기합과 함께 도끼를 휘둘렀다. *퍼억! 툭!* 질긴 덩굴들이 허무하게 잘려 나간다.\n몇 번의 도끼질 끝에, 사람이 지나갈 만한 통로가 확보되었다.',
                 ),
                 Action(type=ActionType.UPDATE_STATE, value={"key": "forest_cleared", "value": True}),
                 Action(type=ActionType.PRINT_SYSTEM, value="이제 **[숲 입구]**로 진입할 수 있습니다."),
-            ]
+            ],
         ),
-
         # 기존 스패너 + 야자수
         Combination(
             targets=[KeywordId.PALM_TREE, KeywordId.SPANNER],

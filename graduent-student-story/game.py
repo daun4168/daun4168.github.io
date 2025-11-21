@@ -120,7 +120,7 @@ class Game:
         # 정의된 인트로 텍스트의 각 문단을 출력합니다.
         for paragraph in INTRO_TEXT:
             self.ui.print_narrative(paragraph, is_markdown=True)
-            await asyncio.sleep(0.2)  # 각 문단 출력 후 0.5초 대기
+            await asyncio.sleep(0.1)  # 각 문단 출력 후 0.1초 대기
 
         # 인트로가 끝난 후 사용자에게 게임 시작 명령을 안내합니다.
         self.ui.print_system_message(f"`{CommandType.WAKE_UP}`를 입력하면 눈을 뜹니다...")

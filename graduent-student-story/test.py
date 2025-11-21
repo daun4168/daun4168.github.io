@@ -93,6 +93,26 @@ TEST_SCENARIOS = {
         "어라",
         "예",
     ],
+    5: [
+        "먼지 제거제",
+        "스패너",
+        "빈 페트병",
+        "비닐",
+        "둘러보기",
+        "격벽",
+        "비상 캐비닛",
+        "조명탄",
+        "경고문",
+        "파이프",
+        "전선",
+        "격벽 + 먼지 제거제",
+        "격벽 + 조명탄",
+        "격벽",
+        "격벽 + 먼지 제거제",
+        "격벽",
+        "격벽 + 스패너",
+        "지하 통로",
+    ],
 }
 
 
@@ -155,5 +175,5 @@ class TestRunner:
 
         for cmd in commands:
             # 딜레이를 주어 너무 빠르게 지나가는 것을 방지
-            await asyncio.sleep(0.1)
+            await asyncio.sleep(0.05)
             await self.game.process_command(cmd)

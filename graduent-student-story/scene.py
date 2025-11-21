@@ -2,7 +2,7 @@ import copy
 
 from const import KeywordState, KeywordType, CombinationType
 from logic_handlers import ACTION_HANDLERS, CONDITION_HANDLERS
-from schemas import SceneData  # 타입 힌팅용
+from schemas import SceneData, ChapterData  # 타입 힌팅용
 from ui import get_josa
 
 
@@ -12,7 +12,7 @@ class Scene:
     장면의 데이터, 상태, 키워드 및 상호작용 로직을 관리합니다.
     """
 
-    def __init__(self, game, ui, inventory, player, scene_data: SceneData):
+    def __init__(self, game, ui, inventory, player, scene_data: SceneData, chapter_data: ChapterData | None = None):
         """
         Scene 클래스의 생성자입니다.
 
@@ -29,6 +29,7 @@ class Scene:
         # Pydantic 모델은 mutable하므로 deepcopy를 사용하여 원본 데이터의 변경을 방지합니다.
         # (혹은 scene_data.model_copy(deep=True)를 사용할 수도 있습니다.)
         self.scene_data = copy.deepcopy(scene_data)
+        self.chapter_data = chapter_data  # 챕터 데이터 저장
         # 장면의 동적 상태를 초기화합니다.
         self.state = self.scene_data.initial_state
 
@@ -123,7 +124,8 @@ class Scene:
     ) -> bool:
         """
         두 개의 키워드(아이템 + 대상 등) 조합을 처리합니다.
-        장면에 정의된 조합(combinations)을 확인하고, 조건이 충족되면 액션을 실행합니다.
+        씬에 정의된 조합(combinations)을 확인하고, 조건이 충족되면 액션을 실행합니다.
+        씬 고유 조합뿐만 아니라 챕터 공통 조합도 검사합니다.
 
         Args:
             item1 (str): 첫 번째 키워드.
@@ -132,7 +134,11 @@ class Scene:
         Returns:
             bool: 조합 처리에 성공했으면 True, 아니면 False.
         """
-        combinations = self.scene_data.combinations  # 현재 장면의 모든 조합 데이터를 가져옵니다.
+        combinations = self.scene_data.combinations.copy()  # 현재 장면의 모든 조합 데이터를 가져옵니다.
+        # 2. [추가] 챕터 공통 조합이 있다면 리스트에 합침
+        if self.chapter_data and self.chapter_data.combinations:
+            combinations = combinations + self.chapter_data.combinations
+
         r_item1 = self.resolve_alias(item1)  # 첫 번째 키워드의 별칭을 해석합니다.
         r_item2 = self.resolve_alias(item2)  # 두 번째 키워드의 별칭을 해석합니다.
 

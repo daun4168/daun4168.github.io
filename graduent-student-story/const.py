@@ -1,27 +1,33 @@
 from enum import StrEnum
 
+class ChapterID(StrEnum):
+    CH0 = "ch0"
+    CH1 = "ch1"
+
 
 class SceneID(StrEnum):
     CH0_SCENE0 = "ch0_scene0"
     CH0_SCENE1 = "ch0_scene1"
     CH0_SCENE2 = "ch0_scene2"
-    CH1_SCENE0 = "ch1_scene0"  # Chapter 1 Intro
-    CH1_SCENE1 = "ch1_scene1"  # Chapter 1 Main
+
+    CH1_SCENE0 = "ch1_scene0"
+    CH1_SCENE1 = "ch1_scene1"
+    CH1_SCENE2 = "ch1_scene2"
 
 
 class KeywordId(StrEnum):
-    # Common
+    # CH0
     PROFESSOR = "교수님"
     CORP_CARD = "법인카드"
     SPANNER = "스패너"
     DOOR = "문"
 
-    # Scene 0
+    # CH0_SCENE0
     THESIS = "논문"
     DESK = "책상"
     GLASSES = "안경알"
 
-    # Scene 1
+    # CH0_SCENE1
     TRASH_CAN = "쓰레기통"
     BOX = "박스"
     BROOM = "빗자루"
@@ -37,19 +43,37 @@ class KeywordId(StrEnum):
     LAB_COAT = "실험용 랩 가운"
     ETHANOL = "에탄올"
 
-    # Scene 2
+    # CH0_SCENE2
     MK_II = "MK-II"
     WIRE = "전선"
     OUTLET = "콘센트"
     HATCH = "탑승구"
 
-    # Chapter 1
+    # CH1_SCENE0
     COMMS = "통신기"
     SEA = "바다"
     SUN = "태양"
     SKY = "하늘"
     SAND = "모래"
     SANDY_BEACH = "모래사장"
+
+    # CH1_SCENE1
+    YES = "예"
+    NO = "아니오"
+
+    # 장소/이동
+    WRECKAGE = "난파선 잔해"
+    FOREST_ENTRY = "숲 입구"
+
+    # 오브젝트
+    SHADE = "그늘막"
+    PALM_TREE = "야자수"
+    TRASH_PILE = "쓰레기 더미"
+
+    # 아이템
+    COCONUT = "코코넛"
+    PLASTIC_BOTTLE = "빈 페트병"
+    VINYL = "비닐"
 
 
 class KeywordState(StrEnum):

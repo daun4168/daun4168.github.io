@@ -1,6 +1,7 @@
 from const import CommandType, CombinationType
 from scene import Scene
 from ui import get_josa
+from schemas import ChapterData
 
 
 class SceneFactory:
@@ -24,9 +25,9 @@ class SceneFactory:
         self.inventory = inventory
         self.player = player
         # _scene_registry는 장면 ID를 키로, (장면 클래스, 장면 데이터) 튜플을 값으로 저장합니다.
-        self._scene_registry: dict[str, (type[Scene], dict)] = {}
+        self._scene_registry = {}
 
-    def register_scene(self, scene_id: str, scene_class: type[Scene], scene_data: dict):
+    def register_scene(self, scene_id: str, scene_class: type[Scene], scene_data: dict, chapter_data: ChapterData | None = None):
         """
         팩토리에 장면 생성에 필요한 정보를 등록합니다.
 
@@ -41,7 +42,7 @@ class SceneFactory:
         # 등록하려는 클래스가 Scene의 서브클래스인지 확인합니다.
         if not issubclass(scene_class, Scene):
             raise TypeError(f"{scene_class.__name__} is not a subclass of Scene.")
-        self._scene_registry[scene_id] = (scene_class, scene_data)
+        self._scene_registry[scene_id] = (scene_class, scene_data, chapter_data)
 
     def create_scene(self, scene_id: str) -> Scene | None:
         """
@@ -59,11 +60,11 @@ class SceneFactory:
             return None
 
         # 등록된 장면 클래스와 데이터를 가져옵니다.
-        scene_class, scene_data = self._scene_registry[scene_id]
+        scene_class, scene_data, chapter_data = self._scene_registry[scene_id]
 
         # Scene 인스턴스를 생성하여 반환합니다.
         # [수정] player 인자 전달 확인
-        return scene_class(self.game, self.ui, self.inventory, self.player, scene_data)
+        return scene_class(self.game, self.ui, self.inventory, self.player, scene_data, chapter_data)
 
 
 class SceneManager:

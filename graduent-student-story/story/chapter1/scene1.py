@@ -21,6 +21,7 @@ CH1_SCENE1_DATA = SceneData(
         "crab_caught": False,
         "searched_trash": False,
         "has_shelter": False,
+        "forest_cleared": False,  # [신규] 숲길 개척 여부
     },
     on_enter_actions=[
         # 체력 UI 표시 (자동 저장은 제거됨)
@@ -100,11 +101,43 @@ CH1_SCENE1_DATA = SceneData(
                 ),
             ],
         ),
-        # 6. 숲 입구 (진입 불가)
+        # 6. 숲 입구 (진입 불가 -> 도끼 사용 후 진입 가능)
         KeywordId.FOREST_ENTRY: KeywordData(
-            type=KeywordType.OBJECT,
+            type=KeywordType.PORTAL,
             state=KeywordState.HIDDEN,
-            description="울창한 밀림이다. 억센 덩굴로 막혀 있어, 무언가 날카로운 도구가 없으면 들어갈 수 없다.",
+            interactions=[
+                # Case 1: 숲길이 개척되었을 때 (이동)
+                Interaction(
+                    conditions=[Condition(type=ConditionType.STATE_IS, target="forest_cleared", value=True)],
+                    actions=[
+                        Action(
+                            type=ActionType.REQUEST_CONFIRMATION,
+                            value={
+                                "prompt": "**[숲 입구]**로 진입하시겠습니까?",
+                                "confirm_actions": [
+                                    Action(
+                                        type=ActionType.PRINT_NARRATIVE,
+                                        value="잘려 나간 덩굴 사이로 난 길을 따라 울창한 숲속으로 들어갑니다.",
+                                    ),
+                                    Action(type=ActionType.MOVE_SCENE, value=SceneID.CH1_SCENE4),
+                                ],
+                                "cancel_actions": [
+                                    Action(type=ActionType.PRINT_NARRATIVE, value="아직 준비가 덜 된 것 같다."),
+                                ],
+                            },
+                        ),
+                    ],
+                ),
+                # Case 2: 기본 상태 (막힘)
+                Interaction(
+                    actions=[
+                        Action(
+                            type=ActionType.PRINT_NARRATIVE,
+                            value="울창한 밀림이다. 억센 덩굴이 그물처럼 얽혀 있어 맨몸으로는 뚫고 지나갈 수 없다.\n무언가 **날카롭고 무거운 도구**가 있다면 길을 낼 수 있을 것 같다."
+                        )
+                    ]
+                )
+            ]
         ),
         # 7. MK-II (수리 대상)
         KeywordId.MK_II: KeywordData(
@@ -171,6 +204,20 @@ CH1_SCENE1_DATA = SceneData(
     },
     # 조합식
     combinations=[
+        # [신규] 소방 도끼 + 숲 입구 (길 뚫기)
+        Combination(
+            targets=[KeywordId.FOREST_ENTRY, KeywordId.FIRE_AXE],
+            actions=[
+                Action(
+                    type=ActionType.PRINT_NARRATIVE,
+                    value="손에 묵직한 **[소방 도끼]**를 쥐었다. 붉은 날이 햇빛을 받아 번뜩인다.\n\n\"길이 없으면 만들면 그만이지.\"\n\n기합과 함께 도끼를 휘둘렀다. *퍼억! 툭!* 질긴 덩굴들이 허무하게 잘려 나간다.\n몇 번의 도끼질 끝에, 사람이 지나갈 만한 통로가 확보되었다."
+                ),
+                Action(type=ActionType.UPDATE_STATE, value={"key": "forest_cleared", "value": True}),
+                Action(type=ActionType.PRINT_SYSTEM, value="이제 **[숲 입구]**로 진입할 수 있습니다."),
+            ]
+        ),
+
+        # 기존 스패너 + 야자수
         Combination(
             targets=[KeywordId.PALM_TREE, KeywordId.SPANNER],
             conditions=[

@@ -1,4 +1,4 @@
-from const import ActionType, ConditionType, KeywordId, KeywordState, KeywordType, SceneID, CombinationType
+from const import ActionType, CombinationType, ConditionType, KeywordId, KeywordState, KeywordType, SceneID
 from schemas import Action, Combination, Condition, Interaction, KeywordData, SceneData
 
 CH0_SCENE1_DATA = SceneData(

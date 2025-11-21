@@ -1,7 +1,7 @@
 from abc import ABC, abstractmethod
+
 from const import ActionType, ConditionType
 from entity import Item
-
 
 # --- Base Interfaces ---
 
@@ -136,6 +136,29 @@ class ShowStaminaUIHandler(ActionHandler):
         scene.ui.toggle_stamina_ui(value)
 
 
+class RequestConfirmationHandler(ActionHandler):
+    def execute(self, scene, value):
+        """
+        value 구조:
+        {
+            "prompt": "질문 내용",
+            "confirm_actions": [Action 객체 리스트],
+            "cancel_actions": [Action 객체 리스트]
+        }
+        """
+        prompt = value.get("prompt", "진행하시겠습니까? (예/아니오)")
+
+        # 질문 출력
+        scene.ui.print_narrative(prompt, is_markdown=True)
+        scene.ui.print_system_message("`예` 또는 `아니오`를 입력하세요.")
+
+        # 게임 상태를 대기 모드로 전환하고 할 일 저장
+        scene.game.pending_confirmation = {
+            "on_confirm": value.get("confirm_actions", []),
+            "on_cancel": value.get("cancel_actions", []),
+        }
+
+
 # --- Registries (Strategy Mapping) ---
 
 CONDITION_HANDLERS = {
@@ -158,5 +181,6 @@ ACTION_HANDLERS = {
     ActionType.MODIFY_STAMINA: ModifyStaminaHandler(),
     ActionType.SAVE_CHECKPOINT: SaveCheckpointHandler(),
     ActionType.RELOAD_CHECKPOINT: ReloadCheckpointHandler(),
-    ActionType.SHOW_STAMINA_UI: ShowStaminaUIHandler(),  # 등록
+    ActionType.SHOW_STAMINA_UI: ShowStaminaUIHandler(),
+    ActionType.REQUEST_CONFIRMATION: RequestConfirmationHandler(),
 }

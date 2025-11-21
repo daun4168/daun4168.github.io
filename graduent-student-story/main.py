@@ -1,11 +1,9 @@
 import sys
 
-from entity import Inventory
+from entity import Inventory, Player
 from game import Game
 from test import TestRunner
 from ui import UIManager
-from entity import Player
-
 
 if __name__ == "__main__":
     print(sys.version)

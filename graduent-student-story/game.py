@@ -10,7 +10,7 @@ from scene_manager import SceneFactory, SceneManager
 # --- 장면 클래스와 데이터 임포트 ---
 # 데이터 파일 임포트 (chapter1 추가)
 from story.chapter0 import CH0_SCENE0_DATA, CH0_SCENE1_DATA, CH0_SCENE2_DATA
-from story.chapter1 import CH1_SCENE0_DATA, CH1_SCENE1_DATA, CH1_COMMON_DATA
+from story.chapter1 import CH1_COMMON_DATA, CH1_SCENE0_DATA, CH1_SCENE1_DATA
 from test import TestRunner
 from ui import UIManager
 
@@ -41,6 +41,10 @@ class Game:
         self.player = player  # Player 필드 저장
         self.test_runner = test_runner
         self.checkpoint_data = None  # 체크포인트 데이터
+
+        # [추가] 확인 요청 상태 저장 (None이면 대기 상태 아님)
+        # 구조: { "on_confirm": [Action...], "on_cancel": [Action...] }
+        self.pending_confirmation = None
 
         # 모든 Entity 객체가 UI 매니저를 사용할 수 있도록 설정합니다.
         Entity.set_ui_manager(self.ui)
@@ -217,6 +221,6 @@ class Game:
         target_scene = self.checkpoint_data["scene_id"]
 
         # [핵심 수정] 장면을 리셋하여 키워드 상태([?])를 초기화하고 새로운 인스턴스를 생성함
-        self.scene_manager.reset_scene(target_scene)
+        self.scene_manager.reset_scene()
 
         self.scene_manager.switch_scene(target_scene)

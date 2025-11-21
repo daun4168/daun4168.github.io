@@ -1,8 +1,8 @@
 import copy
 
-from const import KeywordState, KeywordType, CombinationType
+from const import CombinationType, KeywordState, KeywordType
 from logic_handlers import ACTION_HANDLERS, CONDITION_HANDLERS
-from schemas import SceneData, ChapterData  # 타입 힌팅용
+from schemas import ChapterData, SceneData  # 타입 힌팅용
 from ui import get_josa
 
 
@@ -52,7 +52,7 @@ class Scene:
 
         # 장면에 진입할 때 실행될 액션들이 있다면 실행합니다.
         if self.scene_data.on_enter_actions:
-            self._execute_actions(self.scene_data.on_enter_actions)
+            self.execute_actions(self.scene_data.on_enter_actions)
 
     def on_redisplay(self):
         """
@@ -109,7 +109,7 @@ class Scene:
         if keyword_data.interactions:
             for interaction in keyword_data.interactions:
                 if self._check_conditions(interaction.conditions):  # 조건이 충족되면
-                    self._execute_actions(interaction.actions)  # 해당 액션들을 실행합니다.
+                    self.execute_actions(interaction.actions)  # 해당 액션들을 실행합니다.
                     return True  # 상호작용 처리 성공.
 
         # 상호작용이 없거나 조건이 충족되지 않았지만 설명이 있다면 설명을 출력합니다.
@@ -160,7 +160,7 @@ class Scene:
                     return False  # 보이지 않는 키워드라면 처리 실패.
 
                 if self._check_conditions(combo.conditions):  # 조합의 조건이 충족되면
-                    self._execute_actions(combo.actions)  # 해당 액션들을 실행합니다.
+                    self.execute_actions(combo.actions)  # 해당 액션들을 실행합니다.
                     return True  # 조합 처리 성공.
 
         return False  # 일치하는 조합이 없으면 처리 실패.
@@ -234,7 +234,7 @@ class Scene:
                 return False
         return True  # 모든 조건이 충족되면 True를 반환합니다.
 
-    def _execute_actions(self, actions: list):
+    def execute_actions(self, actions: list):
         """
         주어진 액션 목록을 순차적으로 실행합니다.
         액션 실행 중 씬이 전환되면(예: 사망, 이동) 즉시 중단합니다.

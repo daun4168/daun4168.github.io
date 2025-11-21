@@ -1,5 +1,6 @@
 from enum import StrEnum
 
+
 class ChapterID(StrEnum):
     CH0 = "ch0"
     CH1 = "ch1"
@@ -104,6 +105,7 @@ class ActionType(StrEnum):
     SAVE_CHECKPOINT = "save_checkpoint"
     RELOAD_CHECKPOINT = "reload_checkpoint"
     SHOW_STAMINA_UI = "show_stamina_ui"  # [추가] 체력 UI 표시 여부 토글
+    REQUEST_CONFIRMATION = "request_confirmation"  # [추가] 확인 요청 액션
 
 
 class KeywordType(StrEnum):

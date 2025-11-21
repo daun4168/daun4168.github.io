@@ -1,7 +1,7 @@
-from const import CommandType, CombinationType
+from const import CombinationType, CommandType
 from scene import Scene
-from ui import get_josa
 from schemas import ChapterData
+from ui import get_josa
 
 
 class SceneFactory:
@@ -27,7 +27,9 @@ class SceneFactory:
         # _scene_registry는 장면 ID를 키로, (장면 클래스, 장면 데이터) 튜플을 값으로 저장합니다.
         self._scene_registry = {}
 
-    def register_scene(self, scene_id: str, scene_class: type[Scene], scene_data: dict, chapter_data: ChapterData | None = None):
+    def register_scene(
+        self, scene_id: str, scene_class: type[Scene], scene_data: dict, chapter_data: ChapterData | None = None
+    ):
         """
         팩토리에 장면 생성에 필요한 정보를 등록합니다.
 
@@ -115,18 +117,45 @@ class SceneManager:
         self.current_scene.on_enter()
 
     # [추가] 장면 초기화 메서드
-    def reset_scene(self, scene_id: str):
+    def reset_scene(self):
         """
-        지정된 장면을 캐시에서 제거하여, 다음 진입 시 초기 상태로 새로 생성되게 합니다.
+        모든 씬을 캐시에서 제거하여, 다음 진입 시 초기 상태로 새로 생성되게 합니다.
         체크포인트 로드 시 사용됩니다.
         """
-        if scene_id in self.scenes:
-            del self.scenes[scene_id]
+        self.scenes = {}
+
+    # [추가] 확인 요청 처리 메서드
+    async def _process_confirmation(self, command: str):
+        game = self.scene_factory.game
+        data = game.pending_confirmation
+        cmd = command.strip()
+
+        if cmd in ["예", "네", "y", "Y", "yes"]:
+            # 확인 액션 실행
+            game.pending_confirmation = None  # 상태 초기화 (중요: 액션 실행 전/후 위치 고려)
+            if self.current_scene:
+                self.current_scene.execute_actions(data["on_confirm"])
+
+        elif cmd in ["아니오", "아니", "n", "N", "no"]:
+            # 취소 액션 실행
+            game.pending_confirmation = None
+            if self.current_scene:
+                self.current_scene.execute_actions(data["on_cancel"])
+
+        else:
+            # 잘못된 입력
+            self.ui.print_system_message("잘못된 입력입니다. `예` 또는 `아니오`로 대답해주세요.")
+            # pending 상태 유지
 
     async def process_command(self, command: str):
         """
         사용자 명령을 처리합니다. 기호에 따라 조합 타입을 구분합니다.
         """
+        # [추가] 1. 대기 중인 확인 요청이 있는지 먼저 확인
+        if self.scene_factory.game.pending_confirmation:
+            await self._process_confirmation(command)
+            return
+
         if self.current_scene:
             # 1. 비밀번호 입력 처리 (콜론 ':' 사용) -> Type: PASSWORD
             if ":" in command:

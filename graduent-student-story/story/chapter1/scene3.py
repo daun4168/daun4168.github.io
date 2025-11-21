@@ -122,17 +122,43 @@ CH1_SCENE3_DATA = SceneData(
             ]
         ),
 
-        # 6. 녹슨 클램프
-        KeywordId.RUSTY_CLAMP: KeywordData(
+        # 6. 소방 도끼 (오브젝트 - 벽에 붙어있는 상태)
+        KeywordId.FIRE_AXE: KeywordData(
             type=KeywordType.OBJECT,
             state=KeywordState.HIDDEN,
+            description="벽면에 단단히 고정된 붉은색 소방 도끼입니다.",
+            interactions=[
+                # 산성 웅덩이 미해결 시 접근 불가
+                Interaction(
+                    conditions=[Condition(type=ConditionType.STATE_IS, target="acid_neutralized", value=False)],
+                    actions=[
+                        Action(type=ActionType.PRINT_NARRATIVE,
+                               value="치명적인 산성 웅덩이가 가로막고 있어 도끼에 접근할 수 없습니다. 먼저 웅덩이부터 치워야 합니다.")
+                    ]
+                ),
+                # 웅덩이 해결 후 접근 -> 클램프 발견
+                Interaction(
+                    actions=[
+                        Action(type=ActionType.PRINT_NARRATIVE,
+                               value="도끼를 꺼내려 했지만, **[녹슨 클램프]**가 꽉 물고 있어 꿈쩍도 하지 않습니다."),
+                        Action(type=ActionType.UPDATE_STATE,
+                               value={"keyword": KeywordId.RUSTY_CLAMP, "state": KeywordState.DISCOVERED}),
+                    ]
+                )
+            ]
+        ),
+
+        # 7. 녹슨 클램프 (초기 HIDDEN -> 도끼 조사 시 발견)
+        KeywordId.RUSTY_CLAMP: KeywordData(
+            type=KeywordType.OBJECT,
+            state=KeywordState.INACTIVE,
             description="**[소방 도끼]**를 꽉 물고 있는 고정 장치입니다. 붉은 녹이 슬어 꿈쩍도 안 합니다.\n화학적으로 녹을 제거해야 합니다. 산성 용액이 좋겠지만, 그냥 부으면 흘러내릴 겁니다.",
         ),
 
-        # 7. 정비 메모
+        # 8. 정비 메모
         KeywordId.MEMO_VOLTAGE: KeywordData(
             type=KeywordType.OBJECT,
-            state=KeywordState.HIDDEN,
+            state=KeywordState.INACTIVE,
             description=(
                 "\"경고: 정격 전압 **19V**를 엄수할 것.\n"
                 "회로 보호를 위해 전압은 반드시 **높은 곳에서 낮은 곳으로(High -> Low)** 흐르도록 배열하시오.\n"
@@ -265,13 +291,16 @@ CH1_SCENE3_DATA = SceneData(
                 Action(type=ActionType.ADD_ITEM, value={"name": KeywordId.ACID_GEL, "description": "끈적한 산성 반죽."}),
             ]
         ),
-        # 2-2. 도끼 획득
+        # 2-2. 도끼 획득 (오브젝트 제거 -> 아이템 획득)
         Combination(
             targets=[KeywordId.RUSTY_CLAMP, KeywordId.ACID_GEL],
             actions=[
                 Action(type=ActionType.PRINT_NARRATIVE,
-                       value="녹슨 클램프에 젤을 발랐습니다. 붉은 녹이 녹아내리며 장치가 풀렸습니다. **[소방 도끼]**를 획득했습니다!"),
+                       value="녹슨 클램프에 젤을 발랐습니다. 붉은 녹이 녹아내리며 장치가 풀렸습니다. 벽에 붙어있던 **[소방 도끼]**를 떼어냈습니다!"),
                 Action(type=ActionType.REMOVE_ITEM, value=KeywordId.ACID_GEL),
+                # [수정] 키워드(벽의 도끼) 먼저 제거
+                Action(type=ActionType.REMOVE_KEYWORD, value=KeywordId.FIRE_AXE),
+                # [수정] 아이템 획득
                 Action(type=ActionType.ADD_ITEM, value={"name": KeywordId.FIRE_AXE, "description": "정글을 뚫을 수 있는 도구."}),
                 Action(type=ActionType.UPDATE_STATE, value={"key": "axe_obtained", "value": True}),
             ]

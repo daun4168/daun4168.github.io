@@ -10,7 +10,7 @@ from scene_manager import SceneFactory, SceneManager
 # --- 장면 클래스와 데이터 임포트 ---
 # 데이터 파일 임포트 (chapter1 추가)
 from story.chapter0 import CH0_SCENE0_DATA, CH0_SCENE1_DATA, CH0_SCENE2_DATA
-from story.chapter1 import CH1_COMMON_DATA, CH1_SCENE0_DATA, CH1_SCENE1_DATA, CH1_SCENE2_DATA
+from story.chapter1 import CH1_COMMON_DATA, CH1_SCENE0_DATA, CH1_SCENE1_DATA, CH1_SCENE2_DATA, CH1_SCENE3_DATA
 from test import TestRunner
 from ui import UIManager
 
@@ -83,6 +83,7 @@ class Game:
         factory = SceneFactory(self, self.ui, self.inventory, self.player)
 
         # 각 장면 ID에 해당하는 장면 클래스와 데이터를 팩토리에 등록합니다.
+        # 챕터 0 씬 등록
         factory.register_scene(SceneID.CH0_SCENE0, Scene, CH0_SCENE0_DATA)
         factory.register_scene(SceneID.CH0_SCENE1, Scene, CH0_SCENE1_DATA)
         factory.register_scene(SceneID.CH0_SCENE2, Scene, CH0_SCENE2_DATA)
@@ -90,6 +91,7 @@ class Game:
         factory.register_scene(SceneID.CH1_SCENE0, Scene, CH1_SCENE0_DATA, CH1_COMMON_DATA)
         factory.register_scene(SceneID.CH1_SCENE1, Scene, CH1_SCENE1_DATA, CH1_COMMON_DATA)
         factory.register_scene(SceneID.CH1_SCENE2, Scene, CH1_SCENE2_DATA, CH1_COMMON_DATA)
+        factory.register_scene(SceneID.CH1_SCENE3, Scene, CH1_SCENE3_DATA, CH1_COMMON_DATA)
 
         return factory
 

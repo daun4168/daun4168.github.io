@@ -18,6 +18,8 @@ CH1_SCENE2_DATA = SceneData(
         "door_heated": False,
         "door_frozen": False,
         "door_opened": False,
+        "underground_inspected": False,
+        "bucket_found": False, # [신규] 양동이 발견 여부
     },
     keywords={
         KeywordId.BASECAMP: KeywordData(type=KeywordType.ALIAS, target=KeywordId.BEACH),
@@ -142,15 +144,52 @@ CH1_SCENE2_DATA = SceneData(
             type=KeywordType.PORTAL,
             state=KeywordState.INACTIVE,  # 처음엔 안 보임
             description="난파선 가장 깊은 곳으로 이어지는 어둡고 축축한 계단입니다. 썩은 기름 냄새가 올라옵니다.",
-            # 추후 이동 로직 추가 가능 (Interaction)
             interactions=[
                 Interaction(
+                    conditions=[
+                        Condition(type=ConditionType.STATE_IS, target="underground_inspected", value=False)
+                    ],
                     actions=[
                         Action(
-                            type=ActionType.PRINT_SYSTEM, value="아직 구현되지 않은 지역입니다. (To be continued...)"
-                        )
-                    ]
-                )
+                            type=ActionType.PRINT_NARRATIVE,
+                            value="계단 아래는 칠흑 같은 어둠입니다. 무엇이 기다리고 있을지 모릅니다.",
+                        ),
+                        Action(
+                            type=ActionType.PRINT_SYSTEM,
+                            value="다시 한번 **[지하 통로]**를 입력하면 이동 여부를 결정합니다.",
+                        ),
+                        Action(
+                            type=ActionType.UPDATE_STATE,
+                            value={"key": "underground_inspected", "value": True},
+                        ),
+                    ],
+                ),
+                Interaction(
+                    conditions=[
+                        Condition(type=ConditionType.STATE_IS, target="underground_inspected", value=True)
+                    ],
+                    actions=[
+                        Action(
+                            type=ActionType.REQUEST_CONFIRMATION,
+                            value={
+                                "prompt": "어두운 **[지하 통로]**로 내려가시겠습니까?",
+                                "confirm_actions": [
+                                    Action(
+                                        type=ActionType.PRINT_NARRATIVE,
+                                        value="당신은 심호흡을 하고 어둡고 축축한 계단을 따라 내려갑니다...",
+                                    ),
+                                    Action(type=ActionType.MOVE_SCENE, value=SceneID.CH1_SCENE3),
+                                ],
+                                "cancel_actions": [
+                                    Action(
+                                        type=ActionType.PRINT_NARRATIVE,
+                                        value="아직은 이곳에서 할 일이 남은 것 같습니다.",
+                                    ),
+                                ],
+                            },
+                        ),
+                    ],
+                ),
             ],
         ),
         # --- [단순 상호작용 요소 추가] ---
@@ -160,16 +199,33 @@ CH1_SCENE2_DATA = SceneData(
             state=KeywordState.HIDDEN,
             description="붉은 페인트로 칠해진 'DANGER' 문구 아래에, 부식되어 잘 안 보이지만 'High Voltage(고전압)'이라는 작은 글씨가 남아있다.\n전기가 끊긴 지 오래되어 보이지만, 본능적으로 만지고 싶지 않다.",
         ),
-        # 4. 파이프 (단순 조사)
+        # 4. 파이프 (양동이 획득)
         KeywordId.PIPE: KeywordData(
             type=KeywordType.OBJECT,
             state=KeywordState.HIDDEN,
             interactions=[
                 Interaction(
+                    conditions=[Condition(type=ConditionType.STATE_IS, target="bucket_found", value=False)],
                     actions=[
                         Action(
                             type=ActionType.PRINT_NARRATIVE,
-                            value="발에 걸리적거리는 파이프를 툭 쳐보았다. '텅-' 하는 소리가 난다. 내부는 비어있는 것 같다. 뜯어내기엔 너무 단단히 고정되어 있다.",
+                            value="발에 걸리적거리는 파이프 더미를 들춰보았습니다. 구석에 찌그러진 **[녹슨 양동이]**가 끼어 있습니다.\n힘을 주어 빼냈습니다. 구멍은 없어 보입니다.",
+                        ),
+                        Action(
+                            type=ActionType.ADD_ITEM,
+                            value={
+                                "name": KeywordId.RUSTY_BUCKET,
+                                "description": "바닥이 찌그러졌지만 물을 담을 수 있는 튼튼한 양동이.",
+                            },
+                        ),
+                        Action(type=ActionType.UPDATE_STATE, value={"key": "bucket_found", "value": True}),
+                    ]
+                ),
+                Interaction(
+                    actions=[
+                        Action(
+                            type=ActionType.PRINT_NARRATIVE,
+                            value="차가운 금속 파이프들입니다. 더 이상 쓸만한 건 없습니다.",
                         )
                     ]
                 )

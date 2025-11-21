@@ -70,7 +70,7 @@ class UIManager:
         if not items:
             display_list = ["비어있음"]
         else:
-            display_list = [f"[{item.name}]" for item in items.values()]
+            display_list = [f"[{item}]" for item in items.values()]
 
         self.inventory_status.innerText = f"주머니: {', '.join(display_list)}"
 

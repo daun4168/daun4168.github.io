@@ -14,6 +14,7 @@ CH1_SCENE3_DATA = SceneData(
     initial_state={
         "acid_neutralized": False,  # 중화 여부
         "acid_collected": False,  # 샘플 채취 여부
+        "safe_powered": False, # [신규] 금고 전원 상태
         "safe_opened": False,  # 금고 개방 여부
         "axe_obtained": False,  # 도끼 획득 여부
         "batteries_found": False,  # 건전지 파밍 여부
@@ -28,6 +29,7 @@ CH1_SCENE3_DATA = SceneData(
         KeywordId.RUSTY_CLAMP_ALIAS: KeywordData(type=KeywordType.ALIAS, target=KeywordId.RUSTY_CLAMP),
         KeywordId.MEMO: KeywordData(type=KeywordType.ALIAS, target=KeywordId.MEMO_VOLTAGE),
         KeywordId.SCATTERED_SUPPLIES_ALIAS: KeywordData(type=KeywordType.ALIAS, target=KeywordId.SCATTERED_SUPPLIES),
+        KeywordId.NOTE: KeywordData(type=KeywordType.ALIAS, target=KeywordId.PUZZLE_NOTE),
         # --- [돌아가는 길] ---
         KeywordId.SHIPWRECK_ENTRANCE: KeywordData(
             type=KeywordType.PORTAL,
@@ -104,7 +106,7 @@ CH1_SCENE3_DATA = SceneData(
         KeywordId.WORKBENCH: KeywordData(
             type=KeywordType.OBJECT,
             state=KeywordState.HIDDEN,
-            description="각종 공구가 있던 책상입니다. 고정된 **[멀티미터]**와 기름에 찌든 **[정비 메모]**가 보입니다.",
+            description="각종 공구가 있던 책상입니다. 고정된 **[멀티미터]**와 기름에 찌든 **[정비 메모]**, 그리고 벽에 **[주기율표]**가 붙어 있습니다.",
             interactions=[
                 # Case 1: 산성 웅덩이 미해결
                 Interaction(
@@ -116,7 +118,7 @@ CH1_SCENE3_DATA = SceneData(
                         )
                     ],
                 ),
-                # Case 2: 산성 웅덩이 해결 + 첫 방문 (멀티미터/메모 발견)
+                # Case 2: 산성 웅덩이 해결 + 첫 방문 (멀티미터/메모/주기율표 발견)
                 Interaction(
                     conditions=[
                         Condition(type=ConditionType.STATE_IS, target="acid_neutralized", value=True),
@@ -125,16 +127,21 @@ CH1_SCENE3_DATA = SceneData(
                     actions=[
                         Action(
                             type=ActionType.PRINT_NARRATIVE,
-                            value="작업대에 가까이 다가갔습니다. 고정된 멀티미터와 메모가 보입니다.",
+                            value="작업대에 가까이 다가갔습니다. 고정된 계측기, 메모, 그리고 벽에 붙은 도표가 보입니다.",
                         ),
                         Action(type=ActionType.PRINT_SYSTEM, value="새로운 상호작용 대상이 여러 개 발견되었습니다."),
                         Action(
                             type=ActionType.UPDATE_STATE,
-                            value={"keyword": KeywordId.MULTIMETER, "state": KeywordState.HIDDEN},
+                            value={"keyword": KeywordId.MULTIMETER, "state": KeywordState.DISCOVERED},
                         ),
                         Action(
                             type=ActionType.UPDATE_STATE,
-                            value={"keyword": KeywordId.MEMO_VOLTAGE, "state": KeywordState.HIDDEN},
+                            value={"keyword": KeywordId.MEMO_VOLTAGE, "state": KeywordState.DISCOVERED},
+                        ),
+                        # [신규] 주기율표 발견
+                        Action(
+                            type=ActionType.UPDATE_STATE,
+                            value={"keyword": KeywordId.PERIODIC_TABLE, "state": KeywordState.DISCOVERED},
                         ),
                         Action(type=ActionType.UPDATE_STATE, value={"key": "workbench_inspected", "value": True}),
                     ],
@@ -145,7 +152,7 @@ CH1_SCENE3_DATA = SceneData(
                     actions=[
                         Action(
                             type=ActionType.PRINT_NARRATIVE,
-                            value="각종 공구가 있던 책상입니다. 멀티미터와 메모가 있습니다.",
+                            value="각종 공구가 있던 책상입니다. 멀티미터와 메모, 주기율표가 있습니다.",
                         )
                     ],
                 ),
@@ -175,6 +182,21 @@ CH1_SCENE3_DATA = SceneData(
                 Interaction(
                     conditions=[Condition(type=ConditionType.STATE_IS, target="safe_opened", value=True)],
                     actions=[Action(type=ActionType.PRINT_NARRATIVE, value="금고가 열려 있습니다.")],
+                ),
+                # [신규] 전원 켜짐 상태 (쪽지 힌트 제공)
+                Interaction(
+                    conditions=[Condition(type=ConditionType.STATE_IS, target="safe_powered", value=True)],
+                    actions=[
+                        Action(
+                            type=ActionType.PRINT_NARRATIVE,
+                            value="전원이 켜져 있습니다. 비밀번호 입력 대기 중입니다. 문짝에 **[수수께끼 쪽지]**가 붙어 있습니다.",
+                        ),
+                        Action(
+                            type=ActionType.PRINT_SYSTEM,
+                            value="`전자 금고 : [비밀번호]` 형태로 입력하세요.",
+                        ),
+                        Action(type=ActionType.UPDATE_STATE, value={"keyword": KeywordId.PUZZLE_NOTE, "state": KeywordState.DISCOVERED}),
+                    ],
                 ),
                 Interaction(
                     actions=[
@@ -232,6 +254,32 @@ CH1_SCENE3_DATA = SceneData(
                 "회로 보호를 위해 전압은 반드시 **높은 곳에서 낮은 곳으로(High -> Low)** 흐르도록 배열하시오.\n"
                 '순서가 틀리거나 전압이 맞지 않으면 역전류로 인해 감전될 수 있음."'
             ),
+        ),
+        # [신규] 9. 수수께끼 쪽지 (금고 조사 시 발견)
+        KeywordId.PUZZLE_NOTE: KeywordData(
+            type=KeywordType.OBJECT,
+            state=KeywordState.INACTIVE,
+            description=(
+                "\"가장 탐욕스러운 자들이 사랑하는 세 가지 금속이 이 안에 잠들어 있다.\n"
+                "첫 번째는 녹슬지 않는 영원한 태양의 왕.\n"
+                "두 번째는 늑대 인간을 죽이는 창백한 달의 눈물.\n"
+                "세 번째는 전기를 가장 사랑하는 붉은 핏줄.\n"
+                "그들의 **영혼의 번호(Atomic Number)**를 순서대로 나열하라.\""
+            ),
+        ),
+        # [신규] 10. 주기율표 (작업대 조사 시 발견)
+        KeywordId.PERIODIC_TABLE: KeywordData(
+            type=KeywordType.OBJECT,
+            state=KeywordState.INACTIVE,
+            description=(
+                "벽에 붙어 있던 주기율표 포스터입니다. 불에 타서 가장자리는 검게 그을렸지만, 중앙 부분은 아직 알아볼 수 있습니다.\n\n"
+                "| 1 H 수소| 2 He 헬륨 | 3 Li 리튬 |\n"
+                "| :---: | :---: | :---: |\n"
+                "| 10 Ne 네온 | 11 Na 나트륨 | 12 Mg 마그네슘 |\n"
+                "| 28 Ni 니켈 | 29 Cu 구리 | 30 Zn 아연 |\n"
+                "| 46 Pd 팔라듐 | 47 Ag 은 | 48 Cd 카드뮴 |\n"
+                "| 78 Pt 백금 | 79 Au 금 | 80 Hg 수은 |"
+            )
         ),
         # --- [파밍 아이템] ---
         # 흩어진 보급품
@@ -558,18 +606,35 @@ CH1_SCENE3_DATA = SceneData(
                 )
             ],
         ),
-        # 3-5. 금고 개방
+        # 3-5. 금고 전원 켜기
         Combination(
             targets=[KeywordId.SAFE, KeywordId.BATTERY_PACK],
             actions=[
                 Action(
                     type=ActionType.PRINT_NARRATIVE,
-                    value="전원을 연결하자 금고가 열렸습니다. **[산업용 배터리]**를 확보했습니다.",
+                    value="배터리 팩을 연결하자 '삑' 소리와 함께 금고의 LCD 화면이 켜졌습니다.\n비밀번호 입력 대기 상태입니다. 문짝에는 **[수수께끼 쪽지]**가 붙어 있습니다.",
                 ),
                 Action(type=ActionType.REMOVE_ITEM, value=KeywordId.BATTERY_PACK),
+                Action(type=ActionType.UPDATE_STATE, value={"key": "safe_powered", "value": True}),
+                Action(
+                    type=ActionType.UPDATE_STATE,
+                    value={"keyword": KeywordId.PUZZLE_NOTE, "state": KeywordState.DISCOVERED},
+                ),
+            ],
+        ),
+        # [신규] 3-6. 금고 비밀번호 입력 (Au=79, Ag=47, Cu=29 -> 794729)
+        Combination(
+            type=CombinationType.PASSWORD,
+            targets=[KeywordId.SAFE, "794729"],
+            conditions=[Condition(type=ConditionType.STATE_IS, target="safe_powered", value=True)],
+            actions=[
+                Action(
+                    type=ActionType.PRINT_NARRATIVE,
+                    value="*띠리릭- 철컥!*\n정답입니다. 금고 문이 열렸습니다. 안에서 묵직한 **[산업용 배터리]**를 발견했습니다!",
+                ),
                 Action(
                     type=ActionType.ADD_ITEM,
-                    value={"name": KeywordId.HEAVY_BATTERY, "description": "MK-II 수리용 부품."},
+                    value={"name": KeywordId.HEAVY_BATTERY, "description": "MK-II를 위한 대용량 배터리."},
                 ),
                 Action(type=ActionType.UPDATE_STATE, value={"key": "safe_opened", "value": True}),
             ],

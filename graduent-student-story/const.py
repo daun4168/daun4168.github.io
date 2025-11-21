@@ -104,6 +104,9 @@ class KeywordId(StrEnum):
     MEMO_VOLTAGE = "정비 메모"
     SCATTERED_SUPPLIES = "흩어진 보급품"
     SCATTERED_SUPPLIES_ALIAS = "보급품"
+    PERIODIC_TABLE = "주기율표"
+    NOTE = "쪽지"
+    PUZZLE_NOTE = "수수께끼 쪽지"
 
     # 3. 아이템
     EMPTY_BOTTLE = "빈 페트병"

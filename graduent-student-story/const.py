@@ -43,6 +43,8 @@ class KeywordId(StrEnum):
     WRAPPER = "에너지바 껍질"
     LAB_COAT = "실험용 랩 가운"
     ETHANOL = "에탄올"
+    KEY = "열쇠"
+    CLEANING_CABINET = "청소도구함"
 
     # CH0_SCENE2
     MK_II = "MK-II"

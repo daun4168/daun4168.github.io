@@ -4,7 +4,8 @@ from schemas import Action, Combination, Condition, Interaction, KeywordData, Sc
 CH0_SCENE1_DATA = SceneData(
     id=SceneID.CH0_SCENE1,
     name="제 2 연구실",
-    initial_text="문을 열자 퀴퀴한 곰팡이 냄새와 먼지가 뒤섞여 코를 찌른다. 이곳은 신성한 연구실인가, 고고학 발굴 현장인가.\n\n구석에는 정체를 알 수 없는 쓰레기통이 넘칠 듯이 차 있고, 벽 한쪽에는 굳게 닫힌 시약장과 낡은 박스들이 산더미처럼 쌓여 있다.\n먼지 쌓인 오래된 컴퓨터는 켜지기는 할지 의문이며, 바닥에는 정체불명의 의문의 액체가 흥건하다. 그 옆에 빗자루가 굴러다닌다.",
+    # [수정 1] 초기 텍스트 변경: 빗자루가 바닥에 있다는 묘사를 삭제하고 청소도구함 묘사 추가
+    initial_text="문을 열자 퀴퀴한 곰팡이 냄새와 먼지가 뒤섞여 코를 찌른다. 이곳은 신성한 연구실인가, 고고학 발굴 현장인가.\n\n구석에는 정체를 알 수 없는 쓰레기통이 넘칠 듯이 차 있고, 벽 한쪽에는 굳게 닫힌 시약장과 낡은 박스들이 산더미처럼 쌓여 있다.\n먼지 쌓인 오래된 컴퓨터는 켜지기는 할지 의문이며, 바닥에는 정체불명의 의문의 액체가 흥건하다. 벽에는 낡은 청소도구함이 하나 서 있다.",
     initial_state={
         "trash_step": 0,
         "wall_inspected": False,
@@ -12,6 +13,9 @@ CH0_SCENE1_DATA = SceneData(
         "box_opened": False,
         "cabinet_unlocked": False,
         "computer_solved": False,
+        # [수정 2] 새로운 상태 변수 추가
+        "key_found": False,
+        "cleaning_cabinet_opened": False,
     },
     keywords={
         KeywordId.WALL_ALIAS: KeywordData(type=KeywordType.ALIAS, target=KeywordId.WALL),
@@ -136,7 +140,6 @@ CH0_SCENE1_DATA = SceneData(
                             type=ActionType.PRINT_NARRATIVE,
                             value="전원 버튼을 누르자, 잠시 팬이 돌다가 암호 입력창이 뜬다.",
                         ),
-                        # [수정] 힌트 텍스트 변경: + 대신 : 사용
                         Action(
                             type=ActionType.PRINT_SYSTEM,
                             value="암호를 알아내어 `컴퓨터 : [비밀번호]` 형식으로 입력해야 할 것 같다.",
@@ -159,7 +162,6 @@ CH0_SCENE1_DATA = SceneData(
                             type=ActionType.PRINT_NARRATIVE,
                             value="자물쇠가 걸려있다.",
                         ),
-                        # [수정] 힌트 텍스트 변경: + 대신 : 사용
                         Action(
                             type=ActionType.PRINT_SYSTEM,
                             value="`시약장 : [비밀번호]` 형식으로 열 수 있을 것 같다.",
@@ -178,26 +180,66 @@ CH0_SCENE1_DATA = SceneData(
             state=KeywordState.HIDDEN,
             description="바닥 한쪽에 **[의문의 액체]**가 흥건하다. 끈적해서 밟고 싶지 않다.",
         ),
-        KeywordId.BROOM: KeywordData(
-            type=KeywordType.OBJECT,
-            state=KeywordState.HIDDEN,
-            description="평범한 빗자루다. 바닥을 청소할 수 있을 것 같다.",
-        ),
+
+        # [수정 3] 랩 가운: 조사 시 열쇠 획득 로직 추가
         KeywordId.LAB_COAT: KeywordData(
             type=KeywordType.OBJECT,
             state=KeywordState.INACTIVE,
+            interactions=[
+                Interaction(
+                    conditions=[Condition(type=ConditionType.STATE_IS, target="key_found", value=False)],
+                    actions=[
+                        Action(
+                            type=ActionType.PRINT_NARRATIVE,
+                            value="가운 주머니를 뒤적거리자 짤그랑 소리가 난다. 주머니 속에서 작은 **[열쇠]**를 발견했다!",
+                        ),
+                        Action(
+                            type=ActionType.ADD_ITEM,
+                            value={"name": KeywordId.KEY, "description": "작은 은색 열쇠. '청소'라고 적힌 라벨이 붙어있다."},
+                        ),
+                        Action(type=ActionType.UPDATE_STATE, value={"key": "key_found", "value": True}),
+                    ],
+                ),
+                Interaction(
+                    actions=[
+                        Action(
+                            type=ActionType.PRINT_NARRATIVE,
+                            value="새하얀 랩 가운이다. 더 이상 주머니에 든 것은 없다.",
+                        )
+                    ]
+                ),
+            ],
             description="새하얀 랩 가운이다. 입으면 왠지 졸업에 한 발짝 다가간 기분이 든다.",
         ),
-        KeywordId.ETHANOL: KeywordData(
-            type=KeywordType.ITEM,
-            state=KeywordState.INACTIVE,
-            description="소독 및 청소용. 마시지 마시오.",
+
+        # [수정 5] 청소도구함 오브젝트 추가
+        KeywordId.CLEANING_CABINET: KeywordData(
+            type=KeywordType.OBJECT,
+            state=KeywordState.HIDDEN,
+            interactions=[
+                Interaction(
+                    conditions=[Condition(type=ConditionType.STATE_IS, target="cleaning_cabinet_opened", value=True)],
+                    actions=[Action(type=ActionType.PRINT_NARRATIVE, value="이미 열려있다. 안은 텅 비었다.")],
+                ),
+                Interaction(
+                    actions=[
+                        Action(
+                            type=ActionType.PRINT_NARRATIVE,
+                            value="낡은 철제 캐비닛이다. 자물쇠로 단단히 잠겨있다.",
+                        ),
+                        Action(
+                            type=ActionType.PRINT_SYSTEM,
+                            value="잠겨있습니다. 열 수 있는 도구가 필요합니다.",
+                        ),
+                    ]
+                ),
+            ],
         ),
     },
     combinations=[
-        # 1. 컴퓨터 비밀번호 (타입: PASSWORD)
+        # ... (기존 컴퓨터/시약장 비밀번호 조합은 유지) ...
         Combination(
-            type=CombinationType.PASSWORD,  # [중요] 비밀번호 타입 지정
+            type=CombinationType.PASSWORD,
             targets=[KeywordId.OLD_COMPUTER, "12345678"],
             actions=[
                 Action(
@@ -207,9 +249,8 @@ CH0_SCENE1_DATA = SceneData(
                 Action(type=ActionType.UPDATE_STATE, value={"key": "computer_solved", "value": True}),
             ],
         ),
-        # 2. 시약장 비밀번호 (타입: PASSWORD)
         Combination(
-            type=CombinationType.PASSWORD,  # [중요] 비밀번호 타입 지정
+            type=CombinationType.PASSWORD,
             targets=[KeywordId.CABINET, "0815"],
             actions=[
                 Action(
@@ -223,6 +264,7 @@ CH0_SCENE1_DATA = SceneData(
                 Action(type=ActionType.UPDATE_STATE, value={"key": "cabinet_unlocked", "value": True}),
             ],
         ),
+        # [수정 7] 랩 가운 발견 시, 열쇠 획득 가능성에 대한 힌트(또는 자연스러운 유도)는 LAB_COAT description이나 interaction에서 처리됨.
         Combination(
             targets=[KeywordId.BOX, KeywordId.CORP_CARD],
             conditions=[Condition(type=ConditionType.HAS_ITEM, target=KeywordId.CORP_CARD)],
@@ -243,6 +285,25 @@ CH0_SCENE1_DATA = SceneData(
                 ),
             ],
         ),
+
+        # [수정 8] 열쇠 + 청소도구함 조합 추가 (빗자루 획득)
+        Combination(
+            targets=[KeywordId.CLEANING_CABINET, KeywordId.KEY],
+            conditions=[Condition(type=ConditionType.HAS_ITEM, target=KeywordId.KEY)],
+            actions=[
+                Action(
+                    type=ActionType.PRINT_NARRATIVE,
+                    value="**[열쇠]**를 꽂고 돌리자 '딸깍' 소리가 난다. 문을 열자 안에서 **[빗자루]**가 툭 튀어나왔다.",
+                ),
+                Action(
+                    type=ActionType.ADD_ITEM,
+                    value={"name": KeywordId.BROOM, "description": "먼지가 좀 묻었지만 쓸만하다. 바닥을 청소할 수 있을 것 같다."},
+                ),
+                Action(type=ActionType.UPDATE_STATE, value={"key": "cleaning_cabinet_opened", "value": True}),
+                Action(type=ActionType.REMOVE_ITEM, value=KeywordId.KEY),  # 열쇠 사용 후 제거 (선택 사항)
+            ],
+        ),
+
         Combination(
             targets=[KeywordId.ETHANOL, KeywordId.MYSTERY_LIQUID],
             conditions=[Condition(type=ConditionType.HAS_ITEM, target=KeywordId.ETHANOL)],
@@ -257,23 +318,14 @@ CH0_SCENE1_DATA = SceneData(
                 Action(type=ActionType.PRINT_SYSTEM, value="이제 **[빗자루]**로 **[바닥]**을 청소할 수 있을 것 같다."),
             ],
         ),
+
+        # [수정 9] 빗자루 청소 로직은 유지하되, 빗자루를 가지고 있어야 한다는 조건이 자연스럽게 HAS_ITEM 체크로 이어짐
         Combination(
             targets=[KeywordId.BROOM, KeywordId.FLOOR],
             conditions=[
-                Condition(type=ConditionType.STATE_IS, target="liquid_cleaned", value=True),
-                Condition(type=ConditionType.STATE_IS, target="trash_step", value=2),
+                Condition(type=ConditionType.STATE_IS, target="liquid_cleaned", value=False),
+                Condition(type=ConditionType.HAS_ITEM, target=KeywordId.BROOM),
             ],
-            actions=[
-                Action(
-                    type=ActionType.PRINT_NARRATIVE,
-                    value="깨끗해진 바닥을 **[빗자루]**로 쓸어 마무리 청소를 합니다...",
-                ),
-                Action(type=ActionType.MOVE_SCENE, value=SceneID.CH0_SCENE2),
-            ],
-        ),
-        Combination(
-            targets=[KeywordId.BROOM, KeywordId.FLOOR],
-            conditions=[Condition(type=ConditionType.STATE_IS, target="liquid_cleaned", value=False)],
             actions=[
                 Action(
                     type=ActionType.PRINT_NARRATIVE,
@@ -286,9 +338,26 @@ CH0_SCENE1_DATA = SceneData(
             conditions=[
                 Condition(type=ConditionType.STATE_IS, target="liquid_cleaned", value=True),
                 Condition(type=ConditionType.STATE_NOT, target="trash_step", value=2),
+                Condition(type=ConditionType.HAS_ITEM, target=KeywordId.BROOM),
             ],
             actions=[
                 Action(type=ActionType.PRINT_SYSTEM, value="아직 **[쓰레기통]**이 정리되지 않은 것 같다. 마저 치우자.")
+            ],
+        ),
+        Combination(
+            targets=[KeywordId.BROOM, KeywordId.FLOOR],
+            conditions=[
+                Condition(type=ConditionType.STATE_IS, target="liquid_cleaned", value=True),
+                Condition(type=ConditionType.STATE_IS, target="trash_step", value=2),
+                Condition(type=ConditionType.HAS_ITEM, target=KeywordId.BROOM),
+            ],
+            actions=[
+                Action(
+                    type=ActionType.PRINT_NARRATIVE,
+                    value="깨끗해진 바닥을 **[빗자루]**로 쓸어 마무리 청소를 합니다...",
+                ),
+                Action(type=ActionType.REMOVE_ITEM, value=KeywordId.BROOM),
+                Action(type=ActionType.MOVE_SCENE, value=SceneID.CH0_SCENE2),
             ],
         ),
     ],

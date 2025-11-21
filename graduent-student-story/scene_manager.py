@@ -1,8 +1,9 @@
+import random
+
 from const import CombinationType, CommandType
 from scene import Scene
 from schemas import ChapterData
 from ui import get_josa
-import random
 
 
 class SceneFactory:
@@ -203,12 +204,12 @@ class SceneManager:
                 fail_messages = [
                     f"'{command}'{josa_ro} 아무것도 할 수 없습니다. 물리적으로 불가능합니다.",
                     f"'{command}'... 창의적인 발상이지만, 실현 가능성은 0%입니다.",
-                    f"그것을 그렇게 사용하는 방법은 학계에 보고된 바 없습니다.",
+                    "그것을 그렇게 사용하는 방법은 학계에 보고된 바 없습니다.",
                     f"아무리 시도해도 '{command}'{josa_ga} 반응하지 않습니다. 시간 낭비인 것 같습니다.",
-                    f"논리적으로 맞지 않는 행동입니다. 다시 생각해 보십시오.",
-                    f"유의미한 결과를 도출할 수 없는 행동입니다.",
+                    "논리적으로 맞지 않는 행동입니다. 다시 생각해 보십시오.",
+                    "유의미한 결과를 도출할 수 없는 행동입니다.",
                     f"지금 상황에서 '{command}'{josa_ul} 건드리는 건 에너지 낭비입니다.",
-                    "허공에 삽질하는 기분입니다. 다른 방법을 찾아야 합니다."
+                    "허공에 삽질하는 기분입니다. 다른 방법을 찾아야 합니다.",
                 ]
 
                 # 리스트에서 무작위로 하나 선택하여 출력

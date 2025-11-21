@@ -71,14 +71,18 @@ class KeywordId(StrEnum):
     VINYL = "비닐"
 
     # CH1_SCENE2
-    CARGO_HOLD = "화물 칸"
     RUSTY_IRON = "녹슨 철판"
-    SKELETON = "백골"  # Flavor text용
     BUCKET = "녹슨 양동이"
-    CUP = "더러운 머그컵"
-    WIRE_BUNDLE = "전선 뭉치"
     BEACH = "해변"
     BASECAMP = "베이스캠프"
+    EMERGENCY_CABINET = "비상 캐비닛"  # 조명탄 파밍 장소
+    FLARE = "조명탄"  # 가열 아이템
+    IRON_DOOR = "강화 격벽"  # 메인 퍼즐 장애물
+    BULKHEAD = "격벽"  # 메인 퍼즐 장애물
+    UNDERGROUND_PASSAGE = "지하 통로"  # 문 열면 등장
+    WARNING_SIGN = "경고문"
+    PIPE = "파이프"
+    FLOOR_WIRES = "전선"  # 바닥에 널린 전선들 (아이템 아님)
 
 
 class KeywordState(StrEnum):

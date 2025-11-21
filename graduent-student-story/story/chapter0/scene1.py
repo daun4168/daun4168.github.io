@@ -37,19 +37,21 @@ CH0_SCENE1_DATA = SceneData(
                             value=(
                                 "쓰레기통을 뒤적거리자, 잡동사니 사이에서 **[먼지 제거제]** 캔이 손에 잡혔다.\n"
                                 "가스는 다 빠져서 바람은 안 나오지만, 흔들어보니 찰랑거리는 액체 소리가 난다.\n\n"
-                                "\"학부생 녀석들, 액체 냉매가 절반이나 남았는데 이걸 그냥 버려? 연구비가 썩어나지?\"\n"
+                                '"학부생 녀석들, 액체 냉매가 절반이나 남았는데 이걸 그냥 버려? 연구비가 썩어나지?"\n'
                                 "당신은 혀를 차며 캔을 주머니에 챙겼다.\n"
                                 "쓰레기 더미 아래에 무언가 더 있는 것 같다."
                             ),
                         ),
                         Action(
                             type=ActionType.ADD_ITEM,
-                            value={"name": KeywordId.AIR_DUSTER, "description": (
-                                "컴퓨터 청소용 에어 스프레이. 측면에 '절대 기울여 사용하지 마시오'라는 붉은 경고 문구가 있다.\n"
-        "하지만 이공계생의 상식으로 볼 때, 이 문구는 **'뒤집어서 뿌리면 영하 50도의 급속 냉각기가 됨'**이라는 뜻과 같다.\n"
-        "흔들어보니 액체 가스가 꽤 많이 남아있다."
-                            )
-                                   },
+                            value={
+                                "name": KeywordId.AIR_DUSTER,
+                                "description": (
+                                    "컴퓨터 청소용 에어 스프레이. 측면에 '절대 기울여 사용하지 마시오'라는 붉은 경고 문구가 있다.\n"
+                                    "하지만 이공계생의 상식으로 볼 때, 이 문구는 **'뒤집어서 뿌리면 영하 50도의 급속 냉각기가 됨'**이라는 뜻과 같다.\n"
+                                    "흔들어보니 액체 가스가 꽤 많이 남아있다."
+                                ),
+                            },
                         ),
                         Action(type=ActionType.PRINT_SYSTEM, value="`쓰레기통`을 다시 한번 입력해 보세요."),
                         Action(type=ActionType.UPDATE_STATE, value={"key": "trash_step", "value": 1}),
@@ -191,7 +193,6 @@ CH0_SCENE1_DATA = SceneData(
             state=KeywordState.HIDDEN,
             description="바닥 한쪽에 **[의문의 액체]**가 흥건하다. 끈적해서 밟고 싶지 않다.",
         ),
-
         # [수정 3] 랩 가운: 조사 시 열쇠 획득 로직 추가
         KeywordId.LAB_COAT: KeywordData(
             type=KeywordType.OBJECT,
@@ -206,7 +207,10 @@ CH0_SCENE1_DATA = SceneData(
                         ),
                         Action(
                             type=ActionType.ADD_ITEM,
-                            value={"name": KeywordId.KEY, "description": "작은 은색 열쇠. '청소'라고 적힌 라벨이 붙어있다."},
+                            value={
+                                "name": KeywordId.KEY,
+                                "description": "작은 은색 열쇠. '청소'라고 적힌 라벨이 붙어있다.",
+                            },
                         ),
                         Action(type=ActionType.UPDATE_STATE, value={"key": "key_found", "value": True}),
                     ],
@@ -222,7 +226,6 @@ CH0_SCENE1_DATA = SceneData(
             ],
             description="새하얀 랩 가운이다. 입으면 왠지 졸업에 한 발짝 다가간 기분이 든다.",
         ),
-
         # [수정 5] 청소도구함 오브젝트 추가
         KeywordId.CLEANING_CABINET: KeywordData(
             type=KeywordType.OBJECT,
@@ -296,7 +299,6 @@ CH0_SCENE1_DATA = SceneData(
                 ),
             ],
         ),
-
         # [수정 8] 열쇠 + 청소도구함 조합 추가 (빗자루 획득)
         Combination(
             targets=[KeywordId.CLEANING_CABINET, KeywordId.KEY],
@@ -308,13 +310,15 @@ CH0_SCENE1_DATA = SceneData(
                 ),
                 Action(
                     type=ActionType.ADD_ITEM,
-                    value={"name": KeywordId.BROOM, "description": "먼지가 좀 묻었지만 쓸만하다. 바닥을 청소할 수 있을 것 같다."},
+                    value={
+                        "name": KeywordId.BROOM,
+                        "description": "먼지가 좀 묻었지만 쓸만하다. 바닥을 청소할 수 있을 것 같다.",
+                    },
                 ),
                 Action(type=ActionType.UPDATE_STATE, value={"key": "cleaning_cabinet_opened", "value": True}),
                 Action(type=ActionType.REMOVE_ITEM, value=KeywordId.KEY),  # 열쇠 사용 후 제거 (선택 사항)
             ],
         ),
-
         Combination(
             targets=[KeywordId.ETHANOL, KeywordId.MYSTERY_LIQUID],
             conditions=[Condition(type=ConditionType.HAS_ITEM, target=KeywordId.ETHANOL)],
@@ -329,7 +333,6 @@ CH0_SCENE1_DATA = SceneData(
                 Action(type=ActionType.PRINT_SYSTEM, value="이제 **[바닥]**을 청소할 수 있을 것 같다."),
             ],
         ),
-
         # [수정 9] 빗자루 청소 로직은 유지하되, 빗자루를 가지고 있어야 한다는 조건이 자연스럽게 HAS_ITEM 체크로 이어짐
         Combination(
             targets=[KeywordId.BROOM, KeywordId.FLOOR],

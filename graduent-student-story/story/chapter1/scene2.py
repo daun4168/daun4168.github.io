@@ -3,91 +3,239 @@ from schemas import Action, Combination, Condition, Interaction, KeywordData, Sc
 
 CH1_SCENE2_DATA = SceneData(
     id=SceneID.CH1_SCENE2,
-    name="난파선 잔해 (자원 채취장)",
+    name="난파선 잔해 (화물칸 통로)",
     initial_text=(
-        "반쯤 모래에 파묻힌 거대한 난파선 잔해 앞입니다. 썩은 나무와 쇠 냄새가 진동합니다. 이곳저곳에 오래된 백골도 보입니다. "
-        "파상풍 주사를 언제 맞았는지 기억이 나질 않습니다. 긁히지 않게 조심해야겠습니다.\n\n"
-        "선체 안쪽 화물 칸에는 정체를 알 수 없는 잡동사니들이 쏟아져 나와 있습니다. "
-        "바닥에는 녹슨 철판들이 널려 있어 걷기 위험합니다.\n"
+        "반쯤 모래에 파묻힌 거대한 난파선 잔해 안쪽입니다. 썩은 바닷물 냄새와 쇳가루 냄새가 진동합니다.\n"
+        "발밑에는 정체모를 파이프와 전선들이 뱀처럼 얽혀 있고, 벽면에는 'DANGER'라고 적힌 붉은 경고문이 희미하게 보입니다.\n\n"
+        "벽 한쪽에는 먼지 쌓인 비상 캐비닛이 위태롭게 매달려 있고, "
+        "복도 끝에는 육중한 강화 격벽이 굳게 닫혀 있어 더 이상 진입할 수 없습니다. "
+        "저 너머가 기관실이나 하층 화물칸으로 내려가는 길인 것 같습니다.\n\n"
         "서쪽으로 돌아가면 안전한 해변 베이스캠프입니다."
     ),
     initial_state={
         "beach_path_inspected": False,
-        "searched_cargo": False,
+        "cabinet_searched": False,
+        "door_heated": False,
+        "door_frozen": False,
+        "door_opened": False,
     },
     keywords={
         KeywordId.BASECAMP: KeywordData(type=KeywordType.ALIAS, target=KeywordId.BEACH),
+        KeywordId.CABINET: KeywordData(type=KeywordType.ALIAS, target=KeywordId.EMERGENCY_CABINET),
+        KeywordId.BULKHEAD: KeywordData(type=KeywordType.ALIAS, target=KeywordId.IRON_DOOR),
         # 1. 해변 (돌아가는 길)
         KeywordId.BEACH: KeywordData(
-            type=KeywordType.PORTAL, state=KeywordState.DISCOVERED,
+            type=KeywordType.PORTAL,
+            state=KeywordState.DISCOVERED,
             interactions=[
                 Interaction(
                     conditions=[Condition(type=ConditionType.STATE_IS, target="beach_path_inspected", value=False)],
                     actions=[
-                        Action(type=ActionType.PRINT_NARRATIVE, value="서쪽을 보니 베이스캠프가 아지랑이 속에 보인다. 돌아가는 길도 험난해 보인다. (체력 소모 예상)"),
-                        Action(type=ActionType.PRINT_SYSTEM, value="다시 한번 **[해변]**을 입력하면 이동 여부를 결정합니다."),
-                        Action(type=ActionType.UPDATE_STATE, value={"key": "beach_path_inspected", "value": True})
-                    ]
+                        Action(
+                            type=ActionType.PRINT_NARRATIVE,
+                            value="서쪽을 보니 베이스캠프가 아지랑이 속에 보인다. 돌아가는 길도 험난해 보인다. (체력 소모 예상)",
+                        ),
+                        Action(
+                            type=ActionType.PRINT_SYSTEM,
+                            value="다시 한번 **[해변]**을 입력하면 이동 여부를 결정합니다.",
+                        ),
+                        Action(type=ActionType.UPDATE_STATE, value={"key": "beach_path_inspected", "value": True}),
+                    ],
                 ),
                 Interaction(
-                    conditions=[
-                        Condition(type=ConditionType.STATE_IS, target="beach_path_inspected", value=True),
-                    ],
+                    conditions=[Condition(type=ConditionType.STATE_IS, target="beach_path_inspected", value=True)],
                     actions=[
                         Action(
                             type=ActionType.REQUEST_CONFIRMATION,
                             value={
-                                "prompt": (
-                                    "**[해변]**으로 돌아가시겠습니까?\n"
-                                    "역시 **체력이 2 소모**됩니다. 진행하시겠습니까?"
-                                ),
+                                "prompt": ("**[해변]**으로 돌아가시겠습니까?\n체력이 2 소모됩니다."),
                                 "confirm_actions": [
                                     Action(
                                         type=ActionType.PRINT_NARRATIVE,
                                         value="뜨거운 모래사장을 가로질러 베이스캠프로 복귀합니다.",
                                     ),
-                                    Action(type=ActionType.MODIFY_STAMINA, value=-2),  # 체력 소모
+                                    Action(type=ActionType.MODIFY_STAMINA, value=-2),
                                     Action(type=ActionType.MOVE_SCENE, value=SceneID.CH1_SCENE1),
                                 ],
                                 "cancel_actions": [
-                                    Action(
-                                        type=ActionType.PRINT_NARRATIVE,
-                                        value="조금 더 파밍을 해보는 게 좋겠습니다.",
-                                    ),
+                                    Action(type=ActionType.PRINT_NARRATIVE, value="조금 더 조사가 필요합니다."),
                                 ],
                             },
                         ),
-                    ]
-                )
-            ]
+                    ],
+                ),
+            ],
         ),
-
-        # 2. 오브젝트 (파밍)
-        KeywordId.CARGO_HOLD: KeywordData(
-            type=KeywordType.OBJECT, state=KeywordState.HIDDEN,
+        # 2. 비상 캐비닛 (조명탄 파밍 - 동적 생성)
+        KeywordId.EMERGENCY_CABINET: KeywordData(
+            type=KeywordType.OBJECT,
+            state=KeywordState.HIDDEN,
             interactions=[
                 Interaction(
-                    conditions=[Condition(type=ConditionType.STATE_IS, target="searched_cargo", value=False)],
+                    conditions=[Condition(type=ConditionType.STATE_IS, target="cabinet_searched", value=False)],
                     actions=[
-                        Action(type=ActionType.PRINT_NARRATIVE, value="무너진 화물 칸을 뒤집니다. 날카로운 파편에 베이지 않게 조심해야 합니다. (체력 -3)"),
-                        Action(type=ActionType.PRINT_NARRATIVE, value="쓸만한 물건들을 찾았습니다!\n**[녹슨 양동이]**, **[더러운 머그컵]**, **[전선 뭉치]**를 획득했습니다."),
-                        Action(type=ActionType.MODIFY_STAMINA, value=-3),
-                        Action(type=ActionType.ADD_ITEM, value={"name": KeywordId.BUCKET, "description": "바닥이 조금 찌그러진 양동이."}),
-                        Action(type=ActionType.ADD_ITEM, value={"name": KeywordId.CUP, "description": "I LOVE NY 로고가 박힌 머그컵."}),
-                        Action(type=ActionType.ADD_ITEM, value={"name": KeywordId.WIRE_BUNDLE, "description": "피복이 약간 벗겨진 전선 뭉치."}),
-                        Action(type=ActionType.UPDATE_STATE, value={"key": "searched_cargo", "value": True}),
+                        Action(
+                            type=ActionType.PRINT_NARRATIVE,
+                            value="녹슨 캐비닛을 억지로 열었습니다. 구급약품은 모두 썩었지만, 방수 포장된 **[조명탄]** 하나가 구석에 남아있습니다.",
+                        ),
+                        Action(
+                            type=ActionType.ADD_ITEM,
+                            value={
+                                "name": KeywordId.FLARE,
+                                "description": "선박 구조 신호용 붉은 조명탄. 마그네슘이 포함되어 점화 시 2,000도 이상의 고열을 낸다.",
+                            },
+                        ),
+                        Action(type=ActionType.UPDATE_STATE, value={"key": "cabinet_searched", "value": True}),
+                    ],
+                ),
+                Interaction(
+                    actions=[Action(type=ActionType.PRINT_NARRATIVE, value="텅 비어있습니다. 더 가져갈 것은 없습니다.")]
+                ),
+            ],
+        ),
+        # 4. 강화 격벽 (메인 퍼즐)
+        KeywordId.IRON_DOOR: KeywordData(
+            type=KeywordType.OBJECT,
+            state=KeywordState.HIDDEN,
+            description="군용 수송선급의 두꺼운 격벽입니다. 잠금 휠은 녹슬어 본체와 한 몸이 되었습니다. 물리적인 힘으로 여는 건 불가능해 보입니다. 재질은 고장력강(High Tensile Steel). 열역학적으로 접근해야 할 것 같습니다.",
+            interactions=[
+                Interaction(
+                    conditions=[Condition(type=ConditionType.STATE_IS, target="door_opened", value=True)],
+                    actions=[
+                        Action(
+                            type=ActionType.PRINT_NARRATIVE,
+                            value="잠금장치가 산산조각 나 문이 열려 있습니다. 어두운 **[지하 통로]**가 보입니다.",
+                        )
+                    ],
+                ),
+                Interaction(
+                    conditions=[Condition(type=ConditionType.STATE_IS, target="door_frozen", value=True)],
+                    actions=[
+                        Action(
+                            type=ActionType.PRINT_NARRATIVE,
+                            value="하얗게 성에가 낀 문에서 '쩡, 쩡' 하는 금속 비명 소리가 들립니다. 미세한 균열이 보입니다. 지금이라면 충격을 주어 깰 수 있을 것 같습니다.",
+                        ),
+                    ],
+                ),
+                Interaction(
+                    conditions=[Condition(type=ConditionType.STATE_IS, target="door_heated", value=True)],
+                    actions=[
+                        Action(
+                            type=ActionType.PRINT_NARRATIVE,
+                            value="시뻘겋게 달아올라 엄청난 열기를 내뿜고 있습니다. 금속이 팽창해 터질 듯합니다. 지금 식혀야 합니다... 아주 급격하게.",
+                        ),
+                        Action(type=ActionType.PRINT_SYSTEM, value="급속 냉각 수단이 필요합니다."),
+                    ],
+                ),
+                Interaction(
+                    actions=[
+                        Action(
+                            type=ActionType.PRINT_NARRATIVE,
+                            value="꿈쩍도 안 합니다. 틈새가 없어 지렛대도 들어가지 않습니다. 금속의 성질을 변화시켜야 합니다.",
+                        ),
                     ]
                 ),
-                Interaction(actions=[Action(type=ActionType.PRINT_NARRATIVE, value="이미 샅샅이 뒤졌습니다. 더 이상 쓸만한 건 없어 보입니다.")])
-            ]
+            ],
         ),
-        KeywordId.RUSTY_IRON: KeywordData(
-            type=KeywordType.OBJECT, state=KeywordState.HIDDEN,
-            description="선체에서 떨어져 나온 녹슨 철판이다. 가장자리가 거칠어서 잘만 갈면 **칼**처럼 쓸 수 있을 것 같다. 지금은 맨손이라 뜯어낼 수 없다."
+        # 5. 지하 통로 (초기엔 INACTIVE, 문 열면 등장)
+        KeywordId.UNDERGROUND_PASSAGE: KeywordData(
+            type=KeywordType.PORTAL,
+            state=KeywordState.INACTIVE,  # 처음엔 안 보임
+            description="난파선 가장 깊은 곳으로 이어지는 어둡고 축축한 계단입니다. 썩은 기름 냄새가 올라옵니다.",
+            # 추후 이동 로직 추가 가능 (Interaction)
+            interactions=[
+                Interaction(
+                    actions=[
+                        Action(
+                            type=ActionType.PRINT_SYSTEM, value="아직 구현되지 않은 지역입니다. (To be continued...)"
+                        )
+                    ]
+                )
+            ],
         ),
-        KeywordId.SKELETON: KeywordData(
-            type=KeywordType.OBJECT, state=KeywordState.HIDDEN,
-            description="구석에 하얀 뼈가 보인다... 건드리지 말자. 나도 저렇게 되고 싶진 않다."
+        # --- [단순 상호작용 요소 추가] ---
+        # 3. 경고문 (단순 조사)
+        KeywordId.WARNING_SIGN: KeywordData(
+            type=KeywordType.OBJECT,
+            state=KeywordState.HIDDEN,
+            description="붉은 페인트로 칠해진 'DANGER' 문구 아래에, 부식되어 잘 안 보이지만 'High Voltage(고전압)'이라는 작은 글씨가 남아있다.\n전기가 끊긴 지 오래되어 보이지만, 본능적으로 만지고 싶지 않다.",
         ),
-    }
+        # 4. 파이프 (단순 조사)
+        KeywordId.PIPE: KeywordData(
+            type=KeywordType.OBJECT,
+            state=KeywordState.HIDDEN,
+            interactions=[
+                Interaction(
+                    actions=[
+                        Action(
+                            type=ActionType.PRINT_NARRATIVE,
+                            value="발에 걸리적거리는 파이프를 툭 쳐보았다. '텅-' 하는 소리가 난다. 내부는 비어있는 것 같다. 뜯어내기엔 너무 단단히 고정되어 있다.",
+                        )
+                    ]
+                )
+            ],
+        ),
+        # 5. 바닥 전선 (단순 조사)
+        KeywordId.FLOOR_WIRES: KeywordData(
+            type=KeywordType.OBJECT,
+            state=KeywordState.HIDDEN,
+            description="뱀처럼 얽혀있는 전선들이다. 피복이 벗겨져 구리가 드러나 있지만, 녹이 너무 심해 재활용하기엔 글렀다. 밟지 않게 조심하자.",
+        ),
+    },
+    combinations=[
+        # 1. 가열: 조명탄 + 격벽
+        Combination(
+            targets=[KeywordId.IRON_DOOR, KeywordId.FLARE],
+            actions=[
+                Action(
+                    type=ActionType.PRINT_NARRATIVE,
+                    value="치익! 조명탄을 터뜨려 문 손잡이 틈새에 꽂아 넣었습니다.\n눈부신 백색 섬광과 함께 강철이 시뻘겋게 달아오르며 팽창하기 시작합니다.",
+                ),
+                Action(type=ActionType.REMOVE_ITEM, value=KeywordId.FLARE),
+                Action(type=ActionType.UPDATE_STATE, value={"key": "door_heated", "value": True}),
+            ],
+        ),
+        # 2. 급랭: 먼지제거제 + 격벽
+        Combination(
+            targets=[KeywordId.IRON_DOOR, KeywordId.AIR_DUSTER],
+            conditions=[Condition(type=ConditionType.STATE_IS, target="door_heated", value=True)],
+            actions=[
+                Action(
+                    type=ActionType.PRINT_NARRATIVE,
+                    value="먼지제거제를 거꾸로 뒤집어 잡고, 달궈진 문고리를 향해 액체 냉매를 발사했습니다.\n\n**콰아아-!**\n\n2,000도의 열기와 영하 50도의 냉기가 충돌했습니다. 엄청난 수증기와 함께 금속 표면에 거미줄 같은 균열이 발생합니다.",
+                ),
+                Action(type=ActionType.REMOVE_ITEM, value=KeywordId.AIR_DUSTER),
+                Action(type=ActionType.UPDATE_STATE, value={"key": "door_frozen", "value": True}),
+            ],
+        ),
+        # 2-1. 힌트 제공
+        Combination(
+            targets=[KeywordId.IRON_DOOR, KeywordId.AIR_DUSTER],
+            conditions=[Condition(type=ConditionType.STATE_IS, target="door_heated", value=False)],
+            actions=[
+                Action(
+                    type=ActionType.PRINT_NARRATIVE,
+                    value="차가운 강철에 냉매를 뿌려봐야 소용없습니다. '열충격'을 주려면 먼저 금속을 뜨겁게 달궈야 합니다.",
+                )
+            ],
+        ),
+        # 3. 파괴: 스패너 + 격벽 (지하 통로 등장)
+        Combination(
+            targets=[KeywordId.IRON_DOOR, KeywordId.SPANNER],
+            conditions=[Condition(type=ConditionType.STATE_IS, target="door_frozen", value=True)],
+            actions=[
+                Action(
+                    type=ActionType.PRINT_NARRATIVE,
+                    value="스패너로 하얗게 얼어붙은 잠금장치를 가볍게 내리쳤습니다.\n\n**채앵-그랑!**\n\n유리가 깨지듯 잠금장치가 산산조각 나 바닥으로 쏟아집니다. 육중한 격벽이 끼이익 소리를 내며 열립니다.",
+                ),
+                Action(type=ActionType.UPDATE_STATE, value={"key": "door_opened", "value": True}),
+                # [핵심] 지하 통로 키워드 활성화 (INACTIVE -> DISCOVERED)
+                Action(
+                    type=ActionType.UPDATE_STATE,
+                    value={"keyword": KeywordId.UNDERGROUND_PASSAGE, "state": KeywordState.DISCOVERED},
+                ),
+                Action(type=ActionType.PRINT_SYSTEM, value="**[지하 통로]**가 시야에 드러났습니다."),
+            ],
+        ),
+    ],
 )

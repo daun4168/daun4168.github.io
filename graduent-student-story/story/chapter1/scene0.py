@@ -103,7 +103,7 @@ CH1_SCENE0_DATA = SceneData(
                         Action(type=ActionType.UPDATE_STATE, value={"key": "comm_found", "value": True}),
                     ]
                 ),
-            ]
+            ],
         ),
         # 3. 바다: 함정 (체력 시스템 튜토리얼)
         KeywordId.SEA: KeywordData(
@@ -137,7 +137,7 @@ CH1_SCENE0_DATA = SceneData(
                             value="[경고] 짠물을 마셔 체력이 감소했습니다. 잘못된 행동은 생명을 위협합니다.",
                         ),
                         Action(type=ActionType.UPDATE_STATE, value={"key": "sea_step", "value": 2}),
-                    ]
+                    ],
                 ),
                 Interaction(
                     conditions=[Condition(type=ConditionType.STATE_IS, target="sea_step", value=2)],
@@ -192,7 +192,7 @@ CH1_SCENE0_DATA = SceneData(
                         ),
                         Action(type=ActionType.MODIFY_STAMINA, value=-5),
                         Action(type=ActionType.PRINT_SYSTEM, value="[경고] 뜨거운 모래에 데여 체력이 감소했습니다."),
-                    ]
+                    ],
                 ),
                 # 두 번째: 데미지 입음
                 Interaction(
@@ -202,7 +202,7 @@ CH1_SCENE0_DATA = SceneData(
                             type=ActionType.PRINT_NARRATIVE,
                             value="여기서 모래를 더 만질 일은 없다. 한번 더 만지면 손에 불이 붙을지도 모른다.",
                         ),
-                    ]
+                    ],
                 ),
             ],
         ),

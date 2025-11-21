@@ -220,13 +220,24 @@ CH1_SCENE3_DATA = SceneData(
             ]
         ),
 
+        # [추가된 상호작용] 산성 웅덩이 + 전분 가루 (힌트)
+        Combination(
+            targets=[KeywordId.ACID_PUDDLE, KeywordId.STARCH],
+            actions=[
+                Action(
+                    type=ActionType.PRINT_NARRATIVE,
+                    value="전분 가루를 웅덩이에 뿌려봤자 조금 걸쭉해질 뿐, 산성이 중화되지는 않습니다.\n강산성을 무력화시키려면 염기성 성분의 다른 가루가 필요합니다."
+                )
+            ]
+        ),
+
         # 1-5. 중화 시도 (샘플 채취 전 - 차단)
         Combination(
             targets=[KeywordId.CAUSTIC_SODA_BUCKET, KeywordId.ACID_PUDDLE],
             conditions=[Condition(type=ConditionType.STATE_IS, target="acid_collected", value=False)],
             actions=[
                 Action(type=ActionType.PRINT_NARRATIVE,
-                       value="잠깐, 이 웅덩이를 지금 다 중화시켜 버리면 나중에 산성 물질이 필요할 때 구할 곳이 없어집니다.\n**[빈 페트병]** 같은 곳에 샘플을 좀 떠둔 뒤에 붓는 게 좋겠습니다.")
+                       value="잠깐, 이 웅덩이를 지금 다 중화시켜 버리면 나중에 산성 물질이 필요할 때 구할 곳이 없어집니다.\n어딘가에 샘플을 좀 떠둔 뒤에 붓는 게 좋겠습니다.")
             ]
         ),
         # 1-6. 중화 시도 (샘플 채취 후 - 성공)

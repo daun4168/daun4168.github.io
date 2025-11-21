@@ -20,7 +20,9 @@ CH1_SCENE0_DATA = SceneData(
     initial_state={
         "mk_inspected": False,  # 기계 조사 여부
         "comm_connected": False,  # 통신 연결 여부
-        "sand_inspected": False,  # [추가] 모래 조사 여부 확인용 변수
+        "comm_found": False,
+        "sea_step": 0,
+        "sand_step": 0,  # [추가] 모래 조사 여부 확인용 변수
     },
     # 씬 진입 시 자동 저장 (체크포인트 생성)
     on_enter_actions=[
@@ -44,7 +46,10 @@ CH1_SCENE0_DATA = SceneData(
             state=KeywordState.HIDDEN,  # 시야 목록에 안 뜸. 직접 입력해서 발견해야 함.
             interactions=[
                 Interaction(
-                    conditions=[Condition(type=ConditionType.STATE_IS, target="mk_inspected", value=False)],
+                    conditions=[
+                        Condition(type=ConditionType.STATE_IS, target="mk_inspected", value=False),
+                        Condition(type=ConditionType.STATE_IS, target="comm_found", value=False),
+                    ],
                     actions=[
                         Action(
                             type=ActionType.PRINT_NARRATIVE,
@@ -59,7 +64,21 @@ CH1_SCENE0_DATA = SceneData(
                             value={"keyword": KeywordId.COMMS, "state": KeywordState.HIDDEN},
                         ),
                         Action(type=ActionType.PRINT_SYSTEM, value="새로운 상호작용 대상이 발견되었습니다."),
-                        Action(type=ActionType.UPDATE_STATE, value={"key": "mk_inspected", "value": True}),
+                    ],
+                ),
+                Interaction(
+                    conditions=[
+                        Condition(type=ConditionType.STATE_IS, target="mk_inspected", value=True),
+                        Condition(type=ConditionType.STATE_IS, target="comm_found", value=False),
+                    ],
+                    actions=[
+                        Action(
+                            type=ActionType.PRINT_NARRATIVE,
+                            value=(
+                                "기계는 엉망진창이다. 외장 패널은 찌그러졌고 엔진 쪽에서 검은 연기가 난다.\n"
+                                "다행히 내부 회로는 살아있는지, 계기판 안쪽에서 통신기의 불빛이 깜빡거리고 있다."
+                            ),
+                        ),
                     ],
                 ),
                 Interaction(
@@ -78,14 +97,31 @@ CH1_SCENE0_DATA = SceneData(
             type=KeywordType.OBJECT,
             state=KeywordState.INACTIVE,  # MK-II 조사 전에는 안 보임
             description="지직거리는 잡음이 들린다. 교수님의 목소리일까, 아니면 저승에서 부르는 소리일까. 고치려면 무언가 단단한 게 필요하다.",
+            interactions=[
+                Interaction(
+                    actions=[
+                        Action(type=ActionType.UPDATE_STATE, value={"key": "comm_found", "value": True}),
+                    ]
+                ),
+            ]
         ),
         # 3. 바다: 함정 (체력 시스템 튜토리얼)
         KeywordId.SEA: KeywordData(
             type=KeywordType.OBJECT,
             state=KeywordState.HIDDEN,  # [수정] 텍스트에 있으므로 HIDDEN으로 시작해 발견의 재미 부여
-            description="끝없이 펼쳐진 수평선. 보기에는 시원해 보이지만, 마시면 죽을 것이다.",
             interactions=[
                 Interaction(
+                    conditions=[Condition(type=ConditionType.STATE_IS, target="sea_step", value=0)],
+                    actions=[
+                        Action(
+                            type=ActionType.PRINT_NARRATIVE,
+                            value="끝없이 펼쳐진 수평선. 바닷물이 시원해 보인다. 한 모금 정도 마셔볼까?",
+                        ),
+                        Action(type=ActionType.UPDATE_STATE, value={"key": "sea_step", "value": 1}),
+                    ],
+                ),
+                Interaction(
+                    conditions=[Condition(type=ConditionType.STATE_IS, target="sea_step", value=1)],
                     actions=[
                         Action(
                             type=ActionType.PRINT_NARRATIVE,
@@ -100,8 +136,18 @@ CH1_SCENE0_DATA = SceneData(
                             type=ActionType.PRINT_SYSTEM,
                             value="[경고] 짠물을 마셔 체력이 감소했습니다. 잘못된 행동은 생명을 위협합니다.",
                         ),
+                        Action(type=ActionType.UPDATE_STATE, value={"key": "sea_step", "value": 2}),
                     ]
-                )
+                ),
+                Interaction(
+                    conditions=[Condition(type=ConditionType.STATE_IS, target="sea_step", value=2)],
+                    actions=[
+                        Action(
+                            type=ActionType.PRINT_NARRATIVE,
+                            value="정신을 차리고 생각해보니, 당연히 바닷물을 마시면 안 되는 거였다. 바닷물은 우리 몸의 혈액보다 염분 농도가 훨씬 높다.",
+                        ),
+                    ],
+                ),
             ],
         ),
         # 4. 태양: 환경 묘사
@@ -124,7 +170,7 @@ CH1_SCENE0_DATA = SceneData(
             interactions=[
                 # 첫 번째 조사: 설명만 출력하고 상태 변경
                 Interaction(
-                    conditions=[Condition(type=ConditionType.STATE_IS, target="sand_inspected", value=False)],
+                    conditions=[Condition(type=ConditionType.STATE_IS, target="sand_step", value=0)],
                     actions=[
                         Action(
                             type=ActionType.PRINT_NARRATIVE,
@@ -133,11 +179,12 @@ CH1_SCENE0_DATA = SceneData(
                                 "신발 밑창이 녹기 전에 그늘을 찾아야 한다."
                             ),
                         ),
-                        Action(type=ActionType.UPDATE_STATE, value={"key": "sand_inspected", "value": True}),
+                        Action(type=ActionType.UPDATE_STATE, value={"key": "sand_step", "value": 1}),
                     ],
                 ),
-                # 두 번째 이후: 데미지 입음
+                # 두 번째: 데미지 입음
                 Interaction(
+                    conditions=[Condition(type=ConditionType.STATE_IS, target="sand_step", value=1)],
                     actions=[
                         Action(
                             type=ActionType.PRINT_NARRATIVE,
@@ -145,6 +192,16 @@ CH1_SCENE0_DATA = SceneData(
                         ),
                         Action(type=ActionType.MODIFY_STAMINA, value=-5),
                         Action(type=ActionType.PRINT_SYSTEM, value="[경고] 뜨거운 모래에 데여 체력이 감소했습니다."),
+                    ]
+                ),
+                # 두 번째: 데미지 입음
+                Interaction(
+                    conditions=[Condition(type=ConditionType.STATE_IS, target="sand_step", value=2)],
+                    actions=[
+                        Action(
+                            type=ActionType.PRINT_NARRATIVE,
+                            value="여기서 모래를 더 만질 일은 없다. 한번 더 만지면 손에 불이 붙을지도 모른다.",
+                        ),
                     ]
                 ),
             ],

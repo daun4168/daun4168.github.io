@@ -40,7 +40,7 @@ class KeywordId(StrEnum):
     WALL = "벽"
     WALL_ALIAS = "벽면"
     MEMO = "메모"
-    WRAPPER = "에너지바 껍질"
+    AIR_DUSTER = "먼지 제거제"
     LAB_COAT = "실험용 랩 가운"
     ETHANOL = "에탄올"
     KEY = "열쇠"
@@ -85,7 +85,6 @@ class KeywordState(StrEnum):
     HIDDEN = "hidden"
     DISCOVERED = "discovered"
     INACTIVE = "inactive"
-    NORMAL = "normal"
 
 
 class ConditionType(StrEnum):

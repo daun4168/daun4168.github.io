@@ -156,6 +156,7 @@ class ActionType(StrEnum):
     SHOW_STAMINA_UI = "show_stamina_ui"  # [추가] 체력 UI 표시 여부 토글
     REQUEST_CONFIRMATION = "request_confirmation"  # [추가] 확인 요청 액션
     UPDATE_KEYWORD_DATA = "update_keyword_data"
+    UPDATE_ITEM_DATA = "update_item_data"
 
 
 class KeywordType(StrEnum):

@@ -159,6 +159,47 @@ class RequestConfirmationHandler(ActionHandler):
         }
 
 
+class UpdateKeywordDataHandler(ActionHandler):
+    def execute(self, scene, value):
+        """
+        value 구조:
+        {
+            "keyword": KeywordId,
+            "field": "display_name" | "description",
+            "value": "변경할 내용"
+        }
+        """
+        keyword_id = value.get("keyword")
+        field = value.get("field")
+        new_value = value.get("value")
+
+        if keyword_id in scene.scene_data.keywords:
+            keyword_data = scene.scene_data.keywords[keyword_id]
+            if field == "display_name":
+                keyword_data.display_name = new_value
+            elif field == "description":
+                keyword_data.description = new_value
+            scene.ui.update_sight_status(scene.scene_data.keywords)
+
+
+class UpdateItemDataHandler(ActionHandler):
+    def execute(self, scene, value):
+        """
+        value 구조:
+        {
+            "keyword": KeywordId,
+            "field": "display_name" | "description",
+            "value": "변경할 내용"
+        }
+        """
+        keyword_id = value.get("keyword")
+        field = value.get("field")
+        new_value = value.get("value")
+        scene.inventory.update(keyword_id, field, new_value)
+        print(keyword_id, field, new_value)
+
+
+
 # --- Registries (Strategy Mapping) ---
 
 CONDITION_HANDLERS = {
@@ -183,4 +224,6 @@ ACTION_HANDLERS = {
     ActionType.RELOAD_CHECKPOINT: ReloadCheckpointHandler(),
     ActionType.SHOW_STAMINA_UI: ShowStaminaUIHandler(),
     ActionType.REQUEST_CONFIRMATION: RequestConfirmationHandler(),
+    ActionType.UPDATE_KEYWORD_DATA: UpdateKeywordDataHandler(),
+    ActionType.UPDATE_ITEM_DATA: UpdateItemDataHandler(),
 }

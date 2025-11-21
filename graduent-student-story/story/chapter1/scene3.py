@@ -18,6 +18,7 @@ CH1_SCENE3_DATA = SceneData(
         "axe_obtained": False,  # 도끼 획득 여부
         "batteries_found": False,  # 건전지 파밍 여부
         "entrance_inspected": False,  # 입구 조사 여부
+        "workbench_inspected": False,  # [신규] 작업대 조사 여부
     },
     keywords={
         # --- [Alias 정의] ---
@@ -77,7 +78,6 @@ CH1_SCENE3_DATA = SceneData(
                 Interaction(
                     actions=[
                         Action(type=ActionType.PRINT_NARRATIVE, value="접근 불가. 강산성 용액입니다. 함부로 건널 수 없습니다."),
-                        Action(type=ActionType.PRINT_SYSTEM, value="적절한 용기로 용액을 뜨거나, 중화제를 뿌려야 합니다.")
                     ]
                 ),
             ],
@@ -90,25 +90,62 @@ CH1_SCENE3_DATA = SceneData(
             description="터진 포대에 쌓인 하얀 가루입니다. 강한 염기성 냄새가 납니다. 가성소다(NaOH)인 것 같습니다.\n맨손으로 만지면 위험하니 담을 용기가 필요합니다.",
         ),
 
-        # 3. 작업대
+        # 3. 작업대 (접근 제한 및 멀티미터/메모 발견 로직 추가)
         KeywordId.WORKBENCH: KeywordData(
             type=KeywordType.OBJECT,
             state=KeywordState.HIDDEN,
             description="각종 공구가 있던 책상입니다. 고정된 **[멀티미터]**와 기름에 찌든 **[정비 메모]**가 보입니다.",
+            interactions=[
+                # Case 1: 산성 웅덩이 미해결
+                Interaction(
+                    conditions=[Condition(type=ConditionType.STATE_IS, target="acid_neutralized", value=False)],
+                    actions=[
+                        Action(type=ActionType.PRINT_NARRATIVE, value="산성 웅덩이가 길을 막고 있어 작업대에 접근할 수 없습니다.")
+                    ]
+                ),
+                # Case 2: 산성 웅덩이 해결 + 첫 방문 (멀티미터/메모 발견)
+                Interaction(
+                    conditions=[
+                        Condition(type=ConditionType.STATE_IS, target="acid_neutralized", value=True),
+                        Condition(type=ConditionType.STATE_IS, target="workbench_inspected", value=False)
+                    ],
+                    actions=[
+                        Action(type=ActionType.PRINT_NARRATIVE, value="작업대에 가까이 다가갔습니다. 고정된 멀티미터와 메모가 보입니다."),
+                        Action(type=ActionType.PRINT_SYSTEM, value="새로운 상호작용 대상이 여러 개 발견되었습니다."),
+                        Action(type=ActionType.UPDATE_STATE,
+                               value={"keyword": KeywordId.MULTIMETER, "state": KeywordState.HIDDEN}),
+                        Action(type=ActionType.UPDATE_STATE,
+                               value={"keyword": KeywordId.MEMO_VOLTAGE, "state": KeywordState.HIDDEN}),
+                        Action(type=ActionType.UPDATE_STATE, value={"key": "workbench_inspected", "value": True})
+                    ]
+                ),
+                # Case 3: 재방문
+                Interaction(
+                    conditions=[Condition(type=ConditionType.STATE_IS, target="acid_neutralized", value=True)],
+                    actions=[Action(type=ActionType.PRINT_NARRATIVE, value="각종 공구가 있던 책상입니다. 멀티미터와 메모가 있습니다.")]
+                )
+            ]
         ),
 
-        # 4. 멀티미터
+        # 4. 멀티미터 (초기 INACTIVE)
         KeywordId.MULTIMETER: KeywordData(
             type=KeywordType.OBJECT,
-            state=KeywordState.HIDDEN,
+            state=KeywordState.INACTIVE,
             description="작동하는 아날로그 멀티미터입니다. 리드봉을 건전지에 대면 전압을 측정할 수 있습니다.",
         ),
 
-        # 5. 전자 금고
+        # 5. 전자 금고 (접근 제한 추가)
         KeywordId.SAFE: KeywordData(
             type=KeywordType.OBJECT,
             state=KeywordState.HIDDEN,
             interactions=[
+                # 산성 웅덩이 미해결 시 접근 불가
+                Interaction(
+                    conditions=[Condition(type=ConditionType.STATE_IS, target="acid_neutralized", value=False)],
+                    actions=[
+                        Action(type=ActionType.PRINT_NARRATIVE, value="산성 웅덩이가 길을 막고 있어 금고에 접근할 수 없습니다.")
+                    ]
+                ),
                 Interaction(
                     conditions=[Condition(type=ConditionType.STATE_IS, target="safe_opened", value=True)],
                     actions=[Action(type=ActionType.PRINT_NARRATIVE, value="금고가 열려 있습니다.")]
@@ -116,7 +153,7 @@ CH1_SCENE3_DATA = SceneData(
                 Interaction(
                     actions=[
                         Action(type=ActionType.PRINT_NARRATIVE,
-                               value="전원이 꺼져 있는 금고입니다. 전원 케이블 끝에 **[배터리 케이스]**를 연결해야 할 것 같습니다."),
+                               value="전원이 꺼져 있는 금고입니다. 전원 케이블 끝에 배터리를 연결해야 할 것 같습니다."),
                     ]
                 )
             ]
@@ -155,7 +192,7 @@ CH1_SCENE3_DATA = SceneData(
             description="**[소방 도끼]**를 꽉 물고 있는 고정 장치입니다. 붉은 녹이 슬어 꿈쩍도 안 합니다.\n화학적으로 녹을 제거해야 합니다. 산성 용액이 좋겠지만, 그냥 부으면 흘러내릴 겁니다.",
         ),
 
-        # 8. 정비 메모
+        # 8. 정비 메모 (초기 INACTIVE)
         KeywordId.MEMO_VOLTAGE: KeywordData(
             type=KeywordType.OBJECT,
             state=KeywordState.INACTIVE,
@@ -309,47 +346,57 @@ CH1_SCENE3_DATA = SceneData(
         # --- [퍼즐 3] 배터리 전압 (멀티미터) ---
         # 1: 9V, 2: 6V, 3: 5V, 4: 4V, 5: 2V
         # 정답: 19V (9+6+4) -> ID 1, 2, 4
-        # Action: UPDATE_KEYWORD_DATA로 이름(display_name)만 변경
+        # Action: UPDATE_ITEM_DATA 이름(extra_name)만 변경
 
         # 3-1. 측정 (속성 업데이트 로직)
         Combination(
             targets=[KeywordId.MULTIMETER, KeywordId.BATTERY_1],
             actions=[
                 Action(type=ActionType.PRINT_NARRATIVE, value="측정 결과: **9V**"),
-                Action(type=ActionType.UPDATE_KEYWORD_DATA,
-                       value={"keyword": KeywordId.BATTERY_1, "field": "display_name", "value": "건전지 1 (9V)"})
+                Action(type=ActionType.UPDATE_ITEM_DATA,
+                       value={"keyword": KeywordId.BATTERY_1, "field": "extra_name", "value": "(9V)"}),
+                Action(type=ActionType.UPDATE_ITEM_DATA,
+                       value={"keyword": KeywordId.BATTERY_1, "field": "description", "value": "측정된 전압은 9V입니다."})
             ]
         ),
         Combination(
             targets=[KeywordId.MULTIMETER, KeywordId.BATTERY_2],
             actions=[
                 Action(type=ActionType.PRINT_NARRATIVE, value="측정 결과: **6V**"),
-                Action(type=ActionType.UPDATE_KEYWORD_DATA,
-                       value={"keyword": KeywordId.BATTERY_2, "field": "display_name", "value": "건전지 2 (6V)"})
+                Action(type=ActionType.UPDATE_ITEM_DATA,
+                       value={"keyword": KeywordId.BATTERY_2, "field": "extra_name", "value": "(6V)"}),
+                Action(type=ActionType.UPDATE_ITEM_DATA,
+                       value={"keyword": KeywordId.BATTERY_2, "field": "description", "value": "측정된 전압은 6V입니다."})
             ]
         ),
         Combination(
             targets=[KeywordId.MULTIMETER, KeywordId.BATTERY_3],
             actions=[
                 Action(type=ActionType.PRINT_NARRATIVE, value="측정 결과: **5V**"),
-                Action(type=ActionType.UPDATE_KEYWORD_DATA,
-                       value={"keyword": KeywordId.BATTERY_3, "field": "display_name", "value": "건전지 3 (5V)"})
+                Action(type=ActionType.UPDATE_ITEM_DATA,
+                       value={"keyword": KeywordId.BATTERY_3, "field": "extra_name", "value": "(5V)"}),
+                Action(type=ActionType.UPDATE_ITEM_DATA,
+                       value={"keyword": KeywordId.BATTERY_3, "field": "description", "value": "측정된 전압은 5V입니다."})
             ]
         ),
         Combination(
             targets=[KeywordId.MULTIMETER, KeywordId.BATTERY_4],
             actions=[
                 Action(type=ActionType.PRINT_NARRATIVE, value="측정 결과: **4V**"),
-                Action(type=ActionType.UPDATE_KEYWORD_DATA,
-                       value={"keyword": KeywordId.BATTERY_4, "field": "display_name", "value": "건전지 4 (4V)"})
+                Action(type=ActionType.UPDATE_ITEM_DATA,
+                       value={"keyword": KeywordId.BATTERY_4, "field": "extra_name", "value": "(4V)"}),
+                Action(type=ActionType.UPDATE_ITEM_DATA,
+                       value={"keyword": KeywordId.BATTERY_4, "field": "description", "value": "측정된 전압은 4V입니다."})
             ]
         ),
         Combination(
             targets=[KeywordId.MULTIMETER, KeywordId.BATTERY_5],
             actions=[
                 Action(type=ActionType.PRINT_NARRATIVE, value="측정 결과: **2V**"),
-                Action(type=ActionType.UPDATE_KEYWORD_DATA,
-                       value={"keyword": KeywordId.BATTERY_5, "field": "display_name", "value": "건전지 5 (2V)"})
+                Action(type=ActionType.UPDATE_ITEM_DATA,
+                       value={"keyword": KeywordId.BATTERY_5, "field": "extra_name", "value": "(2V)"}),
+                Action(type=ActionType.UPDATE_ITEM_DATA,
+                       value={"keyword": KeywordId.BATTERY_5, "field": "description", "value": "측정된 전압은 2V입니다."})
             ]
         ),
 
@@ -364,7 +411,9 @@ CH1_SCENE3_DATA = SceneData(
                 # 건전지 아이템 소모 처리 (조립했으므로 제거)
                 Action(type=ActionType.REMOVE_ITEM, value=KeywordId.BATTERY_1),
                 Action(type=ActionType.REMOVE_ITEM, value=KeywordId.BATTERY_2),
+                Action(type=ActionType.REMOVE_ITEM, value=KeywordId.BATTERY_3),
                 Action(type=ActionType.REMOVE_ITEM, value=KeywordId.BATTERY_4),
+                Action(type=ActionType.REMOVE_ITEM, value=KeywordId.BATTERY_5),
                 Action(type=ActionType.ADD_ITEM, value={"name": KeywordId.BATTERY_PACK, "description": "안정적인 19V 전원."}),
             ]
         ),

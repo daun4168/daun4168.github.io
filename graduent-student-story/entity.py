@@ -18,9 +18,10 @@ class Item(Entity):
         super().__init__()
         self.name = name
         self.description = description
+        self.extra_name = None
 
     def __str__(self):
-        return self.name
+        return self.name if self.extra_name is None else f"{self.name} {self.extra_name}"
 
     def __repr__(self):
         return f"Item('{self.name}')"
@@ -44,6 +45,19 @@ class Inventory(Entity):
                     f"**[{item.name}]**{get_josa(item.name, '을/를')} **주머니**에 넣었습니다.", is_markdown=True
                 )
             self._ui.update_inventory_status(self.items)
+
+    def update(self, item_name, field, new_value):
+        item = self._items.get(item_name)
+        if not item:
+            return
+
+        if field == "extra_name":
+            item.extra_name = new_value
+
+        elif field == "description":
+            item.description = new_value
+
+        self._ui.update_inventory_status(self.items)
 
     def remove(self, item_name: str):
         if item_name in self._items:

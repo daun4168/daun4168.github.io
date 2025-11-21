@@ -283,6 +283,19 @@ CH1_SCENE3_DATA = SceneData(
             ]
         ),
 
+        # [신규] 녹슨 클램프 + 산성 용액 (실패 & 부상)
+        Combination(
+            targets=[KeywordId.RUSTY_CLAMP, KeywordId.ACID_BOTTLE],
+            actions=[
+                Action(
+                    type=ActionType.PRINT_NARRATIVE,
+                    value="녹슨 클램프에 산성 용액을 그대로 부었습니다.\n예상대로 용액은 주르륵 흘러내려 바닥으로 떨어졌고, 그중 일부가 당신의 손등에 튀었습니다!\n\n\"으악! 타는 것 같아!\""
+                ),
+                Action(type=ActionType.MODIFY_STAMINA, value=-5),
+                Action(type=ActionType.PRINT_SYSTEM, value="[경고] 화상을 입어 체력이 감소했습니다. 용액이 흘러내리지 않게 점성을 높여야 합니다.")
+            ]
+        ),
+
         # [추가된 상호작용] 산성 웅덩이 + 전분 가루 (힌트)
         Combination(
             targets=[KeywordId.ACID_PUDDLE, KeywordId.STARCH],
@@ -435,6 +448,17 @@ CH1_SCENE3_DATA = SceneData(
                 Action(type=ActionType.PRINT_NARRATIVE,
                        value="퍽! 합계는 19V지만, 낮은 전압을 먼저 연결하자 역전류가 발생했습니다. '높은 곳에서 낮은 곳으로' 연결해야 합니다."),
                 Action(type=ActionType.MODIFY_STAMINA, value=-1)
+            ]
+        ),
+
+        # [신규] 빈 배터리 케이스 + 금고 (힌트)
+        Combination(
+            targets=[KeywordId.SAFE, KeywordId.BATTERY_CASE],
+            actions=[
+                Action(
+                    type=ActionType.PRINT_NARRATIVE,
+                    value="빈 케이스만 연결해서는 작동하지 않습니다. 건전지를 채워 넣어야 합니다."
+                )
             ]
         ),
 

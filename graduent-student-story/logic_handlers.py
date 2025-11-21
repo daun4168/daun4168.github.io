@@ -196,8 +196,6 @@ class UpdateItemDataHandler(ActionHandler):
         field = value.get("field")
         new_value = value.get("value")
         scene.inventory.update(keyword_id, field, new_value)
-        print(keyword_id, field, new_value)
-
 
 
 # --- Registries (Strategy Mapping) ---

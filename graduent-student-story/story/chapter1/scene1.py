@@ -104,7 +104,7 @@ CH1_SCENE1_DATA = SceneData(
         KeywordId.FOREST_ENTRY: KeywordData(
             type=KeywordType.OBJECT,
             state=KeywordState.HIDDEN,
-            description="울창한 밀림이다. 억센 덩굴로 막혀 있어, **[정글도]** 같은 날카로운 도구가 없으면 들어갈 수 없다.",
+            description="울창한 밀림이다. 억센 덩굴로 막혀 있어, 무언가 날카로운 도구가 없으면 들어갈 수 없다.",
         ),
         # 7. MK-II (수리 대상)
         KeywordId.MK_II: KeywordData(

@@ -27,4 +27,5 @@ packages = ["markdown", "asyncio", "pydantic"]
 "story/chapter1/common.py" = "story/chapter1/common.py"
 "story/chapter1/scene0.py" = "story/chapter1/scene0.py"
 "story/chapter1/scene1.py" = "story/chapter1/scene1.py"
+"story/chapter1/scene2.py" = "story/chapter1/scene2.py"
 

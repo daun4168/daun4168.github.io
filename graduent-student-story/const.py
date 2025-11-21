@@ -59,22 +59,24 @@ class KeywordId(StrEnum):
     SANDY_BEACH = "모래사장"
 
     # CH1_SCENE1
-    YES = "예"
-    NO = "아니오"
-
-    # 장소/이동
     WRECKAGE = "난파선 잔해"
     FOREST_ENTRY = "숲 입구"
-
-    # 오브젝트
     SHADE = "그늘막"
     PALM_TREE = "야자수"
     TRASH_PILE = "쓰레기 더미"
-
-    # 아이템
     COCONUT = "코코넛"
     PLASTIC_BOTTLE = "빈 페트병"
     VINYL = "비닐"
+
+    # CH1_SCENE2
+    CARGO_HOLD = "화물 칸"
+    RUSTY_IRON = "녹슨 철판"
+    SKELETON = "백골"  # Flavor text용
+    BUCKET = "녹슨 양동이"
+    CUP = "더러운 머그컵"
+    WIRE_BUNDLE = "전선 뭉치"
+    BEACH = "해변"
+    BASECAMP = "베이스캠프"
 
 
 class KeywordState(StrEnum):

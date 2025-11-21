@@ -78,7 +78,7 @@ class UIManager:
         p = document.createElement("p")
         for cls in classes:
             p.classList.add(cls)
-        p.innerHTML = markdown.markdown(text) if is_markdown else text
+        p.innerHTML = markdown.markdown(text, extensions=['tables', 'fenced_code']) if is_markdown else text
         parent.appendChild(p)
         self.scroll_to_bottom()
 

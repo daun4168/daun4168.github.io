@@ -25,6 +25,11 @@ CH1_SCENE6_DATA = SceneData(
         "quartz_collected": False,
         "swamp_path_inspected": False,
         "hall_inspected": False,  # ✅ 동굴 홀을 처음 조사했는지 여부
+        "lime_btn_1": 0,
+        "lime_btn_2": 0,
+        "lime_btn_3": 0,
+        "lime_btn_4": 0,
+        "lime_btn_5": 0,
     },
     on_enter_actions=[
         Action(type=ActionType.SHOW_STAMINA_UI, value=True),
@@ -107,7 +112,6 @@ CH1_SCENE6_DATA = SceneData(
                 ),
             ],
         ),
-
         # --- [그림자 시계 퍼즐 관련 오브젝트] ---
         # 중앙 동굴 홀
         KeywordId.CAVE_HALL: KeywordData(
@@ -184,7 +188,6 @@ CH1_SCENE6_DATA = SceneData(
                 ),
             ],
         ),
-
         # 짧은 돌
         KeywordId.SHORT_STONE: KeywordData(
             type=KeywordType.OBJECT,
@@ -198,9 +201,7 @@ CH1_SCENE6_DATA = SceneData(
         KeywordId.MID_STONE: KeywordData(
             type=KeywordType.OBJECT,
             state=KeywordState.INACTIVE,
-            description=(
-                "중간 높이의 돌기둥이다. 그림자를 자세히 따라가 보니, 석회문의 왼쪽 부분에 걸쳐 멈춰 있다.\n"
-            ),
+            description=("중간 높이의 돌기둥이다. 그림자를 자세히 따라가 보니, 석회문의 왼쪽 부분에 걸쳐 멈춰 있다.\n"),
         ),
         # 긴 돌
         KeywordId.LONG_STONE: KeywordData(
@@ -211,7 +212,6 @@ CH1_SCENE6_DATA = SceneData(
                 "석회문의 아래쪽 가장 낮은 위치에 걸쳐 있다.\n"
             ),
         ),
-
         # 시계 문양 / 석회문
         KeywordId.TIME_DOOR: KeywordData(
             type=KeywordType.OBJECT,
@@ -236,7 +236,7 @@ CH1_SCENE6_DATA = SceneData(
                                 "형태만 보면 그저 오래된 돌무늬 같지만, 바닥에서 솟은 서로 다른 높이의 세 돌기둥이 드리우는 그림자와 "
                                 "아주 미세하게 부합하는 듯한 느낌이 든다.\n\n"
                                 "석회문 아래쪽 모서리에는 거의 지워진 필치로 이런 문장이 남아 있다.\n"
-                                "\"세 돌이 가리키는 흐름을 잇는 자만이, 문 너머로 나아갈 수 있으리라.\"\n"
+                                '"세 돌이 가리키는 흐름을 잇는 자만이, 문 너머로 나아갈 수 있으리라."\n'
                             ),
                         ),
                         Action(
@@ -263,7 +263,6 @@ CH1_SCENE6_DATA = SceneData(
                 ),
             ],
         ),
-
         # 석회문 안쪽으로 이어지는 절벽 통로(위쪽)
         KeywordId.CLIFF_PATH: KeywordData(
             type=KeywordType.PORTAL,
@@ -333,7 +332,6 @@ CH1_SCENE6_DATA = SceneData(
                 ),
             ],
         ),
-
         # 석회문 안쪽 아래로 이어지는 지하 호수 통로(아래쪽)
         KeywordId.UNDERGROUND_LAKE_PATH: KeywordData(
             type=KeywordType.PORTAL,
@@ -402,7 +400,6 @@ CH1_SCENE6_DATA = SceneData(
                 ),
             ],
         ),
-
         # --- [석영 / 지하수 자원] ---
         KeywordId.QUARTZ_CLUSTER: KeywordData(
             type=KeywordType.OBJECT,
@@ -463,7 +460,6 @@ CH1_SCENE6_DATA = SceneData(
                 ),
             ],
         ),
-
         KeywordId.UNDERGROUND_SPRING: KeywordData(
             type=KeywordType.OBJECT,
             state=KeywordState.INACTIVE,
@@ -524,7 +520,6 @@ CH1_SCENE6_DATA = SceneData(
                 ),
             ],
         ),
-
         # --- [석회암 2진수 패널 퍼즐] ---
         KeywordId.LIME_PANEL: KeywordData(
             type=KeywordType.OBJECT,
@@ -541,115 +536,388 @@ CH1_SCENE6_DATA = SceneData(
                             value=(
                                 "점들을 하나하나 살펴보니, 어떤 점은 손가락을 대면 미세하게 움푹 들어가는 느낌이 들고, "
                                 "어떤 점은 단단하게 굳어 아무 반응이 없다.\n"
-                                "조금 떨어진 지하수 소리가 규칙적인 리듬으로 떨어지는 것이, 어쩐지 이 점들의 배열과 닮아 보인다.\n\n"
                                 "겉에 굳어 있는 석회층을 제거할 방법을 찾아보는게 좋겠다."
                             ),
                         ),
-                        # 점 키워드들을 활성화
+                        # 점 키워드들을 ‘존재만’ 알리기 위한 상태 설정 (실제 활성화는 식초 조합에서)
                         Action(
                             type=ActionType.UPDATE_STATE,
-                            value={"keyword": KeywordId.LIME_DOT_1, "state": KeywordState.HIDDEN},
+                            value={"keyword": KeywordId.LIME_DOT_1, "state": KeywordState.INACTIVE},
                         ),
                         Action(
                             type=ActionType.UPDATE_STATE,
-                            value={"keyword": KeywordId.LIME_DOT_2, "state": KeywordState.HIDDEN},
+                            value={"keyword": KeywordId.LIME_DOT_2, "state": KeywordState.INACTIVE},
                         ),
                         Action(
                             type=ActionType.UPDATE_STATE,
-                            value={"keyword": KeywordId.LIME_DOT_3, "state": KeywordState.HIDDEN},
+                            value={"keyword": KeywordId.LIME_DOT_3, "state": KeywordState.INACTIVE},
                         ),
                         Action(
                             type=ActionType.UPDATE_STATE,
-                            value={"keyword": KeywordId.LIME_DOT_4, "state": KeywordState.HIDDEN},
+                            value={"keyword": KeywordId.LIME_DOT_4, "state": KeywordState.INACTIVE},
                         ),
                         Action(
                             type=ActionType.UPDATE_STATE,
-                            value={"keyword": KeywordId.LIME_DOT_5, "state": KeywordState.HIDDEN},
-                        ),
-                        Action(
-                            type=ActionType.UPDATE_STATE,
-                            value={"keyword": KeywordId.LIME_DOT_6, "state": KeywordState.HIDDEN},
-                        ),
-                        Action(
-                            type=ActionType.UPDATE_STATE,
-                            value={"keyword": KeywordId.LIME_DOT_7, "state": KeywordState.HIDDEN},
+                            value={"keyword": KeywordId.LIME_DOT_5, "state": KeywordState.INACTIVE},
                         ),
                     ]
                 )
             ],
         ),
-
-        # 일곱 개의 점 – 순서 누르기 퍼즐 (● ○ ● ● ○ ○ ●)
+        # 다섯 개의 점 – 순서 누르기 퍼즐 (● ○ ● ● ○ ○ ●)
         KeywordId.LIME_DOT_1: KeywordData(
             type=KeywordType.OBJECT,
-            state=KeywordState.INACTIVE,
-            description="석회 패널의 첫 번째 점이다. 가까이서 보면 다른 점보다 표면이 약간 더 반들거린다.",
+            state=KeywordState.INACTIVE,  # 식초 사용 전에는 비활성
+            description="석회 패널의 첫 번째 버튼이다. 표면이 약간 더 반들거리는 작은 둥근 버튼이다.",
             interactions=[
-                # 정답 시퀀스의 1단계 (step == 0)
+                # 아직 퍼즐이 안 풀렸고, 현재 값이 0일 때 → 1로
                 Interaction(
                     conditions=[
-                        Condition(
-                            type=ConditionType.STATE_IS,
-                            target="binary_panel_solved",
-                            value=False,
-                        ),
-                        Condition(
-                            type=ConditionType.STATE_IS,
-                            target="binary_panel_step",
-                            value=0,
-                        ),
+                        Condition(type=ConditionType.STATE_IS, target="binary_panel_solved", value=False),
+                        Condition(type=ConditionType.STATE_IS, target="lime_btn_1", value=0),
                     ],
                     actions=[
                         Action(
                             type=ActionType.PRINT_NARRATIVE,
-                            value="첫 번째 점을 누르자 미세한 클릭 소리와 함께 점이 안쪽으로 조금 들어간다.",
+                            value="첫 번째 버튼을 누르자, 딸깍 하는 소리와 함께 안쪽으로 살짝 들어간다.",
                         ),
                         Action(
                             type=ActionType.UPDATE_STATE,
-                            value={"key": "binary_panel_step", "value": 1},
+                            value={"key": "lime_btn_1", "value": 1},
                         ),
                     ],
                 ),
-                # 이미 풀린 뒤
+                # 아직 퍼즐이 안 풀렸고, 현재 값이 1일 때 → 0으로
                 Interaction(
                     conditions=[
-                        Condition(
-                            type=ConditionType.STATE_IS,
-                            target="binary_panel_solved",
-                            value=True,
-                        )
+                        Condition(type=ConditionType.STATE_IS, target="binary_panel_solved", value=False),
+                        Condition(type=ConditionType.STATE_IS, target="lime_btn_1", value=1),
                     ],
                     actions=[
                         Action(
                             type=ActionType.PRINT_NARRATIVE,
-                            value="첫 번째 점은 이미 안쪽으로 들어가 고정된 상태다.",
-                        )
-                    ],
-                ),
-                # 그 외 잘못된 타이밍에 눌렀을 때 → 리셋
-                Interaction(
-                    conditions=[
-                        Condition(
-                            type=ConditionType.STATE_IS,
-                            target="binary_panel_solved",
-                            value=False,
-                        )
-                    ],
-                    actions=[
-                        Action(
-                            type=ActionType.PRINT_NARRATIVE,
-                            value="점이 잠깐 흔들렸지만, 다시 원래 자리로 돌아가 버린다. 패턴이 어긋난 것 같다.",
+                            value="첫 번째 버튼이 다시 제자리로 튀어 올라온다.",
                         ),
                         Action(
                             type=ActionType.UPDATE_STATE,
-                            value={"key": "binary_panel_step", "value": 0},
+                            value={"key": "lime_btn_1", "value": 0},
                         ),
+                    ],
+                ),
+                # 이미 퍼즐이 풀린 뒤
+                Interaction(
+                    conditions=[
+                        Condition(type=ConditionType.STATE_IS, target="binary_panel_solved", value=True),
+                    ],
+                    actions=[
+                        Action(
+                            type=ActionType.PRINT_NARRATIVE,
+                            value="첫 번째 버튼은 이미 고정된 상태다. 더 이상 누를 필요는 없어 보인다.",
+                        )
                     ],
                 ),
             ],
         ),
-        # 이하 LIME_DOT_2~7, UNDERGROUND_SPRING, QUARTZ_CLUSTER 등은 그대로 (위에서 쓰던 버전 유지)
-        # ...
+        KeywordId.LIME_DOT_2: KeywordData(
+            type=KeywordType.OBJECT,
+            state=KeywordState.INACTIVE,  # 식초 사용 전에는 비활성
+            description="석회 패널의 두 번째 버튼이다. 살짝 옅은 흠집이 나 있어 다른 버튼과 구분된다.",
+            interactions=[
+                # 아직 퍼즐이 안 풀렸고, 현재 값이 0일 때 → 1로
+                Interaction(
+                    conditions=[
+                        Condition(type=ConditionType.STATE_IS, target="binary_panel_solved", value=False),
+                        Condition(type=ConditionType.STATE_IS, target="lime_btn_2", value=0),
+                    ],
+                    actions=[
+                        Action(
+                            type=ActionType.PRINT_NARRATIVE,
+                            value="두 번째 버튼을 누르자, 짧은 울림과 함께 안쪽으로 눌린다.",
+                        ),
+                        Action(
+                            type=ActionType.UPDATE_STATE,
+                            value={"key": "lime_btn_2", "value": 1},
+                        ),
+                    ],
+                ),
+                # 아직 퍼즐이 안 풀렸고, 현재 값이 1일 때 → 0으로
+                Interaction(
+                    conditions=[
+                        Condition(type=ConditionType.STATE_IS, target="binary_panel_solved", value=False),
+                        Condition(type=ConditionType.STATE_IS, target="lime_btn_2", value=1),
+                    ],
+                    actions=[
+                        Action(
+                            type=ActionType.PRINT_NARRATIVE,
+                            value="두 번째 버튼이 사르륵 소리를 내며 다시 튀어 오른다.",
+                        ),
+                        Action(
+                            type=ActionType.UPDATE_STATE,
+                            value={"key": "lime_btn_2", "value": 0},
+                        ),
+                    ],
+                ),
+                # 이미 퍼즐이 풀린 뒤
+                Interaction(
+                    conditions=[
+                        Condition(type=ConditionType.STATE_IS, target="binary_panel_solved", value=True),
+                    ],
+                    actions=[
+                        Action(
+                            type=ActionType.PRINT_NARRATIVE,
+                            value="두 번째 버튼은 단단히 굳어 있다. 더 이상 움직이지 않는다.",
+                        )
+                    ],
+                ),
+            ],
+        ),
+        KeywordId.LIME_DOT_3: KeywordData(
+            type=KeywordType.OBJECT,
+            state=KeywordState.INACTIVE,  # 식초 사용 전에는 비활성
+            description="석회 패널의 세 번째 버튼이다. 가장 평범해 보이지만, 미세하게 중앙이 파여 있다.",
+            interactions=[
+                # 아직 퍼즐이 안 풀렸고, 현재 값이 0일 때 → 1로
+                Interaction(
+                    conditions=[
+                        Condition(type=ConditionType.STATE_IS, target="binary_panel_solved", value=False),
+                        Condition(type=ConditionType.STATE_IS, target="lime_btn_3", value=0),
+                    ],
+                    actions=[
+                        Action(
+                            type=ActionType.PRINT_NARRATIVE,
+                            value="세 번째 버튼이 또각 소리를 내며 안으로 들어간다.",
+                        ),
+                        Action(
+                            type=ActionType.UPDATE_STATE,
+                            value={"key": "lime_btn_3", "value": 1},
+                        ),
+                    ],
+                ),
+                # 아직 퍼즐이 안 풀렸고, 현재 값이 1일 때 → 0으로
+                Interaction(
+                    conditions=[
+                        Condition(type=ConditionType.STATE_IS, target="binary_panel_solved", value=False),
+                        Condition(type=ConditionType.STATE_IS, target="lime_btn_3", value=1),
+                    ],
+                    actions=[
+                        Action(
+                            type=ActionType.PRINT_NARRATIVE,
+                            value="세 번째 버튼이 천천히 원래 자리로 밀려 올라온다.",
+                        ),
+                        Action(
+                            type=ActionType.UPDATE_STATE,
+                            value={"key": "lime_btn_3", "value": 0},
+                        ),
+                    ],
+                ),
+                # 이미 퍼즐이 풀린 뒤
+                Interaction(
+                    conditions=[
+                        Condition(type=ConditionType.STATE_IS, target="binary_panel_solved", value=True),
+                    ],
+                    actions=[
+                        Action(
+                            type=ActionType.PRINT_NARRATIVE,
+                            value="세 번째 버튼 주변의 석회질이 단단하게 굳어, 아예 손을 댈 수 없을 것 같다.",
+                        )
+                    ],
+                ),
+            ],
+        ),
+        KeywordId.LIME_DOT_4: KeywordData(
+            type=KeywordType.OBJECT,
+            state=KeywordState.INACTIVE,  # 식초 사용 전에는 비활성
+            description="석회 패널의 네 번째 버튼이다. 다른 버튼보다 살짝 기울어진 듯한 인상을 준다.",
+            interactions=[
+                # 아직 퍼즐이 안 풀렸고, 현재 값이 0일 때 → 1로
+                Interaction(
+                    conditions=[
+                        Condition(type=ConditionType.STATE_IS, target="binary_panel_solved", value=False),
+                        Condition(type=ConditionType.STATE_IS, target="lime_btn_4", value=0),
+                    ],
+                    actions=[
+                        Action(
+                            type=ActionType.PRINT_NARRATIVE,
+                            value="네 번째 버튼을 누르자, 비뚤어진 느낌 그대로 안쪽으로 눌려 들어간다.",
+                        ),
+                        Action(
+                            type=ActionType.UPDATE_STATE,
+                            value={"key": "lime_btn_4", "value": 1},
+                        ),
+                    ],
+                ),
+                # 아직 퍼즐이 안 풀렸고, 현재 값이 1일 때 → 0으로
+                Interaction(
+                    conditions=[
+                        Condition(type=ConditionType.STATE_IS, target="binary_panel_solved", value=False),
+                        Condition(type=ConditionType.STATE_IS, target="lime_btn_4", value=1),
+                    ],
+                    actions=[
+                        Action(
+                            type=ActionType.PRINT_NARRATIVE,
+                            value="네 번째 버튼이 약간의 마찰음을 남기며 다시 튀어 오른다.",
+                        ),
+                        Action(
+                            type=ActionType.UPDATE_STATE,
+                            value={"key": "lime_btn_4", "value": 0},
+                        ),
+                    ],
+                ),
+                # 이미 퍼즐이 풀린 뒤
+                Interaction(
+                    conditions=[
+                        Condition(type=ConditionType.STATE_IS, target="binary_panel_solved", value=True),
+                    ],
+                    actions=[
+                        Action(
+                            type=ActionType.PRINT_NARRATIVE,
+                            value="네 번째 버튼은 이미 어떤 힘에 의해 고정된 듯 꿈쩍도 하지 않는다.",
+                        )
+                    ],
+                ),
+            ],
+        ),
+        KeywordId.LIME_DOT_5: KeywordData(
+            type=KeywordType.OBJECT,
+            state=KeywordState.INACTIVE,  # 식초 사용 전에는 비활성
+            description="석회 패널의 다섯 번째 버튼이다. 가장 모서리 쪽에 있어 살짝 누르기 불편한 위치에 있다.",
+            interactions=[
+                # 아직 퍼즐이 안 풀렸고, 현재 값이 0일 때 → 1로
+                Interaction(
+                    conditions=[
+                        Condition(type=ConditionType.STATE_IS, target="binary_panel_solved", value=False),
+                        Condition(type=ConditionType.STATE_IS, target="lime_btn_5", value=0),
+                    ],
+                    actions=[
+                        Action(
+                            type=ActionType.PRINT_NARRATIVE,
+                            value="손가락을 끝까지 뻗어 다섯 번째 버튼을 누르자, 미묘한 진동과 함께 쑥 들어간다.",
+                        ),
+                        Action(
+                            type=ActionType.UPDATE_STATE,
+                            value={"key": "lime_btn_5", "value": 1},
+                        ),
+                    ],
+                ),
+                # 아직 퍼즐이 안 풀렸고, 현재 값이 1일 때 → 0으로
+                Interaction(
+                    conditions=[
+                        Condition(type=ConditionType.STATE_IS, target="binary_panel_solved", value=False),
+                        Condition(type=ConditionType.STATE_IS, target="lime_btn_5", value=1),
+                    ],
+                    actions=[
+                        Action(
+                            type=ActionType.PRINT_NARRATIVE,
+                            value="다섯 번째 버튼이 아슬아슬하게 밀려 나오며, 다시 원래 위치로 돌아온다.",
+                        ),
+                        Action(
+                            type=ActionType.UPDATE_STATE,
+                            value={"key": "lime_btn_5", "value": 0},
+                        ),
+                    ],
+                ),
+                # 이미 퍼즐이 풀린 뒤
+                Interaction(
+                    conditions=[
+                        Condition(type=ConditionType.STATE_IS, target="binary_panel_solved", value=True),
+                    ],
+                    actions=[
+                        Action(
+                            type=ActionType.PRINT_NARRATIVE,
+                            value="다섯 번째 버튼은 패널의 다른 부분과 함께 굳어, 손가락으로 눌러도 전혀 움직이지 않는다.",
+                        )
+                    ],
+                ),
+            ],
+        ),
+        # 확인 버튼
+        KeywordId.LIME_CONFIRM: KeywordData(
+            type=KeywordType.OBJECT,
+            state=KeywordState.INACTIVE,  # 식초 사용 후 활성화
+            description="석회 패널 오른쪽에 있는 래버다.",
+            interactions=[
+                # 1) 정답 패턴일 때 (예: 1,0,1,1,0,0,1 이라고 가정)
+                Interaction(
+                    conditions=[
+                        Condition(type=ConditionType.STATE_IS, target="binary_panel_solved", value=False),
+                        Condition(type=ConditionType.STATE_IS, target="lime_btn_1", value=1),
+                        Condition(type=ConditionType.STATE_IS, target="lime_btn_2", value=0),
+                        Condition(type=ConditionType.STATE_IS, target="lime_btn_3", value=1),
+                        Condition(type=ConditionType.STATE_IS, target="lime_btn_4", value=1),
+                        Condition(type=ConditionType.STATE_IS, target="lime_btn_5", value=0),
+                    ],
+                    actions=[
+                        Action(
+                            type=ActionType.PRINT_NARRATIVE,
+                            value=(
+                                "래버를 당기자, 석회 패널 전체가 낮게 떨리며 버튼들이 한꺼번에 안쪽으로 잠긴다.\n"
+                                "잠시 뒤 패널 아래쪽 석회층이 갈라지며, 지하에서 올라오는 차가운 공기와 함께 "
+                                "멀리서 물 떨어지는 소리가 또렷하게 들려온다.\n"
+                                "갈라진 틈 사이로는 작은 지하 샘과, 그 옆 벽면에 박힌 석영 군집이 모습을 드러낸다."
+                            ),
+                        ),
+                        Action(
+                            type=ActionType.UPDATE_STATE,
+                            value={"key": "binary_panel_solved", "value": True},
+                        ),
+                        Action(
+                            type=ActionType.UPDATE_STATE,
+                            value={"key": "lake_path_opened", "value": True},
+                        ),
+                        # 지하 샘 / 석영 군집 노출
+                        Action(
+                            type=ActionType.UPDATE_STATE,
+                            value={"key": "spring_discovered", "value": True},
+                        ),
+                        Action(
+                            type=ActionType.UPDATE_STATE,
+                            value={"key": "quartz_discovered", "value": True},
+                        ),
+                        Action(
+                            type=ActionType.UPDATE_STATE,
+                            value={"keyword": KeywordId.UNDERGROUND_SPRING, "state": KeywordState.DISCOVERED},
+                        ),
+                        Action(
+                            type=ActionType.UPDATE_STATE,
+                            value={"keyword": KeywordId.QUARTZ_CLUSTER, "state": KeywordState.DISCOVERED},
+                        ),
+                        Action(
+                            type=ActionType.PRINT_SYSTEM,
+                            value="**[지하 샘]**과 **[석영 군집]**이 시야에 드러났습니다.",
+                        ),
+                    ],
+                ),
+                # 2) 오답인 경우
+                Interaction(
+                    conditions=[
+                        Condition(type=ConditionType.STATE_IS, target="binary_panel_solved", value=False),
+                    ],
+                    actions=[
+                        Action(
+                            type=ActionType.PRINT_NARRATIVE,
+                            value="래버를 당겨 보았지만, 패널 안쪽에서 잠깐 삐거덕거리는 소리만 날 뿐 아무 일도 일어나지 않는다.",
+                        ),
+                        Action(
+                            type=ActionType.PRINT_SYSTEM,
+                            value="버튼의 조합이 맞지 않는 것 같다. 패턴을 다시 조정해 보자.",
+                        ),
+                    ],
+                ),
+                # 3) 이미 퍼즐을 푼 뒤
+                Interaction(
+                    conditions=[
+                        Condition(type=ConditionType.STATE_IS, target="binary_panel_solved", value=True),
+                    ],
+                    actions=[
+                        Action(
+                            type=ActionType.PRINT_NARRATIVE,
+                            value="래버는 이미 한 역할을 끝낸 듯 묵묵히 잠겨 있다.",
+                        )
+                    ],
+                ),
+            ],
+        ),
+
     },
     combinations=[
         Combination(
@@ -701,17 +969,42 @@ CH1_SCENE6_DATA = SceneData(
                 Action(
                     type=ActionType.PRINT_NARRATIVE,
                     value=(
-                        "식초를 석회 패널 위에 조금 뿌려 보았다.\n"
-                        "일부 점에서는 조그만 기포가 피어오르며 색이 더 짙어지지만, "
-                        "다른 점들은 축축해졌을 뿐 아무 변화도 없다.\n"
-                        "마치 어떤 점은 살아 있고, 어떤 점은 이미 돌처럼 굳어 버린 것 같다."
+                        "반쯤 남은 식초를 석회 패널 위에 조심스럽게 뿌렸다.\n"
+                        "굳어 있던 석회층이 서서히 녹아내리자, 다섯 개의 둥근 버튼이 또렷하게 솟아오른다.\n"
+                        "버튼 오른쪽에는 **[석회 패널 래버]**라고 적힌 래버도 하나 있다."
                     ),
+                ),
+                # 버튼 7개 + 확인 버튼 활성화
+                Action(
+                    type=ActionType.UPDATE_STATE,
+                    value={"keyword": KeywordId.LIME_DOT_1, "state": KeywordState.DISCOVERED},
+                ),
+                Action(
+                    type=ActionType.UPDATE_STATE,
+                    value={"keyword": KeywordId.LIME_DOT_2, "state": KeywordState.DISCOVERED},
+                ),
+                Action(
+                    type=ActionType.UPDATE_STATE,
+                    value={"keyword": KeywordId.LIME_DOT_3, "state": KeywordState.DISCOVERED},
+                ),
+                Action(
+                    type=ActionType.UPDATE_STATE,
+                    value={"keyword": KeywordId.LIME_DOT_4, "state": KeywordState.DISCOVERED},
+                ),
+                Action(
+                    type=ActionType.UPDATE_STATE,
+                    value={"keyword": KeywordId.LIME_DOT_5, "state": KeywordState.DISCOVERED},
+                ),
+                Action(
+                    type=ActionType.UPDATE_STATE,
+                    value={"keyword": KeywordId.LIME_CONFIRM, "state": KeywordState.DISCOVERED},
                 ),
                 Action(
                     type=ActionType.PRINT_SYSTEM,
-                    value="반응하는 점과 전혀 반응하지 않는 점이 명확히 나뉩니다. 순서와 패턴을 잘 관찰해 두는 편이 좋겠습니다.",
+                    value="이제 **[석회 패널 1번 점]**부터 **[석회 패널 5번 점]**, 그리고 **[석회 패널 래버]**를 사용하여 패턴을 맞출 수 있습니다.",
                 ),
             ],
         ),
+
     ],
 )

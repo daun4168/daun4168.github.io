@@ -206,8 +206,7 @@ class KeywordId(StrEnum):
     LIME_DOT_3 = "석회 패널 3번 점"
     LIME_DOT_4 = "석회 패널 4번 점"
     LIME_DOT_5 = "석회 패널 5번 점"
-    LIME_DOT_6 = "석회 패널 6번 점"
-    LIME_DOT_7 = "석회 패널 7번 점"
+    LIME_CONFIRM = "석회 패널 래버"
 
     # 지하 샘 / 석영 군집 및 아이템
     UNDERGROUND_SPRING = "지하 샘"

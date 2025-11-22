@@ -12,11 +12,15 @@ class SceneID(StrEnum):
     CH0_SCENE2 = "ch0_scene2"
 
     CH1_SCENE0 = "ch1_scene0"
-    CH1_SCENE1 = "ch1_scene1"
-    CH1_SCENE2 = "ch1_scene2"
-    CH1_SCENE3 = "ch1_scene3"
-    CH1_SCENE4 = "ch1_scene4"
-    CH1_SCENE5 = "ch1_scene5"
+    CH1_SCENE1 = "ch1_scene1"  # 베이스캠프
+    CH1_SCENE2 = "ch1_scene2"  # 난파선
+    CH1_SCENE3 = "ch1_scene3"  # 난파선 내부
+    CH1_SCENE4 = "ch1_scene4"  # 공명하는 숲 (생태 관측소)
+    CH1_SCENE5 = "ch1_scene5"  # 늪지대
+    CH1_SCENE6 = "ch1_scene6"  # 동굴
+    CH1_SCENE7 = "ch1_scene7"
+    CH1_SCENE8 = "ch1_scene8"
+    CH1_SCENE9 = "ch1_scene9"
 
 
 class KeywordId(StrEnum):
@@ -148,6 +152,7 @@ class KeywordId(StrEnum):
     SWAMP_PATH = "늪지대로 가는 길"
     SWAMP_PATH_ALIAS = "늪지대"
     VINEGAR = "식초"
+    VINEGAR_HALF = "반쯤 남은 식초"
     WATERPROOF_TAPE = "방수 테이프"
 
     # 준비용 재료/장비
@@ -166,11 +171,18 @@ class KeywordId(StrEnum):
     FLOATING_BAG = "부력 주머니"
     FLOATING_DEVICE = "부력 장치"
 
+    WATER_BUCKET = "늪물 담은 양동이"
+    CHLORINE_BUCKET = "염소 양동이"
+    CHLORINE_AGENT = "염소 소독제"  # 늪 쓰레기 더미에서 줍는 염소 기반 소독제
+
     # CH1_SCENE5 - 늪지대 alias 키워드
     SWAMP_TRASH_ALIAS = "쓰레기 더미"
     SWAMP_WATER_ALIAS = "늪"
     GIANT_CROCODILE_ALIAS = "악어"
     BROKEN_BRIDGE_ALIAS = "다리"
+
+    CAVE_ENTRANCE = "동굴 입구"
+    CAVE = "동굴"
 
 
 class KeywordState(StrEnum):

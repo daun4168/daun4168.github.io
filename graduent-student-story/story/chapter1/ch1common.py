@@ -13,15 +13,14 @@ CH1_COMMON_DATA = ChapterData(
             actions=[
                 Action(
                     type=ActionType.PRINT_NARRATIVE,
-                    value="스패너로 코코넛을 깨서 안의 물을 마셨다. 미지근하지만 달콤하다.",
+                    value="**[스패너]**로 **[코코넛]**을 깨서 마셨다. 미지근하지만 달콤하다.",
                 ),
                 Action(type=ActionType.REMOVE_ITEM, value=KeywordId.COCONUT),
                 Action(type=ActionType.MODIFY_STAMINA, value=15),
                 Action(type=ActionType.PRINT_SYSTEM, value="갈증 해소! 체력 +15"),
             ],
         ),
-        # [준비용 조합] 라텍스 + 식초 = 고무
-        # 고무나무에서 얻은 라텍스에 식초(산성)를 부어 응고시켜 고무를 만든다.
+        # [준비용 조합 1] 라텍스 + 식초(풀) → 고무 + 반쯤 남은 식초
         Combination(
             targets=[KeywordId.LATEX, KeywordId.VINEGAR],
             conditions=[
@@ -32,8 +31,9 @@ CH1_COMMON_DATA = ChapterData(
                 Action(
                     type=ActionType.PRINT_NARRATIVE,
                     value=(
-                        "라텍스를 용기에 담고 식초를 천천히 부었다.\n"
-                        "흐물흐물하던 액체가 점점 덩어리 지더니, 탄력 있는 고무 덩어리로 굳어 간다."
+                        "라텍스를 용기에 담고 식초를 조금씩 떨어뜨렸다.\n"
+                        "흐물흐물하던 액체가 점점 덩어리 지더니, 탄력 있는 고무 덩어리로 굳어 간다.\n"
+                        "식초는 절반쯤만 줄어든 것 같아, 나머지는 다른 용도로도 쓸 수 있을 것 같다."
                     ),
                 ),
                 Action(type=ActionType.REMOVE_ITEM, value=KeywordId.LATEX),
@@ -46,8 +46,45 @@ CH1_COMMON_DATA = ChapterData(
                     },
                 ),
                 Action(
+                    type=ActionType.ADD_ITEM,
+                    value={
+                        "name": KeywordId.VINEGAR_HALF,
+                        "description": "반쯤 남은 식초다. 아직 한 번 정도는 더 쓸 수 있을 것 같다.",
+                    },
+                ),
+                Action(
                     type=ActionType.PRINT_SYSTEM,
-                    value="라텍스가 고무로 응고되었습니다.",
+                    value="라텍스가 고무로 응고되었습니다. 식초는 반쯤 남았습니다.",
+                ),
+            ],
+        ),
+        # [준비용 조합 2] 라텍스 + 반쯤 남은 식초 → 고무 (식초 완전 소진)
+        Combination(
+            targets=[KeywordId.LATEX, KeywordId.VINEGAR_HALF],
+            conditions=[
+                Condition(type=ConditionType.HAS_ITEM, target=KeywordId.LATEX),
+                Condition(type=ConditionType.HAS_ITEM, target=KeywordId.VINEGAR_HALF),
+            ],
+            actions=[
+                Action(
+                    type=ActionType.PRINT_NARRATIVE,
+                    value=(
+                        "남아 있던 식초를 전부 라텍스에 부었다.\n"
+                        "금세 라텍스가 덩어리 지며 고무로 굳어 버리고, 통 안에는 아무것도 남지 않는다."
+                    ),
+                ),
+                Action(type=ActionType.REMOVE_ITEM, value=KeywordId.LATEX),
+                Action(type=ActionType.REMOVE_ITEM, value=KeywordId.VINEGAR_HALF),
+                Action(
+                    type=ActionType.ADD_ITEM,
+                    value={
+                        "name": KeywordId.RUBBER,
+                        "description": "질긴 고무 덩어리다. 전선을 감싸거나 틈을 막는 데 쓸 수 있을 것 같다.",
+                    },
+                ),
+                Action(
+                    type=ActionType.PRINT_SYSTEM,
+                    value="라텍스가 고무로 응고되었습니다. 식초는 전부 사용되었습니다.",
                 ),
             ],
         ),
@@ -82,7 +119,6 @@ CH1_COMMON_DATA = ChapterData(
             ],
         ),
         # [준비용 조합] 송진 + 조명탄 = 방수 부츠
-        # 조명탄의 열기를 이용해 송진을 녹여 신발에 코팅한다.
         Combination(
             targets=[KeywordId.RESIN, KeywordId.FLARE],
             conditions=[

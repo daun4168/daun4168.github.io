@@ -270,7 +270,13 @@ TEST_SCENARIOS = {
         "예",
     ],
     10: [
-
+        "석회문",
+        "동굴 홀",
+        "짧은 돌",
+        "중간 돌",
+        "긴 돌",
+        "석회문 : 034530",
+        "석회문",
     ],
 }
 
@@ -334,5 +340,5 @@ class TestRunner:
 
         for cmd in commands:
             # 딜레이를 주어 너무 빠르게 지나가는 것을 방지
-            await asyncio.sleep(0.02)
+            await asyncio.sleep(0.01)
             await self.game.process_command(cmd)

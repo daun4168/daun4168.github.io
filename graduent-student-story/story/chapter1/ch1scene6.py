@@ -917,7 +917,6 @@ CH1_SCENE6_DATA = SceneData(
                 ),
             ],
         ),
-
     },
     combinations=[
         Combination(
@@ -1005,6 +1004,5 @@ CH1_SCENE6_DATA = SceneData(
                 ),
             ],
         ),
-
     ],
 )

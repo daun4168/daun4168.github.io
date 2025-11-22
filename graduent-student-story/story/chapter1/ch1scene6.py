@@ -10,7 +10,8 @@ CH1_SCENE6_DATA = SceneData(
         "바위 틈 사이로 몸을 비집고 들어가자 곧 머리 위로 석회암 종유석이 빽빽이 매달린 동굴 홀이 펼쳐진다.\n\n"
         "입구 쪽에서 들어오는 희미한 빛이 동굴 바닥과 벽을 스치고 지나가며, 벽면에는 거대한 원형의 석회 문양이 어렴풋이 떠오른다.\n"
         "가까이 눈을 찌푸리고 바라보면, 그 중앙에 굳게 닫힌 둥근 석회문이 자리하고 있다.\n\n"
-        "홀 한쪽 벽은 하얀 석회층으로 뒤덮여 있는데, 그 아래쪽에는 크고 작은 점무늬가 정갈하게 배열된 석회 패널이 희미하게 형체를 드러낸다.\n"
+        "홀 한쪽 벽은 하얀 석회층으로 뒤덮여 있는데, 그 아래쪽에는 크고 작은 점무늬가 정갈하게 배열된 석회 패널이 희미하게 형체를 드러낸다.\n\n"
+        "석회 패널 근처의 벽면에는 다섯 개의 원이 줄지어 있는 이상한 무늬와, 그 아래에 짧은 글귀가 함께 새겨져 있다.\n\n"
         "반대편에는 바닥으로 내려가는 낮은 경사로와, 위쪽 협곡으로 이어지는 듯한 좁은 바람길이 어둠 속으로 이어져 있다."
     ),
     initial_state={
@@ -30,11 +31,20 @@ CH1_SCENE6_DATA = SceneData(
         "lime_btn_3": 0,
         "lime_btn_4": 0,
         "lime_btn_5": 0,
+        "lime_panel_cleaned": False,  # ⭐ 새로 추가된 플래그
     },
     on_enter_actions=[
         Action(type=ActionType.SHOW_STAMINA_UI, value=True),
     ],
     keywords={
+        KeywordId.GROWTH_PATTERN_ALIAS: KeywordData(
+            type=KeywordType.ALIAS,
+            target=KeywordId.GROWTH_PATTERN,
+        ),
+        KeywordId.GROWTH_INSCRIPTION_ALIAS: KeywordData(
+            type=KeywordType.ALIAS,
+            target=KeywordId.GROWTH_INSCRIPTION,
+        ),
         # 늪지대로 되돌아가는 길
         KeywordId.SWAMP_PATH_ALIAS: KeywordData(
             type=KeywordType.PORTAL,
@@ -235,7 +245,7 @@ CH1_SCENE6_DATA = SceneData(
                                 "형태만 보면 그저 오래된 돌무늬 같지만, 바닥에서 솟은 서로 다른 높이의 세 돌기둥이 드리우는 그림자와 "
                                 "아주 미세하게 부합하는 듯한 느낌이 든다.\n\n"
                                 "석회문 아래쪽 모서리에는 거의 지워진 필치로 이런 문장이 남아 있다.\n"
-                                "\"세 돌이 가리키는 흐름을 잇는 자만이, 문 너머로 나아갈 수 있으리라.\"\n"
+                                '"세 돌이 가리키는 흐름을 잇는 자만이, 문 너머로 나아갈 수 있으리라."\n'
                             ),
                         ),
                         Action(
@@ -494,7 +504,15 @@ CH1_SCENE6_DATA = SceneData(
                 "일부 버튼은 표면이 약간 더 반들거리고, 일부는 메마른 석회처럼 바래 있다."
             ),
             interactions=[
+                # 아직 식초를 뿌리기 전
                 Interaction(
+                    conditions=[
+                        Condition(
+                            type=ConditionType.STATE_IS,
+                            target="lime_panel_cleaned",
+                            value=False,
+                        )
+                    ],
                     actions=[
                         Action(
                             type=ActionType.PRINT_NARRATIVE,
@@ -504,30 +522,50 @@ CH1_SCENE6_DATA = SceneData(
                                 "겉에 굳어 있는 석회층을 제거할 방법을 찾아보는 게 좋겠다."
                             ),
                         ),
-                        # 버튼 존재만 알림 (실제 활성화는 식초 조합에서)
+                    ],
+                ),
+                # 식초를 이미 뿌려서 석회층이 녹은 뒤
+                Interaction(
+                    conditions=[
+                        Condition(
+                            type=ConditionType.STATE_IS,
+                            target="lime_panel_cleaned",
+                            value=True,
+                        )
+                    ],
+                    actions=[
                         Action(
-                            type=ActionType.UPDATE_STATE,
-                            value={"keyword": KeywordId.LIME_DOT_1, "state": KeywordState.INACTIVE},
+                            type=ActionType.PRINT_NARRATIVE,
+                            value=(
+                                "석회층이 녹아내린 패널 위로 다섯 개의 버튼과 래버가 또렷하게 드러나 있다.\n"
+                                "이제는 어떤 버튼을 누를지, 어떤 조합이 맞는지만 고민하면 될 것 같다."
+                            ),
                         ),
-                        Action(
-                            type=ActionType.UPDATE_STATE,
-                            value={"keyword": KeywordId.LIME_DOT_2, "state": KeywordState.INACTIVE},
-                        ),
-                        Action(
-                            type=ActionType.UPDATE_STATE,
-                            value={"keyword": KeywordId.LIME_DOT_3, "state": KeywordState.INACTIVE},
-                        ),
-                        Action(
-                            type=ActionType.UPDATE_STATE,
-                            value={"keyword": KeywordId.LIME_DOT_4, "state": KeywordState.INACTIVE},
-                        ),
-                        Action(
-                            type=ActionType.UPDATE_STATE,
-                            value={"keyword": KeywordId.LIME_DOT_5, "state": KeywordState.INACTIVE},
-                        ),
-                    ]
-                )
+                    ],
+                ),
             ],
+        ),
+        KeywordId.GROWTH_PATTERN: KeywordData(
+            type=KeywordType.OBJECT,
+            state=KeywordState.HIDDEN,
+            description=(
+                "원형 다섯 개가 일렬로 새겨진 도형이 세 줄 반복된다.\n\n"
+                "첫 번째 줄은 가운데 하나만 은은히 빛나는 모습,\n\n"
+                "두 번째 줄은 가운데 셋이 연이어 빛나는 모습,\n\n"
+                "세 번째 줄은 양쪽 끝이 옅게 타오르는 듯한 형상을 하고 있다.\n"
+            ),
+        ),
+        KeywordId.GROWTH_INSCRIPTION: KeywordData(
+            type=KeywordType.OBJECT,
+            state=KeywordState.HIDDEN,
+            description=(
+                "그림 아래에는 오래된 글자가 희미하게 새겨져 있다.\n\n"
+                "“성장하는 해(年)의 흐름을 기록하노라.\n\n"
+                "첫 해, 아이가 배움의 문으로 들어서던 때는 여덟의 빛으로 시작되었고\n\n"
+                "둘째 해, 더 넓은 세상을 배우던 때는 열넷의 그림자가 길었으며\n\n"
+                "셋째 해는… (글자가 심하게 지워져 더 이상 읽을 수 없다.)\n\n"
+                "그 마지막 해의 무늬만이, 굳어 있던 석회 아래 숨겨진 맑은 물길을 드러내리라.”"
+            ),
         ),
         # 버튼 1~5 (0/1 토글)
         KeywordId.LIME_DOT_1: KeywordData(
@@ -913,6 +951,7 @@ CH1_SCENE6_DATA = SceneData(
             targets=[KeywordId.LIME_PANEL, KeywordId.VINEGAR_HALF],
             conditions=[
                 Condition(type=ConditionType.HAS_ITEM, target=KeywordId.VINEGAR_HALF),
+                Condition(type=ConditionType.STATE_IS, target="lime_panel_cleaned", value=False),
             ],
             actions=[
                 Action(
@@ -922,6 +961,16 @@ CH1_SCENE6_DATA = SceneData(
                         "굳어 있던 석회층이 서서히 녹아내리자, 다섯 개의 둥근 버튼이 또렷하게 솟아오른다.\n"
                         "버튼 오른쪽에는 **[석회 패널 래버]**라고 적힌 래버도 하나 있다."
                     ),
+                ),
+                # ⭐ 식초 소모
+                Action(
+                    type=ActionType.REMOVE_ITEM,
+                    value=KeywordId.VINEGAR_HALF,
+                ),
+                # ⭐ 패널이 한 번 정리되었다는 상태 플래그
+                Action(
+                    type=ActionType.UPDATE_STATE,
+                    value={"key": "lime_panel_cleaned", "value": True},
                 ),
                 Action(
                     type=ActionType.UPDATE_STATE,
@@ -953,7 +1002,7 @@ CH1_SCENE6_DATA = SceneData(
                 ),
             ],
         ),
-        # 소방 도끼 + 석영 군집 → 석영 조각 한 번만 획득
+        # 소방 도끼 + 석영 군집 → 석영 획득 & 도끼 파괴
         Combination(
             targets=[KeywordId.FIRE_AXE, KeywordId.QUARTZ_CLUSTER],
             conditions=[
@@ -964,8 +1013,11 @@ CH1_SCENE6_DATA = SceneData(
                 Action(
                     type=ActionType.PRINT_NARRATIVE,
                     value=(
-                        "소방 도끼를 힘껏 휘둘러 석영 군집 한 귀퉁이를 내려쳤다.\n"
-                        "맑은 파편들이 튀어 오르며, 그중 손바닥만 한 조각 하나가 바닥에 떨어진다."
+                        "소방 도끼를 높이 쳐들고 석영 군집의 가장 튀어나온 부분을 힘껏 내리찍었다.\n"
+                        "**깡-!** 하는 날카로운 굉음과 함께 손목이 저릴 정도의 충격이 전해진다.\n\n"
+                        "손바닥만 한 맑은 석영 조각이 바닥으로 튀어 올랐지만, 동시에 도끼날이 충격을 이기지 못하고 "
+                        "**딱!** 하는 소리와 함께 자루에서 부러져 나가 어둠 속 깊은 틈새로 튕겨져 버렸다.\n"
+                        "오래된 도끼가 **경도 7**의 석영을 이기기엔 역부족이었던 모양이다."
                     ),
                 ),
                 Action(
@@ -975,9 +1027,32 @@ CH1_SCENE6_DATA = SceneData(
                         "description": "맑은 석영 조각이다. 전자 장비의 기준 발진기로 쓰기에 적당해 보인다.",
                     },
                 ),
+                # ⭐ 도끼 삭제 로직 추가
+                Action(
+                    type=ActionType.REMOVE_ITEM,
+                    value=KeywordId.FIRE_AXE,
+                ),
                 Action(
                     type=ActionType.UPDATE_STATE,
                     value={"key": "quartz_collected", "value": True},
+                ),
+            ],
+        ),
+        # 스패너 + 석영 군집 → 너무 약하다는 피드백
+        Combination(
+            targets=[KeywordId.SPANNER, KeywordId.QUARTZ_CLUSTER],
+            conditions=[
+                Condition(type=ConditionType.STATE_IS, target="quartz_discovered", value=True),
+                Condition(type=ConditionType.STATE_IS, target="quartz_collected", value=False),
+            ],
+            actions=[
+                Action(
+                    type=ActionType.PRINT_NARRATIVE,
+                    value=(
+                        "스패너로 석영 군집을 여러 번 내려쳐 보았지만, "
+                        "단단한 결정은 흠집 하나 나지 않고 오히려 손에만 진동이 울린다.\n"
+                        "이 정도 무게로는 석영을 깨기엔 턱없이 부족해 보인다."
+                    ),
                 ),
             ],
         ),

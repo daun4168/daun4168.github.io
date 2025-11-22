@@ -215,6 +215,11 @@ class KeywordId(StrEnum):
     QUARTZ_CLUSTER = "석영 군집"
     QUARTZ_SHARD = "석영 조각"
 
+    GROWTH_PATTERN = "이상한 무늬"
+    GROWTH_INSCRIPTION = "짧은 글귀"
+    GROWTH_PATTERN_ALIAS = "무늬"
+    GROWTH_INSCRIPTION_ALIAS = "글귀"
+
 
 class KeywordState(StrEnum):
     HIDDEN = "hidden"

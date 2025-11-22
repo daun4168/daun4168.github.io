@@ -1,14 +1,5 @@
-from const import (
-    ActionType,
-    CombinationType,
-    ConditionType,
-    KeywordId,
-    KeywordState,
-    KeywordType,
-    SceneID,
-)
+from const import ActionType, CombinationType, ConditionType, KeywordId, KeywordState, KeywordType, SceneID
 from schemas import Action, Combination, Condition, Interaction, KeywordData, SceneData
-
 
 CH1_SCENE4_DATA = SceneData(
     id=SceneID.CH1_SCENE4,
@@ -20,29 +11,31 @@ CH1_SCENE4_DATA = SceneData(
         "관측소 앞쪽에는 예전에 누군가 손질했던 흔적이 남아 있는 작은 화단이 보인다.\n"
         "건물 벽면은 촘촘한 덩굴에 뒤덮여 있어 안쪽이 거의 보이지 않는다.\n\n"
         "관측소 옆에는 하늘로 곧게 뻗은 나무 한 그루가 서 있고, 높은 가지 위에 작은 새 한 마리가 내려앉아 있다.\n"
-        "새는 일정한 간격으로 몇 번 울어 대다가 잠시 숨을 고른 뒤, 다시 비슷한 패턴을 반복하는 것처럼 들린다."
+        "새는 일정한 간격으로 몇 번 울어 대다가 잠시 숨을 고른 뒤, 다시 비슷한 패턴을 반복하는 것처럼 들린다.\n"
+        "관측소 뒤편으로는 습한 공기와 썩은 물 냄새가 희미하게 풍기는 좁은 길이 나 있는데, "
+        "아마도 늪지대로 가는 길인 것 같다."
     ),
     initial_state={
         "labdoor_unlocked": False,
         "locker_opened": False,
-        "mic_fixed": False,  # 최종 완성 여부
-        "mic_stage": 0,  # 0: 완전 고장, 1: 기계적으로 고정됨, 2: 배터리까지 연결 (완전 수리)
+        "mic_fixed": False,
+        "mic_stage": 0,
         "pipe_step": 0,
         "forest_entrance_inspected": False,
         "vines_cleared": False,
+        "swamp_path_inspected": False,
     },
-
     on_enter_actions=[
         Action(type=ActionType.SHOW_STAMINA_UI, value=True),
     ],
     keywords={
-        # 되돌아가는 길: 숲 입구 -> 베이스캠프 (유일한 DISCOVERED)
+        KeywordId.SWAMP_PATH_ALIAS: KeywordData(type=KeywordType.ALIAS, target=KeywordId.SWAMP_PATH),
+        # 되돌아가는 길: 숲 입구 -> 베이스캠프
         KeywordId.FOREST_ENTRY: KeywordData(
             type=KeywordType.PORTAL,
             state=KeywordState.DISCOVERED,
             description=None,
             interactions=[
-                # 1회차: 설명
                 Interaction(
                     conditions=[
                         Condition(
@@ -61,7 +54,7 @@ CH1_SCENE4_DATA = SceneData(
                         ),
                         Action(
                             type=ActionType.PRINT_SYSTEM,
-                            value="다시 한번 **[숲 입구]**를 입력하면 베이스캠프로 돌아갈지 물어봅니다.",
+                            value="다시 한번 숲 입구를 입력하면 베이스캠프로 돌아갈지 물어봅니다.",
                         ),
                         Action(
                             type=ActionType.UPDATE_STATE,
@@ -69,7 +62,6 @@ CH1_SCENE4_DATA = SceneData(
                         ),
                     ],
                 ),
-                # 2회차 이후: 이동 여부 확인
                 Interaction(
                     conditions=[
                         Condition(
@@ -82,7 +74,7 @@ CH1_SCENE4_DATA = SceneData(
                         Action(
                             type=ActionType.REQUEST_CONFIRMATION,
                             value={
-                                "prompt": "**[숲 입구]** 쪽으로 되돌아가 해변 베이스캠프로 돌아가시겠습니까?",
+                                "prompt": "숲 입구 쪽으로 되돌아가 해변 베이스캠프로 돌아가시겠습니까?",
                                 "confirm_actions": [
                                     Action(
                                         type=ActionType.PRINT_NARRATIVE,
@@ -105,32 +97,105 @@ CH1_SCENE4_DATA = SceneData(
                 ),
             ],
         ),
-        # 새소리: 꾀꼬리 패턴 힌트 (사용자가 찾아야 하므로 HIDDEN)
+        # 늪지대로 가는 길: Scene5 포탈 (락커를 열어야 통과 가능)
+        KeywordId.SWAMP_PATH: KeywordData(
+            type=KeywordType.PORTAL,
+            state=KeywordState.HIDDEN,
+            description=None,
+            interactions=[
+                # 락커를 아직 열지 않았을 때
+                Interaction(
+                    conditions=[
+                        Condition(
+                            type=ConditionType.STATE_IS,
+                            target="locker_opened",
+                            value=False,
+                        )
+                    ],
+                    actions=[
+                        Action(
+                            type=ActionType.PRINT_NARRATIVE,
+                            value=(
+                                "관측소 뒤편으로 이어진 좁은 길 끝에서 축축한 흙냄새와 썩은 물 냄새가 올라온다.\n"
+                                "아마도 이 길을 따라가면 늪지대로 내려갈 수 있을 것 같다.\n"
+                                "하지만 지금 가진 장비만으로는 그쪽을 헤쳐 나가기에 준비가 부족해 보인다."
+                            ),
+                        ),
+                        Action(
+                            type=ActionType.PRINT_SYSTEM,
+                            value="먼저 관측소 안을 조사해 보급품 로커를 열고 장비를 갖추는 편이 좋겠습니다.",
+                        ),
+                    ],
+                ),
+                # 락커를 열어 보급품을 챙긴 뒤
+                Interaction(
+                    conditions=[
+                        Condition(
+                            type=ConditionType.STATE_IS,
+                            target="locker_opened",
+                            value=True,
+                        )
+                    ],
+                    actions=[
+                        Action(
+                            type=ActionType.REQUEST_CONFIRMATION,
+                            value={
+                                "prompt": "늪지대로 가는 길을 따라 맹독 늪지대로 내려가시겠습니까?",
+                                "confirm_actions": [
+                                    Action(
+                                        type=ActionType.PRINT_NARRATIVE,
+                                        value=(
+                                            "당신은 관측소를 한 번 뒤돌아본 뒤, "
+                                            "축축한 공기가 감도는 좁은 길을 따라 서서히 아래로 내려가기 시작한다."
+                                        ),
+                                    ),
+                                    Action(
+                                        type=ActionType.MOVE_SCENE,
+                                        value=SceneID.CH1_SCENE5,
+                                    ),
+                                ],
+                                "cancel_actions": [
+                                    Action(
+                                        type=ActionType.PRINT_NARRATIVE,
+                                        value="아직은 숲과 관측소 주변을 조금 더 살펴보고 싶다.",
+                                    )
+                                ],
+                            },
+                        )
+                    ],
+                ),
+            ],
+        ),
+        # 나무 (새소리 패턴 힌트) — const에서 KeywordId.TREE = "나무"
         KeywordId.TREE: KeywordData(
             type=KeywordType.OBJECT,
             state=KeywordState.HIDDEN,
+            description=(
+                "관측소 옆 나무 위쪽으로 시선을 올려다보면, 높은 가지에 작은 새 한 마리가 앉아 있다.\n"
+                "첫 울림은 길고 묵직하게 깔리더니, 곧이어 두 번 가볍게 튀어 오르는 짧은 울음이 뒤를 따른다.\n"
+                "잠시 숨을 고른 듯한 정적 뒤에, 다시 한 번 길고 여운 있는 울음이 퍼지고, "
+                "마지막으로 또 한 번 짧고 날카로운 소리가 잽싸게 끼어든다.\n\n"
+                "숲 전체가 이 다섯 번의 리듬을 시간을 대신하는 박자처럼 반복되고 있다."
+            ),
             interactions=[
                 Interaction(
                     actions=[
                         Action(
                             type=ActionType.PRINT_NARRATIVE,
                             value=(
-                                "나무 위쪽으로 시선을 올려다보면, 높은 가지에 작은 새 한 마리가 앉아 있다.\n"
-                                "첫 울림은 길고 묵직하게 깔리더니, 곧이어 두 번 가볍게 튀어 오르는 짧은 울음이 뒤를 따른다.\n"
-                                "잠시 숨을 고른 듯한 정적 뒤에, 다시 한 번 길고 여운 있는 울음이 퍼지고, "
-                                "마지막으로 또 한 번 짧고 날카로운 소리가 잽싸게 끼어든다.\n\n"
-                                "숲 전체가 이 다섯 번의 리듬을 시간을 대신하는 박자처럼 반복되고 있다."
+                                "나무 위의 새가 다시 울기 시작한다.\n"
+                                "길고 묵직한 울림 하나, 가볍게 튀는 짧은 소리 둘, "
+                                "다시 길게 이어지는 울림 하나, 마지막으로 짧게 튀는 소리 하나가 귀에 또렷하게 박힌다."
                             ),
                         )
                     ]
                 )
             ],
         ),
-        # 생태 관측소 외관 (처음에는 INACTIVE → 덩굴 제거 후 HIDDEN으로 활성화)
         # 생태 관측소 외관
         KeywordId.ECO_OBSERVATORY: KeywordData(
             type=KeywordType.OBJECT,
-            state=KeywordState.HIDDEN,  # 처음에는 HIDDEN
+            state=KeywordState.HIDDEN,
             description=None,
             interactions=[
                 # 덩굴이 아직 있을 때
@@ -167,24 +232,24 @@ CH1_SCENE4_DATA = SceneData(
                         Action(
                             type=ActionType.PRINT_NARRATIVE,
                             value=(
-                                "덩굴이 걷힌 관측소 외벽이 드러난다.\n"
+                                "덩굴이 걷히자 관측소 외벽이 드러난다.\n"
                                 "이끼와 곰팡이가 얼룩진 시멘트 벽 사이로 작은 벽화가 눈에 띄고, "
                                 "정면에는 전자 도어락이 달린 관측소 문이 있다.\n"
                                 "문 앞쪽에는 시들어버린 꽃들이 자리만 남겨 둔 화단이 있고, "
-                                "벽 한쪽에는 종이가 반쯤 찢어진 관찰 일지가 못질되어 있다.\n"
+                                "벽 한쪽에는 종이가 반쯤 찢어진 관찰 일지가 못질되어 있다."
                             ),
                         )
                     ],
                 ),
             ],
         ),
-        # 덩굴 (처음에는 HIDDEN)
+        # 덩굴
         KeywordId.VINES: KeywordData(
             type=KeywordType.OBJECT,
             state=KeywordState.HIDDEN,
             description="두꺼운 덩굴줄기가 관측소 벽면과 문틀을 칭칭 감고 있다. 맨손으로는 떼어낼 수 없을 것 같다.",
         ),
-        # 벽화 (이전: 식물학자의 벽화 / INACTIVE → 덩굴 제거 후 HIDDEN)
+        # 벽화
         KeywordId.BOTANIST_MURAL: KeywordData(
             type=KeywordType.OBJECT,
             state=KeywordState.INACTIVE,
@@ -198,24 +263,22 @@ CH1_SCENE4_DATA = SceneData(
                 "벽 한쪽에는 누군가 남긴 듯한 낡은 관찰 일지가 박혀 있다."
             ),
         ),
-        # 화단 (INACTIVE → 덩굴 제거 후 HIDDEN)
+        # 화단
         KeywordId.FLOWER_BED: KeywordData(
             type=KeywordType.OBJECT,
             state=KeywordState.INACTIVE,
             description=(
                 "작은 화단에 시들어버린 꽃들이 자리만 남겨 두고 서 있다.\n"
                 "각 위치 앞에는 녹슨 금속 팻말이 꽂혀 있고, 희미한 글씨가 남아 있다.\n\n"
-                "---\n\n"
-                "🌺 나팔꽃: 표본 번호 3\n\n"
-                "💠 닭의장풀: 표본 번호 0\n\n"
-                "🌿 자귀나무: 표본 번호 8\n\n"
-                "🌸 분꽃: 표본 번호 4\n\n"
+                "🌺 나팔꽃: 표본 번호 3\n"
+                "💠 닭의장풀: 표본 번호 0\n"
+                "🌿 자귀나무: 표본 번호 8\n"
+                "🌸 분꽃: 표본 번호 4\n"
                 "🌼 달맞이꽃: 표본 번호 1\n\n"
-                "---\n\n"
                 "꽃 자체의 순서가 아니라, 번호들 사이의 간격을 기록하려 했던 것처럼 보인다."
             ),
         ),
-        # 관찰 일지 (INACTIVE → 덩굴 제거 후 HIDDEN)
+        # 관찰 일지
         KeywordId.BOTANY_NOTE: KeywordData(
             type=KeywordType.OBJECT,
             state=KeywordState.INACTIVE,
@@ -227,7 +290,7 @@ CH1_SCENE4_DATA = SceneData(
                 "벽화의 꽃 순서와 화단의 표본 번호를 떠올리자, 슬슬 패턴이 보이기 시작한다."
             ),
         ),
-        # 관측소 문 (INACTIVE → 덩굴 제거 후 HIDDEN)
+        # 관측소 문
         KeywordId.LAB_DOOR: KeywordData(
             type=KeywordType.OBJECT,
             state=KeywordState.INACTIVE,
@@ -245,14 +308,14 @@ CH1_SCENE4_DATA = SceneData(
                         Action(
                             type=ActionType.PRINT_NARRATIVE,
                             value=(
-                                "관측소 문 옆 전자 도어락이 죽은 눈으로 날 바라본다. "
+                                "관측소 문 옆 전자 도어락이 죽은 눈으로 날 바라본다.\n"
                                 "전원은 들어오지 않지만, 비밀번호를 입력하면 내부 백업 전원이 "
-                                "잠깐 살아날지도 모르겠다.\n"
+                                "잠깐 살아날지도 모르겠다."
                             ),
                         ),
                         Action(
                             type=ActionType.PRINT_SYSTEM,
-                            value="`관측소 문 : [4자리 비밀번호]` 형식으로 입력할 수 있을 것 같다.",
+                            value="관측소 문 : [4자리 비밀번호] 형식으로 입력할 수 있을 것 같다.",
                         ),
                     ],
                 ),
@@ -273,9 +336,10 @@ CH1_SCENE4_DATA = SceneData(
                 ),
             ],
         ),
+        # 관측소 내부
         KeywordId.OBSERVATORY_INSIDE: KeywordData(
             type=KeywordType.OBJECT,
-            state=KeywordState.INACTIVE,  # 문 열리기 전에는 완전 비활성
+            state=KeywordState.HIDDEN,
             description=None,
             interactions=[
                 Interaction(
@@ -290,15 +354,11 @@ CH1_SCENE4_DATA = SceneData(
                                 "두드리면 꽤 크게 울릴 것처럼 보인다."
                             ),
                         ),
-                        Action(
-                            type=ActionType.PRINT_SYSTEM,
-                            value=("관측소 내부를 자세히 조사해 보는 게 좋을 것 같습니다."),
-                        ),
                     ]
                 )
             ],
         ),
-        # 보급품 로커 (INACTIVE → 문 열린 뒤 HIDDEN)
+        # 보급품 로커
         KeywordId.SUPPLY_LOCKER: KeywordData(
             type=KeywordType.OBJECT,
             state=KeywordState.INACTIVE,
@@ -316,14 +376,14 @@ CH1_SCENE4_DATA = SceneData(
                         Action(
                             type=ActionType.PRINT_NARRATIVE,
                             value=(
-                                "관측소 한쪽 벽에 보급품 로커가 붙어 있다. "
+                                "관측소 한쪽 벽에 보급품 로커가 붙어 있다.\n"
                                 "문짝에는 낡은 마이크와 'Voice Pattern Lock'이라는 글자가 적혀 있다.\n"
                                 "로커는 손으로는 열리지 않고, 일정한 소리 패턴을 인식해야만 열리는 구조 같다."
                             ),
                         ),
                         Action(
                             type=ActionType.PRINT_SYSTEM,
-                            value="숲에서 들리는 새소리의 리듬을 잘 들어보는 것이 좋겠다.",
+                            value="새가 내는 울음소리의 리듬을 잘 들어보는 것이 좋겠다.",
                         ),
                     ],
                 ),
@@ -344,13 +404,13 @@ CH1_SCENE4_DATA = SceneData(
                 ),
             ],
         ),
-        # 마이크 (INACTIVE → 문 열린 뒤 DISCOVERED)
+        # 마이크 (단계별 수리)
         KeywordId.MICROPHONE: KeywordData(
             type=KeywordType.OBJECT,
             state=KeywordState.INACTIVE,
             description=None,
             interactions=[
-                # 단계 0: 완전 고장 (스패너 아직 안 쓴 상태)
+                # 단계 0: 완전 고장
                 Interaction(
                     conditions=[
                         Condition(
@@ -363,7 +423,6 @@ CH1_SCENE4_DATA = SceneData(
                         Action(
                             type=ActionType.PRINT_NARRATIVE,
                             value=(
-                                "마이크 전원이 들어오지 않는다.\n"
                                 "마이크 단자가 덜렁거리고, 케이블 피복은 군데군데 벗겨져 있다.\n"
                                 "이 상태로는 소리를 제대로 전달해 줄 것 같지 않다. "
                                 "먼저 나사를 조이고 케이블을 정리해야 할 것 같다."
@@ -371,7 +430,7 @@ CH1_SCENE4_DATA = SceneData(
                         ),
                     ],
                 ),
-                # 단계 1: 스패너로 고정은 했지만, 아직 전원 없음
+                # 단계 1: 고정은 했지만 전원 없음
                 Interaction(
                     conditions=[
                         Condition(
@@ -390,7 +449,7 @@ CH1_SCENE4_DATA = SceneData(
                         ),
                     ],
                 ),
-                # 단계 2: 완전 수리 완료
+                # 단계 2: 완전 수리
                 Interaction(
                     conditions=[
                         Condition(
@@ -411,7 +470,6 @@ CH1_SCENE4_DATA = SceneData(
                 ),
             ],
         ),
-
         # 긴 파이프
         KeywordId.LONG_PIPE: KeywordData(
             type=KeywordType.OBJECT,
@@ -498,7 +556,7 @@ CH1_SCENE4_DATA = SceneData(
                         ),
                     ],
                 ),
-                # 그 외: 패턴 깨짐 → 리셋
+                # 다른 조합: 패턴 깨짐 → 리셋
                 Interaction(
                     conditions=[
                         Condition(
@@ -523,7 +581,7 @@ CH1_SCENE4_DATA = SceneData(
                         ),
                     ],
                 ),
-                # 로커가 이미 열린 뒤에는 단순 묘사
+                # 로커가 이미 열린 뒤
                 Interaction(
                     actions=[
                         Action(
@@ -673,6 +731,24 @@ CH1_SCENE4_DATA = SceneData(
                                 "description": "두껍고 끈끈한 방수 테이프다. 임시 수리용으로 안성맞춤이다.",
                             },
                         ),
+                        Action(
+                            type=ActionType.PRINT_NARRATIVE,
+                            value="산업용 배터리는 아직 사용할 수 있을 것 같다. 이제 로커는 열렸으니 챙겨두자.",
+                        ),
+                        Action(
+                            type=ActionType.ADD_ITEM,
+                            value={
+                                "name": KeywordId.HEAVY_BATTERY,
+                                "description": "한동안 마이크 전원으로 쓰였던 산업용 배터리다. 꽤 무겁지만 아직 쓸 수 있을 것 같다.",
+                            },
+                        ),
+                        Action(
+                            type=ActionType.PRINT_SYSTEM,
+                            value=(
+                                "보급품 로커에서 식초와 방수 테이프를 챙겼다.\n"
+                                "이제 관측소 뒤편의 늪지대로 가는 길을 따라가도 될 것 같다."
+                            ),
+                        ),
                     ],
                 ),
                 # 그 외: 패턴 깨짐 → 리셋
@@ -700,7 +776,7 @@ CH1_SCENE4_DATA = SceneData(
                         ),
                     ],
                 ),
-                # 로커가 이미 열린 뒤에는 단순 묘사
+                # 로커가 이미 열린 뒤
                 Interaction(
                     actions=[
                         Action(
@@ -713,7 +789,6 @@ CH1_SCENE4_DATA = SceneData(
         ),
     },
     combinations=[
-        # 덩굴 제거: 소방 도끼 + 덩굴
         # 덩굴 제거: 소방 도끼 + 덩굴
         Combination(
             targets=[KeywordId.FIRE_AXE, KeywordId.VINES],
@@ -729,38 +804,51 @@ CH1_SCENE4_DATA = SceneData(
                     type=ActionType.REMOVE_KEYWORD,
                     value=KeywordId.VINES,
                 ),
-                # 플래그: 덩굴 제거 완료
                 Action(
                     type=ActionType.UPDATE_STATE,
                     value={"key": "vines_cleared", "value": True},
                 ),
-                # 벽화 / 관찰 일지 / 관측소 문 / 화단은 HIDDEN으로 활성화 (사용자가 이름을 직접 쳐야 함)
+                # 벽화 / 관찰 일지 / 관측소 문 / 화단 활성화 (HIDDEN)
                 Action(
                     type=ActionType.UPDATE_STATE,
-                    value={"keyword": KeywordId.BOTANIST_MURAL, "state": KeywordState.HIDDEN},
+                    value={
+                        "keyword": KeywordId.BOTANIST_MURAL,
+                        "state": KeywordState.HIDDEN,
+                    },
                 ),
                 Action(
                     type=ActionType.UPDATE_STATE,
-                    value={"keyword": KeywordId.BOTANY_NOTE, "state": KeywordState.HIDDEN},
+                    value={
+                        "keyword": KeywordId.BOTANY_NOTE,
+                        "state": KeywordState.HIDDEN,
+                    },
                 ),
                 Action(
                     type=ActionType.UPDATE_STATE,
-                    value={"keyword": KeywordId.LAB_DOOR, "state": KeywordState.HIDDEN},
+                    value={
+                        "keyword": KeywordId.LAB_DOOR,
+                        "state": KeywordState.HIDDEN,
+                    },
                 ),
                 Action(
                     type=ActionType.UPDATE_STATE,
-                    value={"keyword": KeywordId.FLOWER_BED, "state": KeywordState.HIDDEN},
+                    value={
+                        "keyword": KeywordId.FLOWER_BED,
+                        "state": KeywordState.HIDDEN,
+                    },
                 ),
-                # 관측소 외관은 이제 시야에 보이도록 DISCOVERED
                 Action(
                     type=ActionType.UPDATE_STATE,
-                    value={"keyword": KeywordId.ECO_OBSERVATORY, "state": KeywordState.DISCOVERED},
+                    value={
+                        "keyword": KeywordId.ECO_OBSERVATORY,
+                        "state": KeywordState.DISCOVERED,
+                    },
                 ),
                 Action(
                     type=ActionType.PRINT_SYSTEM,
                     value=(
                         "새로운 상호작용 대상이 여러 개 발견되었습니다. "
-                        "덩굴이 사라진 생태 관측소를 살펴보는 것이 좋겠습니다."
+                        "덩굴이 사라진 생태 관측소를 살펴보는 것이 좋습니다."
                     ),
                 ),
             ],
@@ -789,6 +877,7 @@ CH1_SCENE4_DATA = SceneData(
                         "state": KeywordState.DISCOVERED,
                     },
                 ),
+                # 내부 오브젝트들을 HIDDEN으로 활성화
                 Action(
                     type=ActionType.UPDATE_STATE,
                     value={
@@ -819,11 +908,10 @@ CH1_SCENE4_DATA = SceneData(
                 ),
                 Action(
                     type=ActionType.PRINT_SYSTEM,
-                    value=("관측소 문이 열렸습니다. **[관측소 내부]**를 입력해 안으로 들어가 볼 수 있습니다."),
+                    value="관측소 문이 열렸습니다. 관측소 내부를 입력해 안으로 들어가 볼 수 있습니다.",
                 ),
             ],
         ),
-
         # 마이크 1단계 수리: 마이크 + 스패너
         Combination(
             targets=[KeywordId.MICROPHONE, KeywordId.SPANNER],
@@ -843,9 +931,13 @@ CH1_SCENE4_DATA = SceneData(
                     type=ActionType.UPDATE_STATE,
                     value={"key": "mic_stage", "value": 1},
                 ),
+                Action(
+                    type=ActionType.PRINT_SYSTEM,
+                    value="마이크가 고정되었습니다. 이제 전원을 공급하기 위해 마이크 + 산업용 배터리를 시도해 볼 수 있습니다.",
+                ),
             ],
         ),
-        # 이미 스패너 작업이 끝난 뒤 다시 시도할 때
+        # 마이크 + 스패너 (이미 고정된 상태)
         Combination(
             targets=[KeywordId.MICROPHONE, KeywordId.SPANNER],
             conditions=[
@@ -858,7 +950,6 @@ CH1_SCENE4_DATA = SceneData(
                 )
             ],
         ),
-
         # 마이크 2단계 수리: 마이크 + 산업용 배터리
         Combination(
             targets=[KeywordId.MICROPHONE, KeywordId.HEAVY_BATTERY],
@@ -892,7 +983,7 @@ CH1_SCENE4_DATA = SceneData(
                 ),
             ],
         ),
-        # 전원이 이미 연결된 뒤 다시 배터리를 쓰려 할 때
+        # 마이크 + 산업용 배터리 (이미 전원 연결됨)
         Combination(
             targets=[KeywordId.MICROPHONE, KeywordId.HEAVY_BATTERY],
             conditions=[
@@ -905,7 +996,7 @@ CH1_SCENE4_DATA = SceneData(
                 )
             ],
         ),
-        # 스패너 작업도 안 하고 바로 배터리를 연결하려 할 때
+        # 스패너 작업 없이 바로 배터리를 연결하려 할 때
         Combination(
             targets=[KeywordId.MICROPHONE, KeywordId.HEAVY_BATTERY],
             conditions=[
@@ -921,6 +1012,5 @@ CH1_SCENE4_DATA = SceneData(
                 ),
             ],
         ),
-
     ],
 )

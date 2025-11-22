@@ -188,6 +188,11 @@ class Game:
 
         cmd_lower = command.lower()  # 명령어를 소문자로 변환하여 비교에 용이하게 합니다.
 
+        # [추가] 1. 대기 중인 확인 요청이 있는지 먼저 확인
+        if self.pending_confirmation:
+            await self.scene_manager.process_confirmation(command)
+            return
+
         # 인벤토리 명령 처리
         if cmd_lower == CommandType.INVENTORY:
             pass

@@ -145,15 +145,32 @@ class KeywordId(StrEnum):
     SHORT_PIPE = "짧은 파이프"
     TREE = "나무"
 
-    # CH1_SCENE5: 죽음의 늪 (맹독 늪지대)
-    GIANT_CROCODILE = "거대 악어"
-    SWAMP_WATER = "늪물"
-    BROKEN_BRIDGE = "끊어진 다리"
-
-    # CH1 공통 신규 아이템
+    SWAMP_PATH = "늪지대로 가는 길"
+    SWAMP_PATH_ALIAS = "늪지대"
     VINEGAR = "식초"
     WATERPROOF_TAPE = "방수 테이프"
-    FLOATING_BAG = "부력 장치"
+
+    # 준비용 재료/장비
+    LATEX = "라텍스"
+    RUBBER = "고무"
+    RESIN = "송진"
+    INSULATED_WIRE = "절연 전선"
+    WATERPROOF_BOOTS = "방수 부츠"
+
+    # CH1_SCENE5 - 늪지대
+    SWAMP_TRASH = "늪 쓰레기 더미"
+    SWAMP_WATER = "늪물"
+    GIANT_CROCODILE = "거대한 악어"
+    BROKEN_BRIDGE = "끊어진 다리"
+    GAS_BUCKET = "독가스 양동이"
+    FLOATING_BAG = "부력 주머니"
+    FLOATING_DEVICE = "부력 장치"
+
+    # CH1_SCENE5 - 늪지대 alias 키워드
+    SWAMP_TRASH_ALIAS = "쓰레기 더미"
+    SWAMP_WATER_ALIAS = "늪"
+    GIANT_CROCODILE_ALIAS = "악어"
+    BROKEN_BRIDGE_ALIAS = "다리"
 
 
 class KeywordState(StrEnum):

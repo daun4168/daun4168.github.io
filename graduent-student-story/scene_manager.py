@@ -127,7 +127,7 @@ class SceneManager:
         self.scenes = {}
 
     # [추가] 확인 요청 처리 메서드
-    async def _process_confirmation(self, command: str):
+    async def process_confirmation(self, command: str):
         game = self.scene_factory.game
         data = game.pending_confirmation
         cmd = command.strip()
@@ -153,11 +153,6 @@ class SceneManager:
         """
         사용자 명령을 처리합니다. 기호에 따라 조합 타입을 구분합니다.
         """
-        # [추가] 1. 대기 중인 확인 요청이 있는지 먼저 확인
-        if self.scene_factory.game.pending_confirmation:
-            await self._process_confirmation(command)
-            return
-
         if self.current_scene:
             # 1. 비밀번호 입력 처리 (콜론 ':' 사용) -> Type: PASSWORD
             if ":" in command:

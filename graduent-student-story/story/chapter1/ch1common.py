@@ -13,12 +13,105 @@ CH1_COMMON_DATA = ChapterData(
             actions=[
                 Action(
                     type=ActionType.PRINT_NARRATIVE,
-                    value="**[스패너]**로 **[코코넛]**을 깨서 마셨다. 미지근하지만 달콤하다.",
+                    value="스패너로 코코넛을 깨서 안의 물을 마셨다. 미지근하지만 달콤하다.",
                 ),
                 Action(type=ActionType.REMOVE_ITEM, value=KeywordId.COCONUT),
                 Action(type=ActionType.MODIFY_STAMINA, value=15),
                 Action(type=ActionType.PRINT_SYSTEM, value="갈증 해소! 체력 +15"),
             ],
-        )
+        ),
+        # [준비용 조합] 라텍스 + 식초 = 고무
+        # 고무나무에서 얻은 라텍스에 식초(산성)를 부어 응고시켜 고무를 만든다.
+        Combination(
+            targets=[KeywordId.LATEX, KeywordId.VINEGAR],
+            conditions=[
+                Condition(type=ConditionType.HAS_ITEM, target=KeywordId.LATEX),
+                Condition(type=ConditionType.HAS_ITEM, target=KeywordId.VINEGAR),
+            ],
+            actions=[
+                Action(
+                    type=ActionType.PRINT_NARRATIVE,
+                    value=(
+                        "라텍스를 용기에 담고 식초를 천천히 부었다.\n"
+                        "흐물흐물하던 액체가 점점 덩어리 지더니, 탄력 있는 고무 덩어리로 굳어 간다."
+                    ),
+                ),
+                Action(type=ActionType.REMOVE_ITEM, value=KeywordId.LATEX),
+                Action(type=ActionType.REMOVE_ITEM, value=KeywordId.VINEGAR),
+                Action(
+                    type=ActionType.ADD_ITEM,
+                    value={
+                        "name": KeywordId.RUBBER,
+                        "description": "질긴 고무 덩어리다. 전선을 감싸거나 틈을 막는 데 쓸 수 있을 것 같다.",
+                    },
+                ),
+                Action(
+                    type=ActionType.PRINT_SYSTEM,
+                    value="라텍스가 고무로 응고되었습니다.",
+                ),
+            ],
+        ),
+        # [준비용 조합] 고무 + 전선 = 절연 전선
+        Combination(
+            targets=[KeywordId.RUBBER, KeywordId.WIRE],
+            conditions=[
+                Condition(type=ConditionType.HAS_ITEM, target=KeywordId.RUBBER),
+                Condition(type=ConditionType.HAS_ITEM, target=KeywordId.WIRE),
+            ],
+            actions=[
+                Action(
+                    type=ActionType.PRINT_NARRATIVE,
+                    value=(
+                        "벗겨진 전선 부분에 잘게 뜯은 고무를 감싸고, 손으로 꼭꼭 눌러 붙였다.\n"
+                        "즉석에서 만든 절연층이 어느 정도는 버텨 줄 것 같다."
+                    ),
+                ),
+                Action(type=ActionType.REMOVE_ITEM, value=KeywordId.RUBBER),
+                Action(type=ActionType.REMOVE_ITEM, value=KeywordId.WIRE),
+                Action(
+                    type=ActionType.ADD_ITEM,
+                    value={
+                        "name": KeywordId.INSULATED_WIRE,
+                        "description": "고무로 감싼 전선이다. 맨손으로 잡고 써도 비교적 안전할 것 같다.",
+                    },
+                ),
+                Action(
+                    type=ActionType.PRINT_SYSTEM,
+                    value="절연 전선을 만들었습니다.",
+                ),
+            ],
+        ),
+        # [준비용 조합] 송진 + 조명탄 = 방수 부츠
+        # 조명탄의 열기를 이용해 송진을 녹여 신발에 코팅한다.
+        Combination(
+            targets=[KeywordId.RESIN, KeywordId.FLARE],
+            conditions=[
+                Condition(type=ConditionType.HAS_ITEM, target=KeywordId.RESIN),
+                Condition(type=ConditionType.HAS_ITEM, target=KeywordId.FLARE),
+            ],
+            actions=[
+                Action(
+                    type=ActionType.PRINT_NARRATIVE,
+                    value=(
+                        "조명탄을 피워 그 위에 송진을 올려두었다.\n"
+                        "끈적한 송진이 녹아 흐르기 시작하자, 신발 바닥과 옆면에 두껍게 발라 코팅했다.\n"
+                        "이 정도면 웬만한 물과 진흙쯤은 버텨 줄 것 같다."
+                    ),
+                ),
+                Action(type=ActionType.REMOVE_ITEM, value=KeywordId.RESIN),
+                Action(type=ActionType.REMOVE_ITEM, value=KeywordId.FLARE),
+                Action(
+                    type=ActionType.ADD_ITEM,
+                    value={
+                        "name": KeywordId.WATERPROOF_BOOTS,
+                        "description": "거칠게 송진 코팅을 한 방수 부츠다. 늪지대나 젖은 지형을 걸을 때 도움이 된다.",
+                    },
+                ),
+                Action(
+                    type=ActionType.PRINT_SYSTEM,
+                    value="신발에 송진 코팅을 해 방수 부츠를 만들었습니다.",
+                ),
+            ],
+        ),
     ],
 )

@@ -184,6 +184,38 @@ class KeywordId(StrEnum):
     CAVE_ENTRANCE = "동굴 입구"
     CAVE = "동굴"
 
+    # ---- Scene 6: 석회 동굴 (수정 동굴) ----
+    CAVE_HALL = "동굴 홀"
+
+    # 그림자 시계 퍼즐용 돌 3개
+    SHORT_STONE = "짧은 돌"
+    MID_STONE = "중간 돌"
+    LONG_STONE = "긴 돌"
+
+    # 시계 모양 석회문
+    TIME_DOOR = "석회문"
+
+    # 위쪽 절벽 / 아래쪽 지하 호수로 가는 통로
+    CLIFF_PATH = "절벽 길"
+    UNDERGROUND_LAKE_PATH = "지하 호수 통로"
+
+    # 석회 패널(2진수 퍼즐)
+    LIME_PANEL = "석회 패널"
+    LIME_DOT_1 = "석회 패널 1번 점"
+    LIME_DOT_2 = "석회 패널 2번 점"
+    LIME_DOT_3 = "석회 패널 3번 점"
+    LIME_DOT_4 = "석회 패널 4번 점"
+    LIME_DOT_5 = "석회 패널 5번 점"
+    LIME_DOT_6 = "석회 패널 6번 점"
+    LIME_DOT_7 = "석회 패널 7번 점"
+
+    # 지하 샘 / 석영 군집 및 아이템
+    UNDERGROUND_SPRING = "지하 샘"
+    COLD_GROUNDWATER = "차가운 지하수"
+
+    QUARTZ_CLUSTER = "석영 군집"
+    QUARTZ_SHARD = "석영 조각"
+
 
 class KeywordState(StrEnum):
     HIDDEN = "hidden"

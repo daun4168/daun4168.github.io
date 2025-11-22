@@ -31,4 +31,7 @@ packages = ["markdown", "asyncio", "pydantic"]
 "story/chapter1/ch1scene3.py" = "story/chapter1/ch1scene3.py"
 "story/chapter1/ch1scene4.py" = "story/chapter1/ch1scene4.py"
 "story/chapter1/ch1scene5.py" = "story/chapter1/ch1scene5.py"
-
+"story/chapter1/ch1scene6.py" = "story/chapter1/ch1scene6.py"
+"story/chapter1/ch1scene7.py" = "story/chapter1/ch1scene7.py"
+"story/chapter1/ch1scene8.py" = "story/chapter1/ch1scene8.py"
+"story/chapter1/ch1scene9.py" = "story/chapter1/ch1scene9.py"

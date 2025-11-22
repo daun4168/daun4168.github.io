@@ -14,7 +14,7 @@ CH1_SCENE3_DATA = SceneData(
     initial_state={
         "acid_neutralized": False,  # 중화 여부
         "acid_collected": False,  # 샘플 채취 여부
-        "safe_powered": False, # [신규] 금고 전원 상태
+        "safe_powered": False,  # [신규] 금고 전원 상태
         "safe_opened": False,  # 금고 개방 여부
         "axe_obtained": False,  # 도끼 획득 여부
         "batteries_found": False,  # 건전지 파밍 여부
@@ -195,7 +195,10 @@ CH1_SCENE3_DATA = SceneData(
                             type=ActionType.PRINT_SYSTEM,
                             value="`전자 금고 : [비밀번호]` 형태로 입력하세요.",
                         ),
-                        Action(type=ActionType.UPDATE_STATE, value={"keyword": KeywordId.PUZZLE_NOTE, "state": KeywordState.DISCOVERED}),
+                        Action(
+                            type=ActionType.UPDATE_STATE,
+                            value={"keyword": KeywordId.PUZZLE_NOTE, "state": KeywordState.DISCOVERED},
+                        ),
                     ],
                 ),
                 Interaction(
@@ -260,11 +263,11 @@ CH1_SCENE3_DATA = SceneData(
             type=KeywordType.OBJECT,
             state=KeywordState.INACTIVE,
             description=(
-                "\"가장 탐욕스러운 자들이 사랑하는 세 가지 금속이 이 안에 잠들어 있다.\n"
+                '"가장 탐욕스러운 자들이 사랑하는 세 가지 금속이 이 안에 잠들어 있다.\n'
                 "첫 번째는 녹슬지 않는 영원한 태양의 왕.\n"
                 "두 번째는 늑대 인간을 죽이는 창백한 달의 눈물.\n"
                 "세 번째는 전기를 가장 사랑하는 붉은 핏줄.\n"
-                "그들의 **영혼의 번호(Atomic Number)**를 순서대로 나열하라.\""
+                '그들의 **영혼의 번호(Atomic Number)**를 순서대로 나열하라."'
             ),
         ),
         # [신규] 10. 주기율표 (작업대 조사 시 발견)
@@ -279,7 +282,7 @@ CH1_SCENE3_DATA = SceneData(
                 "| 28 Ni 니켈 | 29 Cu 구리 | 30 Zn 아연 |\n"
                 "| 46 Pd 팔라듐 | 47 Ag 은 | 48 Cd 카드뮴 |\n"
                 "| 78 Pt 백금 | 79 Au 금 | 80 Hg 수은 |"
-            )
+            ),
         ),
         # --- [파밍 아이템] ---
         # 흩어진 보급품

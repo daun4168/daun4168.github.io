@@ -131,6 +131,30 @@ class KeywordId(StrEnum):
     FIRE_AXE = "소방 도끼"
     HEAVY_BATTERY = "산업용 배터리"
 
+    # CH1_SCENE4: 공명하는 숲 (생태 관측소)
+    ECO_OBSERVATORY = "생태 관측소"
+    OBSERVATORY_INSIDE = "관측소 내부"
+    VINES = "덩굴"
+    BOTANIST_MURAL = "벽화"
+    FLOWER_BED = "화단"
+    BOTANY_NOTE = "관찰 일지"
+    LAB_DOOR = "관측소 문"
+    SUPPLY_LOCKER = "보급품 로커"
+    MICROPHONE = "마이크"
+    LONG_PIPE = "긴 파이프"
+    SHORT_PIPE = "짧은 파이프"
+    TREE = "나무"
+
+    # CH1_SCENE5: 죽음의 늪 (맹독 늪지대)
+    GIANT_CROCODILE = "거대 악어"
+    SWAMP_WATER = "늪물"
+    BROKEN_BRIDGE = "끊어진 다리"
+
+    # CH1 공통 신규 아이템
+    VINEGAR = "식초"
+    WATERPROOF_TAPE = "방수 테이프"
+    FLOATING_BAG = "부력 장치"
+
 
 class KeywordState(StrEnum):
     HIDDEN = "hidden"

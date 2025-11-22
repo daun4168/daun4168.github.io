@@ -24,7 +24,7 @@ CH1_SCENE6_DATA = SceneData(
         "quartz_discovered": False,
         "quartz_collected": False,
         "swamp_path_inspected": False,
-        "hall_inspected": False,  # ✅ 동굴 홀을 처음 조사했는지 여부
+        "hall_inspected": False,  # 동굴 홀을 처음 조사했는지 여부
         "lime_btn_1": 0,
         "lime_btn_2": 0,
         "lime_btn_3": 0,
@@ -120,10 +120,10 @@ CH1_SCENE6_DATA = SceneData(
             description=(
                 "동굴 중앙은 둥근 홀처럼 트여 있다. 바닥에서 솟아오른 키가 서로 다른 세 개의 돌기둥이 빛을 받아 "
                 "벽면에 서로 다른 방향의 그림자를 드리우고 있다.\n"
-                "벽 한쪽에는 시계판처럼 보이는 원형 석회 문양이 있고, 그 중앙에는 굳게 닫힌 석회문이 자리하고 있다."
+                "벽 한쪽에는 거대한 원형 석회 문양이 있고, 그 중앙에는 굳게 닫힌 석회문이 자리하고 있다."
             ),
             interactions=[
-                # 첫 조사: 동굴 홀 DISCOVER + 짧은/중간/긴 돌을 HIDDEN으로 노출
+                # 첫 조사: 동굴 홀 DISCOVER + 짧은/중간/긴 돌을 노출
                 Interaction(
                     conditions=[
                         Condition(
@@ -144,7 +144,6 @@ CH1_SCENE6_DATA = SceneData(
                                 "각 돌기둥은 바깥에서 들어오는 희미한 빛을 받아 벽면의 석회문에 각기 다른 방향의 그림자를 드리우고 있다."
                             ),
                         ),
-                        # 짧은/중간/긴 돌을 이제부터 시야에 보이도록 HIDDEN으로 전환
                         Action(
                             type=ActionType.UPDATE_STATE,
                             value={"keyword": KeywordId.SHORT_STONE, "state": KeywordState.DISCOVERED},
@@ -181,7 +180,7 @@ CH1_SCENE6_DATA = SceneData(
                             type=ActionType.PRINT_NARRATIVE,
                             value=(
                                 "동굴 중앙에는 여전히 세 개의 돌기둥이 서 있고, "
-                                "그 그림자들은 석회문 위로 멈춰 버린 시계 바늘처럼 걸려 있다."
+                                "그 그림자들은 석회문 위에 멈춰 서 있는 것처럼 보인다."
                             ),
                         )
                     ],
@@ -191,7 +190,7 @@ CH1_SCENE6_DATA = SceneData(
         # 짧은 돌
         KeywordId.SHORT_STONE: KeywordData(
             type=KeywordType.OBJECT,
-            state=KeywordState.INACTIVE,  # ✅ 처음엔 INACTIVE, 동굴 홀 조사 후 HIDDEN으로 전환
+            state=KeywordState.INACTIVE,
             description=(
                 "가장 키가 낮은 돌기둥이다. 입구 쪽에서 들어오는 빛을 받으면, "
                 "그림자가 석회문의 오른쪽 부분으로 짧게 드리워진다.\n"
@@ -212,7 +211,7 @@ CH1_SCENE6_DATA = SceneData(
                 "석회문의 아래쪽 가장 낮은 위치에 걸쳐 있다.\n"
             ),
         ),
-        # 시계 문양 / 석회문
+        # 석회문
         KeywordId.TIME_DOOR: KeywordData(
             type=KeywordType.OBJECT,
             state=KeywordState.HIDDEN,
@@ -236,7 +235,7 @@ CH1_SCENE6_DATA = SceneData(
                                 "형태만 보면 그저 오래된 돌무늬 같지만, 바닥에서 솟은 서로 다른 높이의 세 돌기둥이 드리우는 그림자와 "
                                 "아주 미세하게 부합하는 듯한 느낌이 든다.\n\n"
                                 "석회문 아래쪽 모서리에는 거의 지워진 필치로 이런 문장이 남아 있다.\n"
-                                '"세 돌이 가리키는 흐름을 잇는 자만이, 문 너머로 나아갈 수 있으리라."\n'
+                                "\"세 돌이 가리키는 흐름을 잇는 자만이, 문 너머로 나아갈 수 있으리라.\"\n"
                             ),
                         ),
                         Action(
@@ -263,7 +262,7 @@ CH1_SCENE6_DATA = SceneData(
                 ),
             ],
         ),
-        # 석회문 안쪽으로 이어지는 절벽 통로(위쪽)
+        # 절벽 통로(위)
         KeywordId.CLIFF_PATH: KeywordData(
             type=KeywordType.PORTAL,
             state=KeywordState.INACTIVE,
@@ -282,7 +281,7 @@ CH1_SCENE6_DATA = SceneData(
                         Action(
                             type=ActionType.PRINT_NARRATIVE,
                             value=(
-                                "시계 모양 석회문 가까이에서 위쪽 협곡 틈을 올려다보면, "
+                                "석회문 가까이에서 위쪽 협곡 틈을 올려다보면, "
                                 "낡은 석회 조각들이 아직 길을 반쯤 막고 있다.\n"
                                 "문을 완전히 열어야만 위쪽 절벽으로 이어지는 바람길이 안전해질 것 같다."
                             ),
@@ -332,7 +331,7 @@ CH1_SCENE6_DATA = SceneData(
                 ),
             ],
         ),
-        # 석회문 안쪽 아래로 이어지는 지하 호수 통로(아래쪽)
+        # 지하 호수 통로(아래)
         KeywordId.UNDERGROUND_LAKE_PATH: KeywordData(
             type=KeywordType.PORTAL,
             state=KeywordState.INACTIVE,
@@ -405,56 +404,35 @@ CH1_SCENE6_DATA = SceneData(
             type=KeywordType.OBJECT,
             state=KeywordState.INACTIVE,
             description=(
-                "석회층 사이로 맑은 석영 결정들이 모여 자라고 있다. 빛을 받으면 동굴 안쪽으로 은은하게 퍼뜨릴 것 같다."
+                "석회층 사이로 맑은 석영 결정들이 모여 자라고 있다. 겉보기엔 단단해서, 맨손으로는 깨내기 어려울 것 같다.\n"
+                "무언가 묵직한 도구로 한 번 내려쳐야 조각을 떼어낼 수 있을 것 같다."
             ),
             interactions=[
+                # 아직 석영을 안 땄을 때 → 힌트만
                 Interaction(
                     conditions=[
-                        Condition(
-                            type=ConditionType.STATE_IS,
-                            target="quartz_discovered",
-                            value=True,
-                        ),
-                        Condition(
-                            type=ConditionType.STATE_IS,
-                            target="quartz_collected",
-                            value=False,
-                        ),
+                        Condition(type=ConditionType.STATE_IS, target="quartz_discovered", value=True),
+                        Condition(type=ConditionType.STATE_IS, target="quartz_collected", value=False),
                     ],
                     actions=[
                         Action(
                             type=ActionType.PRINT_NARRATIVE,
                             value=(
-                                "손에 쥘 수 있을 만큼 적당한 크기의 석영 조각을 몇 개 조심스럽게 떼어냈다.\n"
-                                "진동을 잘 전달할 것 같은 맑은 덩어리라, 나중에 발진기나 시계 회로에 쓸 수 있을 것 같다."
+                                "석영 표면을 손가락으로 긁어 보았지만, 단단한 결정이어서 손으로는 아무 조각도 떨어지지 않는다.\n"
+                                "충분히 무거운 도구로 한 번 내려쳐야 할 것 같다."
                             ),
-                        ),
-                        Action(
-                            type=ActionType.ADD_ITEM,
-                            value={
-                                "name": KeywordId.QUARTZ_SHARD,
-                                "description": "맑은 석영 조각이다. 전자 장비의 기준 발진기로 쓰기에 적당해 보인다.",
-                            },
-                        ),
-                        Action(
-                            type=ActionType.UPDATE_STATE,
-                            value={"key": "quartz_collected", "value": True},
-                        ),
+                        )
                     ],
                 ),
-                # 이미 채취한 뒤
+                # 이미 조각을 얻은 뒤
                 Interaction(
                     conditions=[
-                        Condition(
-                            type=ConditionType.STATE_IS,
-                            target="quartz_collected",
-                            value=True,
-                        )
+                        Condition(type=ConditionType.STATE_IS, target="quartz_collected", value=True),
                     ],
                     actions=[
                         Action(
                             type=ActionType.PRINT_NARRATIVE,
-                            value="석영 군집에서 더 떼어낼 만한 조각은 남지 않았다.",
+                            value="석영 군집은 일부가 깨져 나간 채 남아 있다. 더 떼어낼 만한 조각은 없어 보인다.",
                         )
                     ],
                 ),
@@ -467,34 +445,23 @@ CH1_SCENE6_DATA = SceneData(
                 "석회층 사이 좁은 틈에서 맑은 물줄기가 솟아 나와 작은 웅덩이를 만들고 있다. 물을 만져보니 손이 얼얼할 만큼 차갑다."
             ),
             interactions=[
-                # 처음 발견하고 물을 뜰 때
+                # 처음 발견했을 때: 한 입 마시고 체력 +10, spring_collected 플래그만 세팅
                 Interaction(
                     conditions=[
-                        Condition(
-                            type=ConditionType.STATE_IS,
-                            target="spring_discovered",
-                            value=True,
-                        ),
-                        Condition(
-                            type=ConditionType.STATE_IS,
-                            target="spring_collected",
-                            value=False,
-                        ),
+                        Condition(type=ConditionType.STATE_IS, target="spring_discovered", value=True),
+                        Condition(type=ConditionType.STATE_IS, target="spring_collected", value=False),
                     ],
                     actions=[
                         Action(
                             type=ActionType.PRINT_NARRATIVE,
                             value=(
-                                "손을 웅덩이에 넣어 물을 떠보니, 피부가 금방 얼얼해질 정도로 차갑다.\n"
-                                "이 정도 온도라면 열 식히는 용도로 쓰기에 안성맞춤이다."
+                                "목이 바싹 마른 김에 한 모금 떠서 조심스럽게 입에 머금었다.\n"
+                                "입 안 가득 차가운 물이 퍼지자, 잠시 동안 머릿속까지 선명해지는 느낌이 든다."
                             ),
                         ),
                         Action(
-                            type=ActionType.ADD_ITEM,
-                            value={
-                                "name": KeywordId.COLD_GROUNDWATER,
-                                "description": "석회 동굴에서 떠온 차갑고 맑은 지하수다. MK-II 냉각수로 쓰기 좋을 것 같다.",
-                            },
+                            type=ActionType.MODIFY_STAMINA,
+                            value=10,
                         ),
                         Action(
                             type=ActionType.UPDATE_STATE,
@@ -502,31 +469,29 @@ CH1_SCENE6_DATA = SceneData(
                         ),
                     ],
                 ),
-                # 이미 물을 떠간 뒤
+                # 이미 물을 마신 뒤
                 Interaction(
                     conditions=[
-                        Condition(
-                            type=ConditionType.STATE_IS,
-                            target="spring_collected",
-                            value=True,
-                        )
+                        Condition(type=ConditionType.STATE_IS, target="spring_collected", value=True),
                     ],
                     actions=[
                         Action(
                             type=ActionType.PRINT_NARRATIVE,
-                            value="웅덩이에서는 여전히 찬물이 조금씩 솟아나고 있지만, 지금은 더 떠갈 필요는 없어 보인다.",
+                            value=(
+                                "웅덩이에서는 여전히 찬물이 조금씩 솟아나고 있지만, 방금 마신 한 모금만으로도 갈증은 충분히 가신 것 같다."
+                            ),
                         )
                     ],
                 ),
             ],
         ),
-        # --- [석회암 2진수 패널 퍼즐] ---
+        # --- [석회암 패널 퍼즐: 5개 버튼 + 래버] ---
         KeywordId.LIME_PANEL: KeywordData(
             type=KeywordType.OBJECT,
             state=KeywordState.HIDDEN,
             description=(
-                "벽 한쪽을 가득 메운 석회 패널 위에 크고 작은 둥근 점 일곱 개가 일렬로 박혀 있다.\n"
-                "일부 점은 표면이 약간 더 반들거리고, 일부는 메마른 석회처럼 바래 있다."
+                "벽 한쪽을 가득 메운 석회 패널 위에 크고 작은 둥근 버튼 다섯 개가 일렬로 박혀 있다.\n"
+                "일부 버튼은 표면이 약간 더 반들거리고, 일부는 메마른 석회처럼 바래 있다."
             ),
             interactions=[
                 Interaction(
@@ -534,12 +499,12 @@ CH1_SCENE6_DATA = SceneData(
                         Action(
                             type=ActionType.PRINT_NARRATIVE,
                             value=(
-                                "점들을 하나하나 살펴보니, 어떤 점은 손가락을 대면 미세하게 움푹 들어가는 느낌이 들고, "
-                                "어떤 점은 단단하게 굳어 아무 반응이 없다.\n"
-                                "겉에 굳어 있는 석회층을 제거할 방법을 찾아보는게 좋겠다."
+                                "버튼들을 하나하나 살펴보니, 어떤 것은 손가락을 대면 미세하게 움푹 들어가는 느낌이 들고, "
+                                "어떤 것은 단단하게 굳어 아무 반응이 없다.\n"
+                                "겉에 굳어 있는 석회층을 제거할 방법을 찾아보는 게 좋겠다."
                             ),
                         ),
-                        # 점 키워드들을 ‘존재만’ 알리기 위한 상태 설정 (실제 활성화는 식초 조합에서)
+                        # 버튼 존재만 알림 (실제 활성화는 식초 조합에서)
                         Action(
                             type=ActionType.UPDATE_STATE,
                             value={"keyword": KeywordId.LIME_DOT_1, "state": KeywordState.INACTIVE},
@@ -564,13 +529,12 @@ CH1_SCENE6_DATA = SceneData(
                 )
             ],
         ),
-        # 다섯 개의 점 – 순서 누르기 퍼즐 (● ○ ● ● ○ ○ ●)
+        # 버튼 1~5 (0/1 토글)
         KeywordId.LIME_DOT_1: KeywordData(
             type=KeywordType.OBJECT,
-            state=KeywordState.INACTIVE,  # 식초 사용 전에는 비활성
+            state=KeywordState.INACTIVE,
             description="석회 패널의 첫 번째 버튼이다. 표면이 약간 더 반들거리는 작은 둥근 버튼이다.",
             interactions=[
-                # 아직 퍼즐이 안 풀렸고, 현재 값이 0일 때 → 1로
                 Interaction(
                     conditions=[
                         Condition(type=ConditionType.STATE_IS, target="binary_panel_solved", value=False),
@@ -587,7 +551,6 @@ CH1_SCENE6_DATA = SceneData(
                         ),
                     ],
                 ),
-                # 아직 퍼즐이 안 풀렸고, 현재 값이 1일 때 → 0으로
                 Interaction(
                     conditions=[
                         Condition(type=ConditionType.STATE_IS, target="binary_panel_solved", value=False),
@@ -604,7 +567,6 @@ CH1_SCENE6_DATA = SceneData(
                         ),
                     ],
                 ),
-                # 이미 퍼즐이 풀린 뒤
                 Interaction(
                     conditions=[
                         Condition(type=ConditionType.STATE_IS, target="binary_panel_solved", value=True),
@@ -620,10 +582,9 @@ CH1_SCENE6_DATA = SceneData(
         ),
         KeywordId.LIME_DOT_2: KeywordData(
             type=KeywordType.OBJECT,
-            state=KeywordState.INACTIVE,  # 식초 사용 전에는 비활성
+            state=KeywordState.INACTIVE,
             description="석회 패널의 두 번째 버튼이다. 살짝 옅은 흠집이 나 있어 다른 버튼과 구분된다.",
             interactions=[
-                # 아직 퍼즐이 안 풀렸고, 현재 값이 0일 때 → 1로
                 Interaction(
                     conditions=[
                         Condition(type=ConditionType.STATE_IS, target="binary_panel_solved", value=False),
@@ -640,7 +601,6 @@ CH1_SCENE6_DATA = SceneData(
                         ),
                     ],
                 ),
-                # 아직 퍼즐이 안 풀렸고, 현재 값이 1일 때 → 0으로
                 Interaction(
                     conditions=[
                         Condition(type=ConditionType.STATE_IS, target="binary_panel_solved", value=False),
@@ -657,7 +617,6 @@ CH1_SCENE6_DATA = SceneData(
                         ),
                     ],
                 ),
-                # 이미 퍼즐이 풀린 뒤
                 Interaction(
                     conditions=[
                         Condition(type=ConditionType.STATE_IS, target="binary_panel_solved", value=True),
@@ -673,10 +632,9 @@ CH1_SCENE6_DATA = SceneData(
         ),
         KeywordId.LIME_DOT_3: KeywordData(
             type=KeywordType.OBJECT,
-            state=KeywordState.INACTIVE,  # 식초 사용 전에는 비활성
+            state=KeywordState.INACTIVE,
             description="석회 패널의 세 번째 버튼이다. 가장 평범해 보이지만, 미세하게 중앙이 파여 있다.",
             interactions=[
-                # 아직 퍼즐이 안 풀렸고, 현재 값이 0일 때 → 1로
                 Interaction(
                     conditions=[
                         Condition(type=ConditionType.STATE_IS, target="binary_panel_solved", value=False),
@@ -693,7 +651,6 @@ CH1_SCENE6_DATA = SceneData(
                         ),
                     ],
                 ),
-                # 아직 퍼즐이 안 풀렸고, 현재 값이 1일 때 → 0으로
                 Interaction(
                     conditions=[
                         Condition(type=ConditionType.STATE_IS, target="binary_panel_solved", value=False),
@@ -710,7 +667,6 @@ CH1_SCENE6_DATA = SceneData(
                         ),
                     ],
                 ),
-                # 이미 퍼즐이 풀린 뒤
                 Interaction(
                     conditions=[
                         Condition(type=ConditionType.STATE_IS, target="binary_panel_solved", value=True),
@@ -726,10 +682,9 @@ CH1_SCENE6_DATA = SceneData(
         ),
         KeywordId.LIME_DOT_4: KeywordData(
             type=KeywordType.OBJECT,
-            state=KeywordState.INACTIVE,  # 식초 사용 전에는 비활성
+            state=KeywordState.INACTIVE,
             description="석회 패널의 네 번째 버튼이다. 다른 버튼보다 살짝 기울어진 듯한 인상을 준다.",
             interactions=[
-                # 아직 퍼즐이 안 풀렸고, 현재 값이 0일 때 → 1로
                 Interaction(
                     conditions=[
                         Condition(type=ConditionType.STATE_IS, target="binary_panel_solved", value=False),
@@ -746,7 +701,6 @@ CH1_SCENE6_DATA = SceneData(
                         ),
                     ],
                 ),
-                # 아직 퍼즐이 안 풀렸고, 현재 값이 1일 때 → 0으로
                 Interaction(
                     conditions=[
                         Condition(type=ConditionType.STATE_IS, target="binary_panel_solved", value=False),
@@ -763,7 +717,6 @@ CH1_SCENE6_DATA = SceneData(
                         ),
                     ],
                 ),
-                # 이미 퍼즐이 풀린 뒤
                 Interaction(
                     conditions=[
                         Condition(type=ConditionType.STATE_IS, target="binary_panel_solved", value=True),
@@ -779,10 +732,9 @@ CH1_SCENE6_DATA = SceneData(
         ),
         KeywordId.LIME_DOT_5: KeywordData(
             type=KeywordType.OBJECT,
-            state=KeywordState.INACTIVE,  # 식초 사용 전에는 비활성
+            state=KeywordState.INACTIVE,
             description="석회 패널의 다섯 번째 버튼이다. 가장 모서리 쪽에 있어 살짝 누르기 불편한 위치에 있다.",
             interactions=[
-                # 아직 퍼즐이 안 풀렸고, 현재 값이 0일 때 → 1로
                 Interaction(
                     conditions=[
                         Condition(type=ConditionType.STATE_IS, target="binary_panel_solved", value=False),
@@ -799,7 +751,6 @@ CH1_SCENE6_DATA = SceneData(
                         ),
                     ],
                 ),
-                # 아직 퍼즐이 안 풀렸고, 현재 값이 1일 때 → 0으로
                 Interaction(
                     conditions=[
                         Condition(type=ConditionType.STATE_IS, target="binary_panel_solved", value=False),
@@ -816,7 +767,6 @@ CH1_SCENE6_DATA = SceneData(
                         ),
                     ],
                 ),
-                # 이미 퍼즐이 풀린 뒤
                 Interaction(
                     conditions=[
                         Condition(type=ConditionType.STATE_IS, target="binary_panel_solved", value=True),
@@ -830,21 +780,21 @@ CH1_SCENE6_DATA = SceneData(
                 ),
             ],
         ),
-        # 확인 버튼
+        # 확인 래버
         KeywordId.LIME_CONFIRM: KeywordData(
             type=KeywordType.OBJECT,
-            state=KeywordState.INACTIVE,  # 식초 사용 후 활성화
+            state=KeywordState.INACTIVE,
             description="석회 패널 오른쪽에 있는 래버다.",
             interactions=[
-                # 1) 정답 패턴일 때 (예: 1,0,1,1,0,0,1 이라고 가정)
+                # 정답 패턴일 때 (예: 1,0,0,0,1)
                 Interaction(
                     conditions=[
                         Condition(type=ConditionType.STATE_IS, target="binary_panel_solved", value=False),
                         Condition(type=ConditionType.STATE_IS, target="lime_btn_1", value=1),
                         Condition(type=ConditionType.STATE_IS, target="lime_btn_2", value=0),
-                        Condition(type=ConditionType.STATE_IS, target="lime_btn_3", value=1),
-                        Condition(type=ConditionType.STATE_IS, target="lime_btn_4", value=1),
-                        Condition(type=ConditionType.STATE_IS, target="lime_btn_5", value=0),
+                        Condition(type=ConditionType.STATE_IS, target="lime_btn_3", value=0),
+                        Condition(type=ConditionType.STATE_IS, target="lime_btn_4", value=0),
+                        Condition(type=ConditionType.STATE_IS, target="lime_btn_5", value=1),
                     ],
                     actions=[
                         Action(
@@ -864,7 +814,6 @@ CH1_SCENE6_DATA = SceneData(
                             type=ActionType.UPDATE_STATE,
                             value={"key": "lake_path_opened", "value": True},
                         ),
-                        # 지하 샘 / 석영 군집 노출
                         Action(
                             type=ActionType.UPDATE_STATE,
                             value={"key": "spring_discovered", "value": True},
@@ -887,7 +836,7 @@ CH1_SCENE6_DATA = SceneData(
                         ),
                     ],
                 ),
-                # 2) 오답인 경우
+                # 오답 패턴일 때
                 Interaction(
                     conditions=[
                         Condition(type=ConditionType.STATE_IS, target="binary_panel_solved", value=False),
@@ -903,7 +852,7 @@ CH1_SCENE6_DATA = SceneData(
                         ),
                     ],
                 ),
-                # 3) 이미 퍼즐을 푼 뒤
+                # 이미 퍼즐을 푼 뒤
                 Interaction(
                     conditions=[
                         Condition(type=ConditionType.STATE_IS, target="binary_panel_solved", value=True),
@@ -919,6 +868,7 @@ CH1_SCENE6_DATA = SceneData(
         ),
     },
     combinations=[
+        # 석회문 비밀번호: 034530
         Combination(
             type=CombinationType.PASSWORD,
             targets=[KeywordId.TIME_DOOR, "034530"],
@@ -958,7 +908,7 @@ CH1_SCENE6_DATA = SceneData(
                 ),
             ],
         ),
-        # 석회 패널에 식초를 뿌려 보는 조합 – 반응하는 점과 안 하는 점 힌트
+        # 석회 패널 + 반쯤 남은 식초 → 버튼 5개 + 래버 활성화
         Combination(
             targets=[KeywordId.LIME_PANEL, KeywordId.VINEGAR_HALF],
             conditions=[
@@ -973,7 +923,6 @@ CH1_SCENE6_DATA = SceneData(
                         "버튼 오른쪽에는 **[석회 패널 래버]**라고 적힌 래버도 하나 있다."
                     ),
                 ),
-                # 버튼 7개 + 확인 버튼 활성화
                 Action(
                     type=ActionType.UPDATE_STATE,
                     value={"keyword": KeywordId.LIME_DOT_1, "state": KeywordState.DISCOVERED},
@@ -1001,6 +950,34 @@ CH1_SCENE6_DATA = SceneData(
                 Action(
                     type=ActionType.PRINT_SYSTEM,
                     value="이제 **[석회 패널 1번 점]**부터 **[석회 패널 5번 점]**, 그리고 **[석회 패널 래버]**를 사용하여 패턴을 맞출 수 있습니다.",
+                ),
+            ],
+        ),
+        # 소방 도끼 + 석영 군집 → 석영 조각 한 번만 획득
+        Combination(
+            targets=[KeywordId.FIRE_AXE, KeywordId.QUARTZ_CLUSTER],
+            conditions=[
+                Condition(type=ConditionType.STATE_IS, target="quartz_discovered", value=True),
+                Condition(type=ConditionType.STATE_IS, target="quartz_collected", value=False),
+            ],
+            actions=[
+                Action(
+                    type=ActionType.PRINT_NARRATIVE,
+                    value=(
+                        "소방 도끼를 힘껏 휘둘러 석영 군집 한 귀퉁이를 내려쳤다.\n"
+                        "맑은 파편들이 튀어 오르며, 그중 손바닥만 한 조각 하나가 바닥에 떨어진다."
+                    ),
+                ),
+                Action(
+                    type=ActionType.ADD_ITEM,
+                    value={
+                        "name": KeywordId.QUARTZ_SHARD,
+                        "description": "맑은 석영 조각이다. 전자 장비의 기준 발진기로 쓰기에 적당해 보인다.",
+                    },
+                ),
+                Action(
+                    type=ActionType.UPDATE_STATE,
+                    value={"key": "quartz_collected", "value": True},
                 ),
             ],
         ),

@@ -14,16 +14,23 @@ CH1_SCENE9_DATA = SceneData(
     name="가파른 능선 꼭대기 (섬 정상)",
     initial_text=(
         "절벽을 따라 도르래에 몸을 맡기고 천천히 올라가자, 시야가 순식간에 넓어지며 능선 위가 모습을 드러낸다.\n"
-        "발밑에는 오래전부터 쓰이던 듯한 좁은 콘크리트 기단이 있고, 그 위로는 녹슨 볼트와 부러진 금속 파이프 조각들이 흩어져 있다.\n\n"
+        "발밑에는 오래전부터 쓰이던 듯한 좁은 콘크리트 기단이 있고, 그 위로는 녹슨 볼트와 부러진 금속 파이프 조각들이 흩어져 있다.\n"
+        "조금 떨어진 바위 그늘 아래에는, 흙에 반쯤 묻힌 작은 금속 상자가 보인다. 누군가가 서둘러 숨겨 놓고 떠난 흔적처럼, 뚜껑 틈으로 낡은 전선 뭉치가 살짝 비친다.\n\n"
         "바람이 쉴 새 없이 머리 위를 훑고 지나가며, 이곳이 한때 안테나나 관측 장비를 세워 두던 자리였다는 사실을 조용히 말해 주는 듯하다."
     ),
     initial_state={
-        "antenna_build_step": 0,  # 0~9 : 파이프→볼트→스패너 × 3회
-        "antenna_built": False,  # 안테나 기계 구조 완성 여부
-        "antenna_puzzle_solved": False,  # 안테나 관련 퍼즐 해결 여부
-        "antenna_wire_connected": False,  # 긴 전선을 안테나에 연결했는지 여부
+        "antenna_build_step": 0,         # 0~9 : 파이프→볼트→스패너 × 3회
+        "antenna_built": False,          # 안테나 기계 구조 완성 여부
+        "antenna_puzzle_solved": False,  # 안테나 퍼즐 해결 여부
+        "antenna_wire_connected": False, # 긴 전선을 안테나에 연결했는지 여부
+
+        "cliff_down_path_inspected": False,  # 절벽 아래로 내려가는 길을 살펴봤는지
+        "wire_crate_opened": False,          # 전선 상자를 연 적 있는지
     },
     keywords={
+        KeywordId.WIRE_CRATE_ALIAS1: KeywordData(type=KeywordType.ALIAS, target=KeywordId.WIRE_CRATE),
+        KeywordId.WIRE_CRATE_ALIAS2: KeywordData(type=KeywordType.ALIAS, target=KeywordId.WIRE_CRATE),
+        # 절벽 아래(관측소 기단)로 내려가는 길
         KeywordId.CLIFF_FACE: KeywordData(
             type=KeywordType.PORTAL,
             state=KeywordState.DISCOVERED,  # 처음부터 보이도록
@@ -32,7 +39,11 @@ CH1_SCENE9_DATA = SceneData(
                 # 처음 내려가는 길을 살펴볼 때
                 Interaction(
                     conditions=[
-                        Condition(type=ConditionType.STATE_IS, target="cliff_down_path_inspected", value=False),
+                        Condition(
+                            type=ConditionType.STATE_IS,
+                            target="cliff_down_path_inspected",
+                            value=False,
+                        ),
                     ],
                     actions=[
                         Action(
@@ -51,7 +62,11 @@ CH1_SCENE9_DATA = SceneData(
                 # 이미 길을 확인한 뒤, 실제로 내려갈지 선택
                 Interaction(
                     conditions=[
-                        Condition(type=ConditionType.STATE_IS, target="cliff_down_path_inspected", value=True),
+                        Condition(
+                            type=ConditionType.STATE_IS,
+                            target="cliff_down_path_inspected",
+                            value=True,
+                        ),
                     ],
                     actions=[
                         Action(
@@ -75,7 +90,7 @@ CH1_SCENE9_DATA = SceneData(
                                     ),
                                     Action(
                                         type=ActionType.MOVE_SCENE,
-                                        value=SceneID.CH1_SCENE8,  # 절벽 아래(MK-II 근처) 씬으로 이동
+                                        value=SceneID.CH1_SCENE8,
                                     ),
                                 ],
                                 "cancel_actions": [
@@ -90,10 +105,11 @@ CH1_SCENE9_DATA = SceneData(
                 ),
             ],
         ),
-        # 이 씬에서 보이는 오브젝트는 이 하나뿐
+
+        # 안테나 기단(골조를 세우는 자리)
         KeywordId.ANTENNA_MOUNT: KeywordData(
             type=KeywordType.OBJECT,
-            state=KeywordState.HIDDEN,
+            state=KeywordState.DISCOVERED,
             description=(
                 "능선 중앙에는 좁은 콘크리트 기단이 있다. 네 귀퉁이에 녹슨 볼트 자국이 남아 있고,\n"
                 "가운데에는 끊어진 금속 파이프 조각이 비스듬히 튀어나와 있다.\n"
@@ -103,7 +119,11 @@ CH1_SCENE9_DATA = SceneData(
                 # step 0: 완전 작업 전
                 Interaction(
                     conditions=[
-                        Condition(type=ConditionType.STATE_IS, target="antenna_build_step", value=0),
+                        Condition(
+                            type=ConditionType.STATE_IS,
+                            target="antenna_build_step",
+                            value=0,
+                        ),
                     ],
                     actions=[
                         Action(
@@ -119,7 +139,11 @@ CH1_SCENE9_DATA = SceneData(
                 # step 1: 첫 파이프만 올려둔 상태
                 Interaction(
                     conditions=[
-                        Condition(type=ConditionType.STATE_IS, target="antenna_build_step", value=1),
+                        Condition(
+                            type=ConditionType.STATE_IS,
+                            target="antenna_build_step",
+                            value=1,
+                        ),
                     ],
                     actions=[
                         Action(
@@ -134,7 +158,11 @@ CH1_SCENE9_DATA = SceneData(
                 # step 2: 볼트는 끼웠지만 조이기 전
                 Interaction(
                     conditions=[
-                        Condition(type=ConditionType.STATE_IS, target="antenna_build_step", value=2),
+                        Condition(
+                            type=ConditionType.STATE_IS,
+                            target="antenna_build_step",
+                            value=2,
+                        ),
                     ],
                     actions=[
                         Action(
@@ -149,14 +177,19 @@ CH1_SCENE9_DATA = SceneData(
                 # step 3: 첫 구간 완전히 고정
                 Interaction(
                     conditions=[
-                        Condition(type=ConditionType.STATE_IS, target="antenna_build_step", value=3),
+                        Condition(
+                            type=ConditionType.STATE_IS,
+                            target="antenna_build_step",
+                            value=3,
+                        ),
                     ],
                     actions=[
                         Action(
                             type=ActionType.PRINT_NARRATIVE,
                             value=(
                                 "첫 번째 파이프는 이제 기단에 단단히 고정되어, 손으로 힘껏 밀어도 거의 움직이지 않는다.\n"
-                                "기둥 높이는 아직 허리께 정도에 불과하지만, 그 위로 같은 작업을 몇 번 더 반복하면 꽤 쓸 만한 안테나가 될 것 같다."
+                                "기둥 높이는 아직 허리께 정도에 불과하지만, 그 위로 같은 작업을 몇 번 더 반복하면 "
+                                "꽤 쓸 만한 안테나를 세울 수 있을 것 같다."
                             ),
                         )
                     ],
@@ -164,7 +197,11 @@ CH1_SCENE9_DATA = SceneData(
                 # step 4: 두 번째 파이프를 올려둔 상태
                 Interaction(
                     conditions=[
-                        Condition(type=ConditionType.STATE_IS, target="antenna_build_step", value=4),
+                        Condition(
+                            type=ConditionType.STATE_IS,
+                            target="antenna_build_step",
+                            value=4,
+                        ),
                     ],
                     actions=[
                         Action(
@@ -179,7 +216,11 @@ CH1_SCENE9_DATA = SceneData(
                 # step 5: 두 번째 구간 볼트까지 끼운 상태
                 Interaction(
                     conditions=[
-                        Condition(type=ConditionType.STATE_IS, target="antenna_build_step", value=5),
+                        Condition(
+                            type=ConditionType.STATE_IS,
+                            target="antenna_build_step",
+                            value=5,
+                        ),
                     ],
                     actions=[
                         Action(
@@ -194,7 +235,11 @@ CH1_SCENE9_DATA = SceneData(
                 # step 6: 두 번째 구간까지 완전히 고정
                 Interaction(
                     conditions=[
-                        Condition(type=ConditionType.STATE_IS, target="antenna_build_step", value=6),
+                        Condition(
+                            type=ConditionType.STATE_IS,
+                            target="antenna_build_step",
+                            value=6,
+                        ),
                     ],
                     actions=[
                         Action(
@@ -210,7 +255,11 @@ CH1_SCENE9_DATA = SceneData(
                 # step 7: 세 번째 파이프를 올려둔 상태
                 Interaction(
                     conditions=[
-                        Condition(type=ConditionType.STATE_IS, target="antenna_build_step", value=7),
+                        Condition(
+                            type=ConditionType.STATE_IS,
+                            target="antenna_build_step",
+                            value=7,
+                        ),
                     ],
                     actions=[
                         Action(
@@ -225,7 +274,11 @@ CH1_SCENE9_DATA = SceneData(
                 # step 8: 최상단 볼트까지 끼웠지만 아직 조이기 전
                 Interaction(
                     conditions=[
-                        Condition(type=ConditionType.STATE_IS, target="antenna_build_step", value=8),
+                        Condition(
+                            type=ConditionType.STATE_IS,
+                            target="antenna_build_step",
+                            value=8,
+                        ),
                     ],
                     actions=[
                         Action(
@@ -238,11 +291,50 @@ CH1_SCENE9_DATA = SceneData(
                         )
                     ],
                 ),
-                # 안테나가 완성되었지만, 퍼즐은 아직: 퍼즐 힌트 및 안내 (placeholder)
+                # 안테나 완성 후: 기단만 남은 느낌
                 Interaction(
                     conditions=[
-                        Condition(type=ConditionType.STATE_IS, target="antenna_built", value=True),
-                        Condition(type=ConditionType.STATE_IS, target="antenna_puzzle_solved", value=False),
+                        Condition(
+                            type=ConditionType.STATE_IS,
+                            target="antenna_built",
+                            value=True,
+                        ),
+                    ],
+                    actions=[
+                        Action(
+                            type=ActionType.PRINT_NARRATIVE,
+                            value=(
+                                "기단 위에는 이미 길쭉한 안테나가 곧게 서 있다.\n"
+                                "이제는 기단이 아니라, 완성된 안테나 자체를 살펴보는 편이 좋을 것 같다."
+                            ),
+                        ),
+                    ],
+                ),
+            ],
+        ),
+
+        # 완성된 안테나 본체
+        KeywordId.ANTENNA: KeywordData(
+            type=KeywordType.OBJECT,
+            state=KeywordState.INACTIVE,  # 완성 전에는 보이지 않음
+            description=(
+                "여러 겹의 금속 파이프를 이어 붙여 세운 안테나다.\n"
+                "능선 위 바람을 곧게 가르며 서 있고, 기단 옆 콘솔에는 희미한 눈금과 스위치들이 남아 있다."
+            ),
+            interactions=[
+                # 안테나 완성, 퍼즐은 아직
+                Interaction(
+                    conditions=[
+                        Condition(
+                            type=ConditionType.STATE_IS,
+                            target="antenna_built",
+                            value=True,
+                        ),
+                        Condition(
+                            type=ConditionType.STATE_IS,
+                            target="antenna_puzzle_solved",
+                            value=False,
+                        ),
                     ],
                     actions=[
                         Action(
@@ -250,14 +342,12 @@ CH1_SCENE9_DATA = SceneData(
                             value=(
                                 "여러 겹의 금속 파이프를 이어 붙인 안테나 기둥이 능선 위를 가늘게 가르고 서 있다.\n"
                                 "기단 옆 콘솔에는 희미한 눈금과 스위치들 사이로, 작은 숫자 표시창이 깜빡이고 있다.\n"
-                                "마치 이 섬에 도착한 이후 당신이 내린 모든 선택과 움직임을 하나씩 세어 온 흔적처럼, 숫자는 조용히 어떤 값을 가리키고 있다."
+                                "마치 이 섬에 도착한 이후 당신이 내린 모든 선택과 움직임을 하나씩 세어 온 듯, 숫자는 조용히 어떤 값을 가리키고 있다."
                             ),
                         ),
                         Action(
                             type=ActionType.PRINT_SYSTEM,
-                            value=(
-                                "`안테나 : [숫자]` 형식으로 입력해 보세요.\n"
-                            ),
+                            value="`안테나 : [숫자]` 형식으로 입력해 보세요.\n",
                         ),
                         Action(
                             type=ActionType.PRINT_SYSTEM,
@@ -267,15 +357,26 @@ CH1_SCENE9_DATA = SceneData(
                                 "그리고 기억하세요. 지금 입력하려는 그 순간도… 선택의 수를 하나 더 늘립니다."
                             ),
                         ),
-
                     ],
                 ),
-                # 안테나 + 퍼즐까지 해결, 아직 전선을 안 연결한 상태
+                # 퍼즐은 풀었지만 전선을 아직 안 연결한 상태
                 Interaction(
                     conditions=[
-                        Condition(type=ConditionType.STATE_IS, target="antenna_built", value=True),
-                        Condition(type=ConditionType.STATE_IS, target="antenna_puzzle_solved", value=True),
-                        Condition(type=ConditionType.STATE_IS, target="antenna_wire_connected", value=False),
+                        Condition(
+                            type=ConditionType.STATE_IS,
+                            target="antenna_built",
+                            value=True,
+                        ),
+                        Condition(
+                            type=ConditionType.STATE_IS,
+                            target="antenna_puzzle_solved",
+                            value=True,
+                        ),
+                        Condition(
+                            type=ConditionType.STATE_IS,
+                            target="antenna_wire_connected",
+                            value=False,
+                        ),
                     ],
                     actions=[
                         Action(
@@ -286,18 +387,26 @@ CH1_SCENE9_DATA = SceneData(
                                 "전선 한쪽 끝을 여기 단자에 고정하면, 다른 쪽 끝만 손에 쥔 채 절벽 아래로 내려갈 수 있을 것 같다."
                             ),
                         ),
-                        Action(
-                            type=ActionType.PRINT_SYSTEM,
-                            value="기다란 전선을 안테나에 연결하려면, `안테나 기단 + 기다란 전선` 조합을 사용하세요.",
-                        ),
                     ],
                 ),
-                # 모든 작업 완료 후
+                # 퍼즐 + 전선까지 모두 끝난 뒤
                 Interaction(
                     conditions=[
-                        Condition(type=ConditionType.STATE_IS, target="antenna_built", value=True),
-                        Condition(type=ConditionType.STATE_IS, target="antenna_puzzle_solved", value=True),
-                        Condition(type=ConditionType.STATE_IS, target="antenna_wire_connected", value=True),
+                        Condition(
+                            type=ConditionType.STATE_IS,
+                            target="antenna_built",
+                            value=True,
+                        ),
+                        Condition(
+                            type=ConditionType.STATE_IS,
+                            target="antenna_puzzle_solved",
+                            value=True,
+                        ),
+                        Condition(
+                            type=ConditionType.STATE_IS,
+                            target="antenna_wire_connected",
+                            value=True,
+                        ),
                     ],
                     actions=[
                         Action(
@@ -311,17 +420,59 @@ CH1_SCENE9_DATA = SceneData(
                 ),
             ],
         ),
+
+        # 누군가가 남겨 둔 듯한 전선 상자
+        KeywordId.WIRE_CRATE: KeywordData(
+            type=KeywordType.OBJECT,
+            state=KeywordState.HIDDEN,
+            description=(
+                "능선 한쪽 바위 그늘 아래, 작은 금속 상자가 반쯤 흙에 묻혀 있다.\n"
+                "녹슨 자물쇠와 찌그러진 뚜껑 사이로, 안쪽에 감겨 있는 전선 뭉치가 어렴풋이 보인다."
+            ),
+            interactions=[
+                # 아직 상자를 열지 않은 상태
+                Interaction(
+                    conditions=[
+                        Condition(
+                            type=ConditionType.STATE_IS,
+                            target="wire_crate_opened",
+                            value=False,
+                        ),
+                    ],
+                    actions=[
+                        Action(
+                            type=ActionType.PRINT_NARRATIVE,
+                            value=(
+                                "상자를 가까이 들여다보니, 내부에 꽤 긴 전선이 정갈하게 감겨 있다.\n"
+                                "마치 누가 나중에 올 사람을 알고, 일부러 여기 숨겨 두고 간 비상용 장비처럼 보인다.\n"
+                                "뚜껑은 찌그러져 손으로는 열기 힘들다. 단단한 도끼 같은 것이 있다면 비틀어 벌릴 수 있을 것 같다."
+                            ),
+                        )
+                    ],
+                ),
+                # 이미 한 번 열어본 뒤
+                Interaction(
+                    conditions=[
+                        Condition(
+                            type=ConditionType.STATE_IS,
+                            target="wire_crate_opened",
+                            value=True,
+                        ),
+                    ],
+                    actions=[
+                        Action(
+                            type=ActionType.PRINT_NARRATIVE,
+                            value=(
+                                "뚜껑이 벌어진 상자 안에는 잘려 나간 전선 조각들과, 빈 케이블 드럼만 덩그러니 남아 있다.\n"
+                                "누군가를 위해 남겨져 있던 길다란 전선은 이제 당신 손으로 옮겨졌다."
+                            ),
+                        )
+                    ],
+                ),
+            ],
+        ),
     },
     combinations=[
-        # =======================================
-        # 1) 안테나 조립: 파이프 → 볼트 → 스패너 × 3회
-        # antenna_build_step: 0~9
-        #   0,3,6: 금속 파이프 묶음 사용
-        #   1,4,7: 볼트 세트 사용
-        #   2,5,8: 스패너 사용
-        #   9: 안테나 완성 (antenna_built=True)
-        # =======================================
-        # --- 첫 번째 사이클: step 0 → 1 → 2 → 3 ---
         # --- 첫 번째 사이클: step 0 → 1 → 2 → 3 ---
         Combination(
             targets=[KeywordId.ANTENNA_MOUNT, KeywordId.METAL_PIPE],
@@ -338,10 +489,12 @@ CH1_SCENE9_DATA = SceneData(
                         "첫 파이프를 기단에 끼워 넣자, 능선 위 바람 속에 아주 작은 가능성이 섞인다."
                     ),
                 ),
-                Action(type=ActionType.UPDATE_STATE, value={"key": "antenna_build_step", "value": 1}),
+                Action(
+                    type=ActionType.UPDATE_STATE,
+                    value={"key": "antenna_build_step", "value": 1},
+                ),
             ],
         ),
-
         Combination(
             targets=[KeywordId.ANTENNA_MOUNT, KeywordId.BOLT_SET],
             conditions=[
@@ -357,10 +510,12 @@ CH1_SCENE9_DATA = SceneData(
                         "볼트를 끼우자, 금속 기둥이 막 청소 끝낸 바닥처럼 비로소 단정한 자세를 잡기 시작한다."
                     ),
                 ),
-                Action(type=ActionType.UPDATE_STATE, value={"key": "antenna_build_step", "value": 2}),
+                Action(
+                    type=ActionType.UPDATE_STATE,
+                    value={"key": "antenna_build_step", "value": 2},
+                ),
             ],
         ),
-
         Combination(
             targets=[KeywordId.ANTENNA_MOUNT, KeywordId.SPANNER],
             conditions=[
@@ -376,7 +531,10 @@ CH1_SCENE9_DATA = SceneData(
                         "스패너가 딸칵 소리를 내며 멈추자, 첫 기둥이 기단에 제대로 뿌리를 내린다."
                     ),
                 ),
-                Action(type=ActionType.UPDATE_STATE, value={"key": "antenna_build_step", "value": 3}),
+                Action(
+                    type=ActionType.UPDATE_STATE,
+                    value={"key": "antenna_build_step", "value": 3},
+                ),
             ],
         ),
 
@@ -396,10 +554,12 @@ CH1_SCENE9_DATA = SceneData(
                         "두 번째 파이프를 얹자, 기둥은 숲의 나무들보다 훨씬 높이 솟구친다."
                     ),
                 ),
-                Action(type=ActionType.UPDATE_STATE, value={"key": "antenna_build_step", "value": 4}),
+                Action(
+                    type=ActionType.UPDATE_STATE,
+                    value={"key": "antenna_build_step", "value": 4},
+                ),
             ],
         ),
-
         Combination(
             targets=[KeywordId.ANTENNA_MOUNT, KeywordId.BOLT_SET],
             conditions=[
@@ -415,10 +575,12 @@ CH1_SCENE9_DATA = SceneData(
                         "볼트를 끼우자 삐걱거리던 이음새가 잠잠해지고, 기둥은 다시 중심을 찾는다."
                     ),
                 ),
-                Action(type=ActionType.UPDATE_STATE, value={"key": "antenna_build_step", "value": 5}),
+                Action(
+                    type=ActionType.UPDATE_STATE,
+                    value={"key": "antenna_build_step", "value": 5},
+                ),
             ],
         ),
-
         Combination(
             targets=[KeywordId.ANTENNA_MOUNT, KeywordId.SPANNER],
             conditions=[
@@ -434,7 +596,10 @@ CH1_SCENE9_DATA = SceneData(
                         "스패너를 천천히 돌리자 두 번째 구간이 맞물리고, 기둥은 거친 파도 대신 산바람을 버틸 준비를 마친 돛대처럼 느껴진다."
                     ),
                 ),
-                Action(type=ActionType.UPDATE_STATE, value={"key": "antenna_build_step", "value": 6}),
+                Action(
+                    type=ActionType.UPDATE_STATE,
+                    value={"key": "antenna_build_step", "value": 6},
+                ),
             ],
         ),
 
@@ -454,10 +619,12 @@ CH1_SCENE9_DATA = SceneData(
                         "마지막 긴 파이프가 이어지자, 안테나는 처음으로 ‘하늘을 향한 선’ 같은 모양을 갖춘다."
                     ),
                 ),
-                Action(type=ActionType.UPDATE_STATE, value={"key": "antenna_build_step", "value": 7}),
+                Action(
+                    type=ActionType.UPDATE_STATE,
+                    value={"key": "antenna_build_step", "value": 7},
+                ),
             ],
         ),
-
         Combination(
             targets=[KeywordId.ANTENNA_MOUNT, KeywordId.BOLT_SET],
             conditions=[
@@ -473,10 +640,12 @@ CH1_SCENE9_DATA = SceneData(
                         "최상단에 볼트를 끼우자, 기둥은 세찬 바람에도 꺾이지 않을 듯한 표정을 짓는다."
                     ),
                 ),
-                Action(type=ActionType.UPDATE_STATE, value={"key": "antenna_build_step", "value": 8}),
+                Action(
+                    type=ActionType.UPDATE_STATE,
+                    value={"key": "antenna_build_step", "value": 8},
+                ),
             ],
         ),
-
         Combination(
             targets=[KeywordId.ANTENNA_MOUNT, KeywordId.SPANNER],
             conditions=[
@@ -494,10 +663,28 @@ CH1_SCENE9_DATA = SceneData(
                         "이제 남은 건, 이 작은 신호를 MK-II까지 이어 주는 일뿐이다."
                     ),
                 ),
-                Action(type=ActionType.UPDATE_STATE, value={"key": "antenna_build_step", "value": 9}),
-                Action(type=ActionType.UPDATE_STATE, value={"key": "antenna_built", "value": True}),
-                Action(type=ActionType.REMOVE_ITEM, value=KeywordId.METAL_PIPE),
-                Action(type=ActionType.REMOVE_ITEM, value=KeywordId.BOLT_SET),
+                Action(
+                    type=ActionType.UPDATE_STATE,
+                    value={"key": "antenna_build_step", "value": 9},
+                ),
+                Action(
+                    type=ActionType.UPDATE_STATE,
+                    value={"key": "antenna_built", "value": True},
+                ),
+                # 안테나가 완성되는 순간 ANTTENA 키워드를 활성화
+                Action(
+                    type=ActionType.UPDATE_STATE,
+                    value={"keyword": KeywordId.ANTENNA, "state": KeywordState.DISCOVERED},
+                ),
+                # 재료 소진
+                Action(
+                    type=ActionType.REMOVE_ITEM,
+                    value=KeywordId.METAL_PIPE,
+                ),
+                Action(
+                    type=ActionType.REMOVE_ITEM,
+                    value=KeywordId.BOLT_SET,
+                ),
                 Action(
                     type=ActionType.PRINT_SYSTEM,
                     value="금속 파이프 묶음과 볼트를 모두 사용해 안테나 기둥을 완성했습니다.",
@@ -506,22 +693,32 @@ CH1_SCENE9_DATA = SceneData(
         ),
 
         # =======================================
-        # 2) 안테나 퍼즐 (placeholder)
-        #    - 퍼즐 로직은 나중에 교체 가능
+        # 안테나 퍼즐 (placeholder)
+        #  - 실제 정답은 '행동 수'를 기반으로 바뀔 예정이지만,
+        #    현재는 0000 등 정해진 값으로 테스트할 수 있다.
         # =======================================
         Combination(
-            type=CombinationType.PASSWORD,
-            targets=[KeywordId.ANTENNA_MOUNT, "0000"],  # 임시 정답
+            type=CombinationType.PASSWORD_CH1_FINAL,
+            targets=[KeywordId.ANTENNA, "eq"],  # 임시 정답
             conditions=[
-                Condition(type=ConditionType.STATE_IS, target="antenna_built", value=True),
-                Condition(type=ConditionType.STATE_IS, target="antenna_puzzle_solved", value=False),
+                Condition(
+                    type=ConditionType.STATE_IS,
+                    target="antenna_built",
+                    value=True,
+                ),
+                Condition(
+                    type=ConditionType.STATE_IS,
+                    target="antenna_puzzle_solved",
+                    value=False,
+                ),
             ],
             actions=[
                 Action(
                     type=ActionType.PRINT_NARRATIVE,
                     value=(
-                        "콘솔의 다이얼과 스위치를 조심스럽게 조작하자, 안테나 기둥 어딘가에서 미세한 공명음이 들려온다.\n"
-                        "잠시 후 지시등이 일정한 간격으로 점멸하며, 통신 회선이 안정적으로 열린 것 같은 느낌이 든다."
+                        "숫자를 입력하자, 콘솔의 작은 표시창이 잠시 숨을 고르듯 깜빡이더니 조용히 멈춘다.\n\n"
+                        "다이얼과 스위치 주변의 미세한 떨림이 가라앉고, 안테나 기둥 어딘가에서 낮은 공명음이 길게 울려 퍼진다.\n\n"
+                        "이 섬에 발을 디딘 뒤로 당신이 쌓아 올린 모든 선택들이, 이제 하나의 신호로 정리되어 하늘을 향해 뻗어 나가는 듯하다."
                     ),
                 ),
                 Action(
@@ -530,49 +727,188 @@ CH1_SCENE9_DATA = SceneData(
                 ),
                 Action(
                     type=ActionType.PRINT_SYSTEM,
-                    value="(placeholder) 안테나 퍼즐이 해결되었습니다. 이제 긴 전선을 연결할 수 있습니다.",
+                    value=(
+                        "안테나 설정이 안정되었습니다.\n\n"
+                        "이제 기다란 전선을 연결해, 여기서 만들어 낸 신호를 MK-II까지 이어 보낼 수 있을 것 같습니다."
+                    ),
                 ),
             ],
         ),
+
+    # 정답일 때
+    Combination(
+        type=CombinationType.PASSWORD_CH1_FINAL,
+        targets=[KeywordId.ANTENNA, "eq"],  # 임시 정답
+        conditions=[
+            Condition(type=ConditionType.STATE_IS, target="antenna_built", value=True),
+            Condition(type=ConditionType.STATE_IS, target="antenna_puzzle_solved", value=False),
+        ],
+        actions=[
+            Action(
+                type=ActionType.PRINT_NARRATIVE,
+                value=(
+                    "숫자를 입력하자, 콘솔의 작은 표시창이 잠시 숨을 고르듯 깜빡이더니 조용히 멈춘다.\n\n"
+                    "다이얼과 스위치 주변의 미세한 떨림이 가라앉고, 안테나 기둥 어딘가에서 낮은 공명음이 길게 울려 퍼진다.\n\n"
+                    "이 섬에 발을 디딘 뒤로 쌓아 올린 모든 선택들이, 이제 하나의 신호로 정리되어 하늘을 향해 뻗어 나가는 듯하다."
+                ),
+            ),
+            Action(
+                type=ActionType.UPDATE_STATE,
+                value={"key": "antenna_puzzle_solved", "value": True},
+            ),
+            Action(
+                type=ActionType.PRINT_SYSTEM,
+                value=(
+                    "안테나 설정이 안정되었습니다.\n\n"
+                    "이제 기다란 전선을 연결해, 여기서 만들어 낸 신호를 MK-II까지 이어 보낼 수 있을 것 같습니다."
+                ),
+            ),
+        ],
+    ),
+
+    # 사용자가 '정답보다 작은 숫자'를 입력했을 때 (lt)
+    Combination(
+        type=CombinationType.PASSWORD_CH1_FINAL,
+        targets=[KeywordId.ANTENNA, "lt"],  # 임시 정답
+        conditions=[
+            Condition(type=ConditionType.STATE_IS, target="antenna_built", value=True),
+            Condition(type=ConditionType.STATE_IS, target="antenna_puzzle_solved", value=False),
+        ],
+        actions=[
+            Action(
+                type=ActionType.PRINT_NARRATIVE,
+                value=(
+                    "입력한 숫자가 콘솔에 찍히자, 표시창이 한 번 깜빡이고는 금세 힘을 잃은 듯 어둡게 가라앉는다.\n\n"
+                    "안테나 기둥도 잠깐 떨렸다가, 이내 아무 일도 없었다는 듯 고요해진다.\n\n"
+                    "이 숫자로는 아직, 이 섬에서 걸어온 발자국들을 다 셀 수 없는 모양이다."
+                ),
+            ),
+            Action(
+                type=ActionType.PRINT_SYSTEM,
+                value=(
+                    "조금 더 많은 선택을 떠올려 보세요.\n\n"
+                    "당신이 생각하는 것보다, 이곳에서 이미 더 멀리 와 있을지도 모릅니다."
+                ),
+            ),
+        ],
+    ),
+
+    # 사용자가 '정답보다 큰 숫자'를 입력했을 때 (gt)
+    Combination(
+        type=CombinationType.PASSWORD_CH1_FINAL,
+        targets=[KeywordId.ANTENNA, "gt"],  # 임시 정답
+        conditions=[
+            Condition(type=ConditionType.STATE_IS, target="antenna_built", value=True),
+            Condition(type=ConditionType.STATE_IS, target="antenna_puzzle_solved", value=False),
+        ],
+        actions=[
+            Action(
+                type=ActionType.PRINT_NARRATIVE,
+                value=(
+                    "숫자를 입력하자, 표시창의 숫자들이 잠시 과열된 듯 빠르게 요동치다가 원래 자리로 되돌아온다.\n\n"
+                    "안테나 기둥에서도 불안정한 잡음이 몇 번 튀어나오다가 금세 끊긴다.\n\n"
+                    "이 정도 숫자는, 아직 밟지 않은 발자국까지 미리 더해 버린 셈인지도 모른다."
+                ),
+            ),
+            Action(
+                type=ActionType.PRINT_SYSTEM,
+                value=(
+                    "조금 덜 앞서 나가도 괜찮습니다.\n\n"
+                    "지금까지의 선택들만, 정확히 세어 보세요."
+                ),
+            ),
+        ],
+    ),
+
+
         # =======================================
-        # 3) 안테나에 기다란 전선 연결
-        #    - 긴 전선 아이템은 다른 씬에서 획득했다고 가정
+        # 안테나에 기다란 전선 연결
         # =======================================
         Combination(
-            targets=[KeywordId.ANTENNA_MOUNT, KeywordId.LONG_WIRE],
+            targets=[KeywordId.ANTENNA, KeywordId.LONG_WIRE],
             conditions=[
                 Condition(type=ConditionType.HAS_ITEM, target=KeywordId.LONG_WIRE),
-                Condition(type=ConditionType.STATE_IS, target="antenna_puzzle_solved", value=True),
-                Condition(type=ConditionType.STATE_IS, target="antenna_wire_connected", value=False),
+                Condition(
+                    type=ConditionType.STATE_IS,
+                    target="antenna_puzzle_solved",
+                    value=True,
+                ),
+                Condition(
+                    type=ConditionType.STATE_IS,
+                    target="antenna_wire_connected",
+                    value=False,
+                ),
             ],
             actions=[
                 Action(
                     type=ActionType.PRINT_NARRATIVE,
                     value=(
                         "기다란 전선 한쪽 끝의 피복을 벗겨 안테나 기둥 하단 단자에 감아 매고, 단단히 고정한다.\n"
-                        "전선은 능선 가장자리를 따라 절벽 아래로 흘러내리고, 다른 쪽 끝만 손에 남는다."
+                        "이제 다른 쪽 끝만 손에 남는다."
                     ),
                 ),
                 Action(
                     type=ActionType.UPDATE_STATE,
                     value={"key": "antenna_wire_connected", "value": True},
                 ),
-                # 원래 전선 아이템은 소모되고,
-                # MK-II에 연결하러 갈 때 사용할 '전선의 반대쪽 끝'만 인벤토리에 남기는 식으로 구성
+                # 기존 전선 아이템 제거
                 Action(
                     type=ActionType.REMOVE_ITEM,
                     value=KeywordId.LONG_WIRE,
                 ),
+                # MK-II에 연결하기 위한 '남은 전선 끝' 아이템 지급
                 Action(
                     type=ActionType.ADD_ITEM,
                     value={
                         "name": KeywordId.LONG_WIRE_FREE_END,
-                        "description": "한쪽 끝은 능선 위 안테나에 고정되어 있고, 다른 쪽 끝만 손에 남아 있는 긴 전선이다. MK-II 단자에 연결할 수 있을 것 같다.",
+                        "description": (
+                            "한쪽 끝은 능선 위 안테나에 고정되어 있고, 다른 쪽 끝만 손에 남아 있는 긴 전선이다.\n"
+                            "MK-II 단자에 연결할 수 있을 것 같다."
+                        ),
                     },
                 ),
                 Action(
                     type=ActionType.PRINT_SYSTEM,
                     value="이제 MK-II로 내려가, 남은 전선 끝을 단자에 연결할 수 있습니다.",
+                ),
+            ],
+        ),
+
+        # =======================================
+        # 감춰진 전선 상자 + 소방 도끼 → 기다란 전선 획득
+        # =======================================
+        Combination(
+            targets=[KeywordId.WIRE_CRATE, KeywordId.FIRE_AXE],
+            conditions=[
+                Condition(type=ConditionType.HAS_ITEM, target=KeywordId.FIRE_AXE),
+                Condition(
+                    type=ConditionType.STATE_IS,
+                    target="wire_crate_opened",
+                    value=False,
+                ),
+            ],
+            actions=[
+                Action(
+                    type=ActionType.PRINT_NARRATIVE,
+                    value=(
+                        "소방 도끼의 날을 상자 틈에 비스듬히 밀어 넣고, 힘껏 비튼다.\n"
+                        "찌그러진 뚜껑이 끌려 올라가며 녹슨 자물쇠가 부서지고, 안쪽에 감겨 있던 긴 전선이 모습을 드러낸다.\n"
+                        "누군가가 언젠가 이곳까지 올라올 사람을 알았다는 듯, 딱 한 번 쓸 만큼의 여분이 남겨져 있었다."
+                    ),
+                ),
+                Action(
+                    type=ActionType.ADD_ITEM,
+                    value={
+                        "name": KeywordId.LONG_WIRE,
+                        "description": (
+                            "능선 위 상자에서 꺼낸 기다란 전선이다.\n"
+                            "한쪽 끝은 안테나에, 다른 한쪽 끝은 MK-II에 연결해 신호를 전달할 수 있을 것 같다."
+                        ),
+                    },
+                ),
+                Action(
+                    type=ActionType.UPDATE_STATE,
+                    value={"key": "wire_crate_opened", "value": True},
                 ),
             ],
         ),

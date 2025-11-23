@@ -160,6 +160,12 @@ class SceneManager:
                 if len(parts) == 2:
                     part1, part2 = parts
 
+                    success = await self.current_scene.process_combination(
+                        part1, part2, match_type=CombinationType.PASSWORD_CH1_FINAL
+                    )
+                    if success:
+                        return
+
                     # [수정] process_combination 호출 시 match_type을 PASSWORD로 지정
                     success = await self.current_scene.process_combination(
                         part1, part2, match_type=CombinationType.PASSWORD

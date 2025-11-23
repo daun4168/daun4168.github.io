@@ -303,7 +303,11 @@ class KeywordId(StrEnum):
     # 9
     ANTENNA_MOUNT = "콘크리트 기단"
     LONG_WIRE = "기다란 전선"
-    LONG_WIRE_FREE_END = "남은 전선 끝"
+    LONG_WIRE_FREE_END = "기다란 전선 끝"
+    WIRE_CRATE = "전선 상자"
+    WIRE_CRATE_ALIAS1 = "상자"
+    WIRE_CRATE_ALIAS2 = "금속 상자"
+    ANTENNA = "안테나"
 
 
 class KeywordState(StrEnum):
@@ -358,3 +362,4 @@ class CommandType(StrEnum):
 class CombinationType(StrEnum):
     DEFAULT = "default"  # 일반 아이템 조합 (+)
     PASSWORD = "password"  # 비밀번호 입력 (:)
+    PASSWORD_CH1_FINAL = "password_ch1_final"  # 비밀번호 입력 (:)

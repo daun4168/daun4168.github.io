@@ -39,18 +39,8 @@ CH1_SCENE7_DATA = SceneData(
     ],
     keywords={
         # --- ALIAS ---
-        KeywordId.UNDERGROUND_LAKE_ALIAS: KeywordData(
-            type=KeywordType.ALIAS,
-            state=KeywordState.HIDDEN,
-            description=None,
-            interactions=[],
-        ),
-        KeywordId.WATERFALL_ALIAS: KeywordData(
-            type=KeywordType.ALIAS,
-            state=KeywordState.HIDDEN,
-            description=None,
-            interactions=[],
-        ),
+        KeywordId.UNDERGROUND_LAKE_ALIAS: KeywordData(type=KeywordType.ALIAS, target=KeywordId.UNDERGROUND_LAKE),
+        KeywordId.WATERFALL_ALIAS: KeywordData(type=KeywordType.ALIAS, target=KeywordId.WATERFALL),
         # --- 돌아가는 길 포탈만 DISCOVERED ---
         KeywordId.LAKE_BACK_TUNNEL: KeywordData(
             type=KeywordType.PORTAL,

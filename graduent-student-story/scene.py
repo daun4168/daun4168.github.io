@@ -150,6 +150,29 @@ class Scene:
             if len(targets) != 2:  # 조합은 항상 두 개의 대상을 가집니다.
                 continue
 
+            if combo.type == CombinationType.PASSWORD_CH1_FINAL:
+                # 챕터 1 최종 비밀번호 조합의 경우, 첫 번째 키워드는 고정된 값으로 처리합니다.
+                target = targets[1]
+                try:
+                    in_value = int(r_item2)
+                except ValueError:
+                    continue
+
+                print(target, r_item2, self.game.num_total_inputs)
+
+                if target == 'gt':
+                    if in_value > self.game.num_total_inputs:
+                        self.execute_actions(combo.actions)
+                        return True
+                elif target == 'lt':
+                    if in_value < self.game.num_total_inputs:
+                        self.execute_actions(combo.actions)
+                        return True
+                elif target == 'eq':
+                    if in_value == self.game.num_total_inputs:
+                        self.execute_actions(combo.actions)
+                        return True
+
             # 입력된 두 키워드와 조합의 대상 키워드를 소문자 집합으로 만들어 순서에 상관없이 비교합니다.
             input_set = {str(r_item1).lower(), str(r_item2).lower()}
             target_set = {str(t).lower() for t in targets}

@@ -2,6 +2,7 @@ from abc import ABC, abstractmethod
 
 from const import ActionType, ConditionType
 from entity import Item
+import json
 
 # --- Base Interfaces ---
 
@@ -48,7 +49,24 @@ class StaminaMinHandler(ConditionHandler):
 
 class StonePuzzleHandler(ConditionHandler):
     def check(self, scene, target, value) -> bool:
-        return scene.player.current_stamina >= int(value)
+        target = json.loads(target)
+        keys = target["keys"]
+        weights = target["weights"]
+        target_weight = target["target_weight"]
+
+        total_weight = 0
+        for key, weight in zip(keys, weights):
+            if scene.state.get(key, False):
+                total_weight += weight
+
+        # value is one of gt, lt, eq
+        if value == "gt":
+            return total_weight > target_weight
+        elif value == "lt":
+            return total_weight < target_weight
+        elif value == "eq":
+            return total_weight == target_weight
+        return False
 
 
 # --- Action Implementations ---

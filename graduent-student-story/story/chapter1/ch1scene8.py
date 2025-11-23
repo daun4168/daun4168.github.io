@@ -8,7 +8,7 @@ from const import (
     SceneID,
 )
 from schemas import Action, Combination, Condition, Interaction, KeywordData, SceneData
-
+import json
 
 CH1_SCENE8_DATA = SceneData(
     id=SceneID.CH1_SCENE8,
@@ -37,6 +37,12 @@ CH1_SCENE8_DATA = SceneData(
         "cliff_path_inspected": False,  # 위로 가는 길 설명 했는지
         "back_path_inspected": False,  # 석회 동굴로 내려가는 길 설명 했는지
         "wind_log_step": 0,
+        "weight_puzzle_solved": False,  # 돌 무게 평형추 퍼즐 해결 여부
+        "stone_1_used": False,
+        "stone_2_used": False,
+        "stone_3_used": False,
+        "stone_4_used": False,
+        "stone_5_used": False,
     },
     keywords={
         KeywordId.CLIFF_BACK_PATH: KeywordData(
@@ -184,15 +190,221 @@ CH1_SCENE8_DATA = SceneData(
                 Interaction(
                     conditions=[
                         Condition(type=ConditionType.STATE_IS, target="pulley_progress", value=5),
+                        Condition(type=ConditionType.STATE_IS, target="stone_1_used", value=False),
+                        Condition(type=ConditionType.STATE_IS, target="stone_2_used", value=False),
+                        Condition(type=ConditionType.STATE_IS, target="stone_3_used", value=False),
+                        Condition(type=ConditionType.STATE_IS, target="stone_4_used", value=False),
+                        Condition(type=ConditionType.STATE_IS, target="stone_5_used", value=False),
                     ],
                     actions=[
                         Action(
                             type=ActionType.PRINT_NARRATIVE,
                             value=(
                                 "바위 턱 위에는 도르래와 로프, 하네스가 하나의 장치처럼 자연스럽게 이어져 있다.\n"
-                                "지금 상태라면, 이 장치를 믿고 몸을 맡겨도 될지 모른다는 생각이 든다."
+                                "도르래 옆으로는 작은 금속 접시가 하나 매달려 있는데, 평형추를 올려둘 자리인 듯 허공에서 가볍게 흔들린다.\n"
+                                "지금 상태라면, 여기에 적당한 무게를 맞춰 걸기만 하면 장치 전체의 균형이 잡힐 것 같다."
                             ),
-                        )
+                        ),
+                        Action(
+                            type=ActionType.PRINT_SYSTEM,
+                            value="이제 평형추로 쓸 돌을 모두 선택해 바위 턱에 걸어두고, 다시 돌어와서 무게가 적절한지 확인해 보세요.",
+                        ),
+                    ],
+                ),
+                Interaction(
+                    conditions=[
+                        Condition(type=ConditionType.STATE_IS, target="pulley_progress", value=5),
+                        Condition(
+                            type=ConditionType.STONE_PUZZLE,
+                            target=json.dumps(
+                                {
+                                    "keys": [
+                                        "stone_1_used",
+                                        "stone_2_used",
+                                        "stone_3_used",
+                                        "stone_4_used",
+                                        "stone_5_used",
+                                    ],
+                                    "weights": [1, 4, 7, 8, 11],
+                                    "target_weight": 18,
+                                }
+                            ),
+                            value="gt",
+                        ),
+                    ],
+                    actions=[
+                        Action(
+                            type=ActionType.PRINT_NARRATIVE,
+                            value=("너무 무거운 것 같다. 처음부터 다시 해 보자."),
+                        ),
+                        Action(type=ActionType.UPDATE_STATE, value={"key": "stone_1_used", "value": False}),
+                        Action(type=ActionType.UPDATE_STATE, value={"key": "stone_2_used", "value": False}),
+                        Action(type=ActionType.UPDATE_STATE, value={"key": "stone_3_used", "value": False}),
+                        Action(type=ActionType.UPDATE_STATE, value={"key": "stone_4_used", "value": False}),
+                        Action(type=ActionType.UPDATE_STATE, value={"key": "stone_5_used", "value": False}),
+                        Action(type=ActionType.REMOVE_ITEM, value=KeywordId.STONE_1),
+                        Action(type=ActionType.REMOVE_ITEM, value=KeywordId.STONE_2),
+                        Action(type=ActionType.REMOVE_ITEM, value=KeywordId.STONE_3),
+                        Action(type=ActionType.REMOVE_ITEM, value=KeywordId.STONE_4),
+                        Action(type=ActionType.REMOVE_ITEM, value=KeywordId.STONE_5),
+                        Action(
+                            type=ActionType.ADD_ITEM,
+                            value={
+                                "name": KeywordId.STONE_1,
+                                "description": "손 안에 쏙 들어오는 작은 돌이다. 흔히 볼 수 있는 자갈처럼 보이지만 제법 단단하다.",
+                                "silent": True,
+                            },
+                        ),
+                        Action(
+                            type=ActionType.ADD_ITEM,
+                            value={
+                                "name": KeywordId.STONE_2,
+                                "description": "손에 쥐면 조금 묵직하게 느껴지는 돌이다. 표면이 단단해서 평형추로 쓰기 좋다.",
+                                "silent": True,
+                            },
+                        ),
+                        Action(
+                            type=ActionType.ADD_ITEM,
+                            value={
+                                "name": KeywordId.STONE_3,
+                                "description": "표면이 매끈한 돌이다. 크기에 비해 묵직한 편이라 감이 독특하다.",
+                                "silent": True,
+                            },
+                        ),
+                        Action(
+                            type=ActionType.ADD_ITEM,
+                            value={
+                                "name": KeywordId.STONE_4,
+                                "description": "손바닥을 가득 채우는 크기의 돌이다. 모서리가 적당히 둥글다.",
+                                "silent": True,
+                            },
+                        ),
+                        Action(
+                            type=ActionType.ADD_ITEM,
+                            value={
+                                "name": KeywordId.STONE_5,
+                                "description": "다섯 개 중 가장 큰 돌이다. 평형추로 쓰기 딱 좋아 보인다.",
+                                "silent": True,
+                            },
+                        ),
+                    ],
+                ),
+                Interaction(
+                    conditions=[
+                        Condition(type=ConditionType.STATE_IS, target="pulley_progress", value=5),
+                        Condition(
+                            type=ConditionType.STONE_PUZZLE,
+                            target=json.dumps(
+                                {
+                                    "keys": [
+                                        "stone_1_used",
+                                        "stone_2_used",
+                                        "stone_3_used",
+                                        "stone_4_used",
+                                        "stone_5_used",
+                                    ],
+                                    "weights": [1, 4, 7, 8, 11],
+                                    "target_weight": 18,
+                                }
+                            ),
+                            value="lt",
+                        ),
+                    ],
+                    actions=[
+                        Action(
+                            type=ActionType.PRINT_NARRATIVE,
+                            value=("너무 가벼운 것 같다. 처음부터 다시 해 보자."),
+                        ),
+                        Action(type=ActionType.UPDATE_STATE, value={"key": "stone_1_used", "value": False}),
+                        Action(type=ActionType.UPDATE_STATE, value={"key": "stone_2_used", "value": False}),
+                        Action(type=ActionType.UPDATE_STATE, value={"key": "stone_3_used", "value": False}),
+                        Action(type=ActionType.UPDATE_STATE, value={"key": "stone_4_used", "value": False}),
+                        Action(type=ActionType.UPDATE_STATE, value={"key": "stone_5_used", "value": False}),
+                        Action(type=ActionType.REMOVE_ITEM, value=KeywordId.STONE_1),
+                        Action(type=ActionType.REMOVE_ITEM, value=KeywordId.STONE_2),
+                        Action(type=ActionType.REMOVE_ITEM, value=KeywordId.STONE_3),
+                        Action(type=ActionType.REMOVE_ITEM, value=KeywordId.STONE_4),
+                        Action(type=ActionType.REMOVE_ITEM, value=KeywordId.STONE_5),
+                        Action(
+                            type=ActionType.ADD_ITEM,
+                            value={
+                                "name": KeywordId.STONE_1,
+                                "description": "손 안에 쏙 들어오는 작은 돌이다. 흔히 볼 수 있는 자갈처럼 보이지만 제법 단단하다.",
+                                "silent": True,
+                            },
+                        ),
+                        Action(
+                            type=ActionType.ADD_ITEM,
+                            value={
+                                "name": KeywordId.STONE_2,
+                                "description": "손에 쥐면 조금 묵직하게 느껴지는 돌이다. 표면이 단단해서 평형추로 쓰기 좋다.",
+                                "silent": True,
+                            },
+                        ),
+                        Action(
+                            type=ActionType.ADD_ITEM,
+                            value={
+                                "name": KeywordId.STONE_3,
+                                "description": "표면이 매끈한 돌이다. 크기에 비해 묵직한 편이라 감이 독특하다.",
+                                "silent": True,
+                            },
+                        ),
+                        Action(
+                            type=ActionType.ADD_ITEM,
+                            value={
+                                "name": KeywordId.STONE_4,
+                                "description": "손바닥을 가득 채우는 크기의 돌이다. 모서리가 적당히 둥글다.",
+                                "silent": True,
+                            },
+                        ),
+                        Action(
+                            type=ActionType.ADD_ITEM,
+                            value={
+                                "name": KeywordId.STONE_5,
+                                "description": "다섯 개 중 가장 큰 돌이다. 평형추로 쓰기 딱 좋아 보인다.",
+                                "silent": True,
+                            },
+                        ),
+                    ],
+                ),
+                Interaction(
+                    conditions=[
+                        Condition(type=ConditionType.STATE_IS, target="pulley_progress", value=5),
+                        Condition(
+                            type=ConditionType.STONE_PUZZLE,
+                            target=json.dumps(
+                                {
+                                    "keys": [
+                                        "stone_1_used",
+                                        "stone_2_used",
+                                        "stone_3_used",
+                                        "stone_4_used",
+                                        "stone_5_used",
+                                    ],
+                                    "weights": [1, 4, 7, 8, 11],
+                                    "target_weight": 18,
+                                }
+                            ),
+                            value="eq",
+                        ),
+                    ],
+                    actions=[
+                        Action(
+                            type=ActionType.PRINT_NARRATIVE,
+                            value=(
+                                "이제 완벽하게 평형을 이루었다. 장치가 안정적으로 작동하는 느낌이다.\n"
+                                "더 이상 돌은 필요 없을 것 같다. 이제 절벽으로 가 보자."
+                            ),
+                        ),
+                        Action(type=ActionType.REMOVE_ITEM, value=KeywordId.STONE_1),
+                        Action(type=ActionType.REMOVE_ITEM, value=KeywordId.STONE_2),
+                        Action(type=ActionType.REMOVE_ITEM, value=KeywordId.STONE_3),
+                        Action(type=ActionType.REMOVE_ITEM, value=KeywordId.STONE_4),
+                        Action(type=ActionType.REMOVE_ITEM, value=KeywordId.STONE_5),
+                        Action(
+                            type=ActionType.UPDATE_STATE,
+                            value={"key": "weight_puzzle_solved", "value": True},
+                        ),
                     ],
                 ),
             ],
@@ -457,7 +669,7 @@ CH1_SCENE8_DATA = SceneData(
                         ),
                     ],
                 ),
-                # 도르래 완성 전: 아직 올라갈 수 없음
+                # 도르래도 아직 완성 전: 그냥 못 올라감
                 Interaction(
                     conditions=[
                         Condition(type=ConditionType.STATE_IS, target="cliff_path_inspected", value=True),
@@ -473,18 +685,38 @@ CH1_SCENE8_DATA = SceneData(
                         )
                     ],
                 ),
-                # 도르래 완성 후: 절벽을 타고 올라갈지 선택
+                # 도르래는 완성됐지만, 평형추 퍼즐이 아직: 올라가면 위험해 보임
                 Interaction(
                     conditions=[
                         Condition(type=ConditionType.STATE_IS, target="cliff_path_inspected", value=True),
                         Condition(type=ConditionType.STATE_IS, target="climb_ready", value=True),
+                        Condition(type=ConditionType.STATE_IS, target="weight_puzzle_solved", value=False),
+                    ],
+                    actions=[
+                        Action(
+                            type=ActionType.PRINT_NARRATIVE,
+                            value=(
+                                "도르래와 로프, 하네스는 하나의 장치처럼 이어져 있지만, 바위 턱 옆에 달린 빈 접시가 눈에 들어온다.\n"
+                                "평형추가 걸려야 할 자리인 듯한 그 접시는, 지금은 텅 비어 덜컹거리며 흔들릴 뿐이다.\n"
+                                "이대로 몸을 맡겼다가는, 무게가 맞지 않아 도르래가 제멋대로 튕겨 나갈지도 모른다.\n"
+                                "절벽 아래 돌무더기에서 고른 돌들을 이용해, 적당한 무게를 맞추어야 할 것 같다."
+                            ),
+                        )
+                    ],
+                ),
+                # 도르래 완성 + 평형추 퍼즐 해결 후: 절벽을 타고 올라갈지 선택
+                Interaction(
+                    conditions=[
+                        Condition(type=ConditionType.STATE_IS, target="cliff_path_inspected", value=True),
+                        Condition(type=ConditionType.STATE_IS, target="climb_ready", value=True),
+                        Condition(type=ConditionType.STATE_IS, target="weight_puzzle_solved", value=True),
                     ],
                     actions=[
                         Action(
                             type=ActionType.REQUEST_CONFIRMATION,
                             value={
                                 "prompt": (
-                                    "바위 턱에 걸린 도르래 장치는 모두 준비되었다.\n"
+                                    "바위 턱에 걸린 도르래 장치는 균형추까지 맞춰져, 더 이상 덜컹거리는 느낌이 없다.\n"
                                     "하네스를 확인하고 절벽을 타고 위 능선으로 올라가시겠습니까?\n"
                                     "올라가는 동안 **체력이 2 소모**됩니다."
                                 ),
@@ -1063,12 +1295,105 @@ CH1_SCENE8_DATA = SceneData(
             targets=[KeywordId.PULLEY_ANCHOR, KeywordId.STONE_1],
             conditions=[
                 Condition(type=ConditionType.HAS_ITEM, target=KeywordId.STONE_1),
+                Condition(type=ConditionType.STATE_IS, target="pulley_progress", value=5),
             ],
             actions=[
                 Action(
                     type=ActionType.PRINT_NARRATIVE,
-                    value="돌 1을 시험 삼아 도르래에 매달아 본다. 아직은 어떤 느낌인지 가늠하기 어렵다.",
-                )
+                    value="돌 1을 시험 삼아 평형추 접시 위에 매달아 본다. 아직은 어떤 느낌인지 가늠하기 어렵다.",
+                ),
+                Action(
+                    type=ActionType.REMOVE_ITEM,
+                    value=KeywordId.STONE_1,
+                ),
+                Action(
+                    type=ActionType.UPDATE_STATE,
+                    value={"key": "stone_1_used", "value": True},
+                ),
+            ],
+        ),
+        Combination(
+            targets=[KeywordId.PULLEY_ANCHOR, KeywordId.STONE_2],
+            conditions=[
+                Condition(type=ConditionType.HAS_ITEM, target=KeywordId.STONE_2),
+                Condition(type=ConditionType.STATE_IS, target="pulley_progress", value=5),
+            ],
+            actions=[
+                Action(
+                    type=ActionType.PRINT_NARRATIVE,
+                    value="돌 2를 접시에 걸어 본다. 도르래가 천천히 움직이긴 하지만, 아직은 어딘가 가볍게 느껴진다.",
+                ),
+                Action(
+                    type=ActionType.REMOVE_ITEM,
+                    value=KeywordId.STONE_2,
+                ),
+                Action(
+                    type=ActionType.UPDATE_STATE,
+                    value={"key": "stone_2_used", "value": True},
+                ),
+            ],
+        ),
+        Combination(
+            targets=[KeywordId.PULLEY_ANCHOR, KeywordId.STONE_3],
+            conditions=[
+                Condition(type=ConditionType.HAS_ITEM, target=KeywordId.STONE_3),
+                Condition(type=ConditionType.STATE_IS, target="pulley_progress", value=5),
+            ],
+            actions=[
+                Action(
+                    type=ActionType.PRINT_NARRATIVE,
+                    value="돌 3을 올려 두자, 도르래가 짧게 삐걱인 뒤 조용해진다.",
+                ),
+                Action(
+                    type=ActionType.REMOVE_ITEM,
+                    value=KeywordId.STONE_3,
+                ),
+                Action(
+                    type=ActionType.UPDATE_STATE,
+                    value={"key": "stone_3_used", "value": True},
+                ),
+            ],
+        ),
+        Combination(
+            targets=[KeywordId.PULLEY_ANCHOR, KeywordId.STONE_4],
+            conditions=[
+                Condition(type=ConditionType.HAS_ITEM, target=KeywordId.STONE_4),
+                Condition(type=ConditionType.STATE_IS, target="pulley_progress", value=5),
+            ],
+            actions=[
+                Action(
+                    type=ActionType.PRINT_NARRATIVE,
+                    value="돌 4를 매달자, 도르래가 조금 과하게 돌아가며 금속 마찰음이 길게 이어진다. ",
+                ),
+                Action(
+                    type=ActionType.REMOVE_ITEM,
+                    value=KeywordId.STONE_4,
+                ),
+                Action(
+                    type=ActionType.UPDATE_STATE,
+                    value={"key": "stone_4_used", "value": True},
+                ),
+            ],
+        ),
+        Combination(
+            targets=[KeywordId.PULLEY_ANCHOR, KeywordId.STONE_5],
+            conditions=[
+                Condition(type=ConditionType.HAS_ITEM, target=KeywordId.STONE_5),
+                Condition(type=ConditionType.STATE_IS, target="pulley_progress", value=5),
+            ],
+            actions=[
+                Action(
+                    type=ActionType.PRINT_NARRATIVE,
+                    value="돌 5를 걸어 보자, 도르래가 크게 움직이는 것 처럼 보인다.",
+                ),
+                Action(
+                    type=ActionType.REMOVE_ITEM,
+                    value=KeywordId.STONE_5,
+                ),
+                Action(
+                    type=ActionType.UPDATE_STATE,
+                    value={"key": "stone_5_used", "value": True},
+                ),
             ],
         ),
         # ===========================

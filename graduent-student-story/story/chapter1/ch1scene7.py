@@ -466,6 +466,57 @@ CH1_SCENE7_DATA = SceneData(
                 )
             ],
         ),
+        # ------------------------------------------------------------------
+        # [추가됨] 폭포(WATERFALL)와의 부정 피드백 모음
+        # ------------------------------------------------------------------
+        # [부정] 자철석 조각 + 폭포
+        Combination(
+            targets=[KeywordId.MAGNETITE_CHUNK, KeywordId.WATERFALL],
+            conditions=[
+                Condition(type=ConditionType.HAS_ITEM, target=KeywordId.MAGNETITE_CHUNK),
+            ],
+            actions=[
+                Action(
+                    type=ActionType.PRINT_NARRATIVE,
+                    value=(
+                        "자철석 조각을 흐르는 물에 씻어 보았다. 반짝거려서 예쁘긴 하지만, 젖은 자석이 전기를 뱉어내진 않는다.\n"
+                        "전자기 유도를 일으키려면 코일과 함께 '회전'시켜야 한다."
+                    ),
+                )
+            ],
+        ),
+        # [부정] 구리선 + 폭포
+        Combination(
+            targets=[KeywordId.COPPER_WIRE, KeywordId.WATERFALL],
+            conditions=[
+                Condition(type=ConditionType.HAS_ITEM, target=KeywordId.COPPER_WIRE),
+            ],
+            actions=[
+                Action(
+                    type=ActionType.PRINT_NARRATIVE,
+                    value=(
+                        "구리선을 폭포수에 담가 본다. 시원한 물줄기가 전선을 타고 흐르지만, 전자가 흐르는 것은 아니다.\n"
+                        "이걸 발전기로 만들려면 자석 주위에서 끊임없이 움직이게 해 줄 장치가 필요하다."
+                    ),
+                )
+            ],
+        ),
+        # [부정] 코코넛 껍질 + 폭포
+        Combination(
+            targets=[KeywordId.COCONUT_SHELL, KeywordId.WATERFALL],
+            conditions=[
+                Condition(type=ConditionType.HAS_ITEM, target=KeywordId.COCONUT_SHELL),
+            ],
+            actions=[
+                Action(
+                    type=ActionType.PRINT_NARRATIVE,
+                    value=(
+                        "코코넛 껍질로 떨어지는 폭포수를 받아 마셨다. 갈증은 해소되지만 탈출에는 진전이 없다.\n"
+                        "수력 발전을 하려면 이 껍질들을 엮어서 물살을 받아낼 '날개'를 만들어야 한다."
+                    ),
+                )
+            ],
+        ),
         Combination(
             targets=[KeywordId.SHAFTED_ROTOR, KeywordId.WATERFALL],
             conditions=[
@@ -474,9 +525,52 @@ CH1_SCENE7_DATA = SceneData(
             actions=[
                 Action(
                     type=ActionType.PRINT_NARRATIVE,
+                    value=("축 달린 수차를 폭포 옆 바위에 기대어 보지만, 축이 흔들려 금방 한쪽으로 기울어 버린다.\n"),
+                )
+            ],
+        ),
+        # [부정] 발전 코어 + 폭포
+        Combination(
+            targets=[KeywordId.DYNAMO_CORE, KeywordId.WATERFALL],
+            conditions=[
+                Condition(type=ConditionType.HAS_ITEM, target=KeywordId.DYNAMO_CORE),
+            ],
+            actions=[
+                Action(
+                    type=ActionType.PRINT_NARRATIVE,
                     value=(
-                        "축 달린 수차를 폭포 옆 바위에 기대어 보지만, 축이 흔들려 금방 한쪽으로 기울어 버린다.\n"
-                        "베어링 역할을 해 줄 바위 고리 같은 것이 필요하다."
+                        "발전 코어를 손에 쥐고 물살 속에 넣어 보았다. 묵직한 수압이 느껴지지만 손목만 아플 뿐이다.\n"
+                    ),
+                )
+            ],
+        ),
+        # [부정] 나무 축 + 폭포
+        Combination(
+            targets=[KeywordId.WOODEN_SHAFT, KeywordId.WATERFALL],
+            conditions=[
+                Condition(type=ConditionType.HAS_ITEM, target=KeywordId.WOODEN_SHAFT),
+            ],
+            actions=[
+                Action(
+                    type=ActionType.PRINT_NARRATIVE,
+                    value=(
+                        "나무 축을 흐르는 물에 꽂아 보았다. 유속을 측정하는 척해 보지만, 막대기 하나로는 아무런 동력도 얻을 수 없다.\n"
+                    ),
+                )
+            ],
+        ),
+        # [부정] 고리에 끼운 수차 + 폭포 (발전 코어 누락)
+        Combination(
+            targets=[KeywordId.MOUNTED_ROTOR, KeywordId.WATERFALL],
+            conditions=[
+                Condition(type=ConditionType.HAS_ITEM, target=KeywordId.MOUNTED_ROTOR),
+            ],
+            actions=[
+                Action(
+                    type=ActionType.PRINT_NARRATIVE,
+                    value=(
+                        "고리에 끼운 수차를 폭포 옆에 설치해 보았다. 베어링 덕분에 수차는 신나게 돌아가지만, 전기는 1볼트도 나오지 않는다.\n"
+                        "회전 에너지를 전기 에너지로 바꿔 주어야 한다."
                     ),
                 )
             ],

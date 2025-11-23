@@ -50,7 +50,6 @@ CH1_COMMON_DATA = ChapterData(
                 Action(type=ActionType.PRINT_SYSTEM, value="갈증 해소! 체력 +5"),
             ],
         ),
-
         # [준비용 조합] 고무 + 전선 = 절연 전선
         Combination(
             targets=[KeywordId.RUBBER, KeywordId.WIRE],
@@ -81,11 +80,9 @@ CH1_COMMON_DATA = ChapterData(
                 ),
             ],
         ),
-
         # ------------------------------------------------------------------
         # 수차 / 발전기 제작 라인
         # ------------------------------------------------------------------
-
         # --- 1) 코팅된 코코넛 껍질 + 덩굴 줄기 → 임시 수차 로터 ---
         Combination(
             targets=[KeywordId.COATED_COCONUT_SHELL, KeywordId.VINES],
@@ -112,7 +109,6 @@ CH1_COMMON_DATA = ChapterData(
                 ),
             ],
         ),
-
         # 잘못된 조합: 코팅된 코코넛 껍질 + 바위 고리
         Combination(
             targets=[KeywordId.COATED_COCONUT_SHELL, KeywordId.STONE_RING],
@@ -130,7 +126,6 @@ CH1_COMMON_DATA = ChapterData(
                 )
             ],
         ),
-
         # 잘못된 조합: 덩굴 줄기 + 바위 고리
         Combination(
             targets=[KeywordId.VINES, KeywordId.STONE_RING],
@@ -148,7 +143,6 @@ CH1_COMMON_DATA = ChapterData(
                 )
             ],
         ),
-
         # --- 2) 임시 수차 로터 + 나무 축 → 축 달린 수차 ---
         Combination(
             targets=[KeywordId.MAKESHIFT_ROTOR, KeywordId.WOODEN_SHAFT],
@@ -175,7 +169,6 @@ CH1_COMMON_DATA = ChapterData(
                 ),
             ],
         ),
-
         # 잘못된 조합: 나무 축 + 덩굴 줄기
         Combination(
             targets=[KeywordId.WOODEN_SHAFT, KeywordId.VINES],
@@ -193,7 +186,6 @@ CH1_COMMON_DATA = ChapterData(
                 )
             ],
         ),
-
         # --- 3) 축 달린 수차 + 바위 고리 → 고리에 끼운 수차 ---
         Combination(
             targets=[KeywordId.SHAFTED_ROTOR, KeywordId.STONE_RING],
@@ -220,25 +212,20 @@ CH1_COMMON_DATA = ChapterData(
                 ),
             ],
         ),
-
-        # 잘못된 조합: 축 달린 수차 + 구리선
+        # 잘못된 조합: 축 달린 수차 + 절연 구리선
         Combination(
-            targets=[KeywordId.SHAFTED_ROTOR, KeywordId.COPPER_WIRE],
+            targets=[KeywordId.SHAFTED_ROTOR, KeywordId.INSULATED_COPPER_WIRE],
             conditions=[
                 Condition(type=ConditionType.HAS_ITEM, target=KeywordId.SHAFTED_ROTOR),
-                Condition(type=ConditionType.HAS_ITEM, target=KeywordId.COPPER_WIRE),
+                Condition(type=ConditionType.HAS_ITEM, target=KeywordId.INSULATED_COPPER_WIRE),
             ],
             actions=[
                 Action(
                     type=ActionType.PRINT_NARRATIVE,
-                    value=(
-                        "축 달린 수차에 구리선을 대충 감아 보았지만, 전기보다는 엉킨 줄이 먼저 떠오른다.\n"
-                        "코일을 만들 거라면 자철석 조각과 함께 쓰는 편이 좋겠다."
-                    ),
+                    value=("축 달린 수차에 구리선을 대충 감아 보았지만, 전기보다는 엉킨 줄이 먼저 떠오른다.\n"),
                 )
             ],
         ),
-
         # --- 4) 자철석 조각 + 절연 구리선 → 발전 코어 ---
         Combination(
             targets=[KeywordId.MAGNETITE_CHUNK, KeywordId.INSULATED_COPPER_WIRE],
@@ -264,7 +251,6 @@ CH1_COMMON_DATA = ChapterData(
                 ),
             ],
         ),
-
         # 잘못된 조합: 자철석 조각 + 덩굴 줄기 → 구박
         Combination(
             targets=[KeywordId.MAGNETITE_CHUNK, KeywordId.VINES],
@@ -279,7 +265,6 @@ CH1_COMMON_DATA = ChapterData(
                 )
             ],
         ),
-
         # 자철석 조각 + 코코넛 껍질 -> 부정 피드백
         Combination(
             targets=[KeywordId.MAGNETITE_CHUNK, KeywordId.COCONUT_SHELL],
@@ -294,7 +279,6 @@ CH1_COMMON_DATA = ChapterData(
                 )
             ],
         ),
-
         # --- 5) 고리에 끼운 수차 + 발전 코어 → 수력 발전 모듈 ---
         Combination(
             targets=[KeywordId.MOUNTED_ROTOR, KeywordId.DYNAMO_CORE],
@@ -321,7 +305,6 @@ CH1_COMMON_DATA = ChapterData(
                 ),
             ],
         ),
-
         # 잘못된 조합: 수력 발전 모듈 + 덩굴 줄기
         Combination(
             targets=[KeywordId.HYDRO_DYNAMO_MODULE, KeywordId.VINES],
@@ -335,6 +318,74 @@ CH1_COMMON_DATA = ChapterData(
                     value=(
                         "수력 발전 모듈에 덩굴을 한 번 더 감아 보려 했지만, 이 정도면 이미 충분히 위험해 보인다.\n"
                         "불필요한 데코레이션은 과학 실험보다 집 꾸미기에 더 어울린다."
+                    ),
+                )
+            ],
+        ),
+        # [부정] 코팅된 코코넛 껍질 + 나무 축: 중간 단계(로터 조립) 누락
+        Combination(
+            targets=[KeywordId.COATED_COCONUT_SHELL, KeywordId.WOODEN_SHAFT],
+            conditions=[
+                Condition(type=ConditionType.HAS_ITEM, target=KeywordId.COATED_COCONUT_SHELL),
+                Condition(type=ConditionType.HAS_ITEM, target=KeywordId.WOODEN_SHAFT),
+            ],
+            actions=[
+                Action(
+                    type=ActionType.PRINT_NARRATIVE,
+                    value=(
+                        "코팅된 코코넛 껍질 하나에 나무 축을 대 보았다. 중심을 잡을 수도 없고, 회전력을 만들 날개도 부족하다.\n"
+                        "먼저 껍질들을 엮어서 '로터' 형태를 만든 뒤에 축을 끼워야 할 것 같다."
+                    ),
+                )
+            ],
+        ),
+        # [부정] 자철석 조각 + 스패너: 자성 실험(?)
+        Combination(
+            targets=[KeywordId.MAGNETITE_CHUNK, KeywordId.SPANNER],
+            conditions=[
+                Condition(type=ConditionType.HAS_ITEM, target=KeywordId.MAGNETITE_CHUNK),
+                Condition(type=ConditionType.HAS_ITEM, target=KeywordId.SPANNER),
+            ],
+            actions=[
+                Action(
+                    type=ActionType.PRINT_NARRATIVE,
+                    value=(
+                        "자철석 조각을 스패너에 갖다 대자 '탁' 하고 달라붙는다. 자성은 확인했지만 그뿐이다.\n"
+                        "스패너를 자석으로 만든다고 해서 탈출에 도움이 될 것 같지는 않다."
+                    ),
+                )
+            ],
+        ),
+        # [부정] 코코넛 껍질 + 덩굴 줄기: 코팅(방수) 필요성 암시
+        Combination(
+            targets=[KeywordId.COCONUT_SHELL, KeywordId.VINES],
+            conditions=[
+                Condition(type=ConditionType.HAS_ITEM, target=KeywordId.COCONUT_SHELL),
+                Condition(type=ConditionType.HAS_ITEM, target=KeywordId.VINES),
+            ],
+            actions=[
+                Action(
+                    type=ActionType.PRINT_NARRATIVE,
+                    value=(
+                        "코코넛 껍질을 덩굴로 엮어 보았지만, 표면이 거칠고 금방이라도 물을 먹어 무거워질 것 같다.\n"
+                        "거센 물살을 버티려면 껍질 표면에 **끈적하고 물을 튕겨내는 무언가**를 발라 코팅 처리를 먼저 해야 한다."
+                    ),
+                )
+            ],
+        ),
+        # [부정] 자철석 조각 + 구리선: 절연 필요성 암시
+        Combination(
+            targets=[KeywordId.MAGNETITE_CHUNK, KeywordId.COPPER_WIRE],
+            conditions=[
+                Condition(type=ConditionType.HAS_ITEM, target=KeywordId.MAGNETITE_CHUNK),
+                Condition(type=ConditionType.HAS_ITEM, target=KeywordId.COPPER_WIRE),
+            ],
+            actions=[
+                Action(
+                    type=ActionType.PRINT_NARRATIVE,
+                    value=(
+                        "자철석에 맨 구리선을 바로 감으려다 멈칫했다. 피복 없는 전선끼리 닿으면 **쇼트(단락)**가 나서 전기를 모을 수 없다.\n"
+                        "구리선 표면을 **전기가 통하지 않는 물질**로 감싸서 절연 처리를 한 뒤에 감아야 한다."
                     ),
                 )
             ],

@@ -240,14 +240,12 @@ class KeywordId(StrEnum):
     COCONUT_SHELL = "코코넛 껍질"
     MAKESHIFT_ROTOR = "임시 수차 로터"
     DYNAMO_CORE = "발전 코어"
-    HYDRO_DYNAMO_MODULE = "수력 발전 모듈"
-    RESIN_GLOB = "수지 덩어리"
-    HYDRO_GENERATOR = "수력 발전기"
-    CHARGED_HEAVY_BATTERY = "충전된 산업용 배터리"
-
     WOODEN_SHAFT = "나무 축"  # 호숫가에서 줍는 회전축
     SHAFTED_ROTOR = "축 달린 수차"  # 수차 로터 + 나무 축
     MOUNTED_ROTOR = "고리에 끼운 수차"  # 바위 고리에 끼운 수차
+    HYDRO_DYNAMO_MODULE = "수력 발전 모듈"
+    HYDRO_GENERATOR = "수력 발전기"
+    CHARGED_HEAVY_BATTERY = "충전된 산업용 배터리"
 
     # 8
     CLIFF_FACE = "절벽"

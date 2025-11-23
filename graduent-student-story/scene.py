@@ -160,15 +160,15 @@ class Scene:
 
                 print(target, r_item2, self.game.num_total_inputs)
 
-                if target == 'gt':
+                if target == "gt":
                     if in_value > self.game.num_total_inputs:
                         self.execute_actions(combo.actions)
                         return True
-                elif target == 'lt':
+                elif target == "lt":
                     if in_value < self.game.num_total_inputs:
                         self.execute_actions(combo.actions)
                         return True
-                elif target == 'eq':
+                elif target == "eq":
                     if in_value == self.game.num_total_inputs:
                         self.execute_actions(combo.actions)
                         return True

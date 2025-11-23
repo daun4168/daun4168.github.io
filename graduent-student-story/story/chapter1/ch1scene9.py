@@ -19,13 +19,12 @@ CH1_SCENE9_DATA = SceneData(
         "바람이 쉴 새 없이 머리 위를 훑고 지나가며, 이곳이 한때 안테나나 관측 장비를 세워 두던 자리였다는 사실을 조용히 말해 주는 듯하다."
     ),
     initial_state={
-        "antenna_build_step": 0,         # 0~9 : 파이프→볼트→스패너 × 3회
-        "antenna_built": False,          # 안테나 기계 구조 완성 여부
+        "antenna_build_step": 0,  # 0~9 : 파이프→볼트→스패너 × 3회
+        "antenna_built": False,  # 안테나 기계 구조 완성 여부
         "antenna_puzzle_solved": False,  # 안테나 퍼즐 해결 여부
-        "antenna_wire_connected": False, # 긴 전선을 안테나에 연결했는지 여부
-
+        "antenna_wire_connected": False,  # 긴 전선을 안테나에 연결했는지 여부
         "cliff_down_path_inspected": False,  # 절벽 아래로 내려가는 길을 살펴봤는지
-        "wire_crate_opened": False,          # 전선 상자를 연 적 있는지
+        "wire_crate_opened": False,  # 전선 상자를 연 적 있는지
     },
     keywords={
         KeywordId.WIRE_CRATE_ALIAS1: KeywordData(type=KeywordType.ALIAS, target=KeywordId.WIRE_CRATE),
@@ -105,7 +104,6 @@ CH1_SCENE9_DATA = SceneData(
                 ),
             ],
         ),
-
         # 안테나 기단(골조를 세우는 자리)
         KeywordId.ANTENNA_MOUNT: KeywordData(
             type=KeywordType.OBJECT,
@@ -312,7 +310,6 @@ CH1_SCENE9_DATA = SceneData(
                 ),
             ],
         ),
-
         # 완성된 안테나 본체
         KeywordId.ANTENNA: KeywordData(
             type=KeywordType.OBJECT,
@@ -420,7 +417,6 @@ CH1_SCENE9_DATA = SceneData(
                 ),
             ],
         ),
-
         # 누군가가 남겨 둔 듯한 전선 상자
         KeywordId.WIRE_CRATE: KeywordData(
             type=KeywordType.OBJECT,
@@ -537,7 +533,6 @@ CH1_SCENE9_DATA = SceneData(
                 ),
             ],
         ),
-
         # --- 두 번째 사이클: step 3 → 4 → 5 → 6 ---
         Combination(
             targets=[KeywordId.ANTENNA_MOUNT, KeywordId.METAL_PIPE],
@@ -602,7 +597,6 @@ CH1_SCENE9_DATA = SceneData(
                 ),
             ],
         ),
-
         # --- 세 번째 사이클: step 6 → 7 → 8 → 9 ---
         Combination(
             targets=[KeywordId.ANTENNA_MOUNT, KeywordId.METAL_PIPE],
@@ -691,7 +685,6 @@ CH1_SCENE9_DATA = SceneData(
                 ),
             ],
         ),
-
         # =======================================
         # 안테나 퍼즐 (placeholder)
         #  - 실제 정답은 '행동 수'를 기반으로 바뀔 예정이지만,
@@ -734,93 +727,85 @@ CH1_SCENE9_DATA = SceneData(
                 ),
             ],
         ),
-
-    # 정답일 때
-    Combination(
-        type=CombinationType.PASSWORD_CH1_FINAL,
-        targets=[KeywordId.ANTENNA, "eq"],  # 임시 정답
-        conditions=[
-            Condition(type=ConditionType.STATE_IS, target="antenna_built", value=True),
-            Condition(type=ConditionType.STATE_IS, target="antenna_puzzle_solved", value=False),
-        ],
-        actions=[
-            Action(
-                type=ActionType.PRINT_NARRATIVE,
-                value=(
-                    "숫자를 입력하자, 콘솔의 작은 표시창이 잠시 숨을 고르듯 깜빡이더니 조용히 멈춘다.\n\n"
-                    "다이얼과 스위치 주변의 미세한 떨림이 가라앉고, 안테나 기둥 어딘가에서 낮은 공명음이 길게 울려 퍼진다.\n\n"
-                    "이 섬에 발을 디딘 뒤로 쌓아 올린 모든 선택들이, 이제 하나의 신호로 정리되어 하늘을 향해 뻗어 나가는 듯하다."
+        # 정답일 때
+        Combination(
+            type=CombinationType.PASSWORD_CH1_FINAL,
+            targets=[KeywordId.ANTENNA, "eq"],  # 임시 정답
+            conditions=[
+                Condition(type=ConditionType.STATE_IS, target="antenna_built", value=True),
+                Condition(type=ConditionType.STATE_IS, target="antenna_puzzle_solved", value=False),
+            ],
+            actions=[
+                Action(
+                    type=ActionType.PRINT_NARRATIVE,
+                    value=(
+                        "숫자를 입력하자, 콘솔의 작은 표시창이 잠시 숨을 고르듯 깜빡이더니 조용히 멈춘다.\n\n"
+                        "다이얼과 스위치 주변의 미세한 떨림이 가라앉고, 안테나 기둥 어딘가에서 낮은 공명음이 길게 울려 퍼진다.\n\n"
+                        "이 섬에 발을 디딘 뒤로 쌓아 올린 모든 선택들이, 이제 하나의 신호로 정리되어 하늘을 향해 뻗어 나가는 듯하다."
+                    ),
                 ),
-            ),
-            Action(
-                type=ActionType.UPDATE_STATE,
-                value={"key": "antenna_puzzle_solved", "value": True},
-            ),
-            Action(
-                type=ActionType.PRINT_SYSTEM,
-                value=(
-                    "안테나 설정이 안정되었습니다.\n\n"
-                    "이제 기다란 전선을 연결해, 여기서 만들어 낸 신호를 MK-II까지 이어 보낼 수 있을 것 같습니다."
+                Action(
+                    type=ActionType.UPDATE_STATE,
+                    value={"key": "antenna_puzzle_solved", "value": True},
                 ),
-            ),
-        ],
-    ),
-
-    # 사용자가 '정답보다 작은 숫자'를 입력했을 때 (lt)
-    Combination(
-        type=CombinationType.PASSWORD_CH1_FINAL,
-        targets=[KeywordId.ANTENNA, "lt"],  # 임시 정답
-        conditions=[
-            Condition(type=ConditionType.STATE_IS, target="antenna_built", value=True),
-            Condition(type=ConditionType.STATE_IS, target="antenna_puzzle_solved", value=False),
-        ],
-        actions=[
-            Action(
-                type=ActionType.PRINT_NARRATIVE,
-                value=(
-                    "입력한 숫자가 콘솔에 찍히자, 표시창이 한 번 깜빡이고는 금세 힘을 잃은 듯 어둡게 가라앉는다.\n\n"
-                    "안테나 기둥도 잠깐 떨렸다가, 이내 아무 일도 없었다는 듯 고요해진다.\n\n"
-                    "이 숫자로는 아직, 이 섬에서 걸어온 발자국들을 다 셀 수 없는 모양이다."
+                Action(
+                    type=ActionType.PRINT_SYSTEM,
+                    value=(
+                        "안테나 설정이 안정되었습니다.\n\n"
+                        "이제 기다란 전선을 연결해, 여기서 만들어 낸 신호를 MK-II까지 이어 보낼 수 있을 것 같습니다."
+                    ),
                 ),
-            ),
-            Action(
-                type=ActionType.PRINT_SYSTEM,
-                value=(
-                    "조금 더 많은 선택을 떠올려 보세요.\n\n"
-                    "당신이 생각하는 것보다, 이곳에서 이미 더 멀리 와 있을지도 모릅니다."
+            ],
+        ),
+        # 사용자가 '정답보다 작은 숫자'를 입력했을 때 (lt)
+        Combination(
+            type=CombinationType.PASSWORD_CH1_FINAL,
+            targets=[KeywordId.ANTENNA, "lt"],  # 임시 정답
+            conditions=[
+                Condition(type=ConditionType.STATE_IS, target="antenna_built", value=True),
+                Condition(type=ConditionType.STATE_IS, target="antenna_puzzle_solved", value=False),
+            ],
+            actions=[
+                Action(
+                    type=ActionType.PRINT_NARRATIVE,
+                    value=(
+                        "입력한 숫자가 콘솔에 찍히자, 표시창이 한 번 깜빡이고는 금세 힘을 잃은 듯 어둡게 가라앉는다.\n\n"
+                        "안테나 기둥도 잠깐 떨렸다가, 이내 아무 일도 없었다는 듯 고요해진다.\n\n"
+                        "이 숫자로는 아직, 이 섬에서 걸어온 발자국들을 다 셀 수 없는 모양이다."
+                    ),
                 ),
-            ),
-        ],
-    ),
-
-    # 사용자가 '정답보다 큰 숫자'를 입력했을 때 (gt)
-    Combination(
-        type=CombinationType.PASSWORD_CH1_FINAL,
-        targets=[KeywordId.ANTENNA, "gt"],  # 임시 정답
-        conditions=[
-            Condition(type=ConditionType.STATE_IS, target="antenna_built", value=True),
-            Condition(type=ConditionType.STATE_IS, target="antenna_puzzle_solved", value=False),
-        ],
-        actions=[
-            Action(
-                type=ActionType.PRINT_NARRATIVE,
-                value=(
-                    "숫자를 입력하자, 표시창의 숫자들이 잠시 과열된 듯 빠르게 요동치다가 원래 자리로 되돌아온다.\n\n"
-                    "안테나 기둥에서도 불안정한 잡음이 몇 번 튀어나오다가 금세 끊긴다.\n\n"
-                    "이 정도 숫자는, 아직 밟지 않은 발자국까지 미리 더해 버린 셈인지도 모른다."
+                Action(
+                    type=ActionType.PRINT_SYSTEM,
+                    value=(
+                        "조금 더 많은 선택을 떠올려 보세요.\n\n"
+                        "당신이 생각하는 것보다, 이곳에서 이미 더 멀리 와 있을지도 모릅니다."
+                    ),
                 ),
-            ),
-            Action(
-                type=ActionType.PRINT_SYSTEM,
-                value=(
-                    "조금 덜 앞서 나가도 괜찮습니다.\n\n"
-                    "지금까지의 선택들만, 정확히 세어 보세요."
+            ],
+        ),
+        # 사용자가 '정답보다 큰 숫자'를 입력했을 때 (gt)
+        Combination(
+            type=CombinationType.PASSWORD_CH1_FINAL,
+            targets=[KeywordId.ANTENNA, "gt"],  # 임시 정답
+            conditions=[
+                Condition(type=ConditionType.STATE_IS, target="antenna_built", value=True),
+                Condition(type=ConditionType.STATE_IS, target="antenna_puzzle_solved", value=False),
+            ],
+            actions=[
+                Action(
+                    type=ActionType.PRINT_NARRATIVE,
+                    value=(
+                        "숫자를 입력하자, 표시창의 숫자들이 잠시 과열된 듯 빠르게 요동치다가 원래 자리로 되돌아온다.\n\n"
+                        "안테나 기둥에서도 불안정한 잡음이 몇 번 튀어나오다가 금세 끊긴다.\n\n"
+                        "이 정도 숫자는, 아직 밟지 않은 발자국까지 미리 더해 버린 셈인지도 모른다."
+                    ),
                 ),
-            ),
-        ],
-    ),
-
-
+                Action(
+                    type=ActionType.PRINT_SYSTEM,
+                    value=("조금 덜 앞서 나가도 괜찮습니다.\n\n" "지금까지의 선택들만, 정확히 세어 보세요."),
+                ),
+            ],
+        ),
         # =======================================
         # 안테나에 기다란 전선 연결
         # =======================================
@@ -873,7 +858,6 @@ CH1_SCENE9_DATA = SceneData(
                 ),
             ],
         ),
-
         # =======================================
         # 감춰진 전선 상자 + 소방 도끼 → 기다란 전선 획득
         # =======================================

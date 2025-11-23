@@ -21,6 +21,7 @@ class SceneID(StrEnum):
     CH1_SCENE7 = "ch1_scene7"
     CH1_SCENE8 = "ch1_scene8"
     CH1_SCENE9 = "ch1_scene9"
+    CH1_SCENE10 = "ch1_scene10"
 
 
 class KeywordId(StrEnum):

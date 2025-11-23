@@ -9,6 +9,7 @@ from .ch1scene6 import CH1_SCENE6_DATA
 from .ch1scene7 import CH1_SCENE7_DATA
 from .ch1scene8 import CH1_SCENE8_DATA
 from .ch1scene9 import CH1_SCENE9_DATA
+from .ch1scene10 import CH1_SCENE10_DATA
 
 __all__ = [
     "CH1_COMMON_DATA",
@@ -22,4 +23,5 @@ __all__ = [
     "CH1_SCENE7_DATA",
     "CH1_SCENE8_DATA",
     "CH1_SCENE9_DATA",
+    "CH1_SCENE10_DATA",
 ]

@@ -310,6 +310,10 @@ class KeywordId(StrEnum):
     WIRE_CRATE_ALIAS2 = "금속 상자"
     ANTENNA = "안테나"
 
+    LAB_ROOM = "연구실"  # 연구실 전체
+    LAB_DESK = "책상"  # 연구실 책상/작업대
+    ENDING_NOTE = "수상한 메모"  # 엔딩 떡밥 메모
+
 
 class KeywordState(StrEnum):
     HIDDEN = "hidden"

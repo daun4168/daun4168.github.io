@@ -22,6 +22,7 @@ from story.chapter1 import (
     CH1_SCENE7_DATA,
     CH1_SCENE8_DATA,
     CH1_SCENE9_DATA,
+    CH1_SCENE10_DATA,
 )
 from test import TestRunner
 from ui import UIManager
@@ -111,6 +112,7 @@ class Game:
         factory.register_scene(SceneID.CH1_SCENE7, Scene, CH1_SCENE7_DATA, CH1_COMMON_DATA)
         factory.register_scene(SceneID.CH1_SCENE8, Scene, CH1_SCENE8_DATA, CH1_COMMON_DATA)
         factory.register_scene(SceneID.CH1_SCENE9, Scene, CH1_SCENE9_DATA, CH1_COMMON_DATA)
+        factory.register_scene(SceneID.CH1_SCENE10, Scene, CH1_SCENE10_DATA, CH1_COMMON_DATA)
 
         return factory
 

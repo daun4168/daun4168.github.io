@@ -301,26 +301,11 @@ class KeywordId(StrEnum):
     BROKEN_FEATURE_PHONE = "고장난 피쳐폰"
 
     # 9
-    SUMMIT_ROCK = "산 정상 암반"
-    SUMMIT_ALIAS = "정상"
-    WET_SOIL = "젖은 흙"
-    STORM_SKY = "폭풍 하늘"
-    STORM_ALIAS = "먹구름"
+    ANTENNA_MOUNT = "콘크리트 기단"
+    LONG_WIRE = "기다란 전선"
+    LONG_WIRE_FREE_END = "남은 전선 끝"
 
     METAL_PIPE_BUNDLE = "금속 파이프 묶음"
-    ANTENNA_MAST = "안테나 기둥"
-    ANTENNA_ALIAS = "기둥"
-    ANTENNA_CABLE = "안테나 케이블"
-
-    GROUND_ROD = "접지 말뚝"
-    GROUND_ROD_TOP = "접지 말뚝 머리"
-    GROUND_CABLE = "접지 케이블"
-
-    MK_II_SUMMIT = "휴대용 MK-II 모듈"
-
-    TUNING_PANEL = "튜닝 패널"
-    TUNING_ALIAS = "튜닝"
-    TUNING_COIL = "튜닝 코일"
 
 
 class KeywordState(StrEnum):

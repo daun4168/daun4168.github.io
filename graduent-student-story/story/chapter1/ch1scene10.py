@@ -101,6 +101,7 @@ CH1_SCENE10_DATA = SceneData(
     on_enter_actions=[
         Action(type=ActionType.REMOVE_ITEM, value=KeywordId.SPANNER),
         Action(type=ActionType.REMOVE_ITEM, value=KeywordId.FIRE_AXE),
+        Action(type=ActionType.SHOW_STAMINA_UI, value=False),
     ],
     keywords={
         # 연구실 전체
@@ -179,7 +180,6 @@ CH1_SCENE10_DATA = SceneData(
                         ),
                     ],
                 ),
-ENDING_INTERACTION,
                 # 다시 MK-II를 볼 때
                 Interaction(
                     conditions=[
@@ -232,7 +232,6 @@ ENDING_INTERACTION,
                         ),
                     ],
                 ),
-ENDING_INTERACTION,
                 # 이미 메모를 발견한 뒤 책상을 볼 때
                 Interaction(
                     conditions=[
@@ -281,7 +280,6 @@ ENDING_INTERACTION,
                         ),
                     ],
                 ),
-ENDING_INTERACTION,
                 Interaction(
                     conditions=[
                         Condition(type=ConditionType.STATE_IS, target="ending_note_inspected", value=True),

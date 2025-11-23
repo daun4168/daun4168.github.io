@@ -314,7 +314,7 @@ CH1_SCENE7_DATA = SceneData(
                 ),
             ],
         ),
-# 임시 수차 로터 + 폭포 (축 없이 사용 시 부정 피드백)
+        # 임시 수차 로터 + 폭포 (축 없이 사용 시 부정 피드백)
         Combination(
             targets=[KeywordId.MAKESHIFT_ROTOR, KeywordId.WATERFALL],
             conditions=[

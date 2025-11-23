@@ -1,12 +1,10 @@
 from const import ActionType, ChapterID, ConditionType, KeywordId
 from schemas import Action, ChapterData, Combination, Condition
 
-# 챕터 1 전체에서 공통으로 사용될 데이터
 CH1_COMMON_DATA = ChapterData(
     id=ChapterID.CH1,
     combinations=[
         # [공통 조합] 스패너 + 코코넛 = 섭취
-        # 어떤 씬에서든 코코넛과 스패너가 있다면 먹을 수 있음
         Combination(
             targets=[KeywordId.COCONUT, KeywordId.SPANNER],
             conditions=[
@@ -29,74 +27,30 @@ CH1_COMMON_DATA = ChapterData(
                 Action(type=ActionType.PRINT_SYSTEM, value="갈증 해소! 체력 +5"),
             ],
         ),
-        # [준비용 조합 1] 라텍스 + 식초(풀) → 고무 + 반쯤 남은 식초
+        # [공통 조합] 소방 도끼 + 코코넛 = 섭취
         Combination(
-            targets=[KeywordId.LATEX, KeywordId.VINEGAR],
+            targets=[KeywordId.COCONUT, KeywordId.FIRE_AXE],
             conditions=[
-                Condition(type=ConditionType.HAS_ITEM, target=KeywordId.LATEX),
-                Condition(type=ConditionType.HAS_ITEM, target=KeywordId.VINEGAR),
+                Condition(type=ConditionType.HAS_ITEM, target=KeywordId.COCONUT),
             ],
             actions=[
                 Action(
                     type=ActionType.PRINT_NARRATIVE,
-                    value=(
-                        "라텍스를 용기에 담고 식초를 조금씩 떨어뜨렸다.\n"
-                        "흐물흐물하던 액체가 점점 덩어리 지더니, 탄력 있는 고무 덩어리로 굳어 간다.\n"
-                        "식초는 절반쯤만 줄어든 것 같아, 나머지는 다른 용도로도 쓸 수 있을 것 같다."
-                    ),
+                    value="**[소방 도끼]**로 **[코코넛]**을 깨서 속의 물을 마셨다. 미지근하지만 달콤하다. 남은 **[코코넛 껍질]**은 챙겨 두자.",
                 ),
-                Action(type=ActionType.REMOVE_ITEM, value=KeywordId.LATEX),
-                Action(type=ActionType.REMOVE_ITEM, value=KeywordId.VINEGAR),
+                Action(type=ActionType.REMOVE_ITEM, value=KeywordId.COCONUT),
                 Action(
                     type=ActionType.ADD_ITEM,
                     value={
-                        "name": KeywordId.RUBBER,
-                        "description": "질긴 고무 덩어리다. 전선을 감싸거나 틈을 막는 데 쓸 수 있을 것 같다.",
+                        "name": KeywordId.COCONUT_SHELL,
+                        "description": "속을 다 비운 코코넛 껍질이다. 잘 말리면 그릇이나 수차 날개로 쓸 수 있을 것 같다.",
                     },
                 ),
-                Action(
-                    type=ActionType.ADD_ITEM,
-                    value={
-                        "name": KeywordId.VINEGAR_HALF,
-                        "description": "반쯤 남은 식초다. 아직 한 번 정도는 더 쓸 수 있을 것 같다.",
-                    },
-                ),
-                Action(
-                    type=ActionType.PRINT_SYSTEM,
-                    value="라텍스가 고무로 응고되었습니다. 식초는 반쯤 남았습니다.",
-                ),
+                Action(type=ActionType.MODIFY_STAMINA, value=5),
+                Action(type=ActionType.PRINT_SYSTEM, value="갈증 해소! 체력 +5"),
             ],
         ),
-        # [준비용 조합 2] 라텍스 + 반쯤 남은 식초 → 고무 (식초 완전 소진)
-        Combination(
-            targets=[KeywordId.LATEX, KeywordId.VINEGAR_HALF],
-            conditions=[
-                Condition(type=ConditionType.HAS_ITEM, target=KeywordId.LATEX),
-                Condition(type=ConditionType.HAS_ITEM, target=KeywordId.VINEGAR_HALF),
-            ],
-            actions=[
-                Action(
-                    type=ActionType.PRINT_NARRATIVE,
-                    value=(
-                        "남아 있던 식초를 전부 라텍스에 부었다.\n"
-                        "금세 라텍스가 덩어리 지며 고무로 굳어 버리고, 통 안에는 아무것도 남지 않는다."
-                    ),
-                ),
-                Action(type=ActionType.REMOVE_ITEM, value=KeywordId.LATEX),
-                Action(type=ActionType.REMOVE_ITEM, value=KeywordId.VINEGAR_HALF),
-                Action(
-                    type=ActionType.ADD_ITEM,
-                    value={
-                        "name": KeywordId.RUBBER,
-                        "description": "질긴 고무 덩어리다. 전선을 감싸거나 틈을 막는 데 쓸 수 있을 것 같다.",
-                    },
-                ),
-                Action(
-                    type=ActionType.PRINT_SYSTEM,
-                    value="라텍스가 고무로 응고되었습니다. 식초는 전부 사용되었습니다.",
-                ),
-            ],
-        ),
+
         # [준비용 조합] 고무 + 전선 = 절연 전선
         Combination(
             targets=[KeywordId.RUBBER, KeywordId.WIRE],
@@ -127,34 +81,152 @@ CH1_COMMON_DATA = ChapterData(
                 ),
             ],
         ),
-        # [준비용 조합] 송진 + 조명탄 = 방수 부츠
+
+        # --- 1) 코팅된 코코넛 껍질 + 덩굴 줄기 → 임시 수차 로터 ---
         Combination(
-            targets=[KeywordId.RESIN, KeywordId.FLARE],
+            targets=[KeywordId.COATED_COCONUT_SHELL, KeywordId.VINES],
             conditions=[
-                Condition(type=ConditionType.HAS_ITEM, target=KeywordId.RESIN),
-                Condition(type=ConditionType.HAS_ITEM, target=KeywordId.FLARE),
+                Condition(type=ConditionType.HAS_ITEM, target=KeywordId.COATED_COCONUT_SHELL),
+                Condition(type=ConditionType.HAS_ITEM, target=KeywordId.VINES),
             ],
             actions=[
                 Action(
                     type=ActionType.PRINT_NARRATIVE,
                     value=(
-                        "조명탄을 피워 그 위에 송진을 올려두었다.\n"
-                        "끈적한 송진이 녹아 흐르기 시작하자, 신발 바닥과 옆면에 두껍게 발라 코팅했다.\n"
-                        "이 정도면 웬만한 물과 진흙쯤은 버텨 줄 것 같다."
+                        "코팅된 코코넛 껍질을 십자 모양으로 엇갈려 놓고, 덩굴 줄기로 단단히 묶는다.\n"
+                        "중앙에는 축을 꽂을 수 있는 작은 구멍을 뚫어 두었다. 제법 그럴듯한 임시 수차 로터가 완성됐다."
                     ),
                 ),
-                Action(type=ActionType.REMOVE_ITEM, value=KeywordId.RESIN),
-                Action(type=ActionType.REMOVE_ITEM, value=KeywordId.FLARE),
+                Action(type=ActionType.REMOVE_ITEM, value=KeywordId.COATED_COCONUT_SHELL),
+                Action(type=ActionType.REMOVE_ITEM, value=KeywordId.VINES),
                 Action(
                     type=ActionType.ADD_ITEM,
                     value={
-                        "name": KeywordId.WATERPROOF_BOOTS,
-                        "description": "거칠게 송진 코팅을 한 방수 부츠다. 늪지대나 젖은 지형을 걸을 때 도움이 된다.",
+                        "name": KeywordId.MAKESHIFT_ROTOR,
+                        "description": "코팅된 코코넛 껍질과 덩굴 줄기로 만든 임시 수차 로터다.",
                     },
                 ),
+            ],
+        ),
+
+        # --- 2) 임시 수차 로터 + 나무 축 → 축 달린 수차 ---
+        Combination(
+            targets=[KeywordId.MAKESHIFT_ROTOR, KeywordId.WOODEN_SHAFT],
+            conditions=[
+                Condition(type=ConditionType.HAS_ITEM, target=KeywordId.MAKESHIFT_ROTOR),
+                Condition(type=ConditionType.HAS_ITEM, target=KeywordId.WOODEN_SHAFT),
+            ],
+            actions=[
                 Action(
-                    type=ActionType.PRINT_SYSTEM,
-                    value="신발에 송진 코팅을 해 방수 부츠를 만들었습니다.",
+                    type=ActionType.PRINT_NARRATIVE,
+                    value=(
+                        "나무 축을 수차 로터 중앙 구멍에 끼운 뒤, 덩굴 조각과 테이프로 양쪽을 단단히 고정한다.\n"
+                        "손으로 돌려 보니, 수차가 축을 중심으로 부드럽게 회전한다."
+                    ),
+                ),
+                Action(type=ActionType.REMOVE_ITEM, value=KeywordId.MAKESHIFT_ROTOR),
+                Action(type=ActionType.REMOVE_ITEM, value=KeywordId.WOODEN_SHAFT),
+                Action(
+                    type=ActionType.ADD_ITEM,
+                    value={
+                        "name": KeywordId.SHAFTED_ROTOR,
+                        "description": "나무 축이 끼워진 수차 로터다. 이제 베어링만 있으면 폭포 옆에서 쓸 수 있다.",
+                    },
+                ),
+            ],
+        ),
+
+        # --- 3) 축 달린 수차 + 바위 고리 → 고리에 끼운 수차 ---
+        Combination(
+            targets=[KeywordId.SHAFTED_ROTOR, KeywordId.STONE_RING],
+            conditions=[
+                Condition(type=ConditionType.HAS_ITEM, target=KeywordId.SHAFTED_ROTOR),
+                Condition(type=ConditionType.HAS_ITEM, target=KeywordId.STONE_RING),
+            ],
+            actions=[
+                Action(
+                    type=ActionType.PRINT_NARRATIVE,
+                    value=(
+                        "바위 고리의 매끈한 구멍에 수차의 나무 축을 조심스럽게 끼워 넣는다.\n"
+                        "양쪽을 조율하자, 수차가 거의 마찰 없이 매끈하게 돌아가기 시작한다. 자연산 베어링 치고는 매우 훌륭한 성능이다."
+                    ),
+                ),
+                Action(type=ActionType.REMOVE_ITEM, value=KeywordId.SHAFTED_ROTOR),
+                Action(type=ActionType.REMOVE_ITEM, value=KeywordId.STONE_RING),
+                Action(
+                    type=ActionType.ADD_ITEM,
+                    value={
+                        "name": KeywordId.MOUNTED_ROTOR,
+                        "description": "바위 고리에 축이 끼워진 수차다. 그대로 폭포 옆에 세우면 수력 발전 장치의 뼈대가 된다.",
+                    },
+                ),
+            ],
+        ),
+
+        # --- 4) 자철석 조각 + 절연 구리선 → 발전 코어 ---
+        Combination(
+            targets=[KeywordId.MAGNETITE_CHUNK, KeywordId.INSULATED_COPPER_WIRE],
+            conditions=[
+                Condition(type=ConditionType.HAS_ITEM, target=KeywordId.MAGNETITE_CHUNK),
+                Condition(type=ConditionType.HAS_ITEM, target=KeywordId.INSULATED_COPPER_WIRE),
+            ],
+            actions=[
+                Action(
+                    type=ActionType.PRINT_NARRATIVE,
+                    value=(
+                        "자철석 조각을 손에 쥐고 절연 구리선을 빽빽하게 감아 나간다.\n"
+                        "여러 겹을 감은 뒤 양 끝 전선을 단자처럼 조금 남겨 꺾어 두자, 어디서 많이 본 발전 코어 모양이 완성된다."
+                    ),
+                ),
+                Action(type=ActionType.REMOVE_ITEM, value=KeywordId.INSULATED_COPPER_WIRE),
+                Action(
+                    type=ActionType.ADD_ITEM,
+                    value={
+                        "name": KeywordId.DYNAMO_CORE,
+                        "description": "자철석 조각에 절연 구리선을 감아 만든 발전 코어다.",
+                    },
+                ),
+            ],
+        ),
+
+        # 잘못된 재료 조합: 자철석 조각 + 덩굴 줄기 → 구박
+        Combination(
+            targets=[KeywordId.MAGNETITE_CHUNK, KeywordId.VINES],
+            conditions=[
+                Condition(type=ConditionType.HAS_ITEM, target=KeywordId.MAGNETITE_CHUNK),
+                Condition(type=ConditionType.HAS_ITEM, target=KeywordId.VINES),
+            ],
+            actions=[
+                Action(
+                    type=ActionType.PRINT_NARRATIVE,
+                    value="자철석 조각에 덩굴을 감아 보았지만, 이것은 전기가 아니라 예술의 영역에 가까운 실패작일 뿐이다.",
+                )
+            ],
+        ),
+
+        # --- 5) 고리에 끼운 수차 + 발전 코어 → 수력 발전 모듈 ---
+        Combination(
+            targets=[KeywordId.MOUNTED_ROTOR, KeywordId.DYNAMO_CORE],
+            conditions=[
+                Condition(type=ConditionType.HAS_ITEM, target=KeywordId.MOUNTED_ROTOR),
+                Condition(type=ConditionType.HAS_ITEM, target=KeywordId.DYNAMO_CORE),
+            ],
+            actions=[
+                Action(
+                    type=ActionType.PRINT_NARRATIVE,
+                    value=(
+                        "바위 고리에 끼운 수차 한쪽 옆에 발전 코어를 단단히 묶고, 축이 도는 방향에 맞춰 코일 방향을 조정한다.\n"
+                        "이제 물살만 있으면 전기를 만들어낼 수 있는 수력 발전 모듈이 준비됐다."
+                    ),
+                ),
+                Action(type=ActionType.REMOVE_ITEM, value=KeywordId.MOUNTED_ROTOR),
+                Action(type=ActionType.REMOVE_ITEM, value=KeywordId.DYNAMO_CORE),
+                Action(
+                    type=ActionType.ADD_ITEM,
+                    value={
+                        "name": KeywordId.HYDRO_DYNAMO_MODULE,
+                        "description": "바위 고리 베어링과 수차, 발전 코어를 한 몸으로 묶은 수력 발전 모듈이다.",
+                    },
                 ),
             ],
         ),

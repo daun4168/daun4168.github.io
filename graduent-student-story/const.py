@@ -224,18 +224,16 @@ class KeywordId(StrEnum):
     GROWTH_INSCRIPTION_ALIAS = "글귀"
 
     # 7
-    # 7
     UNDERGROUND_LAKE = "지하 호수"
     UNDERGROUND_LAKE_ALIAS = "호수"
     WATERFALL = "폭포"
     WATERFALL_ALIAS = "물폭포"
     LAKE_SHORE = "호숫가"
     STONE_RING = "바위 고리"
-    MAGNETIC_ROCK = "자석 바위"
-    RESIN_POOL = "수지 웅덩이"
+    MAGNETIC_ROCK = "검은 바위"
+    MAGNETIC_ROCK_ALIAS2 = "검은 바위 덩어리"
+    MAGNETIC_ROCK_ALIAS3 = "바위 덩어리"
     LAKE_BACK_TUNNEL = "경사로"
-
-    TOOL_POUCH = "공구 파우치"
 
     MAGNETITE_CHUNK = "자철석 조각"
     COPPER_WIRE = "구리선"
@@ -244,6 +242,12 @@ class KeywordId(StrEnum):
     DYNAMO_CORE = "발전 코어"
     HYDRO_DYNAMO_MODULE = "수력 발전 모듈"
     RESIN_GLOB = "수지 덩어리"
+    HYDRO_GENERATOR = "수력 발전기"
+    CHARGED_HEAVY_BATTERY = "충전된 산업용 배터리"
+
+    WOODEN_SHAFT = "나무 축"  # 호숫가에서 줍는 회전축
+    SHAFTED_ROTOR = "축 달린 수차"  # 수차 로터 + 나무 축
+    MOUNTED_ROTOR = "고리에 끼운 수차"  # 바위 고리에 끼운 수차
 
     # 8
     CLIFF_FACE = "절벽"

@@ -249,14 +249,9 @@ class KeywordId(StrEnum):
 
     # 8
     CLIFF_FACE = "절벽"
-    CLIFF_ALIAS = "바위 절벽"
-    CLIFF_TOP_PATH = "절벽 위 길"
-    CLIFF_UP_ALIAS = "위로 가는 길"
-    CLIFF_BACK_PATH = "돌아가는 길"
-    CLIFF_BACK_ALIAS = "하산 길"
+    CLIFF_BACK_PATH = "석회 동굴"
     PULLEY_ANCHOR = "바위 턱"
     STONE_PILE = "돌무더기"
-    CLIFF_SPRING = "절벽 샘물"
 
     EQUIPMENT_BUNDLE = "장비 상자"
     CLIMBING_ROPE = "등반용 로프"
@@ -264,12 +259,46 @@ class KeywordId(StrEnum):
     CARGO_NET = "그물 바구니"
 
     WEATHER_CRATE = "관측 장비 상자"
-    SMALL_BOTTLE = "작은 병"
-    WATER_FILLED_BOTTLE = "물 채운 병"
-    PLASTIC_STRAW = "빨대 조각"
-    IMPROVISED_BAROMETER = "간이 기압계"
-    BAROMETER_ALIAS = "기압계"
-    WEATHER_LOG = "기압 메모"
+    ASCENT_CRATE = "등반 장비 상자"  # 상자 3 (도르래 재료 상자)
+
+    # 풍향계 재료
+    METAL_PIPE = "금속 파이프 뭉치"
+    ROTATION_BRACKET = "회전 브래킷"
+    ALUMINUM_PLATE = "알루미늄 판"
+    PLASTIC_ROD = "플라스틱 막대"
+    BOLT_SET = "볼트 세트"
+
+    # 풍향계 제작 중간품/완성품
+    TRIMMED_TAIL_PLATE = "다듬은 꼬리판"
+    ARROW_HEAD = "화살 헤드"
+    WIND_VANE_WINGS = "풍향계 날개"
+    WIND_VANE_POLE = "풍향계 기둥"
+    TIGHTENED_PIVOT = "조여진 회전축"
+    PIVOT_POLE_SET = "회전 기둥 세트"
+    WIND_VANE = "풍향계"
+
+    # 도르래 재료
+    LARGE_PULLEY = "큰 도르래"
+    SMALL_PULLEY = "작은 도르래"
+    HARNESS = "하네스"
+
+    # 도르래 중간품
+    ROPE_TIP_CUT = "정리된 로프 끝"
+    HARNESS_SET = "하네스 세트"
+    MOUNTABLE_PULLEY = "설치용 큰 도르래"
+
+    # 무게추 (돌 1~5)
+    STONE_1 = "돌 1"
+    STONE_2 = "돌 2"
+    STONE_3 = "돌 3"
+    STONE_4 = "돌 4"
+    STONE_5 = "돌 5"
+
+    # 풍향 측정용 오브젝트 (절벽 바람)
+    CLIFF_WIND = "바람"
+
+    EQUIPMENT_NAMEPLATE = "장비 상자 명판"
+    BROKEN_FEATURE_PHONE = "고장난 피쳐폰"
 
     # 9
     SUMMIT_ROCK = "산 정상 암반"

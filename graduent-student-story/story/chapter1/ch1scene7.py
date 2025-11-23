@@ -222,16 +222,18 @@ CH1_SCENE7_DATA = SceneData(
             description=(
                 "동굴 벽 한쪽에 검은 바위 덩어리가 튀어나와 있다.\n"
                 "스패너를 가까이 가져가자 금속이 살짝 끌리는 느낌이 든다. 표면에 쇳가루도 붙어 있는 걸 보니, "
-                "제법 강한 자성을 띠는 자철석인 듯하다."
+                "제법 강한 자성을 띠는 자철석인 듯하다.\n\n"
+                "마치 누군가 일부러 정리라도 한 듯, 자력의 세기에 따라 파편들이 층을 이루고 있다.\n\n"
+                "노랑... 보라... 빨강...\n"
+                "마치 어떤 전자 부품의 색 띠를 보는 듯한 기묘한 정렬이다."
             ),
         ),
         # --- 설치형 수력 발전기 (처음에는 비활성) ---
         KeywordId.HYDRO_GENERATOR: KeywordData(
             type=KeywordType.OBJECT,
             state=KeywordState.INACTIVE,  # 모듈 설치 전에는 등장하지 않음
-            description="폭포 옆 바위 고리에 수차 모듈을 걸어 만든 임시 수력 발전기다.",
             interactions=[
-                # 설치만 되어 있고 아직 잠금(비밀번호) 안 풀린 상태
+                # 1. 설치 직후 (잠금 상태) -> 여기서 퍼즐 제시
                 Interaction(
                     conditions=[
                         Condition(
@@ -249,16 +251,22 @@ CH1_SCENE7_DATA = SceneData(
                         Action(
                             type=ActionType.PRINT_NARRATIVE,
                             value=(
-                                "폭포 옆 바위 고리에 수차 모듈을 단단히 고정해 두었다.\n"
-                                "물살을 받아 코코넛 날개가 일정한 속도로 돌아가고, 연결된 자철석 코어 주변에 미세한 전류가 흐르는 것이 느껴진다.\n"
-                                "발전기 옆 조그마한 금속 패널에는 이렇게 적혀 있다.\n"
-                                '"원 둘레 / 지름 ≈ 3.14  → 소수점 없이 세 자리 입력"\n'
-                                "아무래도 시동을 걸기 전에 비밀번호를 먼저 입력해야 하는 모양이다."
+                                "물살을 받아 코코넛 날개가 힘차게 돌아가지만, 제어 패널 화면에는 경고등이 깜빡인다.\n\n"
+                                "**[WARNING: IMPEDANCE MISMATCH]**\n\n"
+                                "주변 자철석의 자기장 간섭을 상쇄하기 위해, 현재 환경에 맞는 **'보정 저항값(Ω)'**을 입력해야 한다.\n"
+                                "패널 구석에는 낡은 저항 색상표 스티커가 붙어 있다.\n\n"
+                                "====================================\n\n"
+                                "**검(0) 갈(1) 적(2) 주(3) 노(4) 초(5) 파(6) 보(7) 회(8) 흰(9)**\n\n"
+                                "====================================\n\n"
                             ),
-                        )
+                        ),
+                        Action(
+                            type=ActionType.PRINT_SYSTEM,
+                            value="수력 발전기 : [3자리 숫자] 형식으로 입력할 수 있을 것 같다.",
+                        ),
                     ],
                 ),
-                # 잠금 해제 후 단순 관찰
+                # 2. 잠금 해제 후 단순 관찰
                 Interaction(
                     conditions=[
                         Condition(
@@ -276,8 +284,8 @@ CH1_SCENE7_DATA = SceneData(
                         Action(
                             type=ActionType.PRINT_NARRATIVE,
                             value=(
-                                "폭포 옆 수력 발전기가 일정한 속도로 돌아가고 있다.\n"
-                                "코일에서 나온 전기는 외부 단자에 안정적으로 출력되는 중이다."
+                                "설정을 마치자 경고등이 꺼지고 **[NORMAL OPERATION]** 문구가 떴다.\n"
+                                "수력 발전기가 안정적으로 돌아가며 코일에서 전기를 뿜어내고 있다."
                             ),
                         )
                     ],
@@ -374,10 +382,10 @@ CH1_SCENE7_DATA = SceneData(
                 ),
             ],
         ),
-        # --- 7) 수력 발전기 비밀번호 퍼즐: HYDRO_GENERATOR + "314" ---
+        # --- 7) 수력 발전기 비밀번호 퍼즐: HYDRO_GENERATOR + "472" ---
         Combination(
             type=CombinationType.PASSWORD,
-            targets=[KeywordId.HYDRO_GENERATOR, "314"],
+            targets=[KeywordId.HYDRO_GENERATOR, "472"],
             conditions=[
                 Condition(type=ConditionType.STATE_IS, target="generator_installed", value=True),
                 Condition(type=ConditionType.STATE_IS, target="generator_unlocked", value=False),
@@ -386,7 +394,7 @@ CH1_SCENE7_DATA = SceneData(
                 Action(
                     type=ActionType.PRINT_NARRATIVE,
                     value=(
-                        "발전기 옆 금속 패널에 3-1-4를 차례대로 눌러 본다.\n"
+                        "발전기 옆 제어 패널에 4-7-2를 차례대로 눌러 본다.\n"
                         "잠시 후 작게 딸깍 하는 소리와 함께 내부에서 계기들이 정렬되는 느낌이 전해진다.\n"
                         "수차의 회전 속도가 안정되고, 출력 단자에 일정한 전압이 걸린다."
                     ),
@@ -524,7 +532,7 @@ CH1_SCENE7_DATA = SceneData(
             actions=[
                 Action(
                     type=ActionType.PRINT_NARRATIVE,
-                    value=("축 달린 수차를 폭포 옆 바위에 기대어 보지만, 축이 흔들려 금방 한쪽으로 기울어 버린다.\n"),
+                    value="축 달린 수차를 폭포 옆 바위에 기대어 보지만, 축이 흔들려 금방 한쪽으로 기울어 버린다.\n",
                 )
             ],
         ),

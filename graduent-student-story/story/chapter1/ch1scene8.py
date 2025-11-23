@@ -1,4 +1,12 @@
-from const import ActionType, CombinationType, ConditionType, KeywordId, KeywordState, KeywordType, SceneID
+from const import (
+    ActionType,
+    CombinationType,
+    ConditionType,
+    KeywordId,
+    KeywordState,
+    KeywordType,
+    SceneID,
+)
 from schemas import Action, Combination, Condition, Interaction, KeywordData, SceneData
 
 
@@ -7,405 +15,33 @@ CH1_SCENE8_DATA = SceneData(
     name="가파른 절벽 (바람의 언덕)",
     initial_text=(
         "석회 동굴 벽을 짚고 좁은 협곡을 비집고 나오자, 갑자기 하늘이 쫙 열리며 바람이 얼굴을 후려친다.\n"
-        "발밑은 절벽 가장자리, 아래로는 지나온 숲과 늪, 해변이 한눈에 내려다보인다.\n"
-        "위쪽으로는 바람에 휘날리는 잔디와 바위가 이어진 완만한 언덕이 펼쳐져 있고, 그 끝에는 산 정상의 평평한 능선이 보인다.\n\n"
-        '절벽 바로 옆에는 난파선에서 끌어올린 장비 상자가 무심하게 놓여 있다. 옆면에는 희미하게 "DECK WINCH KIT"라는 글자가 보인다.\n'
-        "당신은 직감한다. '저걸 안 쓰고 여기서 장비를 직접 들고 올라가면, 내가 먼저 사라질 것이다.'"
+        "발밑은 절벽 가장자리, 아래로는 지나온 숲과 늪, 해변이 한눈에 내려다보인다.\n\n"
+        "옆에는 거칠게 긁힌 장비 상자가 놓여 있고, 위쪽에는 바람을 정면으로 맞받는 바위 턱이 어둡게 솟아 있다.\n"
+        "바닥 가까이에는 크기가 제각각인 돌무더기가 쌓여 있어 발걸음을 더욱 조심하게 만든다.\n\n"
+        "절벽을 따라 불어오는 바람은 일정하지 않아, 이곳에서 무언가 작업했던 흔적들이 더 선명하게 느껴진다."
     ),
     initial_state={
-        "bundle_opened": False,
-        "pulley_installed": False,
-        "rope_threaded": False,
-        "basket_attached": False,
-        "equipment_loaded": False,
-        "counterweight_ready": False,
-        "equipment_up": False,
-        "barometer_built": False,
-        "storm_coming": True,
-        "storm_alerted": False,
-        "safety_line_set": False,
-        "cliff_path_inspected": False,
-        "back_path_inspected": False,
+        # 상자들 상태
+        "gear_crate_opened": False,        # 장비 상자 열렸는지
+        "gear_nameplate_detached": False,  # 장비 상자에서 금속 명판을 떼어냈는지
+        "obs_crate_opened": False,  # 관측 장비 상자(풍향계 재료)
+        "ascent_crate_opened": False,  # 등반 장비 상자(도르래 재료)
+        "stone_pick_count": 0,  # 돌을 몇 개 쪼아냈는지 (0~5)
+        # 도르래 제작/설치 상태
+        "rope_prepared": False,  # 정리된 로프 끝 제작 여부
+        "harness_set_built": False,  # 하네스 세트 제작 여부
+        "main_pulley_prepared": False,  # 설치용 큰 도르래 제작 여부
+        "pulley_progress": 0,  # 바위 턱 위 도르래 설치 단계 (0~5)
+        "climb_ready": False,  # 절벽 등반 준비 완료 여부
+        # 경로 설명 여부
+        "cliff_path_inspected": False,  # 위로 가는 길 설명 했는지
+        "back_path_inspected": False,  # 석회 동굴로 내려가는 길 설명 했는지
+        "wind_log_step": 0,
     },
-    on_enter_actions=[
-        Action(type=ActionType.SHOW_STAMINA_UI, value=True),
-    ],
     keywords={
-        # --- ALIAS ---
-        KeywordId.CLIFF_ALIAS: KeywordData(
-            type=KeywordType.ALIAS, state=KeywordState.DISCOVERED, description=None, interactions=[]
-        ),
-        KeywordId.CLIFF_UP_ALIAS: KeywordData(
-            type=KeywordType.ALIAS, state=KeywordState.DISCOVERED, description=None, interactions=[]
-        ),
-        KeywordId.CLIFF_BACK_ALIAS: KeywordData(
-            type=KeywordType.ALIAS, state=KeywordState.DISCOVERED, description=None, interactions=[]
-        ),
-        KeywordId.BAROMETER_ALIAS: KeywordData(
-            type=KeywordType.ALIAS, state=KeywordState.INACTIVE, description=None, interactions=[]
-        ),
-        # --- 지형/환경 ---
-        KeywordId.CLIFF_FACE: KeywordData(
-            type=KeywordType.OBJECT,
-            state=KeywordState.DISCOVERED,
-            description=(
-                "눈앞의 절벽은 거의 수직에 가깝다. 군데군데 튀어나온 바위 턱이 손잡이 역할을 해 줄 것 같지만, "
-                "무거운 장비까지 짊어지고 오르기에는 무리다.\n"
-                "잘못 미끄러지면 밑의 숲과 늪을 한 번에 관통하는 체험을 하게 될 것이다."
-            ),
-        ),
-        KeywordId.PULLEY_ANCHOR: KeywordData(
-            type=KeywordType.OBJECT,
-            state=KeywordState.DISCOVERED,
-            description=(
-                "절벽 상단 가까이에 튀어나온 단단한 바위 턱이 보인다.\n"
-                "로프나 도르래를 걸기에는 딱 좋은 모양이다. "
-                "이미 누군가 여기서 비슷한 짓을 해 본 흔적(닳은 자국)도 보인다."
-            ),
-        ),
-        KeywordId.STONE_PILE: KeywordData(
-            type=KeywordType.OBJECT,
-            state=KeywordState.DISCOVERED,
-            description=(
-                "절벽 아래에는 주먹에서 머리통 크기까지 다양한 돌들이 쌓여 있다.\n"
-                "몇 개만 골라 묶으면 그럴듯한 평형추가 될 것 같다."
-            ),
-        ),
-        KeywordId.CLIFF_SPRING: KeywordData(
-            type=KeywordType.OBJECT,
-            state=KeywordState.DISCOVERED,
-            description=(
-                "절벽 아래 바위 틈에서 맑은 물이 조금씩 스며 나와 작은 샘을 이루고 있다.\n"
-                "기압계에 쓸 물을 채우기에 딱 좋다."
-            ),
-        ),
-        # --- 장비 상자 ---
-        KeywordId.EQUIPMENT_BUNDLE: KeywordData(
-            type=KeywordType.OBJECT,
-            state=KeywordState.DISCOVERED,
-            description="덮개가 반쯤 열린 장비 상자다. 안에 무엇이 들어 있는지 아직 제대로 살펴보지 않았다.",
-            interactions=[
-                Interaction(
-                    conditions=[
-                        Condition(type=ConditionType.STATE_IS, target="bundle_opened", value=False),
-                    ],
-                    actions=[
-                        Action(
-                            type=ActionType.PRINT_NARRATIVE,
-                            value=(
-                                "상자를 열어 보니, 선박 갑판에서 짐을 올리고 내릴 때 쓰던 장비들이 잔뜩 들어 있다.\n"
-                                "**[등반용 로프]**, 낡았지만 쓸 만한 **[도르래 바퀴]**, 큼직한 **[그물 바구니]**, "
-                                "그리고 서로 이어 붙일 수 있는 **[금속 파이프 묶음]**이 눈에 띈다.\n"
-                                "한쪽에는 **[접지 말뚝]**, **[접지 케이블]**, **[안테나 케이블]**, 그리고 "
-                                "수상한 메모가 붙은 **[튜닝 코일]**도 있다.\n"
-                                "이 키트 하나로 절벽 위에 안테나와 접지를 세팅하라는 뜻인 것 같다. 담당 교수의 악의가 느껴진다."
-                            ),
-                        ),
-                        Action(
-                            type=ActionType.ADD_ITEM,
-                            value={
-                                "name": KeywordId.CLIMBING_ROPE,
-                                "description": "선박에서 쓰던 튼튼한 등반용 로프다. 사람과 장비를 동시에 지탱할 정도다.",
-                            },
-                        ),
-                        Action(
-                            type=ActionType.ADD_ITEM,
-                            value={
-                                "name": KeywordId.PULLEY_WHEEL,
-                                "description": "무거운 짐을 들어 올릴 때 사용하는 금속 도르래 바퀴다.",
-                            },
-                        ),
-                        Action(
-                            type=ActionType.ADD_ITEM,
-                            value={
-                                "name": KeywordId.CARGO_NET,
-                                "description": "부피 큰 장비를 한 번에 담을 수 있는 그물 바구니다.",
-                            },
-                        ),
-                        Action(
-                            type=ActionType.ADD_ITEM,
-                            value={
-                                "name": KeywordId.METAL_PIPE_BUNDLE,
-                                "description": "서로 이어 붙이면 높은 안테나 기둥이 될 수 있는 금속 파이프 묶음이다.",
-                            },
-                        ),
-                        Action(
-                            type=ActionType.ADD_ITEM,
-                            value={
-                                "name": KeywordId.GROUND_ROD,
-                                "description": "뾰족한 끝을 가진 긴 금속 말뚝이다. 젖은 흙에 박아 접지용으로 쓰기 좋다.",
-                            },
-                        ),
-                        Action(
-                            type=ActionType.ADD_ITEM,
-                            value={
-                                "name": KeywordId.GROUND_CABLE,
-                                "description": "굵은 피복으로 감싼 구리 케이블이다. 안테나와 접지를 연결하는 데 사용한다.",
-                            },
-                        ),
-                        Action(
-                            type=ActionType.ADD_ITEM,
-                            value={
-                                "name": KeywordId.ANTENNA_CABLE,
-                                "description": "MK-II 통신 모듈과 고지대 안테나를 연결할 긴 케이블이다.",
-                            },
-                        ),
-                        Action(
-                            type=ActionType.ADD_ITEM,
-                            value={
-                                "name": KeywordId.TUNING_COIL,
-                                "description": '메모가 붙어 있다. "코일 감은 수 조절용. 나중에 꼭 필요함(중요)."',
-                            },
-                        ),
-                        Action(
-                            type=ActionType.UPDATE_STATE,
-                            value={"key": "bundle_opened", "value": True},
-                        ),
-                    ],
-                ),
-                Interaction(
-                    conditions=[
-                        Condition(type=ConditionType.STATE_IS, target="bundle_opened", value=True),
-                    ],
-                    actions=[
-                        Action(
-                            type=ActionType.PRINT_SYSTEM,
-                            value="상자에서 쓸 만한 장비는 이미 모두 꺼내 두었다.",
-                        )
-                    ],
-                ),
-            ],
-        ),
-        # --- 기압계용 상자 ---
-        KeywordId.WEATHER_CRATE: KeywordData(
-            type=KeywordType.OBJECT,
-            state=KeywordState.DISCOVERED,
-            description="절벽 옆에 반쯤 묻힌 작은 관측 장비 상자가 보인다.",
-            interactions=[
-                Interaction(
-                    conditions=[
-                        Condition(type=ConditionType.STATE_IS, target="barometer_built", value=False),
-                    ],
-                    actions=[
-                        Action(
-                            type=ActionType.PRINT_NARRATIVE,
-                            value=(
-                                "상자를 비틀어 열어 보니, 깨진 온도계와 녹슨 삼각대, 그리고 멀쩡한 **작은 플라스틱 병**과 "
-                                "**플라스틱 빨대 조각**이 나온다.\n"
-                                "공기에 민감한 간이 기압계를 만들 수 있을 것 같다."
-                            ),
-                        ),
-                        Action(
-                            type=ActionType.ADD_ITEM,
-                            value={
-                                "name": KeywordId.SMALL_BOTTLE,
-                                "description": "투명한 작은 플라스틱 병이다. 뚜껑은 없지만 입구가 단단하다.",
-                            },
-                        ),
-                        Action(
-                            type=ActionType.ADD_ITEM,
-                            value={
-                                "name": KeywordId.PLASTIC_STRAW,
-                                "description": "잘려 나간 플라스틱 빨대 조각이다.",
-                            },
-                        ),
-                    ],
-                ),
-                Interaction(
-                    conditions=[
-                        Condition(type=ConditionType.STATE_IS, target="barometer_built", value=True),
-                    ],
-                    actions=[
-                        Action(
-                            type=ActionType.PRINT_SYSTEM,
-                            value="상자 안에는 이제 쓸 만한 것이 남아 있지 않다.",
-                        )
-                    ],
-                ),
-            ],
-        ),
-        # --- 간이 기압계 ---
-        KeywordId.IMPROVISED_BAROMETER: KeywordData(
-            type=KeywordType.OBJECT,
-            state=KeywordState.INACTIVE,
-            description="플라스틱 병과 빨대를 이용해 만든 간이 기압계다. 물기둥 높이로 기압 변화를 볼 수 있다.",
-            interactions=[
-                Interaction(
-                    conditions=[
-                        Condition(type=ConditionType.STATE_IS, target="barometer_built", value=True),
-                        Condition(type=ConditionType.STATE_IS, target="storm_alerted", value=False),
-                    ],
-                    actions=[
-                        Action(
-                            type=ActionType.PRINT_NARRATIVE,
-                            value=(
-                                "기압계를 눈높이에 맞춰 바라본다.\n"
-                                "빨대 안 물기둥이 처음보다 확실히 더 올라가 있다. 내부 공기가 팽창하면서 물을 밀어 올리는 모양이다.\n\n"
-                                "— 기압이 빠르게 떨어지고 있다. 곧 이쪽으로 폭풍이 몰려올 것이다."
-                            ),
-                        ),
-                        Action(
-                            type=ActionType.ADD_ITEM,
-                            value={
-                                "name": KeywordId.WEATHER_LOG,
-                                "description": '기압 변화를 간단히 적어 둔 메모다. "수십 분 내 강한 돌풍 예상"이라고 쓰여 있다.',
-                            },
-                        ),
-                        Action(
-                            type=ActionType.UPDATE_STATE,
-                            value={"key": "storm_alerted", "value": True},
-                        ),
-                    ],
-                ),
-                Interaction(
-                    conditions=[
-                        Condition(type=ConditionType.STATE_IS, target="barometer_built", value=True),
-                        Condition(type=ConditionType.STATE_IS, target="storm_alerted", value=True),
-                    ],
-                    actions=[
-                        Action(
-                            type=ActionType.PRINT_NARRATIVE,
-                            value=(
-                                "물기둥은 이미 한계치에 가까운 높이를 유지하고 있다.\n"
-                                "폭풍은 언제 들이닥쳐도 이상하지 않은 상태다."
-                            ),
-                        )
-                    ],
-                ),
-            ],
-        ),
-        # --- 이동 포탈: 위 / 아래 ---
-        KeywordId.CLIFF_TOP_PATH: KeywordData(
-            type=KeywordType.PORTAL,
-            state=KeywordState.DISCOVERED,
-            description=None,
-            interactions=[
-                # 첫 조사
-                Interaction(
-                    conditions=[
-                        Condition(type=ConditionType.STATE_IS, target="cliff_path_inspected", value=False),
-                    ],
-                    actions=[
-                        Action(
-                            type=ActionType.PRINT_NARRATIVE,
-                            value=(
-                                "절벽 옆으로 사람 한 명 겨우 지나갈 수 있는 좁은 바위 길이 위쪽으로 이어져 있다.\n"
-                                "옆은 그대로 낭떠러지라, 바람이 강하게 불 때마다 몸이 한쪽으로 휘청인다.\n"
-                                "이 길을 따라 올라가면 산 정상의 평평한 능선으로 이어질 것 같다."
-                            ),
-                        ),
-                        Action(
-                            type=ActionType.UPDATE_STATE,
-                            value={"key": "cliff_path_inspected", "value": True},
-                        ),
-                    ],
-                ),
-                # 장비를 아직 올리지 못했을 때
-                Interaction(
-                    conditions=[
-                        Condition(type=ConditionType.STATE_IS, target="cliff_path_inspected", value=True),
-                        Condition(type=ConditionType.STATE_IS, target="equipment_up", value=False),
-                    ],
-                    actions=[
-                        Action(
-                            type=ActionType.PRINT_NARRATIVE,
-                            value=(
-                                "지금 혼자 올라가면 절벽 위에는 몸밖에 없고, 중요한 장비는 전부 아래에 남게 된다.\n"
-                                "MK-II 수리를 위해서는 안테나와 접지 재료를 위로 먼저 올려야 할 것 같다."
-                            ),
-                        )
-                    ],
-                ),
-                # 장비는 위로 올렸지만 안전 로프가 없을 때
-                Interaction(
-                    conditions=[
-                        Condition(type=ConditionType.STATE_IS, target="equipment_up", value=True),
-                        Condition(type=ConditionType.STATE_IS, target="safety_line_set", value=False),
-                    ],
-                    actions=[
-                        Action(
-                            type=ActionType.REQUEST_CONFIRMATION,
-                            value={
-                                "prompt": (
-                                    "장비는 이미 절벽 위로 올려 두었다.\n"
-                                    "하지만 이 좁은 길을 **안전 로프 없이** 올라가려면 꽤 위험하다.\n"
-                                    "조심스럽게 절벽 위로 올라가시겠습니까?\n"
-                                    "오르내리는 동안 **체력이 2 소모**됩니다."
-                                ),
-                                "confirm_actions": [
-                                    Action(
-                                        type=ActionType.PRINT_NARRATIVE,
-                                        value=(
-                                            "당신은 바위에 몸을 최대한 붙이고, 강풍의 간격을 계산해 한 걸음씩 앞으로 나아간다.\n"
-                                            "두 번쯤 심장이 멎는 줄 알았지만, 결국 산 정상의 능선에 올라서는 데 성공한다."
-                                        ),
-                                    ),
-                                    Action(
-                                        type=ActionType.MODIFY_STAMINA,
-                                        value=-2,
-                                    ),
-                                    Action(
-                                        type=ActionType.MOVE_SCENE,
-                                        value=SceneID.CH1_SCENE9,
-                                    ),
-                                ],
-                                "cancel_actions": [
-                                    Action(
-                                        type=ActionType.PRINT_SYSTEM,
-                                        value="일단은 안전 로프를 설치하는 방법이 없는지 더 고민해 보기로 한다.",
-                                    )
-                                ],
-                            },
-                        )
-                    ],
-                ),
-                # 장비도 올렸고 안전 로프도 있는 경우
-                Interaction(
-                    conditions=[
-                        Condition(type=ConditionType.STATE_IS, target="equipment_up", value=True),
-                        Condition(type=ConditionType.STATE_IS, target="safety_line_set", value=True),
-                    ],
-                    actions=[
-                        Action(
-                            type=ActionType.REQUEST_CONFIRMATION,
-                            value={
-                                "prompt": (
-                                    "장비는 이미 절벽 위에 있고, 안전 로프도 설치되어 있다.\n"
-                                    "로프에 몸을 연결하고 산 정상 능선으로 올라가시겠습니까?\n"
-                                    "오르내리는 동안 **체력이 1 소모**됩니다."
-                                ),
-                                "confirm_actions": [
-                                    Action(
-                                        type=ActionType.PRINT_NARRATIVE,
-                                        value=(
-                                            "당신은 하네스를 한 번 더 확인한 뒤, 절벽 옆 좁은 길을 따라 위로 올라간다.\n"
-                                            "바람이 불 때마다 로프가 몸을 잡아 주어, 몇 번의 위기 끝에 안전하게 능선에 도달한다."
-                                        ),
-                                    ),
-                                    Action(
-                                        type=ActionType.MODIFY_STAMINA,
-                                        value=-1,
-                                    ),
-                                    Action(
-                                        type=ActionType.MOVE_SCENE,
-                                        value=SceneID.CH1_SCENE9,
-                                    ),
-                                ],
-                                "cancel_actions": [
-                                    Action(
-                                        type=ActionType.PRINT_SYSTEM,
-                                        value="아직은 마음의 준비가 덜 된 것 같다. 매듭을 한 번 더 확인한다.",
-                                    )
-                                ],
-                            },
-                        )
-                    ],
-                ),
-            ],
-        ),
         KeywordId.CLIFF_BACK_PATH: KeywordData(
             type=KeywordType.PORTAL,
-            state=KeywordState.DISCOVERED,
+            state=KeywordState.DISCOVERED,  # 이거만 처음부터 보이도록
             description=None,
             interactions=[
                 Interaction(
@@ -461,239 +97,1183 @@ CH1_SCENE8_DATA = SceneData(
                 ),
             ],
         ),
+        KeywordId.PULLEY_ANCHOR: KeywordData(
+            type=KeywordType.OBJECT,
+            state=KeywordState.HIDDEN,
+            description=(
+                "절벽 상단 가까이에 튀어나온 단단한 바위 턱이 보인다.\n"
+                "누가 봐도 로프나 도르래를 걸기 딱 좋은 위치다. "
+                "이미 누군가 여기서 비슷한 짓을 해 본 흔적(닳은 자국)도 보인다."
+            ),
+        ),
+        KeywordId.STONE_PILE: KeywordData(
+            type=KeywordType.OBJECT,
+            state=KeywordState.HIDDEN,
+            description="절벽 아래에는 크기가 다른 돌들이 잔뜩 쌓여 있다.",
+            interactions=[
+                # 처음 보는 경우 (돌도 안 쪼았고, 피쳐폰도 아직 못 본 상태)
+                Interaction(
+                    conditions=[
+                        Condition(type=ConditionType.STATE_IS, target="stone_pick_count", value=0),
+                    ],
+                    actions=[
+                        Action(
+                            type=ActionType.PRINT_NARRATIVE,
+                            value=(
+                                "돌무더기를 살펴보니, 겉에 쌓인 자잘한 돌들은 손으로 집어 들기엔 너무 가볍고 부서지기 쉽다.\n"
+                                "속에 박힌 덩어리를 소방 도끼로 쪼아 내면, 평형추로 쓰기 좋은 돌들을 뽑아낼 수 있을 것 같다.\n\n"
+                                "돌무더기 가장자리에는 먼지와 모래에 파묻힌 고장난 피쳐폰 하나가 나뒹굴고 있다.\n"
+                                "별 모양 스티커가 붙어 있는 걸 보니, 이 섬 어디선가 쓰이던 장비였던 것 같다."
+                            ),
+                        ),
+                        # 고장난 피쳐폰 오브젝트를 발견 상태로 전환
+                        Action(
+                            type=ActionType.UPDATE_STATE,
+                            value={
+                                "keyword": KeywordId.BROKEN_FEATURE_PHONE,
+                                "state": KeywordState.DISCOVERED,
+                            },
+                        ),
+                    ],
+                ),
+                # 돌을 다섯 개 다 쪼아낸 뒤
+                Interaction(
+                    conditions=[
+                        Condition(type=ConditionType.STATE_IS, target="stone_pick_count", value=5),
+                    ],
+                    actions=[
+                        Action(
+                            type=ActionType.PRINT_NARRATIVE,
+                            value="돌무더기 표면에는 이미 도끼 자국이 여러 개 남아 있다. 더 쓸만한 돌이 있을지 모르겠다.",
+                        ),
+                    ],
+                ),
+            ],
+        ),
+
+        KeywordId.CLIFF_WIND: KeywordData(
+            type=KeywordType.OBJECT,
+            state=KeywordState.HIDDEN,
+            description=(
+                "절벽 위쪽에서 거센 바람이 불어온다. 방향이 일정하지 않고, 때때로 방향을 바꾸며 불고 멈추기를 반복한다."
+            ),
+        ),
+
+        # --- 상자들 ---
+        KeywordId.EQUIPMENT_BUNDLE: KeywordData(
+            type=KeywordType.OBJECT,
+            state=KeywordState.HIDDEN,
+            description="덮개가 반쯤 열린 장비 상자다. 하지만 안쪽은 별도의 잠금 장치로 막혀 있는 것 같다.",
+            interactions=[
+                # 아직 안 열었고, 명판도 안 뜯었을 때
+                Interaction(
+                    conditions=[
+                        Condition(type=ConditionType.STATE_IS, target="gear_crate_opened", value=False),
+                        Condition(type=ConditionType.STATE_IS, target="gear_nameplate_detached", value=False),
+                    ],
+                    actions=[
+                        Action(
+                            type=ActionType.PRINT_NARRATIVE,
+                            value=(
+                                "장비 상자 안쪽에는 네 자리 숫자를 맞추는 자물쇠와, 그 옆에 얇은 금속판이 나사로 붙어 있다.\n"
+                                "나사를 풀어 보면 금속판을 떼어낼 수 있을지도 모르겠다."
+                            ),
+                        ),
+                        Action(
+                            type=ActionType.PRINT_SYSTEM,
+                            value="`장비 상자 : [비밀번호 네자리]` 형태로 입력하세요.",
+                        ),
+                    ],
+                ),
+                # 아직 안 열었지만, 명판은 이미 떼어낸 상태
+                Interaction(
+                    conditions=[
+                        Condition(type=ConditionType.STATE_IS, target="gear_crate_opened", value=False),
+                        Condition(type=ConditionType.STATE_IS, target="gear_nameplate_detached", value=True),
+                    ],
+                    actions=[
+                        Action(
+                            type=ActionType.PRINT_NARRATIVE,
+                            value=(
+                                "장비 상자 안쪽 자물쇠 아래에는 금속 명판을 떼어낸 자국이 남아 있다.\n"
+                                "나사 자국 모양을 보니, 명판이 처음에는 거꾸로 달려 있었던 것 같다.\n"
+                            ),
+                        ),
+                        Action(
+                            type=ActionType.PRINT_SYSTEM,
+                            value="`장비 상자 : [비밀번호 네자리]` 형태로 입력하세요.",
+                        ),
+                    ],
+                ),
+                # 이미 상자를 연 상태
+                Interaction(
+                    conditions=[
+                        Condition(type=ConditionType.STATE_IS, target="gear_crate_opened", value=True),
+                    ],
+                    actions=[
+                        Action(
+                            type=ActionType.PRINT_NARRATIVE,
+                            value=(
+                                "장비 상자 안은 이미 한 번 뒤졌기 때문에, 이제는 텅 비어 있다.\n"
+                                "관측 장비 상자와 등반 장비 상자, 그리고 로프는 이미 밖으로 꺼내 둔 상태다."
+                            ),
+                        ),
+                        Action(
+                            type=ActionType.PRINT_SYSTEM,
+                            value="장비 상자는 이미 열려 있다. 필요한 것들은 모두 꺼냈다.",
+                        ),
+                    ],
+                ),
+            ],
+        ),
+
+        KeywordId.WEATHER_CRATE: KeywordData(
+            type=KeywordType.OBJECT,
+            state=KeywordState.INACTIVE,
+            interactions=[
+                # 아직 안 연 상태
+                Interaction(
+                    conditions=[
+                        Condition(type=ConditionType.STATE_IS, target="obs_crate_opened", value=False),
+                    ],
+                    actions=[
+                        Action(
+                            type=ActionType.PRINT_NARRATIVE,
+                            value=(
+                                "철제 관측 장비 상자 앞에는 네 자리 숫자를 맞추는 자물쇠가 달려 있다.\n"
+                                "상자 뚜껑 안쪽에는 연필로 끄적인 문장이 하나 보인다.\n\n"
+                                "\n\n"
+                                "**별에서 시작해서, 바람이 가리키는 대로 움직인다.**\n\n"
+                                "**위로 한 칸, 오른쪽으로 한 칸, 다시 위로 한 칸, 다시 오른쪽으로 한 칸.**\n\n"
+                                "**길을 네 번 따라가면, 네 자리 숫자가 남는다.**\n\n"
+                                "\n\n"
+                                "별이라는 말과 바람이라는 말이 유난히 진하게 눌려 적혀 있다."
+                            ),
+                        ),
+                        Action(
+                            type=ActionType.PRINT_SYSTEM,
+                            value="`관측 장비 상자 : [비밀번호 네자리]` 형태로 입력하세요.",
+                        ),
+                    ],
+                ),
+                # 이미 연 상태
+                Interaction(
+                    conditions=[
+                        Condition(type=ConditionType.STATE_IS, target="obs_crate_opened", value=True),
+                    ],
+                    actions=[
+                        Action(
+                            type=ActionType.PRINT_NARRATIVE,
+                            value=(
+                                "관측 장비 상자 안에는 이미 필요한 부품들을 모두 꺼낸 뒤라, "
+                                "자잘한 포장재와 녹슨 나사 몇 개만 굴러다니고 있다."
+                            ),
+                        ),
+                        Action(
+                            type=ActionType.PRINT_SYSTEM,
+                            value="관측 장비 상자는 이미 열려 있다. 안은 비어 있다.",
+                        ),
+                    ],
+                ),
+            ],
+        ),
+
+        KeywordId.ASCENT_CRATE: KeywordData(
+            type=KeywordType.OBJECT,
+            state=KeywordState.INACTIVE,
+            description="등반 장비가 들어 있을 법한 길쭉한 상자다. 잠금 장치는 바람 방향 모양의 아이콘으로 꾸며져 있다.",
+            interactions=[
+                # 아직 안 연 상태
+                Interaction(
+                    conditions=[
+                        Condition(type=ConditionType.STATE_IS, target="ascent_crate_opened", value=False),
+                    ],
+                    actions=[
+                        Action(
+                            type=ActionType.PRINT_NARRATIVE,
+                            value=(
+                                "길쭉한 등반 장비 상자 앞에는 작은 다이얼 자물쇠가 달려 있다.\n"
+                                "자물쇠 주변에는 동, 서, 남, 북을 가리키는 작은 화살표와, "
+                                "그 아래로 이어진 곡선이 마치 바람의 흐름을 그려 둔 것처럼 새겨져 있다.\n"
+                                "W는, 서쪽에서 불어오는 바람, NE는 북동쪽에서 불어오는 바람을 뜻하는 것 같다.\n\n"
+                            ),
+                        ),
+                        Action(
+                            type=ActionType.PRINT_SYSTEM,
+                            value="`등반 장비 상자 : [비밀번호 네자리]` 형태로 입력하세요.",
+                        ),
+                    ],
+                ),
+                # 이미 연 상태
+                Interaction(
+                    conditions=[
+                        Condition(type=ConditionType.STATE_IS, target="ascent_crate_opened", value=True),
+                    ],
+                    actions=[
+                        Action(
+                            type=ActionType.PRINT_NARRATIVE,
+                            value=(
+                                "등반 장비 상자 안에는 비어 있는 받침대와 얇은 포장재만 남아 있다.\n"
+                                "도르래와 하네스는 이미 밖으로 꺼내 놓은 상태다."
+                            ),
+                        ),
+                        Action(
+                            type=ActionType.PRINT_SYSTEM,
+                            value="등반 장비 상자는 이미 열려 있다.",
+                        ),
+                    ],
+                ),
+            ],
+        ),
+
+        KeywordId.BROKEN_FEATURE_PHONE: KeywordData(
+            type=KeywordType.OBJECT,
+            state=KeywordState.INACTIVE,
+            description="바람 모양 스티커가 붙어 있던 오래된 피쳐폰이다. 화면은 깨져 있고 전원은 들어오지 않는다.",
+            interactions=[
+                Interaction(
+                    conditions=[],
+                    actions=[
+                        Action(
+                            type=ActionType.PRINT_NARRATIVE,
+                            value=(
+                                "고장난 피쳐폰을 집어 들어 뒤집어 본다.\n\n"
+                                "앞면의 화면은 금이 가서 아무것도 보이지 않지만, 아래쪽 숫자 키패드는 아직 형태를 유지하고 있다.\n\n"
+                            ),
+                        ),
+                    ],
+                ),
+            ],
+        ),
+
+
+        # --- 이동 포탈: 위 / 아래 ---
+        KeywordId.CLIFF_FACE: KeywordData(
+            type=KeywordType.OBJECT,
+            state=KeywordState.HIDDEN,
+            description=None,
+            interactions=[
+                # 첫 조사: 절벽 구조 설명 + 바위 턱/도르래 힌트
+                Interaction(
+                    conditions=[
+                        Condition(type=ConditionType.STATE_IS, target="cliff_path_inspected", value=False),
+                    ],
+                    actions=[
+                        Action(
+                            type=ActionType.PRINT_NARRATIVE,
+                            value=(
+                                "눈앞의 절벽은 거의 수직에 가깝다. 군데군데 튀어나온 바위 턱이 손잡이 역할을 해 줄 것 같지만, "
+                                "맨몸으로 기어오르기에는 무리다.\n"
+                                "절벽 위로 올라가려면, 저 바위 턱에 도르래를 걸어 놓고 그 힘을 빌려 올라가는 수밖에 없어 보인다."
+                            ),
+                        ),
+                        Action(
+                            type=ActionType.UPDATE_STATE,
+                            value={"key": "cliff_path_inspected", "value": True},
+                        ),
+                    ],
+                ),
+                # 도르래 완성 전: 아직 올라갈 수 없음
+                Interaction(
+                    conditions=[
+                        Condition(type=ConditionType.STATE_IS, target="cliff_path_inspected", value=True),
+                        Condition(type=ConditionType.STATE_IS, target="climb_ready", value=False),
+                    ],
+                    actions=[
+                        Action(
+                            type=ActionType.PRINT_NARRATIVE,
+                            value=(
+                                "절벽은 여전히 수직으로 서 있고, 바위 턱은 손에 잡힐 듯 먼 곳에 있다.\n"
+                                "지금 상태로는 올라갈 수 없다. 도르래 장치를 완성해, 바위 턱에 제대로 걸어야만 이 절벽을 오를 수 있을 것 같다."
+                            ),
+                        )
+                    ],
+                ),
+                # 도르래 완성 후: 절벽을 타고 올라갈지 선택
+                Interaction(
+                    conditions=[
+                        Condition(type=ConditionType.STATE_IS, target="cliff_path_inspected", value=True),
+                        Condition(type=ConditionType.STATE_IS, target="climb_ready", value=True),
+                    ],
+                    actions=[
+                        Action(
+                            type=ActionType.REQUEST_CONFIRMATION,
+                            value={
+                                "prompt": (
+                                    "바위 턱에 걸린 도르래 장치는 모두 준비되었다.\n"
+                                    "하네스를 확인하고 절벽을 타고 위 능선으로 올라가시겠습니까?\n"
+                                    "올라가는 동안 **체력이 2 소모**됩니다."
+                                ),
+                                "confirm_actions": [
+                                    Action(
+                                        type=ActionType.PRINT_NARRATIVE,
+                                        value=(
+                                            "당신은 하네스를 조이고, 로프를 잡아당기며 절벽 옆으로 천천히 몸을 끌어올린다.\n"
+                                            "몇 번의 숨 고르기 끝에, 드디어 산 정상의 능선 위에 발을 딛는다."
+                                        ),
+                                    ),
+                                    Action(
+                                        type=ActionType.MODIFY_STAMINA,
+                                        value=-2,
+                                    ),
+                                    Action(
+                                        type=ActionType.MOVE_SCENE,
+                                        value=SceneID.CH1_SCENE9,
+                                    ),
+                                ],
+                                "cancel_actions": [
+                                    Action(
+                                        type=ActionType.PRINT_SYSTEM,
+                                        value="아직은 준비가 덜 된 것 같다. 장비 상태를 한 번 더 점검한다.",
+                                    )
+                                ],
+                            },
+                        )
+                    ],
+                ),
+            ],
+        ),
     },
     combinations=[
-        # --- 도르래 설치 ---
+        # ================================
+        # 1) 장비 상자 퍼즐: 1699 -> 6691
+        # ================================
         Combination(
-            targets=[KeywordId.PULLEY_WHEEL, KeywordId.PULLEY_ANCHOR],
+            type=CombinationType.PASSWORD,
+            targets=[KeywordId.ASCENT_CRATE, "7421"],
             conditions=[
-                Condition(type=ConditionType.HAS_ITEM, target=KeywordId.PULLEY_WHEEL),
-                Condition(type=ConditionType.STATE_IS, target="pulley_installed", value=False),
+                Condition(type=ConditionType.STATE_IS, target="obs_crate_opened", value=True),
+                Condition(type=ConditionType.STATE_IS, target="ascent_crate_opened", value=False),
             ],
             actions=[
                 Action(
                     type=ActionType.PRINT_NARRATIVE,
                     value=(
-                        "도르래 바퀴를 바위 턱에 대고 볼트와 너트로 단단히 고정한다.\n"
-                        "이제 로프를 걸면 제대로 된 승강 장치를 만들 수 있을 것 같다."
+                        "풍향계를 통해 기록한 바람 패턴을 상자 옆 패널에 입력하자, "
+                        "내부에서 하중이 풀리는 소리가 나며 잠금 장치가 열린다.\n"
+                        "상자 안에는 등반용 도르래와 하네스가 가지런히 놓여 있다.\n"
+                        "풍향계는 제 역할을 다 한 것 같다. 이제는 도르래를 조립하는 데 집중해야 한다."
                     ),
+                ),
+                # 풍향계 제거
+                Action(
+                    type=ActionType.REMOVE_ITEM,
+                    value=KeywordId.WIND_VANE,
+                ),
+                Action(
+                    type=ActionType.ADD_ITEM,
+                    value={
+                        "name": KeywordId.LARGE_PULLEY,
+                        "description": "큰 도르래다. 바위 턱에 걸어 메인 도르래로 쓰기 좋다.",
+                    },
+                ),
+                Action(
+                    type=ActionType.ADD_ITEM,
+                    value={
+                        "name": KeywordId.SMALL_PULLEY,
+                        "description": "작은 보조 도르래다. 하네스에 달면 힘을 덜 들이고 올라갈 수 있다.",
+                    },
+                ),
+                Action(
+                    type=ActionType.ADD_ITEM,
+                    value={
+                        "name": KeywordId.HARNESS,
+                        "description": "허리와 다리를 감싸는 등반용 하네스다.",
+                    },
                 ),
                 Action(
                     type=ActionType.UPDATE_STATE,
-                    value={"key": "pulley_installed", "value": True},
+                    value={"key": "ascent_crate_opened", "value": True},
+                ),
+                Action(
+                    type=ActionType.PRINT_SYSTEM,
+                    value="이제 도르래를 조립해 절벽을 올라갈 수 있을 것 같습니다.",
+                ),
+            ],
+        ),
+
+        # =========================================
+        # 2) 관측 장비 상자: 별 핸드폰 퍼즐
+        # =========================================
+        Combination(
+            type=CombinationType.PASSWORD,
+            targets=[KeywordId.WEATHER_CRATE, "7856"],
+            conditions=[
+                Condition(type=ConditionType.STATE_IS, target="gear_crate_opened", value=True),
+                Condition(type=ConditionType.STATE_IS, target="obs_crate_opened", value=False),
+            ],
+            actions=[
+                Action(
+                    type=ActionType.PRINT_NARRATIVE,
+                    value=(
+                        "별 모양 아이콘이 그려진 잠금 장치에 코드를 입력하자, 상자에서 짧은 전자음이 들린다.\n"
+                        "덮개를 열어 보니, 관측 장비와 각종 금속 부품, 그리고 별 모양 스티커가 붙은 작은 휴대폰 하나가 들어 있다."
+                    ),
+                ),
+                # 풍향계 재료 지급
+                Action(
+                    type=ActionType.ADD_ITEM,
+                    value={
+                        "name": KeywordId.METAL_PIPE,
+                        "description": "속이 빈 금속 파이프다. 세워 두면 기둥처럼 쓸 수 있지만, 바람이 강한 곳에서는 바닥 고정이 필요해 보인다.",
+                    },
+                ),
+                Action(
+                    type=ActionType.ADD_ITEM,
+                    value={
+                        "name": KeywordId.ROTATION_BRACKET,
+                        "description": "회전축으로 쓸 수 있는 작은 브래킷이다. 헐거워 약간의 조임이 필요해 보인다.”",
+                    },
+                ),
+                Action(
+                    type=ActionType.ADD_ITEM,
+                    value={
+                        "name": KeywordId.ALUMINUM_PLATE,
+                        "description": "얇은 알루미늄 판이다. 가공해서 꼬리 역할을 하게 만들 수 있다.",
+                    },
+                ),
+                Action(
+                    type=ActionType.ADD_ITEM,
+                    value={
+                        "name": KeywordId.PLASTIC_ROD,
+                        "description": "가벼운 플라스틱 막대다. 끝부분이 약간 비어 있어 작은 조각을 끼우면 앞쪽에 무게를 줄 수도 있을 것 같다.",
+                    },
+                ),
+                Action(
+                    type=ActionType.ADD_ITEM,
+                    value={
+                        "name": KeywordId.BOLT_SET,
+                        "description": "여러 개의 볼트와 너트가 들어 있는 작은 상자다.",
+                    },
+                ),
+                Action(
+                    type=ActionType.UPDATE_STATE,
+                    value={"key": "obs_crate_opened", "value": True},
+                ),
+                Action(
+                    type=ActionType.PRINT_SYSTEM,
+                    value="이제 풍향계를 만들 수 있을 것 같습니다.",
+                ),
+            ],
+        ),
+        # ===========================================================
+        # 3) 등반 장비 상자: 풍향계 + 바람 퍼즐 (코드는 나중에 교체)
+        # ===========================================================
+        Combination(
+            type=CombinationType.PASSWORD,
+            targets=[KeywordId.ASCENT_CRATE, "7421"],
+            conditions=[
+                Condition(type=ConditionType.STATE_IS, target="obs_crate_opened", value=True),
+                Condition(type=ConditionType.STATE_IS, target="ascent_crate_opened", value=False),
+            ],
+            actions=[
+                Action(
+                    type=ActionType.PRINT_NARRATIVE,
+                    value=(
+                        "풍향계를 통해 기록한 바람 패턴을 상자 옆 패널에 입력하자, "
+                        "내부에서 하중이 풀리는 소리가 나며 잠금 장치가 열린다.\n"
+                        "상자 안에는 등반용 도르래와 하네스가 가지런히 놓여 있다."
+                    ),
+                ),
+                Action(
+                    type=ActionType.ADD_ITEM,
+                    value={
+                        "name": KeywordId.LARGE_PULLEY,
+                        "description": "큰 도르래다. 바위 턱에 걸어 메인 도르래로 쓰기 좋다.",
+                    },
+                ),
+                Action(
+                    type=ActionType.ADD_ITEM,
+                    value={
+                        "name": KeywordId.SMALL_PULLEY,
+                        "description": "작은 보조 도르래다. 하네스에 달면 힘을 덜 들이고 올라갈 수 있다.",
+                    },
+                ),
+                Action(
+                    type=ActionType.ADD_ITEM,
+                    value={
+                        "name": KeywordId.HARNESS,
+                        "description": "허리와 다리를 감싸는 등반용 하네스다.",
+                    },
+                ),
+                Action(
+                    type=ActionType.UPDATE_STATE,
+                    value={"key": "ascent_crate_opened", "value": True},
+                ),
+                Action(
+                    type=ActionType.PRINT_SYSTEM,
+                    value="이제 도르래를 조립해 절벽을 올라갈 수 있을 것 같습니다.",
+                ),
+            ],
+        ),
+        # ==========================
+        # 4) 풍향계 제작 (아이템 ↔ 아이템)
+        # ==========================
+        Combination(
+            targets=[KeywordId.ALUMINUM_PLATE, KeywordId.FIRE_AXE],
+            conditions=[
+                Condition(type=ConditionType.HAS_ITEM, target=KeywordId.ALUMINUM_PLATE),
+                Condition(type=ConditionType.HAS_ITEM, target=KeywordId.FIRE_AXE),
+            ],
+            actions=[
+                Action(
+                    type=ActionType.PRINT_NARRATIVE,
+                    value="알루미늄 판 가장자리를 소방 도끼로 잘라 깃 모양으로 다듬는다.",
+                ),
+                Action(
+                    type=ActionType.ADD_ITEM,
+                    value={
+                        "name": KeywordId.TRIMMED_TAIL_PLATE,
+                        "description": "얇은 알루미늄 판을 깃 모양으로 다듬어 놓았다. 넓은 면적 덕분에 바람이 불면 뒤쪽에서 안정적으로 방향을 잡아 줄 것 같다.",
+                    },
+                ),
+                Action(
+                    type=ActionType.REMOVE_ITEM,
+                    value=KeywordId.ALUMINUM_PLATE,
                 ),
             ],
         ),
         Combination(
-            targets=[KeywordId.PULLEY_WHEEL, KeywordId.PULLEY_ANCHOR],
+            targets=[KeywordId.PLASTIC_ROD, KeywordId.QUARTZ_SHARD],
             conditions=[
-                Condition(type=ConditionType.STATE_IS, target="pulley_installed", value=True),
+                Condition(type=ConditionType.HAS_ITEM, target=KeywordId.PLASTIC_ROD),
+                Condition(type=ConditionType.HAS_ITEM, target=KeywordId.QUARTZ_SHARD),
             ],
             actions=[
                 Action(
-                    type=ActionType.PRINT_SYSTEM,
-                    value="도르래는 이미 바위 턱에 단단히 고정되어 있다.",
+                    type=ActionType.PRINT_NARRATIVE,
+                    value="플라스틱 막대 끝에 석영 조각을 달아 화살촉처럼 만든다.",
+                ),
+                Action(
+                    type=ActionType.ADD_ITEM,
+                    value={
+                        "name": KeywordId.ARROW_HEAD,
+                        "description": "플라스틱 막대 끝에 석영을 달아 만든 작은 화살 모양 조각이다. 바람을 받으면 앞쪽이 민감하게 돌아가도록 되어 있다.",
+                    },
+                ),
+                Action(
+                    type=ActionType.REMOVE_ITEM,
+                    value=KeywordId.PLASTIC_ROD,
+                ),
+            ],
+        ),
+        Combination(
+            targets=[KeywordId.TRIMMED_TAIL_PLATE, KeywordId.ARROW_HEAD],
+            conditions=[
+                Condition(type=ConditionType.HAS_ITEM, target=KeywordId.TRIMMED_TAIL_PLATE),
+                Condition(type=ConditionType.HAS_ITEM, target=KeywordId.ARROW_HEAD),
+            ],
+            actions=[
+                Action(
+                    type=ActionType.PRINT_NARRATIVE,
+                    value="다듬은 꼬리판과 화살 헤드를 한 축에 맞춰 연결해 하나의 날개로 조립한다.",
+                ),
+                Action(
+                    type=ActionType.ADD_ITEM,
+                    value={
+                        "name": KeywordId.WIND_VANE_WINGS,
+                        "description": "앞쪽은 화살처럼 무게가 실려 있고, 뒤쪽은 넓은 꼬리판이 받쳐 주는 구조다. 바람을 받으면 자연스럽게 한쪽이 먼저 돌고, 다른 쪽이 뒤를 잡아준다.",
+                    },
+                ),
+                Action(type=ActionType.REMOVE_ITEM, value=KeywordId.TRIMMED_TAIL_PLATE),
+                Action(type=ActionType.REMOVE_ITEM, value=KeywordId.ARROW_HEAD),
+            ],
+        ),
+        Combination(
+            targets=[KeywordId.METAL_PIPE, KeywordId.BOLT_SET],
+            conditions=[
+                Condition(type=ConditionType.HAS_ITEM, target=KeywordId.METAL_PIPE),
+                Condition(type=ConditionType.HAS_ITEM, target=KeywordId.BOLT_SET),
+            ],
+            actions=[
+                Action(
+                    type=ActionType.PRINT_NARRATIVE,
+                    value="금속 파이프를 단단히 고정할 수 있도록 볼트 위치를 맞춰 본다.",
+                ),
+                Action(
+                    type=ActionType.ADD_ITEM,
+                    value={
+                        "name": KeywordId.WIND_VANE_POLE,
+                        "description": "풍향계를 세우기 위한 기둥이다. 위에 무언가 회전하는 구조물을 올려두면 흔들리지 않을 것 같다.",
+                    },
+                ),
+                Action(type=ActionType.REMOVE_ITEM, value=KeywordId.METAL_PIPE),
+            ],
+        ),
+        Combination(
+            targets=[KeywordId.ROTATION_BRACKET, KeywordId.SPANNER],
+            conditions=[
+                Condition(type=ConditionType.HAS_ITEM, target=KeywordId.ROTATION_BRACKET),
+                Condition(type=ConditionType.HAS_ITEM, target=KeywordId.SPANNER),
+            ],
+            actions=[
+                Action(
+                    type=ActionType.PRINT_NARRATIVE,
+                    value="회전 브래킷의 볼트를 스패너로 조여, 헐거운 부분이 없도록 정리한다.",
+                ),
+                Action(
+                    type=ActionType.ADD_ITEM,
+                    value={
+                        "name": KeywordId.TIGHTENED_PIVOT,
+                        "description": "헐거웠던 브래킷을 스패너로 조여 둔 회전축이다. 기둥 위에 올리면 바람에 흔들려도 매끄럽게 돌아갈 것 같다.",
+                    },
+                ),
+                Action(type=ActionType.REMOVE_ITEM, value=KeywordId.ROTATION_BRACKET),
+            ],
+        ),
+        # =======================================
+        # 5) 풍향계 설치 (아이템 ↔ 바위 턱, progress 0→3)
+        # =======================================
+        # 풍향계 기둥 + 회전축 → 회전 기둥 세트
+        Combination(
+            targets=[KeywordId.WIND_VANE_POLE, KeywordId.TIGHTENED_PIVOT],
+            conditions=[
+                Condition(type=ConditionType.HAS_ITEM, target=KeywordId.WIND_VANE_POLE),
+                Condition(type=ConditionType.HAS_ITEM, target=KeywordId.TIGHTENED_PIVOT),
+            ],
+            actions=[
+                Action(
+                    type=ActionType.PRINT_NARRATIVE,
+                    value=(
+                        "풍향계 기둥 상단에 조여진 회전축을 끼워 맞춘다.\n"
+                        "몇 번 돌려 보니, 바람을 받아도 부드럽게 돌아갈 만큼 적당한 마찰만 남아 있다."
+                    ),
+                ),
+                Action(
+                    type=ActionType.ADD_ITEM,
+                    value={
+                        "name": KeywordId.PIVOT_POLE_SET,
+                        "description": "기둥 위에 회전축을 단단히 끼워 만든 구조물이다. 위에 날개를 꽂기만 하면 바람 방향을 읽을 수 있는 형태가 갖춰진다.",
+                    },
+                ),
+                Action(
+                    type=ActionType.REMOVE_ITEM,
+                    value=KeywordId.WIND_VANE_POLE,
+                ),
+                Action(
+                    type=ActionType.REMOVE_ITEM,
+                    value=KeywordId.TIGHTENED_PIVOT,
+                ),
+            ],
+        ),
+
+        # 회전 기둥 세트 + 풍향계 날개 → 풍향계 완성
+        Combination(
+            targets=[KeywordId.PIVOT_POLE_SET, KeywordId.WIND_VANE_WINGS],
+            conditions=[
+                Condition(type=ConditionType.HAS_ITEM, target=KeywordId.PIVOT_POLE_SET),
+                Condition(type=ConditionType.HAS_ITEM, target=KeywordId.WIND_VANE_WINGS),
+            ],
+            actions=[
+                Action(
+                    type=ActionType.PRINT_NARRATIVE,
+                    value=(
+                        "조립해 둔 풍향계 날개를 회전축 끝에 끼워 넣는다.\n"
+                        "숨을 들이쉬어 가볍게 내뱉자, 화살 부분이 바람을 따라 방향을 틀며 잔잔히 돌아간다.\n"
+                        "이제 어디서든 세워 두기만 하면, 바람이 불어오는 방향을 바로 읽을 수 있을 것이다."
+                    ),
+                ),
+                Action(
+                    type=ActionType.ADD_ITEM,
+                    value={
+                        "name": KeywordId.WIND_VANE,
+                        "description": "앞이 민감하고 뒤가 안정적인 날개가 회전축에 연결되어 있다. 바람이 부는 쪽을 향해 자연스럽게 돌아가는 완성된 풍향계다.",
+                    },
+                ),
+                Action(
+                    type=ActionType.REMOVE_ITEM,
+                    value=KeywordId.PIVOT_POLE_SET,
+                ),
+                Action(
+                    type=ActionType.REMOVE_ITEM,
+                    value=KeywordId.WIND_VANE_WINGS,
+                ),
+            ],
+        ),
+
+        # ====================================
+        # 6) 도르래 제작 (아이템 ↔ 아이템)
+        # ====================================
+        Combination(
+            targets=[KeywordId.CLIMBING_ROPE, KeywordId.FIRE_AXE],
+            conditions=[
+                Condition(type=ConditionType.HAS_ITEM, target=KeywordId.CLIMBING_ROPE),
+                Condition(type=ConditionType.HAS_ITEM, target=KeywordId.FIRE_AXE),
+                Condition(type=ConditionType.STATE_IS, target="rope_prepared", value=False),
+            ],
+            actions=[
+                Action(
+                    type=ActionType.PRINT_NARRATIVE,
+                    value="로프 끝을 도끼로 잘라 지저분한 부분을 정리하고, 단단한 매듭을 지을 수 있도록 만든다.",
+                ),
+                Action(
+                    type=ActionType.ADD_ITEM,
+                    value={
+                        "name": KeywordId.ROPE_TIP_CUT,
+                        "description": "끝이 깔끔하게 정리된 로프 쪽 부분이다. 도르래에 통과시키기 좋다.",
+                    },
+                ),
+                Action(
+                    type=ActionType.UPDATE_STATE,
+                    value={"key": "rope_prepared", "value": True},
+                ),
+            ],
+        ),
+        Combination(
+            targets=[KeywordId.HARNESS, KeywordId.SMALL_PULLEY],
+            conditions=[
+                Condition(type=ConditionType.HAS_ITEM, target=KeywordId.HARNESS),
+                Condition(type=ConditionType.HAS_ITEM, target=KeywordId.SMALL_PULLEY),
+                Condition(type=ConditionType.STATE_IS, target="harness_set_built", value=False),
+            ],
+            actions=[
+                Action(
+                    type=ActionType.PRINT_NARRATIVE,
+                    value="하네스의 허리 부분에 작은 도르래를 달아, 몸쪽에 걸리는 보조 도르래 세트를 만든다.",
+                ),
+                Action(
+                    type=ActionType.ADD_ITEM,
+                    value={
+                        "name": KeywordId.HARNESS_SET,
+                        "description": "작은 도르래가 달린 하네스 세트다. 로프를 통과시키면 몸이 함께 끌려 올라갈 수 있다.",
+                    },
+                ),
+                Action(
+                    type=ActionType.UPDATE_STATE,
+                    value={"key": "harness_set_built", "value": True},
+                ),
+                Action(type=ActionType.REMOVE_ITEM, value=KeywordId.SMALL_PULLEY),
+            ],
+        ),
+        Combination(
+            targets=[KeywordId.LARGE_PULLEY, KeywordId.BOLT_SET],
+            conditions=[
+                Condition(type=ConditionType.HAS_ITEM, target=KeywordId.LARGE_PULLEY),
+                Condition(type=ConditionType.HAS_ITEM, target=KeywordId.BOLT_SET),
+                Condition(type=ConditionType.STATE_IS, target="main_pulley_prepared", value=False),
+            ],
+            actions=[
+                Action(
+                    type=ActionType.PRINT_NARRATIVE,
+                    value="큰 도르래에 볼트를 끼워, 바위 턱에 걸어 고정할 수 있는 형태로 만든다.",
+                ),
+                Action(
+                    type=ActionType.ADD_ITEM,
+                    value={
+                        "name": KeywordId.MOUNTABLE_PULLEY,
+                        "description": "바위 턱에 바로 고정할 수 있도록 준비된 큰 도르래다.",
+                    },
+                ),
+                Action(
+                    type=ActionType.UPDATE_STATE,
+                    value={"key": "main_pulley_prepared", "value": True},
+                ),
+                Action(type=ActionType.REMOVE_ITEM, value=KeywordId.LARGE_PULLEY),
+            ],
+        ),
+        # ===========================================
+        # 7) 도르래 설치 (아이템 ↔ 바위 턱, progress 0→5)
+        # ===========================================
+        # progress 0 → 1: 메인 도르래 설치
+        Combination(
+            targets=[KeywordId.PULLEY_ANCHOR, KeywordId.MOUNTABLE_PULLEY],
+            conditions=[
+                Condition(type=ConditionType.HAS_ITEM, target=KeywordId.MOUNTABLE_PULLEY),
+                Condition(type=ConditionType.STATE_IS, target="pulley_progress", value=0),
+            ],
+            actions=[
+                Action(
+                    type=ActionType.PRINT_NARRATIVE,
+                    value="바위 턱 위에 큰 도르래를 올리고, 틈새에 볼트를 끼워 단단히 고정한다.",
+                ),
+                Action(
+                    type=ActionType.UPDATE_STATE,
+                    value={"key": "pulley_progress", "value": 1},
+                ),
+                Action(type=ActionType.REMOVE_ITEM, value=KeywordId.MOUNTABLE_PULLEY),
+            ],
+        ),
+        # progress 1 → 2: 로프 통과
+        Combination(
+            targets=[KeywordId.PULLEY_ANCHOR, KeywordId.ROPE_TIP_CUT],
+            conditions=[
+                Condition(type=ConditionType.HAS_ITEM, target=KeywordId.ROPE_TIP_CUT),
+                Condition(type=ConditionType.STATE_IS, target="pulley_progress", value=1),
+            ],
+            actions=[
+                Action(
+                    type=ActionType.PRINT_NARRATIVE,
+                    value="정리된 로프 끝을 도르래에 통과시켜, 위아래로 자유롭게 움직일 수 있도록 만든다.",
+                ),
+                Action(
+                    type=ActionType.UPDATE_STATE,
+                    value={"key": "pulley_progress", "value": 2},
+                ),
+                Action(type=ActionType.REMOVE_ITEM, value=KeywordId.ROPE_TIP_CUT),
+            ],
+        ),
+        # progress 2 → 3: 하네스 세트 설치
+        Combination(
+            targets=[KeywordId.PULLEY_ANCHOR, KeywordId.HARNESS_SET],
+            conditions=[
+                Condition(type=ConditionType.HAS_ITEM, target=KeywordId.HARNESS_SET),
+                Condition(type=ConditionType.STATE_IS, target="pulley_progress", value=2),
+            ],
+            actions=[
+                Action(
+                    type=ActionType.PRINT_NARRATIVE,
+                    value="하네스 세트를 로프의 한쪽에 연결해, 몸을 매달 수 있는 구조를 만든다.",
+                ),
+                Action(
+                    type=ActionType.UPDATE_STATE,
+                    value={"key": "pulley_progress", "value": 3},
+                ),
+                Action(type=ActionType.REMOVE_ITEM, value=KeywordId.HARNESS_SET),
+            ],
+        ),
+        # progress 3 → 4: 스패너로 전체 점검/조임
+        Combination(
+            targets=[KeywordId.PULLEY_ANCHOR, KeywordId.SPANNER],
+            conditions=[
+                Condition(type=ConditionType.HAS_ITEM, target=KeywordId.SPANNER),
+                Condition(type=ConditionType.STATE_IS, target="pulley_progress", value=3),
+            ],
+            actions=[
+                Action(
+                    type=ActionType.PRINT_NARRATIVE,
+                    value="스패너로 각 연결부의 볼트를 다시 한 번 조여, 도르래와 로프가 흔들리지 않도록 고정한다.",
+                ),
+                Action(
+                    type=ActionType.UPDATE_STATE,
+                    value={"key": "pulley_progress", "value": 4},
+                ),
+            ],
+        ),
+        # progress 4 → 5: 로프 본체 연결 (완성)
+        Combination(
+            targets=[KeywordId.PULLEY_ANCHOR, KeywordId.CLIMBING_ROPE],
+            conditions=[
+                Condition(type=ConditionType.HAS_ITEM, target=KeywordId.CLIMBING_ROPE),
+                Condition(type=ConditionType.STATE_IS, target="pulley_progress", value=4),
+            ],
+            actions=[
+                Action(
+                    type=ActionType.PRINT_NARRATIVE,
+                    value=(
+                        "남은 로프 부분을 바위 아래쪽 고리에 한 번 더 감아 매고, "
+                        "느슨함을 조절해 몸을 끌어올리기 좋은 장력으로 맞춘다.\n"
+                        "이제 도르래를 이용해 절벽을 오를 준비가 끝났다."
+                    ),
+                ),
+                Action(
+                    type=ActionType.UPDATE_STATE,
+                    value={"key": "pulley_progress", "value": 5},
+                ),
+                Action(
+                    type=ActionType.UPDATE_STATE,
+                    value={"key": "climb_ready", "value": True},
+                ),
+            ],
+        ),
+        # ===============================
+        # 8) 무게추(돌 1~5) 퍼즐 (틀만)
+        # ===============================
+        # 예시: 바위 턱 + 돌 N → 가볍다/무겁다/딱 맞다 피드백 (정답 로직은 나중에 구현)
+        # 여기서는 틀만 하나 넣어두고, 실제 조건/정답 조합은 나중에 네가 채우면 됨.
+        Combination(
+            targets=[KeywordId.PULLEY_ANCHOR, KeywordId.STONE_1],
+            conditions=[
+                Condition(type=ConditionType.HAS_ITEM, target=KeywordId.STONE_1),
+            ],
+            actions=[
+                Action(
+                    type=ActionType.PRINT_NARRATIVE,
+                    value="돌 1을 시험 삼아 도르래에 매달아 본다. 아직은 어떤 느낌인지 가늠하기 어렵다.",
                 )
             ],
         ),
-        # --- 로프를 도르래에 걸기 ---
+        # ===========================
+        # 돌무더기 + 소방 도끼 → 돌 1~5
+        # ===========================
+        # 1번째 타격 → 돌 1
         Combination(
-            targets=[KeywordId.CLIMBING_ROPE, KeywordId.PULLEY_WHEEL],
+            targets=[KeywordId.STONE_PILE, KeywordId.FIRE_AXE],
             conditions=[
-                Condition(type=ConditionType.HAS_ITEM, target=KeywordId.CLIMBING_ROPE),
-                Condition(type=ConditionType.STATE_IS, target="pulley_installed", value=True),
-                Condition(type=ConditionType.STATE_IS, target="rope_threaded", value=False),
-            ],
-            actions=[
-                Action(
-                    type=ActionType.PRINT_NARRATIVE,
-                    value="등반용 로프를 도르래 바퀴에 통과시켰다. 양쪽 끝이 절벽 위아래로 자연스럽게 늘어진다.",
-                ),
-                Action(
-                    type=ActionType.UPDATE_STATE,
-                    value={"key": "rope_threaded", "value": True},
-                ),
-            ],
-        ),
-        # --- 그물 바구니를 로프 끝에 연결 ---
-        Combination(
-            targets=[KeywordId.CARGO_NET, KeywordId.CLIMBING_ROPE],
-            conditions=[
-                Condition(type=ConditionType.HAS_ITEM, target=KeywordId.CARGO_NET),
-                Condition(type=ConditionType.HAS_ITEM, target=KeywordId.CLIMBING_ROPE),
-                Condition(type=ConditionType.STATE_IS, target="rope_threaded", value=True),
-                Condition(type=ConditionType.STATE_IS, target="basket_attached", value=False),
-            ],
-            actions=[
-                Action(
-                    type=ActionType.PRINT_NARRATIVE,
-                    value="로프의 아래쪽 끝에 그물 바구니를 단단히 묶었다. 이제 장비를 실어 올릴 수 있다.",
-                ),
-                Action(
-                    type=ActionType.UPDATE_STATE,
-                    value={"key": "basket_attached", "value": True},
-                ),
-            ],
-        ),
-        # --- 장비 상자를 그물에 싣기 ---
-        Combination(
-            targets=[KeywordId.EQUIPMENT_BUNDLE, KeywordId.CARGO_NET],
-            conditions=[
-                Condition(type=ConditionType.STATE_IS, target="basket_attached", value=True),
-                Condition(type=ConditionType.STATE_IS, target="equipment_loaded", value=False),
+                Condition(type=ConditionType.HAS_ITEM, target=KeywordId.FIRE_AXE),
+                Condition(type=ConditionType.STATE_IS, target="stone_pick_count", value=0),
             ],
             actions=[
                 Action(
                     type=ActionType.PRINT_NARRATIVE,
                     value=(
-                        "금속 파이프와 각종 장비를 그물 바구니 안으로 밀어 넣는다.\n"
-                        "그물 줄이 팽팽해지며 무게를 받아낸다."
+                        "소방 도끼로 돌무더기 옆을 세게 내려친다.\n"
+                        "겉돌이 부서지며 안쪽에서 단단한 조각 하나가 굴러 나온다."
                     ),
-                ),
-                Action(
-                    type=ActionType.UPDATE_STATE,
-                    value={"key": "equipment_loaded", "value": True},
-                ),
-            ],
-        ),
-        # --- 평형추 만들기 ---
-        Combination(
-            targets=[KeywordId.STONE_PILE, KeywordId.CLIMBING_ROPE],
-            conditions=[
-                Condition(type=ConditionType.HAS_ITEM, target=KeywordId.CLIMBING_ROPE),
-                Condition(type=ConditionType.STATE_IS, target="rope_threaded", value=True),
-                Condition(type=ConditionType.STATE_IS, target="counterweight_ready", value=False),
-            ],
-            actions=[
-                Action(
-                    type=ActionType.PRINT_NARRATIVE,
-                    value=(
-                        "로프의 반대쪽 끝에 적당한 크기의 돌들을 여러 개 묶어 매단다.\n"
-                        "평형추가 생기자, 장비 쪽 로프의 장력이 눈에 띄게 줄어든다."
-                    ),
-                ),
-                Action(
-                    type=ActionType.UPDATE_STATE,
-                    value={"key": "counterweight_ready", "value": True},
-                ),
-            ],
-        ),
-        # --- 장비 끌어올리기 ---
-        Combination(
-            targets=[KeywordId.CLIMBING_ROPE, KeywordId.EQUIPMENT_BUNDLE],
-            conditions=[
-                Condition(type=ConditionType.HAS_ITEM, target=KeywordId.CLIMBING_ROPE),
-                Condition(type=ConditionType.STATE_IS, target="equipment_loaded", value=True),
-                Condition(type=ConditionType.STATE_IS, target="counterweight_ready", value=True),
-                Condition(type=ConditionType.STATE_IS, target="equipment_up", value=False),
-            ],
-            actions=[
-                Action(
-                    type=ActionType.PRINT_NARRATIVE,
-                    value=(
-                        "로프를 서서히 당기자 그물 바구니가 끌려 올라간다.\n"
-                        "평형추가 대부분의 무게를 떠받쳐 주어, 당신은 방향만 잡아 주듯 로프를 조절하기만 하면 된다.\n"
-                        "잠시 후, 절벽 위에서 금속이 부딪히는 소리가 나며 장비가 안전하게 능선 위에 안착한다."
-                    ),
-                ),
-                Action(
-                    type=ActionType.UPDATE_STATE,
-                    value={"key": "equipment_up", "value": True},
-                ),
-            ],
-        ),
-        # --- 안전 로프 설치 ---
-        Combination(
-            targets=[KeywordId.CLIMBING_ROPE, KeywordId.CLIFF_TOP_PATH],
-            conditions=[
-                Condition(type=ConditionType.HAS_ITEM, target=KeywordId.CLIMBING_ROPE),
-                Condition(type=ConditionType.STATE_IS, target="rope_threaded", value=True),
-                Condition(type=ConditionType.STATE_IS, target="safety_line_set", value=False),
-            ],
-            actions=[
-                Action(
-                    type=ActionType.PRINT_NARRATIVE,
-                    value=(
-                        "로프의 한쪽 끝을 절벽 아래쪽 굵은 바위에, 다른 쪽 끝을 절벽 위쪽 바위에 고정한다.\n"
-                        "중간에는 하네스를 연결할 수 있는 고리를 하나 만들어 두었다.\n"
-                        "이제 이 길을 오르내릴 때, 로프가 마지막 안전장치가 되어 줄 것이다."
-                    ),
-                ),
-                Action(
-                    type=ActionType.UPDATE_STATE,
-                    value={"key": "safety_line_set", "value": True},
-                ),
-            ],
-        ),
-        # --- 기압계 제작 ---
-        Combination(
-            targets=[KeywordId.SMALL_BOTTLE, KeywordId.CLIFF_SPRING],
-            conditions=[
-                Condition(type=ConditionType.HAS_ITEM, target=KeywordId.SMALL_BOTTLE),
-                Condition(type=ConditionType.STATE_IS, target="barometer_built", value=False),
-            ],
-            actions=[
-                Action(
-                    type=ActionType.PRINT_NARRATIVE,
-                    value="작은 플라스틱 병을 샘물에 담가 절반 정도까지 물을 채운다.",
-                ),
-                Action(
-                    type=ActionType.REMOVE_ITEM,
-                    value=KeywordId.SMALL_BOTTLE,
                 ),
                 Action(
                     type=ActionType.ADD_ITEM,
                     value={
-                        "name": KeywordId.WATER_FILLED_BOTTLE,
-                        "description": "맑은 물이 절반쯤 채워진 작은 플라스틱 병이다.",
+                        "name": KeywordId.STONE_1,
+                        "description": "손 안에 쏙 들어오는 작은 돌이다. 흔히 볼 수 있는 자갈처럼 보이지만 제법 단단하다.",
                     },
+                ),
+                Action(
+                    type=ActionType.UPDATE_STATE,
+                    value={"key": "stone_pick_count", "value": 1},
                 ),
             ],
         ),
+        # 2번째 타격 → 돌 2
         Combination(
-            targets=[KeywordId.WATER_FILLED_BOTTLE, KeywordId.PLASTIC_STRAW],
+            targets=[KeywordId.STONE_PILE, KeywordId.FIRE_AXE],
             conditions=[
-                Condition(type=ConditionType.HAS_ITEM, target=KeywordId.WATER_FILLED_BOTTLE),
-                Condition(type=ConditionType.HAS_ITEM, target=KeywordId.PLASTIC_STRAW),
-                Condition(type=ConditionType.STATE_IS, target="barometer_built", value=False),
+                Condition(type=ConditionType.HAS_ITEM, target=KeywordId.FIRE_AXE),
+                Condition(type=ConditionType.STATE_IS, target="stone_pick_count", value=1),
+            ],
+            actions=[
+                Action(
+                    type=ActionType.PRINT_NARRATIVE,
+                    value=("한 번 더 내려치자, 갈라진 틈 사이로 조금 더 묵직한 돌 조각이 떨어져 나온다."),
+                ),
+                Action(
+                    type=ActionType.ADD_ITEM,
+                    value={
+                        "name": KeywordId.STONE_2,
+                        "description": "손에 쥐면 조금 묵직하게 느껴지는 돌이다. 표면이 단단해서 평형추로 쓰기 좋다.",
+                    },
+                ),
+                Action(
+                    type=ActionType.UPDATE_STATE,
+                    value={"key": "stone_pick_count", "value": 2},
+                ),
+            ],
+        ),
+        # 3번째 타격 → 돌 3
+        Combination(
+            targets=[KeywordId.STONE_PILE, KeywordId.FIRE_AXE],
+            conditions=[
+                Condition(type=ConditionType.HAS_ITEM, target=KeywordId.FIRE_AXE),
+                Condition(type=ConditionType.STATE_IS, target="stone_pick_count", value=2),
+            ],
+            actions=[
+                Action(
+                    type=ActionType.PRINT_NARRATIVE,
+                    value=("도끼날이 깊숙이 파고들면서, 매끈한 표면을 가진 중간 크기의 돌이 하나 튀어나온다."),
+                ),
+                Action(
+                    type=ActionType.ADD_ITEM,
+                    value={
+                        "name": KeywordId.STONE_3,
+                        "description": "표면이 매끈한 돌이다. 크기에 비해 묵직한 편이라 감이 독특하다.",
+                    },
+                ),
+                Action(
+                    type=ActionType.UPDATE_STATE,
+                    value={"key": "stone_pick_count", "value": 3},
+                ),
+            ],
+        ),
+        # 4번째 타격 → 돌 4
+        Combination(
+            targets=[KeywordId.STONE_PILE, KeywordId.FIRE_AXE],
+            conditions=[
+                Condition(type=ConditionType.HAS_ITEM, target=KeywordId.FIRE_AXE),
+                Condition(type=ConditionType.STATE_IS, target="stone_pick_count", value=3),
+            ],
+            actions=[
+                Action(
+                    type=ActionType.PRINT_NARRATIVE,
+                    value=("이번에는 도끼로 가장자리 부분을 잘라내자, 손바닥만 한 크기의 돌이 통째로 떨어져 나온다."),
+                ),
+                Action(
+                    type=ActionType.ADD_ITEM,
+                    value={
+                        "name": KeywordId.STONE_4,
+                        "description": "손바닥을 가득 채우는 크기의 돌이다. 모서리가 적당히 둥글다.",
+                    },
+                ),
+                Action(
+                    type=ActionType.UPDATE_STATE,
+                    value={"key": "stone_pick_count", "value": 4},
+                ),
+            ],
+        ),
+        # 5번째 타격 → 돌 5
+        Combination(
+            targets=[KeywordId.STONE_PILE, KeywordId.FIRE_AXE],
+            conditions=[
+                Condition(type=ConditionType.HAS_ITEM, target=KeywordId.FIRE_AXE),
+                Condition(type=ConditionType.STATE_IS, target="stone_pick_count", value=4),
+            ],
+            actions=[
+                Action(
+                    type=ActionType.PRINT_NARRATIVE,
+                    value=("마지막으로 깊게 찍어내자, 다른 것들보다 더 크고 묵직한 돌 조각이 느리게 굴러 나온다."),
+                ),
+                Action(
+                    type=ActionType.ADD_ITEM,
+                    value={
+                        "name": KeywordId.STONE_5,
+                        "description": "다섯 개 중 가장 큰 돌이다. 평형추로 쓰기 딱 좋아 보인다.",
+                    },
+                ),
+                Action(
+                    type=ActionType.UPDATE_STATE,
+                    value={"key": "stone_pick_count", "value": 5},
+                ),
+            ],
+        ),
+
+        # 장비 상자 + 스패너 → 금속 명판 떼어내기
+        Combination(
+            targets=[KeywordId.EQUIPMENT_BUNDLE, KeywordId.SPANNER],
+            conditions=[
+                Condition(type=ConditionType.HAS_ITEM, target=KeywordId.SPANNER),
+                Condition(type=ConditionType.STATE_IS, target="gear_crate_opened", value=False),
+                Condition(type=ConditionType.STATE_IS, target="gear_nameplate_detached", value=False),
             ],
             actions=[
                 Action(
                     type=ActionType.PRINT_NARRATIVE,
                     value=(
-                        "플라스틱 빨대를 병 입구에 꽂고, 주변을 천 조각과 테이프로 임시로 막는다.\n"
-                        "병을 세워 두자 빨대 안으로 물이 일정 높이까지 올라온다.\n"
-                        "기압이 떨어지면 공기가 팽창하면서 물기둥 높이가 변할 것이다."
+                        "스패너로 장비 상자 안쪽 금속판을 고정하고 있던 나사를 하나씩 풀어낸다.\n"
+                        "마지막 나사를 빼자, 금속판이 '톡' 하고 떨어져 손바닥 위에 내려앉는다.\n"
                     ),
-                ),
-                Action(
-                    type=ActionType.REMOVE_ITEM,
-                    value=KeywordId.WATER_FILLED_BOTTLE,
-                ),
-                Action(
-                    type=ActionType.REMOVE_ITEM,
-                    value=KeywordId.PLASTIC_STRAW,
                 ),
                 Action(
                     type=ActionType.ADD_ITEM,
                     value={
-                        "name": KeywordId.IMPROVISED_BAROMETER,
-                        "description": "플라스틱 병과 빨대로 만든 간이 기압계다.",
+                        "name": KeywordId.EQUIPMENT_NAMEPLATE,
+                        "description": "장비 상자 안쪽에 붙어 있던 금속 명판이다. 한쪽 면에 '1699'라는 숫자가 적혀 있었다.",
                     },
                 ),
                 Action(
                     type=ActionType.UPDATE_STATE,
-                    value={"key": "barometer_built", "value": True},
+                    value={"key": "gear_nameplate_detached", "value": True},
+                ),
+
+            ],
+        ),
+
+        # ============================================
+        # 풍향계 + 바람 관측 로그 (wind_log_step 0 → 1 → 2 → 3 → 4 → 1 …)
+        # ============================================
+
+        # 0단계: 서풍(W) → 북동풍(NE)
+        Combination(
+            targets=[KeywordId.CLIFF_WIND, KeywordId.WIND_VANE],
+            conditions=[
+                Condition(type=ConditionType.HAS_ITEM, target=KeywordId.WIND_VANE),
+                Condition(type=ConditionType.STATE_IS, target="wind_log_step", value=0),
+            ],
+            actions=[
+                Action(
+                    type=ActionType.PRINT_NARRATIVE,
+                    value=(
+                        "풍향계 화살이 먼저 서쪽에서 밀려오는 바람을 가리킨다(W).\n"
+                        "잠시 뒤 바람결이 바뀌며 화살이 북동쪽을 향해 천천히 돌아선다(NE).\n"
+                        "오늘 바람은 생각보다 예민하게 방향을 틀고 있는 것 같다."
+                    ),
                 ),
                 Action(
-                    type=ActionType.UPDATE_KEYWORD_DATA,
-                    value={
-                        "keyword": KeywordId.IMPROVISED_BAROMETER,
-                        "field": "state",
-                        "value": KeywordState.DISCOVERED,
-                    },
+                    type=ActionType.UPDATE_STATE,
+                    value={"key": "wind_log_step", "value": 1},
                 ),
             ],
         ),
+
+        # 1단계: 남풍(S) → 북동풍(NE) → 서풍(W)
+        Combination(
+            targets=[KeywordId.CLIFF_WIND, KeywordId.WIND_VANE],
+            conditions=[
+                Condition(type=ConditionType.HAS_ITEM, target=KeywordId.WIND_VANE),
+                Condition(type=ConditionType.STATE_IS, target="wind_log_step", value=1),
+            ],
+            actions=[
+                Action(
+                    type=ActionType.PRINT_NARRATIVE,
+                    value=(
+                        "이번에는 바람이 남쪽에서 먼저 가볍게 불어온다(S).\n"
+                        "풍향계가 흔들리다가 어느 순간 북동풍 쪽으로 방향을 바꾸고(NE),\n"
+                        "마지막에는 다시 서쪽에서 부는 바람이 화살을 밀어낸다(W)."
+                    ),
+                ),
+                Action(
+                    type=ActionType.UPDATE_STATE,
+                    value={"key": "wind_log_step", "value": 2},
+                ),
+            ],
+        ),
+
+        # 2단계: 서풍(W) → 북동풍(NE) → 서풍(W)
+        Combination(
+            targets=[KeywordId.CLIFF_WIND, KeywordId.WIND_VANE],
+            conditions=[
+                Condition(type=ConditionType.HAS_ITEM, target=KeywordId.WIND_VANE),
+                Condition(type=ConditionType.STATE_IS, target="wind_log_step", value=2),
+            ],
+            actions=[
+                Action(
+                    type=ActionType.PRINT_NARRATIVE,
+                    value=(
+                        "서풍이 강하게 불어와 화살을 서쪽으로 밀어낸다(W).\n"
+                        "곧이어 바람이 고개를 틀듯 북동쪽으로 방향을 바꾸더니(NE),\n"
+                        "잠시 후 다시 처음처럼 서풍이 돌아와 화살을 원래 자리로 데려다 놓는다(W).\n"
+                        "짧은 순간 안에 바람이 세 번이나 방향을 튼 셈이다."
+                    ),
+                ),
+                Action(
+                    type=ActionType.UPDATE_STATE,
+                    value={"key": "wind_log_step", "value": 3},
+                ),
+            ],
+        ),
+
+        # 3단계: 북풍(N)
+        Combination(
+            targets=[KeywordId.CLIFF_WIND, KeywordId.WIND_VANE],
+            conditions=[
+                Condition(type=ConditionType.HAS_ITEM, target=KeywordId.WIND_VANE),
+                Condition(type=ConditionType.STATE_IS, target="wind_log_step", value=3),
+            ],
+            actions=[
+                Action(
+                    type=ActionType.PRINT_NARRATIVE,
+                    value=(
+                        "풍향계는 한동안 움직이지 않더니, 이내 북쪽을 곧게 가리킨 채 멈춰 선다(N).\n"
+                        "바람은 일정하게 머리 위를 스쳐 지나가고, 방향이 바뀔 기미는 보이지 않는다.\n"
+                        "오히려 이렇게 한 방향으로 고정된 바람이 더 불길하게 느껴진다."
+                    ),
+                ),
+                Action(
+                    type=ActionType.UPDATE_STATE,
+                    value={"key": "wind_log_step", "value": 4},
+                ),
+            ],
+        ),
+
+        # 4단계: 서풍(W) → 북동풍(NE), 이후 다시 1단계로 루프
+        Combination(
+            targets=[KeywordId.CLIFF_WIND, KeywordId.WIND_VANE],
+            conditions=[
+                Condition(type=ConditionType.HAS_ITEM, target=KeywordId.WIND_VANE),
+                Condition(type=ConditionType.STATE_IS, target="wind_log_step", value=4),
+            ],
+            actions=[
+                Action(
+                    type=ActionType.PRINT_NARRATIVE,
+                    value=(
+                        "서쪽에서 불어온 바람이 잠시 풍향계를 서쪽으로 밀어낸다(W).\n"
+                        "그러다 어느 순간 기류가 갈라지듯 방향을 꺾어, 화살이 다시 북동쪽을 향해 돌아선다(NE).\n"
+                        "아까와 비슷한 패턴이 반복되는 것으로 보인다."
+                    ),
+                ),
+                Action(
+                    type=ActionType.UPDATE_STATE,
+                    value={"key": "wind_log_step", "value": 1},
+                ),
+            ],
+        ),
+
     ],
 )

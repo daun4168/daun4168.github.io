@@ -242,6 +242,7 @@ CH1_COMMON_DATA = ChapterData(
                     ),
                 ),
                 Action(type=ActionType.REMOVE_ITEM, value=KeywordId.INSULATED_COPPER_WIRE),
+                Action(type=ActionType.REMOVE_ITEM, value=KeywordId.MAGNETITE_CHUNK),
                 Action(
                     type=ActionType.ADD_ITEM,
                     value={

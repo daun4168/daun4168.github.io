@@ -366,11 +366,10 @@ CH1_SCENE7_DATA = SceneData(
                     value={"key": "generator_installed", "value": True},
                 ),
                 Action(
-                    type=ActionType.UPDATE_KEYWORD_DATA,
+                    type=ActionType.UPDATE_STATE,
                     value={
                         "keyword": KeywordId.HYDRO_GENERATOR,
-                        "field": "state",
-                        "value": KeywordState.DISCOVERED,
+                        "state": KeywordState.DISCOVERED,
                     },
                 ),
             ],

@@ -85,10 +85,10 @@ CH1_COMMON_DATA = ChapterData(
         # ------------------------------------------------------------------
         # --- 1) 코팅된 코코넛 껍질 + 덩굴 줄기 → 임시 수차 로터 ---
         Combination(
-            targets=[KeywordId.COATED_COCONUT_SHELL, KeywordId.VINES],
+            targets=[KeywordId.COATED_COCONUT_SHELL, KeywordId.VINE_STEM],
             conditions=[
                 Condition(type=ConditionType.HAS_ITEM, target=KeywordId.COATED_COCONUT_SHELL),
-                Condition(type=ConditionType.HAS_ITEM, target=KeywordId.VINES),
+                Condition(type=ConditionType.HAS_ITEM, target=KeywordId.VINE_STEM),
             ],
             actions=[
                 Action(
@@ -99,7 +99,7 @@ CH1_COMMON_DATA = ChapterData(
                     ),
                 ),
                 Action(type=ActionType.REMOVE_ITEM, value=KeywordId.COATED_COCONUT_SHELL),
-                Action(type=ActionType.REMOVE_ITEM, value=KeywordId.VINES),
+                Action(type=ActionType.REMOVE_ITEM, value=KeywordId.VINE_STEM),
                 Action(
                     type=ActionType.ADD_ITEM,
                     value={
@@ -128,9 +128,9 @@ CH1_COMMON_DATA = ChapterData(
         ),
         # 잘못된 조합: 덩굴 줄기 + 바위 고리
         Combination(
-            targets=[KeywordId.VINES, KeywordId.STONE_RING],
+            targets=[KeywordId.VINE_STEM, KeywordId.STONE_RING],
             conditions=[
-                Condition(type=ConditionType.HAS_ITEM, target=KeywordId.VINES),
+                Condition(type=ConditionType.HAS_ITEM, target=KeywordId.VINE_STEM),
                 Condition(type=ConditionType.HAS_ITEM, target=KeywordId.STONE_RING),
             ],
             actions=[
@@ -171,10 +171,10 @@ CH1_COMMON_DATA = ChapterData(
         ),
         # 잘못된 조합: 나무 축 + 덩굴 줄기
         Combination(
-            targets=[KeywordId.WOODEN_SHAFT, KeywordId.VINES],
+            targets=[KeywordId.WOODEN_SHAFT, KeywordId.VINE_STEM],
             conditions=[
                 Condition(type=ConditionType.HAS_ITEM, target=KeywordId.WOODEN_SHAFT),
-                Condition(type=ConditionType.HAS_ITEM, target=KeywordId.VINES),
+                Condition(type=ConditionType.HAS_ITEM, target=KeywordId.VINE_STEM),
             ],
             actions=[
                 Action(
@@ -254,10 +254,10 @@ CH1_COMMON_DATA = ChapterData(
         ),
         # 잘못된 조합: 자철석 조각 + 덩굴 줄기 → 구박
         Combination(
-            targets=[KeywordId.MAGNETITE_CHUNK, KeywordId.VINES],
+            targets=[KeywordId.MAGNETITE_CHUNK, KeywordId.VINE_STEM],
             conditions=[
                 Condition(type=ConditionType.HAS_ITEM, target=KeywordId.MAGNETITE_CHUNK),
-                Condition(type=ConditionType.HAS_ITEM, target=KeywordId.VINES),
+                Condition(type=ConditionType.HAS_ITEM, target=KeywordId.VINE_STEM),
             ],
             actions=[
                 Action(
@@ -308,10 +308,10 @@ CH1_COMMON_DATA = ChapterData(
         ),
         # 잘못된 조합: 수력 발전 모듈 + 덩굴 줄기
         Combination(
-            targets=[KeywordId.HYDRO_DYNAMO_MODULE, KeywordId.VINES],
+            targets=[KeywordId.HYDRO_DYNAMO_MODULE, KeywordId.VINE_STEM],
             conditions=[
                 Condition(type=ConditionType.HAS_ITEM, target=KeywordId.HYDRO_DYNAMO_MODULE),
-                Condition(type=ConditionType.HAS_ITEM, target=KeywordId.VINES),
+                Condition(type=ConditionType.HAS_ITEM, target=KeywordId.VINE_STEM),
             ],
             actions=[
                 Action(
@@ -359,10 +359,10 @@ CH1_COMMON_DATA = ChapterData(
         ),
         # [부정] 코코넛 껍질 + 덩굴 줄기: 코팅(방수) 필요성 암시
         Combination(
-            targets=[KeywordId.COCONUT_SHELL, KeywordId.VINES],
+            targets=[KeywordId.COCONUT_SHELL, KeywordId.VINE_STEM],
             conditions=[
                 Condition(type=ConditionType.HAS_ITEM, target=KeywordId.COCONUT_SHELL),
-                Condition(type=ConditionType.HAS_ITEM, target=KeywordId.VINES),
+                Condition(type=ConditionType.HAS_ITEM, target=KeywordId.VINE_STEM),
             ],
             actions=[
                 Action(

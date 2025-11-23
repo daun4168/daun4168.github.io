@@ -130,7 +130,7 @@ CH1_SCENE1_DATA = SceneData(
                         Action(
                             type=ActionType.ADD_ITEM,
                             value={
-                                "name": KeywordId.VINES,
+                                "name": KeywordId.VINE_STEM,
                                 "description": "단단하고 질긴 덩굴 줄기다. 뭔가를 묶거나 임시 로프로 쓰기 좋다.",
                             },
                         ),

@@ -139,7 +139,8 @@ class KeywordId(StrEnum):
     # CH1_SCENE4: 공명하는 숲 (생태 관측소)
     ECO_OBSERVATORY = "생태 관측소"
     OBSERVATORY_INSIDE = "관측소 내부"
-    VINES = "덩굴 줄기"
+    VINE = "덩굴"
+    VINE_STEM = "덩굴 줄기"
     BOTANIST_MURAL = "벽화"
     FLOWER_BED = "화단"
     BOTANY_NOTE = "관찰 일지"

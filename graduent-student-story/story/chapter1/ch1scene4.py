@@ -244,7 +244,7 @@ CH1_SCENE4_DATA = SceneData(
             ],
         ),
         # 덩굴
-        KeywordId.VINES: KeywordData(
+        KeywordId.VINE: KeywordData(
             type=KeywordType.OBJECT,
             state=KeywordState.HIDDEN,
             description="두꺼운 덩굴줄기가 관측소 벽면과 문틀을 칭칭 감고 있다. 맨손으로는 떼어낼 수 없을 것 같다.",
@@ -791,7 +791,7 @@ CH1_SCENE4_DATA = SceneData(
     combinations=[
         # 덩굴 제거: 소방 도끼 + 덩굴
         Combination(
-            targets=[KeywordId.FIRE_AXE, KeywordId.VINES],
+            targets=[KeywordId.FIRE_AXE, KeywordId.VINE],
             actions=[
                 Action(
                     type=ActionType.PRINT_NARRATIVE,
@@ -802,7 +802,7 @@ CH1_SCENE4_DATA = SceneData(
                 ),
                 Action(
                     type=ActionType.REMOVE_KEYWORD,
-                    value=KeywordId.VINES,
+                    value=KeywordId.VINE,
                 ),
                 Action(
                     type=ActionType.UPDATE_STATE,

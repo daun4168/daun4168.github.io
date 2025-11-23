@@ -20,6 +20,7 @@ CH1_SCENE2_DATA = SceneData(
         "door_opened": False,
         "underground_inspected": False,
         "bucket_found": False,  # [신규] 양동이 발견 여부
+        "floor_wires_collected": False,  # 바닥 전선에서 구리선을 이미 챙겼는지 여부
     },
     keywords={
         KeywordId.BASECAMP: KeywordData(type=KeywordType.ALIAS, target=KeywordId.BEACH),
@@ -231,7 +232,60 @@ CH1_SCENE2_DATA = SceneData(
         KeywordId.FLOOR_WIRES: KeywordData(
             type=KeywordType.OBJECT,
             state=KeywordState.HIDDEN,
-            description="뱀처럼 얽혀있는 전선들이다. 피복이 벗겨져 구리가 드러나 있지만, 녹이 너무 심해 재활용하기엔 글렀다. 밟지 않게 조심하자.",
+            description=(
+                "바닥에 뱀처럼 얽혀있는 전선들이다. 피복이 벗겨져 구리가 드러나 있어 밟으면 감전될지도 모른다."
+            ),
+            interactions=[
+                # 첫 조사: 구리 전선 챙기기
+                Interaction(
+                    conditions=[
+                        Condition(
+                            type=ConditionType.STATE_IS,
+                            target="floor_wires_collected",
+                            value=False,
+                        )
+                    ],
+                    actions=[
+                        Action(
+                            type=ActionType.PRINT_NARRATIVE,
+                            value=(
+                                "살펴보니 완전히 썩어빠진 부분을 제외하면, 아직 쓸 만한 구리선이 조금 남아 있다.\n"
+                                "가장 멀쩡해 보이는 구간만 골라 조심스럽게 잘라서 말아 챙겨 둔다."
+                            ),
+                        ),
+                        Action(
+                            type=ActionType.ADD_ITEM,
+                            value={
+                                "name": KeywordId.COPPER_WIRE,
+                                "description": (
+                                    "피복이 거의 다 벗겨진 구리 전선 조각이다. 구리 자체는 멀쩡하지만, "
+                                    "이 상태로 그대로 쓰면 감전 위험이 크다. 절연 처리가 필요해 보인다."
+                                ),
+                            },
+                        ),
+                        Action(
+                            type=ActionType.UPDATE_STATE,
+                            value={"key": "floor_wires_collected", "value": True},
+                        ),
+                    ],
+                ),
+                # 이후 재조사: 이미 챙긴 뒤
+                Interaction(
+                    conditions=[
+                        Condition(
+                            type=ConditionType.STATE_IS,
+                            target="floor_wires_collected",
+                            value=True,
+                        )
+                    ],
+                    actions=[
+                        Action(
+                            type=ActionType.PRINT_SYSTEM,
+                            value="쓸 만한 구리 전선은 이미 모두 걷어냈다. 남은 건 부서진 피복과 녹슨 구리 찌꺼기뿐이다.",
+                        )
+                    ],
+                ),
+            ],
         ),
     },
     combinations=[

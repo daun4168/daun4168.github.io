@@ -9,15 +9,24 @@ CH1_COMMON_DATA = ChapterData(
         # 어떤 씬에서든 코코넛과 스패너가 있다면 먹을 수 있음
         Combination(
             targets=[KeywordId.COCONUT, KeywordId.SPANNER],
-            conditions=[Condition(type=ConditionType.HAS_ITEM, target=KeywordId.COCONUT)],
+            conditions=[
+                Condition(type=ConditionType.HAS_ITEM, target=KeywordId.COCONUT),
+            ],
             actions=[
                 Action(
                     type=ActionType.PRINT_NARRATIVE,
-                    value="**[스패너]**로 **[코코넛]**을 깨서 마셨다. 미지근하지만 달콤하다.",
+                    value="**[스패너]**로 **[코코넛]**을 깨서 속의 물을 마셨다. 미지근하지만 달콤하다. 남은 **[코코넛 껍질]**은 챙겨 두자.",
                 ),
                 Action(type=ActionType.REMOVE_ITEM, value=KeywordId.COCONUT),
-                Action(type=ActionType.MODIFY_STAMINA, value=15),
-                Action(type=ActionType.PRINT_SYSTEM, value="갈증 해소! 체력 +15"),
+                Action(
+                    type=ActionType.ADD_ITEM,
+                    value={
+                        "name": KeywordId.COCONUT_SHELL,
+                        "description": "속을 다 비운 코코넛 껍질이다. 잘 말리면 그릇이나 수차 날개로 쓸 수 있을 것 같다.",
+                    },
+                ),
+                Action(type=ActionType.MODIFY_STAMINA, value=5),
+                Action(type=ActionType.PRINT_SYSTEM, value="갈증 해소! 체력 +5"),
             ],
         ),
         # [준비용 조합 1] 라텍스 + 식초(풀) → 고무 + 반쯤 남은 식초

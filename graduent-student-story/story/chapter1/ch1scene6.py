@@ -1003,6 +1003,7 @@ CH1_SCENE6_DATA = SceneData(
             ],
         ),
         # 소방 도끼 + 석영 군집 → 석영 획득 & 도끼 파괴
+        # 소방 도끼 + 석영 군집 → 석영 획득 (도끼는 살아남음)
         Combination(
             targets=[KeywordId.FIRE_AXE, KeywordId.QUARTZ_CLUSTER],
             conditions=[
@@ -1015,9 +1016,9 @@ CH1_SCENE6_DATA = SceneData(
                     value=(
                         "소방 도끼를 높이 쳐들고 석영 군집의 가장 튀어나온 부분을 힘껏 내리찍었다.\n"
                         "**깡-!** 하는 날카로운 굉음과 함께 손목이 저릴 정도의 충격이 전해진다.\n\n"
-                        "손바닥만 한 맑은 석영 조각이 바닥으로 튀어 올랐지만, 동시에 도끼날이 충격을 이기지 못하고 "
-                        "**딱!** 하는 소리와 함께 자루에서 부러져 나가 어둠 속 깊은 틈새로 튕겨져 버렸다.\n"
-                        "오래된 도끼가 **경도 7**의 석영을 이기기엔 역부족이었던 모양이다."
+                        "손바닥만 한 맑은 석영 조각이 바닥으로 튀어 오른다. 도끼날은 여기저기 흠집이 났지만, "
+                        "다행히 완전히 부러지지는 않았다.\n"
+                        "오래된 도끼가 **경도 7**의 석영을 상대로 겨우 한 번은 버텨 준 셈이다."
                     ),
                 ),
                 Action(
@@ -1026,11 +1027,6 @@ CH1_SCENE6_DATA = SceneData(
                         "name": KeywordId.QUARTZ_SHARD,
                         "description": "맑은 석영 조각이다. 전자 장비의 기준 발진기로 쓰기에 적당해 보인다.",
                     },
-                ),
-                # ⭐ 도끼 삭제 로직 추가
-                Action(
-                    type=ActionType.REMOVE_ITEM,
-                    value=KeywordId.FIRE_AXE,
                 ),
                 Action(
                     type=ActionType.UPDATE_STATE,

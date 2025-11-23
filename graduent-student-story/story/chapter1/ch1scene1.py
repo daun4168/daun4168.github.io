@@ -22,6 +22,7 @@ CH1_SCENE1_DATA = SceneData(
         "searched_trash": False,
         "has_shelter": False,
         "forest_cleared": False,  # [신규] 숲길 개척 여부
+        "vines_collected": False,
     },
     on_enter_actions=[
         # 체력 UI 표시 (자동 저장은 제거됨)
@@ -106,9 +107,59 @@ CH1_SCENE1_DATA = SceneData(
             type=KeywordType.PORTAL,
             state=KeywordState.HIDDEN,
             interactions=[
-                # Case 1: 숲길이 개척되었을 때 (이동)
+                # Case 1-1: 숲길이 개척되었고, 아직 덩굴 줄기를 챙기지 않았을 때
                 Interaction(
-                    conditions=[Condition(type=ConditionType.STATE_IS, target="forest_cleared", value=True)],
+                    conditions=[
+                        Condition(type=ConditionType.STATE_IS, target="forest_cleared", value=True),
+                        Condition(type=ConditionType.STATE_IS, target="vines_collected", value=False),
+                    ],
+                    actions=[
+                        Action(
+                            type=ActionType.PRINT_NARRATIVE,
+                            value=(
+                                "도끼로 잘려 나간 덩굴들이 입구 주변에 수북이 쌓여 있다.\n"
+                                "당신은 그중에서 비교적 탄탄한 **[덩굴 줄기]** 몇 가닥을 골라 잘라 챙겨 둔다."
+                            ),
+                        ),
+                        Action(
+                            type=ActionType.ADD_ITEM,
+                            value={
+                                "name": KeywordId.VINES,
+                                "description": "단단하고 질긴 덩굴 줄기다. 뭔가를 묶거나 임시 로프로 쓰기 좋다.",
+                            },
+                        ),
+                        Action(
+                            type=ActionType.UPDATE_STATE,
+                            value={"key": "vines_collected", "value": True},
+                        ),
+                        # 덩굴 줍고 나서 바로 진입 여부 물어보기
+                        Action(
+                            type=ActionType.REQUEST_CONFIRMATION,
+                            value={
+                                "prompt": "**[숲 입구]**로 진입하시겠습니까?",
+                                "confirm_actions": [
+                                    Action(
+                                        type=ActionType.PRINT_NARRATIVE,
+                                        value="잘려 나간 덩굴 사이로 난 길을 따라 울창한 숲속으로 들어갑니다.",
+                                    ),
+                                    Action(type=ActionType.MOVE_SCENE, value=SceneID.CH1_SCENE4),
+                                ],
+                                "cancel_actions": [
+                                    Action(
+                                        type=ActionType.PRINT_NARRATIVE,
+                                        value="덩굴 줄기를 한 번 더 살펴보다가, 일단은 들어가지 않기로 합니다.",
+                                    ),
+                                ],
+                            },
+                        ),
+                    ],
+                ),
+                # Case 1-2: 숲길이 개척되었고, 이미 덩굴 줄기를 챙긴 뒤 (기존 이동 로직)
+                Interaction(
+                    conditions=[
+                        Condition(type=ConditionType.STATE_IS, target="forest_cleared", value=True),
+                        Condition(type=ConditionType.STATE_IS, target="vines_collected", value=True),
+                    ],
                     actions=[
                         Action(
                             type=ActionType.REQUEST_CONFIRMATION,
@@ -133,9 +184,12 @@ CH1_SCENE1_DATA = SceneData(
                     actions=[
                         Action(
                             type=ActionType.PRINT_NARRATIVE,
-                            value="울창한 밀림이다. 억센 덩굴이 그물처럼 얽혀 있어 맨몸으로는 뚫고 지나갈 수 없다.\n무언가 **날카롭고 무거운 도구**가 있다면 길을 낼 수 있을 것 같다.",
-                        )
-                    ]
+                            value=(
+                                "울창한 밀림이다. 억센 덩굴이 그물처럼 얽혀 있어 맨몸으로는 뚫고 지나갈 수 없다.\n"
+                                "무언가 **날카롭고 무거운 도구**가 있다면 길을 낼 수 있을 것 같다."
+                            ),
+                        ),
+                    ],
                 ),
             ],
         ),

@@ -138,7 +138,7 @@ class KeywordId(StrEnum):
     # CH1_SCENE4: 공명하는 숲 (생태 관측소)
     ECO_OBSERVATORY = "생태 관측소"
     OBSERVATORY_INSIDE = "관측소 내부"
-    VINES = "덩굴"
+    VINES = "덩굴 줄기"
     BOTANIST_MURAL = "벽화"
     FLOWER_BED = "화단"
     BOTANY_NOTE = "관찰 일지"
@@ -161,6 +161,9 @@ class KeywordId(StrEnum):
     RESIN = "송진"
     INSULATED_WIRE = "절연 전선"
     WATERPROOF_BOOTS = "방수 부츠"
+    RUBBER_TREE = "고무나무"
+    COATED_COCONUT_SHELL = "코팅된 코코넛 껍질"
+    INSULATED_COPPER_WIRE = "절연 구리선"
 
     # CH1_SCENE5 - 늪지대
     SWAMP_TRASH = "늪 쓰레기 더미"
@@ -219,6 +222,74 @@ class KeywordId(StrEnum):
     GROWTH_INSCRIPTION = "짧은 글귀"
     GROWTH_PATTERN_ALIAS = "무늬"
     GROWTH_INSCRIPTION_ALIAS = "글귀"
+
+    # 7
+    # 7
+    UNDERGROUND_LAKE = "지하 호수"
+    UNDERGROUND_LAKE_ALIAS = "호수"
+    WATERFALL = "폭포"
+    WATERFALL_ALIAS = "물폭포"
+    LAKE_SHORE = "호숫가"
+    STONE_RING = "바위 고리"
+    MAGNETIC_ROCK = "자석 바위"
+    RESIN_POOL = "수지 웅덩이"
+    LAKE_BACK_TUNNEL = "경사로"
+
+    TOOL_POUCH = "공구 파우치"
+
+    MAGNETITE_CHUNK = "자철석 조각"
+    COPPER_WIRE = "구리선"
+    COCONUT_SHELL = "코코넛 껍질"
+    MAKESHIFT_ROTOR = "임시 수차 로터"
+    DYNAMO_CORE = "발전 코어"
+    HYDRO_DYNAMO_MODULE = "수력 발전 모듈"
+    RESIN_GLOB = "수지 덩어리"
+
+    # 8
+    CLIFF_FACE = "절벽"
+    CLIFF_ALIAS = "바위 절벽"
+    CLIFF_TOP_PATH = "절벽 위 길"
+    CLIFF_UP_ALIAS = "위로 가는 길"
+    CLIFF_BACK_PATH = "돌아가는 길"
+    CLIFF_BACK_ALIAS = "하산 길"
+    PULLEY_ANCHOR = "바위 턱"
+    STONE_PILE = "돌무더기"
+    CLIFF_SPRING = "절벽 샘물"
+
+    EQUIPMENT_BUNDLE = "장비 상자"
+    CLIMBING_ROPE = "등반용 로프"
+    PULLEY_WHEEL = "도르래 바퀴"
+    CARGO_NET = "그물 바구니"
+
+    WEATHER_CRATE = "관측 장비 상자"
+    SMALL_BOTTLE = "작은 병"
+    WATER_FILLED_BOTTLE = "물 채운 병"
+    PLASTIC_STRAW = "빨대 조각"
+    IMPROVISED_BAROMETER = "간이 기압계"
+    BAROMETER_ALIAS = "기압계"
+    WEATHER_LOG = "기압 메모"
+
+    # 9
+    SUMMIT_ROCK = "산 정상 암반"
+    SUMMIT_ALIAS = "정상"
+    WET_SOIL = "젖은 흙"
+    STORM_SKY = "폭풍 하늘"
+    STORM_ALIAS = "먹구름"
+
+    METAL_PIPE_BUNDLE = "금속 파이프 묶음"
+    ANTENNA_MAST = "안테나 기둥"
+    ANTENNA_ALIAS = "기둥"
+    ANTENNA_CABLE = "안테나 케이블"
+
+    GROUND_ROD = "접지 말뚝"
+    GROUND_ROD_TOP = "접지 말뚝 머리"
+    GROUND_CABLE = "접지 케이블"
+
+    MK_II_SUMMIT = "휴대용 MK-II 모듈"
+
+    TUNING_PANEL = "튜닝 패널"
+    TUNING_ALIAS = "튜닝"
+    TUNING_COIL = "튜닝 코일"
 
 
 class KeywordState(StrEnum):

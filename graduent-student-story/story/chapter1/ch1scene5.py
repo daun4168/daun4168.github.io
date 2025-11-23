@@ -8,7 +8,7 @@ CH1_SCENE5_DATA = SceneData(
     initial_text=(
         "생태 관측소 뒤편의 좁은 길을 따라 한참을 내려오자, 발밑 흙이 점점 질어지기 시작한다.\n"
         "발밑에는 탁한 늪물이 질척거리며 고여 있어, 어디든 발을 잘못 디디면 그대로 빠질 것 같다.\n"
-        "한 걸음 내디딜 때마다 진흙이 신발을 붙잡고 늘어지는 느낌이 들고, 공기에서는 썩은 물 냄새가 올라온다.\n\n"
+        "길 옆에는 껍질이 두껍고 줄기가 굵은 고무나무 몇 그루가 서 있고, 공기에서는 썩은 물 냄새가 올라온다.\n\n"
         "앞쪽으로는 녹색 거품이 피어오르는 넓은 늪지대가 펼쳐져 있고, 중앙의 외길 위에는 거대한 악어 한 마리가 몸을 뻗고 누워 있다.\n"
         "늪 가장자리에는 물살에 떠밀려 온 듯한 늪 쓰레기 더미가 쌓여 있어, 무언가 쓸 만한 것이 있을지도 모른다.\n"
         "그 뒤쪽으로는 물 위에 반쯤 떠 있는 끊어진 다리가 보이고, 그 너머에는 조금 더 단단해 보이는 언덕과 "
@@ -22,6 +22,7 @@ CH1_SCENE5_DATA = SceneData(
         "forest_path_inspected": False,
         "trash_searched": False,
         "cave_inspected": False,
+        "rubber_sap_opened": False,
     },
     on_enter_actions=[
         Action(type=ActionType.SHOW_STAMINA_UI, value=True),
@@ -421,6 +422,52 @@ CH1_SCENE5_DATA = SceneData(
                                 "발을 딛으면 살짝 출렁거리지만, 조심해서 건너면 반대편 언덕까지 갈 수 있을 것 같다."
                             ),
                         )
+                    ],
+                ),
+            ],
+        ),
+        KeywordId.RUBBER_TREE: KeywordData(
+            type=KeywordType.OBJECT,
+            state=KeywordState.HIDDEN,
+            description=None,  # 상태별로 인터랙션에서 출력하니까 None으로 두는 걸 추천
+            interactions=[
+                # 아직 도끼질 안 해서 수액이 많이 안 나올 때
+                Interaction(
+                    conditions=[
+                        Condition(
+                            type=ConditionType.STATE_IS,
+                            target="rubber_sap_opened",
+                            value=False,
+                        )
+                    ],
+                    actions=[
+                        Action(
+                            type=ActionType.PRINT_NARRATIVE,
+                            value=(
+                                "껍질이 두껍고 줄기가 굵은 나무다. 여기저기 오래된 상처 자국이 보이고, "
+                                "갈라진 틈에서 하얀 진이 조금씩 배어나오고 있다.\n"
+                                "가까이 다가가면 나무 수액 특유의 약간 달큰한 냄새가 난다."
+                            ),
+                        ),
+                    ],
+                ),
+                # 한 번 도끼질 해서 rubber_sap_opened == True인 상태
+                Interaction(
+                    conditions=[
+                        Condition(
+                            type=ConditionType.STATE_IS,
+                            target="rubber_sap_opened",
+                            value=True,
+                        )
+                    ],
+                    actions=[
+                        Action(
+                            type=ActionType.PRINT_NARRATIVE,
+                            value=(
+                                "껍질이 갈라진 고무나무 줄기에서 하얀 수액이 계속 흘러내리고 있다.\n"
+                                "진이 굳어가며 줄기 표면에 두꺼운 층을 만들고, 바닥에는 점점점 작은 방울 자국이 쌓여 있다."
+                            ),
+                        ),
                     ],
                 ),
             ],
@@ -964,6 +1011,127 @@ CH1_SCENE5_DATA = SceneData(
                         "독가스를 제대로 쓰려면, 늪 전체에 흘려 보내기보다는 "
                         "양동이 안에서 반응을 한 번에 폭발적으로 일으킨 뒤, "
                         "악어 쪽으로 한꺼번에 퍼뜨리는 편이 훨씬 효과적일 것 같습니다."
+                    ),
+                ),
+            ],
+        ),
+        # 소방 도끼 + 고무나무 (처음 찍어서 수액 흐르게 만들기)
+        Combination(
+            targets=[KeywordId.FIRE_AXE, KeywordId.RUBBER_TREE],
+            conditions=[
+                Condition(type=ConditionType.HAS_ITEM, target=KeywordId.FIRE_AXE),
+                Condition(type=ConditionType.STATE_IS, target="rubber_sap_opened", value=False),
+            ],
+            actions=[
+                Action(
+                    type=ActionType.PRINT_NARRATIVE,
+                    value=(
+                        "소방 도끼로 고무나무 줄기를 살짝 내리치자, 두껍게 갈라진 껍질 사이로 하얀 수액이 더 힘차게 배어나오기 시작한다.\n"
+                        "진이 줄기를 따라 천천히 흘러내리며 바닥에 작은 점들을 찍는다."
+                    ),
+                ),
+                Action(
+                    type=ActionType.UPDATE_STATE,
+                    value={"key": "rubber_sap_opened", "value": True},
+                ),
+            ],
+        ),
+        # 소방 도끼 + 고무나무 (이미 수액이 흐르고 있을 때 다시 찍기)
+        Combination(
+            targets=[KeywordId.FIRE_AXE, KeywordId.RUBBER_TREE],
+            conditions=[
+                Condition(type=ConditionType.HAS_ITEM, target=KeywordId.FIRE_AXE),
+                Condition(type=ConditionType.STATE_IS, target="rubber_sap_opened", value=True),
+            ],
+            actions=[
+                Action(
+                    type=ActionType.PRINT_NARRATIVE,
+                    value=(
+                        "이미 도끼질한 상처에서 하얀 수액이 계속 흘러내리고 있다.\n"
+                        "더 찍어 봐야 수액만 괜히 낭비될 것 같다."
+                    ),
+                ),
+            ],
+        ),
+        Combination(
+            targets=[KeywordId.COCONUT_SHELL, KeywordId.RUBBER_TREE],
+            conditions=[
+                Condition(type=ConditionType.HAS_ITEM, target=KeywordId.COCONUT_SHELL),
+                Condition(type=ConditionType.STATE_IS, target="rubber_sap_opened", value=True),
+            ],
+            actions=[
+                Action(
+                    type=ActionType.PRINT_NARRATIVE,
+                    value=(
+                        "코코넛 껍질 안쪽을 고무나무 수액에 슥슥 문지르자, 표면에 끈적한 막이 생긴다.\n"
+                        "잠시 말려 두면 물에도 잘 버티는 튼튼한 수차 날개가 될 것 같다."
+                    ),
+                ),
+                Action(type=ActionType.REMOVE_ITEM, value=KeywordId.COCONUT_SHELL),
+                Action(
+                    type=ActionType.ADD_ITEM,
+                    value={
+                        "name": KeywordId.COATED_COCONUT_SHELL,
+                        "description": "고무 수액으로 코팅한 코코넛 껍질이다. 수차 날개로 쓰기 좋다.",
+                    },
+                ),
+            ],
+        ),
+        Combination(
+            targets=[KeywordId.COPPER_WIRE, KeywordId.RUBBER_TREE],
+            conditions=[
+                Condition(type=ConditionType.HAS_ITEM, target=KeywordId.COPPER_WIRE),
+                Condition(type=ConditionType.STATE_IS, target="rubber_sap_opened", value=True),
+            ],
+            actions=[
+                Action(
+                    type=ActionType.PRINT_NARRATIVE,
+                    value=(
+                        "피복이 벗겨진 구리 전선을 고무나무 수액에 여러 번 담갔다 빼낸다.\n"
+                        "수액이 굳으면서 전선 주변에 얇은 고무막이 형성된다.\n"
+                        "완벽한 공인 규격은 아니지만, 무인도 표준으로는 충분히 안전한 절연 전선이다."
+                    ),
+                ),
+                Action(type=ActionType.REMOVE_ITEM, value=KeywordId.COPPER_WIRE),
+                Action(
+                    type=ActionType.ADD_ITEM,
+                    value={
+                        "name": KeywordId.INSULATED_COPPER_WIRE,
+                        "description": "고무 수액으로 임시 피복을 씌운 구리 전선이다. 임시 회로를 짜기에 충분하다.",
+                    },
+                ),
+            ],
+        ),
+        # 고무나무 + 코코넛 껍질 (아직 수액을 안 틔운 상태)
+        Combination(
+            targets=[KeywordId.RUBBER_TREE, KeywordId.COCONUT_SHELL],
+            conditions=[
+                Condition(type=ConditionType.HAS_ITEM, target=KeywordId.COCONUT_SHELL),
+                Condition(type=ConditionType.STATE_IS, target="rubber_sap_opened", value=False),
+            ],
+            actions=[
+                Action(
+                    type=ActionType.PRINT_NARRATIVE,
+                    value=(
+                        "코코넛 껍질을 고무나무 줄기에 대 보지만, 겉껍질이 단단해 수액이 거의 묻지 않는다.\n"
+                        "먼저 줄기에 상처를 좀 더 내서 수액이 잘 나오게 만들어야 할 것 같다."
+                    ),
+                ),
+            ],
+        ),
+        # 고무나무 + 구리 전선 (아직 수액을 안 틔운 상태)
+        Combination(
+            targets=[KeywordId.RUBBER_TREE, KeywordId.COPPER_WIRE],
+            conditions=[
+                Condition(type=ConditionType.HAS_ITEM, target=KeywordId.COPPER_WIRE),
+                Condition(type=ConditionType.STATE_IS, target="rubber_sap_opened", value=False),
+            ],
+            actions=[
+                Action(
+                    type=ActionType.PRINT_NARRATIVE,
+                    value=(
+                        "피복이 벗겨진 구리 전선을 고무나무 줄기에 대 보지만, 겉껍질만 미끄럽게 스칠 뿐이다.\n"
+                        "먼저 줄기를 살짝 찍어 상처를 내고, 수액이 흘러나오도록 만들어야 전선에 제대로 묻을 것 같다."
                     ),
                 ),
             ],

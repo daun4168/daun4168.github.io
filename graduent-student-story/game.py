@@ -107,6 +107,9 @@ class Game:
         factory.register_scene(SceneID.CH1_SCENE4, Scene, CH1_SCENE4_DATA, CH1_COMMON_DATA)
         factory.register_scene(SceneID.CH1_SCENE5, Scene, CH1_SCENE5_DATA, CH1_COMMON_DATA)
         factory.register_scene(SceneID.CH1_SCENE6, Scene, CH1_SCENE6_DATA, CH1_COMMON_DATA)
+        factory.register_scene(SceneID.CH1_SCENE7, Scene, CH1_SCENE7_DATA, CH1_COMMON_DATA)
+        factory.register_scene(SceneID.CH1_SCENE8, Scene, CH1_SCENE8_DATA, CH1_COMMON_DATA)
+        factory.register_scene(SceneID.CH1_SCENE9, Scene, CH1_SCENE9_DATA, CH1_COMMON_DATA)
 
         return factory
 

@@ -46,6 +46,11 @@ class StaminaMinHandler(ConditionHandler):
         return scene.player.current_stamina >= int(value)
 
 
+class StonePuzzleHandler(ConditionHandler):
+    def check(self, scene, target, value) -> bool:
+        return scene.player.current_stamina >= int(value)
+
+
 # --- Action Implementations ---
 
 
@@ -206,6 +211,7 @@ CONDITION_HANDLERS = {
     ConditionType.STATE_IS: StateIsHandler(),
     ConditionType.STATE_NOT: StateNotHandler(),
     ConditionType.STAMINA_MIN: StaminaMinHandler(),
+    ConditionType.STONE_PUZZLE: StonePuzzleHandler(),
 }
 
 ACTION_HANDLERS = {

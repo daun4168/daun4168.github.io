@@ -335,6 +335,7 @@ class ConditionType(StrEnum):
     STATE_IS = "state_is"
     STATE_NOT = "state_not"
     STAMINA_MIN = "stamina_min"
+    STONE_PUZZLE = "stone_puzzle"
 
 
 class ActionType(StrEnum):

@@ -22,7 +22,7 @@ CH1_SCENE8_DATA = SceneData(
     ),
     initial_state={
         # 상자들 상태
-        "gear_crate_opened": False,        # 장비 상자 열렸는지
+        "gear_crate_opened": False,  # 장비 상자 열렸는지
         "gear_nameplate_detached": False,  # 장비 상자에서 금속 명판을 떼어냈는지
         "obs_crate_opened": False,  # 관측 장비 상자(풍향계 재료)
         "ascent_crate_opened": False,  # 등반 장비 상자(도르래 재료)
@@ -102,9 +102,100 @@ CH1_SCENE8_DATA = SceneData(
             state=KeywordState.HIDDEN,
             description=(
                 "절벽 상단 가까이에 튀어나온 단단한 바위 턱이 보인다.\n"
-                "누가 봐도 로프나 도르래를 걸기 딱 좋은 위치다. "
-                "이미 누군가 여기서 비슷한 짓을 해 본 흔적(닳은 자국)도 보인다."
+                "거칠게 닳은 표면이, 여기서 무언가를 여러 번 걸었다 뗐다 한 흔적을 말해 준다."
             ),
+            interactions=[
+                # progress 0: 아직 아무것도 안 설치된 상태
+                Interaction(
+                    conditions=[
+                        Condition(type=ConditionType.STATE_IS, target="pulley_progress", value=0),
+                    ],
+                    actions=[
+                        Action(
+                            type=ActionType.PRINT_NARRATIVE,
+                            value=(
+                                "바위 턱 위에는 지금 아무것도 걸려 있지 않다.\n"
+                                "손으로 잡아 보니 충분히 단단해서, 무거운 것 하나 정도 매달려도 끄떡없을 것 같다."
+                            ),
+                        )
+                    ],
+                ),
+                # progress 1: 설치용 큰 도르래까지 단 상태
+                Interaction(
+                    conditions=[
+                        Condition(type=ConditionType.STATE_IS, target="pulley_progress", value=1),
+                    ],
+                    actions=[
+                        Action(
+                            type=ActionType.PRINT_NARRATIVE,
+                            value=(
+                                "바위 턱에는 이제 큰 도르래가 달려 있다.\n"
+                                "바람에 따라 천천히 흔들리는 모습만 보면, 아직 이 장치가 무엇을 끌어올려야 하는지 정해지지 않은 것처럼 보인다."
+                            ),
+                        )
+                    ],
+                ),
+                # progress 2: 도르래 + 정리된 로프 끝까지 통과된 상태
+                Interaction(
+                    conditions=[
+                        Condition(type=ConditionType.STATE_IS, target="pulley_progress", value=2),
+                    ],
+                    actions=[
+                        Action(
+                            type=ActionType.PRINT_NARRATIVE,
+                            value=(
+                                "도르래를 통과한 로프가 바위 턱 위아래로 늘어져 있다.\n"
+                                "줄만 늘어진 모양새라 그런지, 아직은 이 줄에 무엇을 연결해야 할지가 조금 비어 보인다."
+                            ),
+                        )
+                    ],
+                ),
+                # progress 3: 하네스 세트까지 연결된 상태
+                Interaction(
+                    conditions=[
+                        Condition(type=ConditionType.STATE_IS, target="pulley_progress", value=3),
+                    ],
+                    actions=[
+                        Action(
+                            type=ActionType.PRINT_NARRATIVE,
+                            value=(
+                                "로프 한쪽에 하네스 세트가 매달려 있다.\n"
+                                "구조는 갖춰졌지만, 볼트와 연결부 여기저기가 손에 힘을 주면 미세하게 움직이는 느낌이 남아 있다."
+                            ),
+                        )
+                    ],
+                ),
+                # progress 4: 스패너로 조임까지 끝난 상태
+                Interaction(
+                    conditions=[
+                        Condition(type=ConditionType.STATE_IS, target="pulley_progress", value=4),
+                    ],
+                    actions=[
+                        Action(
+                            type=ActionType.PRINT_NARRATIVE,
+                            value=(
+                                "볼트와 연결부를 한 번씩 잡아당겨 보아도 쉽게 움직일 기미는 보이지 않는다.\n"
+                                "다만 로프의 남은 부분이 다소 느슨하게 늘어져 있어, 마지막 손질이 조금 남은 듯한 인상을 준다."
+                            ),
+                        )
+                    ],
+                ),
+                # progress 5 이상: 완성된 상태 (climb_ready == True일 것)
+                Interaction(
+                    conditions=[
+                        Condition(type=ConditionType.STATE_IS, target="pulley_progress", value=5),
+                    ],
+                    actions=[
+                        Action(
+                            type=ActionType.PRINT_NARRATIVE,
+                            value=(
+                                "바위 턱 위에는 도르래와 로프, 하네스가 하나의 장치처럼 자연스럽게 이어져 있다.\n"
+                                "지금 상태라면, 이 장치를 믿고 몸을 맡겨도 될지 모른다는 생각이 든다."
+                            ),
+                        )
+                    ],
+                ),
+            ],
         ),
         KeywordId.STONE_PILE: KeywordData(
             type=KeywordType.OBJECT,
@@ -150,7 +241,6 @@ CH1_SCENE8_DATA = SceneData(
                 ),
             ],
         ),
-
         KeywordId.CLIFF_WIND: KeywordData(
             type=KeywordType.OBJECT,
             state=KeywordState.HIDDEN,
@@ -158,7 +248,6 @@ CH1_SCENE8_DATA = SceneData(
                 "절벽 위쪽에서 거센 바람이 불어온다. 방향이 일정하지 않고, 때때로 방향을 바꾸며 불고 멈추기를 반복한다."
             ),
         ),
-
         # --- 상자들 ---
         KeywordId.EQUIPMENT_BUNDLE: KeywordData(
             type=KeywordType.OBJECT,
@@ -226,7 +315,6 @@ CH1_SCENE8_DATA = SceneData(
                 ),
             ],
         ),
-
         KeywordId.WEATHER_CRATE: KeywordData(
             type=KeywordType.OBJECT,
             state=KeywordState.INACTIVE,
@@ -277,7 +365,6 @@ CH1_SCENE8_DATA = SceneData(
                 ),
             ],
         ),
-
         KeywordId.ASCENT_CRATE: KeywordData(
             type=KeywordType.OBJECT,
             state=KeywordState.INACTIVE,
@@ -325,7 +412,6 @@ CH1_SCENE8_DATA = SceneData(
                 ),
             ],
         ),
-
         KeywordId.BROKEN_FEATURE_PHONE: KeywordData(
             type=KeywordType.OBJECT,
             state=KeywordState.INACTIVE,
@@ -345,8 +431,6 @@ CH1_SCENE8_DATA = SceneData(
                 ),
             ],
         ),
-
-
         # --- 이동 포탈: 위 / 아래 ---
         KeywordId.CLIFF_FACE: KeywordData(
             type=KeywordType.OBJECT,
@@ -440,58 +524,55 @@ CH1_SCENE8_DATA = SceneData(
         # ================================
         Combination(
             type=CombinationType.PASSWORD,
-            targets=[KeywordId.ASCENT_CRATE, "7421"],
+            targets=[KeywordId.EQUIPMENT_BUNDLE, "6691"],
             conditions=[
-                Condition(type=ConditionType.STATE_IS, target="obs_crate_opened", value=True),
-                Condition(type=ConditionType.STATE_IS, target="ascent_crate_opened", value=False),
+                Condition(type=ConditionType.STATE_IS, target="gear_crate_opened", value=False),
             ],
             actions=[
                 Action(
                     type=ActionType.PRINT_NARRATIVE,
                     value=(
-                        "풍향계를 통해 기록한 바람 패턴을 상자 옆 패널에 입력하자, "
-                        "내부에서 하중이 풀리는 소리가 나며 잠금 장치가 열린다.\n"
-                        "상자 안에는 등반용 도르래와 하네스가 가지런히 놓여 있다.\n"
-                        "풍향계는 제 역할을 다 한 것 같다. 이제는 도르래를 조립하는 데 집중해야 한다."
+                        "상자 옆 금속 패널에 6-6-9-1을 차례대로 눌러 본다.\n"
+                        "잠시 후 안쪽에서 '투벅' 하는 무거운 소리와 함께 잠금 장치가 풀리는 느낌이 전해진다.\n"
+                        "덮개를 들어 올리자, 안쪽에서 두 개의 작은 상자와 튼튼한 로프 한 뭉치가 모습을 드러낸다."
                     ),
-                ),
-                # 풍향계 제거
-                Action(
-                    type=ActionType.REMOVE_ITEM,
-                    value=KeywordId.WIND_VANE,
-                ),
-                Action(
-                    type=ActionType.ADD_ITEM,
-                    value={
-                        "name": KeywordId.LARGE_PULLEY,
-                        "description": "큰 도르래다. 바위 턱에 걸어 메인 도르래로 쓰기 좋다.",
-                    },
-                ),
-                Action(
-                    type=ActionType.ADD_ITEM,
-                    value={
-                        "name": KeywordId.SMALL_PULLEY,
-                        "description": "작은 보조 도르래다. 하네스에 달면 힘을 덜 들이고 올라갈 수 있다.",
-                    },
-                ),
-                Action(
-                    type=ActionType.ADD_ITEM,
-                    value={
-                        "name": KeywordId.HARNESS,
-                        "description": "허리와 다리를 감싸는 등반용 하네스다.",
-                    },
                 ),
                 Action(
                     type=ActionType.UPDATE_STATE,
-                    value={"key": "ascent_crate_opened", "value": True},
+                    value={"key": "gear_crate_opened", "value": True},
+                ),
+                # 명판은 더 이상 필요 없으니 인벤토리에서 제거 (있을 경우에만)
+                Action(
+                    type=ActionType.REMOVE_ITEM,
+                    value=KeywordId.EQUIPMENT_NAMEPLATE,
                 ),
                 Action(
                     type=ActionType.PRINT_SYSTEM,
-                    value="이제 도르래를 조립해 절벽을 올라갈 수 있을 것 같습니다.",
+                    value="장비 상자 명판은 더 이상 필요 없을 것 같다. 조심스레 배낭 한쪽에 밀어 넣었다.",
+                ),
+                # 관측/등반 상자 활성화(상태만)
+                Action(
+                    type=ActionType.UPDATE_STATE,
+                    value={"keyword": KeywordId.WEATHER_CRATE, "state": KeywordState.DISCOVERED},
+                ),
+                Action(
+                    type=ActionType.UPDATE_STATE,
+                    value={"keyword": KeywordId.ASCENT_CRATE, "state": KeywordState.DISCOVERED},
+                ),
+                # 로프 지급
+                Action(
+                    type=ActionType.ADD_ITEM,
+                    value={
+                        "name": KeywordId.CLIMBING_ROPE,
+                        "description": "등반용 로프다. 사람 한 명쯤 매달려도 버틸 만큼 튼튼해 보이지만, 끝부분이 해져 있어 그대로는 도르래에 통과시키기 어렵다.",
+                    },
+                ),
+                Action(
+                    type=ActionType.PRINT_SYSTEM,
+                    value="관측 장비 상자와 등반 장비 상자가 눈에 들어오기 시작합니다.",
                 ),
             ],
         ),
-
         # =========================================
         # 2) 관측 장비 상자: 별 핸드폰 퍼즐
         # =========================================
@@ -572,28 +653,34 @@ CH1_SCENE8_DATA = SceneData(
                     value=(
                         "풍향계를 통해 기록한 바람 패턴을 상자 옆 패널에 입력하자, "
                         "내부에서 하중이 풀리는 소리가 나며 잠금 장치가 열린다.\n"
-                        "상자 안에는 등반용 도르래와 하네스가 가지런히 놓여 있다."
+                        "상자 안에는 등반용 도르래와 하네스가 가지런히 놓여 있다.\n"
+                        "풍향계는 제 역할을 다 한 것 같다. 이제는 도르래를 조립하는 데 집중해야 한다."
                     ),
+                ),
+                # 풍향계 제거
+                Action(
+                    type=ActionType.REMOVE_ITEM,
+                    value=KeywordId.WIND_VANE,
                 ),
                 Action(
                     type=ActionType.ADD_ITEM,
                     value={
                         "name": KeywordId.LARGE_PULLEY,
-                        "description": "큰 도르래다. 바위 턱에 걸어 메인 도르래로 쓰기 좋다.",
+                        "description": "큰 도르래다. 바위 턱 같은 곳에 걸어 메인 도르래로 쓰기 좋지만, 제대로 쓰려면 단단히 고정할 필요가 있어 보인다.",
                     },
                 ),
                 Action(
                     type=ActionType.ADD_ITEM,
                     value={
                         "name": KeywordId.SMALL_PULLEY,
-                        "description": "작은 보조 도르래다. 하네스에 달면 힘을 덜 들이고 올라갈 수 있다.",
+                        "description": "작은 보조 도르래다. 하네스 같은 장비에 달아 로프를 한 번 더 꺾어 주면, 몸을 끌어올릴 때 힘을 적게 쓸 수 있다.",
                     },
                 ),
                 Action(
                     type=ActionType.ADD_ITEM,
                     value={
                         "name": KeywordId.HARNESS,
-                        "description": "허리와 다리를 감싸는 등반용 하네스다.",
+                        "description": "허리와 다리를 감싸는 등반용 하네스다. 로프만 매달면 몸이 한쪽으로 쏠리기 쉬워, 어딘가에 도르래 같은 보조 장치를 달아 주는 게 좋아 보인다.",
                     },
                 ),
                 Action(
@@ -697,7 +784,6 @@ CH1_SCENE8_DATA = SceneData(
                         "description": "풍향계를 세우기 위한 기둥이다. 위에 무언가 회전하는 구조물을 올려두면 흔들리지 않을 것 같다.",
                     },
                 ),
-                Action(type=ActionType.REMOVE_ITEM, value=KeywordId.METAL_PIPE),
             ],
         ),
         Combination(
@@ -756,7 +842,6 @@ CH1_SCENE8_DATA = SceneData(
                 ),
             ],
         ),
-
         # 회전 기둥 세트 + 풍향계 날개 → 풍향계 완성
         Combination(
             targets=[KeywordId.PIVOT_POLE_SET, KeywordId.WIND_VANE_WINGS],
@@ -790,7 +875,6 @@ CH1_SCENE8_DATA = SceneData(
                 ),
             ],
         ),
-
         # ====================================
         # 6) 도르래 제작 (아이템 ↔ 아이템)
         # ====================================
@@ -799,7 +883,6 @@ CH1_SCENE8_DATA = SceneData(
             conditions=[
                 Condition(type=ConditionType.HAS_ITEM, target=KeywordId.CLIMBING_ROPE),
                 Condition(type=ConditionType.HAS_ITEM, target=KeywordId.FIRE_AXE),
-                Condition(type=ConditionType.STATE_IS, target="rope_prepared", value=False),
             ],
             actions=[
                 Action(
@@ -810,12 +893,16 @@ CH1_SCENE8_DATA = SceneData(
                     type=ActionType.ADD_ITEM,
                     value={
                         "name": KeywordId.ROPE_TIP_CUT,
-                        "description": "끝이 깔끔하게 정리된 로프 쪽 부분이다. 도르래에 통과시키기 좋다.",
+                        "description": "끝이 깔끔하게 정리된 로프 쪽 부분이다. 도르래에 통과시키거나 바위 턱에 한 번 더 걸어 매기에 알맞다.",
                     },
                 ),
                 Action(
-                    type=ActionType.UPDATE_STATE,
-                    value={"key": "rope_prepared", "value": True},
+                    type=ActionType.UPDATE_ITEM_DATA,
+                    value={
+                        "keyword": KeywordId.CLIMBING_ROPE,
+                        "field": "description",
+                        "value": "등반용 로프다. 사람 한 명쯤 매달려도 버틸 만큼 튼튼해 보인다. 한쪽 끝은 도르래를 통과시키고, 나머지 부분은 몸과 바위에 고정해야 제대로 힘을 쓸 수 있다.",
+                    },
                 ),
             ],
         ),
@@ -824,7 +911,6 @@ CH1_SCENE8_DATA = SceneData(
             conditions=[
                 Condition(type=ConditionType.HAS_ITEM, target=KeywordId.HARNESS),
                 Condition(type=ConditionType.HAS_ITEM, target=KeywordId.SMALL_PULLEY),
-                Condition(type=ConditionType.STATE_IS, target="harness_set_built", value=False),
             ],
             actions=[
                 Action(
@@ -835,14 +921,11 @@ CH1_SCENE8_DATA = SceneData(
                     type=ActionType.ADD_ITEM,
                     value={
                         "name": KeywordId.HARNESS_SET,
-                        "description": "작은 도르래가 달린 하네스 세트다. 로프를 통과시키면 몸이 함께 끌려 올라갈 수 있다.",
+                        "description": "작은 도르래가 달린 하네스 세트다. 로프를 통과시키기만 하면, 바위 턱에 걸어 둔 도르래와 연결되어 몸이 함께 끌려 올라갈 수 있다.",
                     },
                 ),
-                Action(
-                    type=ActionType.UPDATE_STATE,
-                    value={"key": "harness_set_built", "value": True},
-                ),
                 Action(type=ActionType.REMOVE_ITEM, value=KeywordId.SMALL_PULLEY),
+                Action(type=ActionType.REMOVE_ITEM, value=KeywordId.HARNESS),
             ],
         ),
         Combination(
@@ -850,7 +933,6 @@ CH1_SCENE8_DATA = SceneData(
             conditions=[
                 Condition(type=ConditionType.HAS_ITEM, target=KeywordId.LARGE_PULLEY),
                 Condition(type=ConditionType.HAS_ITEM, target=KeywordId.BOLT_SET),
-                Condition(type=ConditionType.STATE_IS, target="main_pulley_prepared", value=False),
             ],
             actions=[
                 Action(
@@ -861,12 +943,8 @@ CH1_SCENE8_DATA = SceneData(
                     type=ActionType.ADD_ITEM,
                     value={
                         "name": KeywordId.MOUNTABLE_PULLEY,
-                        "description": "바위 턱에 바로 고정할 수 있도록 준비된 큰 도르래다.",
+                        "description": "바위 턱에 바로 고정할 수 있도록 볼트까지 세팅해 둔 큰 도르래다. 이제 위치만 잡고 바위 턱에 걸어 주면 된다.",
                     },
-                ),
-                Action(
-                    type=ActionType.UPDATE_STATE,
-                    value={"key": "main_pulley_prepared", "value": True},
                 ),
                 Action(type=ActionType.REMOVE_ITEM, value=KeywordId.LARGE_PULLEY),
             ],
@@ -973,6 +1051,7 @@ CH1_SCENE8_DATA = SceneData(
                     type=ActionType.UPDATE_STATE,
                     value={"key": "climb_ready", "value": True},
                 ),
+                Action(type=ActionType.REMOVE_ITEM, value=KeywordId.CLIMBING_ROPE),
             ],
         ),
         # ===============================
@@ -1123,7 +1202,6 @@ CH1_SCENE8_DATA = SceneData(
                 ),
             ],
         ),
-
         # 장비 상자 + 스패너 → 금속 명판 떼어내기
         Combination(
             targets=[KeywordId.EQUIPMENT_BUNDLE, KeywordId.SPANNER],
@@ -1151,14 +1229,11 @@ CH1_SCENE8_DATA = SceneData(
                     type=ActionType.UPDATE_STATE,
                     value={"key": "gear_nameplate_detached", "value": True},
                 ),
-
             ],
         ),
-
         # ============================================
         # 풍향계 + 바람 관측 로그 (wind_log_step 0 → 1 → 2 → 3 → 4 → 1 …)
         # ============================================
-
         # 0단계: 서풍(W) → 북동풍(NE)
         Combination(
             targets=[KeywordId.CLIFF_WIND, KeywordId.WIND_VANE],
@@ -1181,7 +1256,6 @@ CH1_SCENE8_DATA = SceneData(
                 ),
             ],
         ),
-
         # 1단계: 남풍(S) → 북동풍(NE) → 서풍(W)
         Combination(
             targets=[KeywordId.CLIFF_WIND, KeywordId.WIND_VANE],
@@ -1204,7 +1278,6 @@ CH1_SCENE8_DATA = SceneData(
                 ),
             ],
         ),
-
         # 2단계: 서풍(W) → 북동풍(NE) → 서풍(W)
         Combination(
             targets=[KeywordId.CLIFF_WIND, KeywordId.WIND_VANE],
@@ -1228,7 +1301,6 @@ CH1_SCENE8_DATA = SceneData(
                 ),
             ],
         ),
-
         # 3단계: 북풍(N)
         Combination(
             targets=[KeywordId.CLIFF_WIND, KeywordId.WIND_VANE],
@@ -1251,7 +1323,6 @@ CH1_SCENE8_DATA = SceneData(
                 ),
             ],
         ),
-
         # 4단계: 서풍(W) → 북동풍(NE), 이후 다시 1단계로 루프
         Combination(
             targets=[KeywordId.CLIFF_WIND, KeywordId.WIND_VANE],
@@ -1274,6 +1345,5 @@ CH1_SCENE8_DATA = SceneData(
                 ),
             ],
         ),
-
     ],
 )

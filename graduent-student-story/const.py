@@ -305,8 +305,6 @@ class KeywordId(StrEnum):
     LONG_WIRE = "기다란 전선"
     LONG_WIRE_FREE_END = "남은 전선 끝"
 
-    METAL_PIPE_BUNDLE = "금속 파이프 묶음"
-
 
 class KeywordState(StrEnum):
     HIDDEN = "hidden"

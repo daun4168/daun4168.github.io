@@ -249,14 +249,25 @@ CH1_SCENE9_DATA = SceneData(
                             type=ActionType.PRINT_NARRATIVE,
                             value=(
                                 "여러 겹의 금속 파이프를 이어 붙인 안테나 기둥이 능선 위를 가늘게 가르고 서 있다.\n"
-                                "기단 옆 콘솔에는 희미하게 남아 있는 눈금과 몇 개의 스위치, 다이얼이 있다.\n"
-                                "어떤 패턴으로 스위치를 눌러야, 이 안테나가 제대로 외부와 통신을 시작할 수 있을까?"
+                                "기단 옆 콘솔에는 희미한 눈금과 스위치들 사이로, 작은 숫자 표시창이 깜빡이고 있다.\n"
+                                "마치 이 섬에 도착한 이후 당신이 내린 모든 선택과 움직임을 하나씩 세어 온 흔적처럼, 숫자는 조용히 어떤 값을 가리키고 있다."
                             ),
                         ),
                         Action(
                             type=ActionType.PRINT_SYSTEM,
-                            value="(placeholder) `안테나 : [퍼즐 정답]` 형태로 값을 입력해 퍼즐을 푸는 구조로 사용할 수 있습니다.",
+                            value=(
+                                "`안테나 : [숫자]` 형식으로 입력해 보세요.\n"
+                            ),
                         ),
+                        Action(
+                            type=ActionType.PRINT_SYSTEM,
+                            value=(
+                                "이 섬에서 지나온 선택들이, 이제 하나의 숫자로 이어지고 있습니다.\n\n"
+                                "떠올려 보세요. 몇 번을 고민하고, 결심하고, 다시 움직였는지.\n\n"
+                                "그리고 기억하세요. 지금 입력하려는 그 순간도… 선택의 수를 하나 더 늘립니다."
+                            ),
+                        ),
+
                     ],
                 ),
                 # 안테나 + 퍼즐까지 해결, 아직 전선을 안 연결한 상태
@@ -311,23 +322,26 @@ CH1_SCENE9_DATA = SceneData(
         #   9: 안테나 완성 (antenna_built=True)
         # =======================================
         # --- 첫 번째 사이클: step 0 → 1 → 2 → 3 ---
+        # --- 첫 번째 사이클: step 0 → 1 → 2 → 3 ---
         Combination(
-            targets=[KeywordId.ANTENNA_MOUNT, KeywordId.METAL_PIPE_BUNDLE],
+            targets=[KeywordId.ANTENNA_MOUNT, KeywordId.METAL_PIPE],
             conditions=[
-                Condition(type=ConditionType.HAS_ITEM, target=KeywordId.METAL_PIPE_BUNDLE),
+                Condition(type=ConditionType.HAS_ITEM, target=KeywordId.METAL_PIPE),
                 Condition(type=ConditionType.STATE_IS, target="antenna_build_step", value=0),
             ],
             actions=[
                 Action(
                     type=ActionType.PRINT_NARRATIVE,
-                    value="금속 파이프 묶음에서 가장 곧은 파이프를 골라 기단 중앙의 옛 기둥 자리에 맞춰 끼워 넣는다.",
+                    value=(
+                        "교수님이 ‘이건 논문이 아니다’라며 원고를 밀어내던 그 표정이 떠오른다.\n\n"
+                        "그날은 모든 문이 닫힌 것 같았지만, 지금은 이 파이프 하나라도 세우면 어딘가로 통할 것 같은 기분이다.\n\n"
+                        "첫 파이프를 기단에 끼워 넣자, 능선 위 바람 속에 아주 작은 가능성이 섞인다."
+                    ),
                 ),
-                Action(
-                    type=ActionType.UPDATE_STATE,
-                    value={"key": "antenna_build_step", "value": 1},
-                ),
+                Action(type=ActionType.UPDATE_STATE, value={"key": "antenna_build_step", "value": 1}),
             ],
         ),
+
         Combination(
             targets=[KeywordId.ANTENNA_MOUNT, KeywordId.BOLT_SET],
             conditions=[
@@ -337,14 +351,16 @@ CH1_SCENE9_DATA = SceneData(
             actions=[
                 Action(
                     type=ActionType.PRINT_NARRATIVE,
-                    value="볼트 상자에서 적당한 길이의 볼트를 꺼내, 파이프와 기단을 관통하도록 끼워 넣는다.",
+                    value=(
+                        "제 2 연구실에서 쓰레기통을 뒤지고, 랩 가운 주머니를 털고, 열쇠로 청소도구함을 열어 겨우 빗자루 하나를 꺼냈던 일이 떠오른다.\n\n"
+                        "바닥 한 번 쓸려면 그 정도 삽질은 해야 굴러가는 곳이었다.\n\n"
+                        "볼트를 끼우자, 금속 기둥이 막 청소 끝낸 바닥처럼 비로소 단정한 자세를 잡기 시작한다."
+                    ),
                 ),
-                Action(
-                    type=ActionType.UPDATE_STATE,
-                    value={"key": "antenna_build_step", "value": 2},
-                ),
+                Action(type=ActionType.UPDATE_STATE, value={"key": "antenna_build_step", "value": 2}),
             ],
         ),
+
         Combination(
             targets=[KeywordId.ANTENNA_MOUNT, KeywordId.SPANNER],
             conditions=[
@@ -354,32 +370,36 @@ CH1_SCENE9_DATA = SceneData(
             actions=[
                 Action(
                     type=ActionType.PRINT_NARRATIVE,
-                    value="스패너를 이용해 볼트를 조여, 첫 번째 파이프를 기단에 단단히 고정한다.",
+                    value=(
+                        "스패너로 MK-II 해치를 조이던 순간이 떠오른다. 그 한 바퀴로 연구실에서 이 섬까지, 인생 궤도가 통째로 틀어졌다.\n\n"
+                        "그래도 조여야 할 때는 조여야 했다. 그때도, 지금도.\n\n"
+                        "스패너가 딸칵 소리를 내며 멈추자, 첫 기둥이 기단에 제대로 뿌리를 내린다."
+                    ),
                 ),
-                Action(
-                    type=ActionType.UPDATE_STATE,
-                    value={"key": "antenna_build_step", "value": 3},
-                ),
+                Action(type=ActionType.UPDATE_STATE, value={"key": "antenna_build_step", "value": 3}),
             ],
         ),
+
         # --- 두 번째 사이클: step 3 → 4 → 5 → 6 ---
         Combination(
-            targets=[KeywordId.ANTENNA_MOUNT, KeywordId.METAL_PIPE_BUNDLE],
+            targets=[KeywordId.ANTENNA_MOUNT, KeywordId.METAL_PIPE],
             conditions=[
-                Condition(type=ConditionType.HAS_ITEM, target=KeywordId.METAL_PIPE_BUNDLE),
+                Condition(type=ConditionType.HAS_ITEM, target=KeywordId.METAL_PIPE),
                 Condition(type=ConditionType.STATE_IS, target="antenna_build_step", value=3),
             ],
             actions=[
                 Action(
                     type=ActionType.PRINT_NARRATIVE,
-                    value="두 번째 금속 파이프를 첫 번째 파이프 위에 이어 붙여, 기둥을 한 마디 더 높인다.",
+                    value=(
+                        "늪에서 양동이를 굴려 독가스를 만들고, 공명하는 숲에서 꽃무늬와 새소리를 맞춰 길을 열던 순간들이 차례로 떠오른다.\n\n"
+                        "그때는 냄새와 소리를 다루었다면, 지금은 금속과 높이를 다루는 중이다.\n\n"
+                        "두 번째 파이프를 얹자, 기둥은 숲의 나무들보다 훨씬 높이 솟구친다."
+                    ),
                 ),
-                Action(
-                    type=ActionType.UPDATE_STATE,
-                    value={"key": "antenna_build_step", "value": 4},
-                ),
+                Action(type=ActionType.UPDATE_STATE, value={"key": "antenna_build_step", "value": 4}),
             ],
         ),
+
         Combination(
             targets=[KeywordId.ANTENNA_MOUNT, KeywordId.BOLT_SET],
             conditions=[
@@ -389,14 +409,16 @@ CH1_SCENE9_DATA = SceneData(
             actions=[
                 Action(
                     type=ActionType.PRINT_NARRATIVE,
-                    value="이어 붙인 부분에 볼트를 끼워 넣어, 두 파이프가 어긋나지 않도록 중심을 잡는다.",
+                    value=(
+                        "석회 패널의 순서를 맞춰 문을 열고, 눈앞에 새로운 길이 펼쳐지던 그 조용한 순간이 떠오른다.\n\n"
+                        "여기서도 마찬가지로, 제자리에 꽂힌 하나가 전체를 안정시킨다.\n\n"
+                        "볼트를 끼우자 삐걱거리던 이음새가 잠잠해지고, 기둥은 다시 중심을 찾는다."
+                    ),
                 ),
-                Action(
-                    type=ActionType.UPDATE_STATE,
-                    value={"key": "antenna_build_step", "value": 5},
-                ),
+                Action(type=ActionType.UPDATE_STATE, value={"key": "antenna_build_step", "value": 5}),
             ],
         ),
+
         Combination(
             targets=[KeywordId.ANTENNA_MOUNT, KeywordId.SPANNER],
             conditions=[
@@ -406,32 +428,36 @@ CH1_SCENE9_DATA = SceneData(
             actions=[
                 Action(
                     type=ActionType.PRINT_NARRATIVE,
-                    value="스패너로 볼트를 하나씩 조여 주자, 두 파이프가 하나의 기둥처럼 단단하게 이어진다.",
+                    value=(
+                        "난파선에서 문이 터져 나가고, 황산을 부어 숨겨진 금속 결을 드러내던 순간이 스쳐 간다.\n\n"
+                        "그때는 금속을 녹여 길을 열었다면, 지금은 그 금속을 붙잡아 세워야 하는 자리다.\n\n"
+                        "스패너를 천천히 돌리자 두 번째 구간이 맞물리고, 기둥은 거친 파도 대신 산바람을 버틸 준비를 마친 돛대처럼 느껴진다."
+                    ),
                 ),
-                Action(
-                    type=ActionType.UPDATE_STATE,
-                    value={"key": "antenna_build_step", "value": 6},
-                ),
+                Action(type=ActionType.UPDATE_STATE, value={"key": "antenna_build_step", "value": 6}),
             ],
         ),
-        # --- 세 번째 사이클: step 6 → 7 → 8 → 9 (완성) ---
+
+        # --- 세 번째 사이클: step 6 → 7 → 8 → 9 ---
         Combination(
-            targets=[KeywordId.ANTENNA_MOUNT, KeywordId.METAL_PIPE_BUNDLE],
+            targets=[KeywordId.ANTENNA_MOUNT, KeywordId.METAL_PIPE],
             conditions=[
-                Condition(type=ConditionType.HAS_ITEM, target=KeywordId.METAL_PIPE_BUNDLE),
+                Condition(type=ConditionType.HAS_ITEM, target=KeywordId.METAL_PIPE),
                 Condition(type=ConditionType.STATE_IS, target="antenna_build_step", value=6),
             ],
             actions=[
                 Action(
                     type=ActionType.PRINT_NARRATIVE,
-                    value="금속 파이프 묶음에서 마지막 남은 가장 긴 파이프를 골라 기둥 맨 위에 이어 붙인다.",
+                    value=(
+                        "지하 호수에서 코일과 자철석을 맞추며 물 위로 번지던 희미한 불빛을 바라보던 장면이 떠오른다.\n\n"
+                        "그 빛이 이 기둥을 따라 다시 위로 흘러오는 것 같다.\n\n"
+                        "마지막 긴 파이프가 이어지자, 안테나는 처음으로 ‘하늘을 향한 선’ 같은 모양을 갖춘다."
+                    ),
                 ),
-                Action(
-                    type=ActionType.UPDATE_STATE,
-                    value={"key": "antenna_build_step", "value": 7},
-                ),
+                Action(type=ActionType.UPDATE_STATE, value={"key": "antenna_build_step", "value": 7}),
             ],
         ),
+
         Combination(
             targets=[KeywordId.ANTENNA_MOUNT, KeywordId.BOLT_SET],
             conditions=[
@@ -441,14 +467,16 @@ CH1_SCENE9_DATA = SceneData(
             actions=[
                 Action(
                     type=ActionType.PRINT_NARRATIVE,
-                    value="볼트 상자에서 남은 볼트들을 긁어모아, 마지막 이음새를 단단히 고정한다.",
+                    value=(
+                        "절벽 아래에서 돌 다섯 개로 평형추를 맞추고, 능선 위에 풍향계를 세워 바람의 방향을 읽어내던 순간이 떠오른다.\n\n"
+                        "이제 그 바람이 이 안테나를 흔들겠지만, 쓰러뜨리지는 못하게 할 차례다.\n\n"
+                        "최상단에 볼트를 끼우자, 기둥은 세찬 바람에도 꺾이지 않을 듯한 표정을 짓는다."
+                    ),
                 ),
-                Action(
-                    type=ActionType.UPDATE_STATE,
-                    value={"key": "antenna_build_step", "value": 8},
-                ),
+                Action(type=ActionType.UPDATE_STATE, value={"key": "antenna_build_step", "value": 8}),
             ],
         ),
+
         Combination(
             targets=[KeywordId.ANTENNA_MOUNT, KeywordId.SPANNER],
             conditions=[
@@ -459,33 +487,24 @@ CH1_SCENE9_DATA = SceneData(
                 Action(
                     type=ActionType.PRINT_NARRATIVE,
                     value=(
-                        "스패너를 끝까지 돌려 마지막 볼트를 조여 주자, 긴 안테나 기둥이 미세하게 떨리다 곧 곧게 서서 바람을 가른다.\n"
-                        "금속 파이프 묶음과 볼트 상자는 이제 텅 비어, 더 이상 쓸 수 있는 조각이 남지 않았다."
+                        "이 스패너는 참 많이 돌았다. 연구실 해치에서도, 풍향계 축에서도, 도르래와 난파선 문에서도.\n\n"
+                        "섬을 한 바퀴 도는 동안 ‘조여야 할 것들’을 묵묵히 정리해 준 건 언제나 이 금속 막대였다.\n\n"
+                        "이번에도 한 바퀴, 또 한 바퀴 돌리자 금속이 끝까지 물리는 감각이 손끝에 또렷하다.\n\n"
+                        "안테나 기둥은 바람을 가르는 선으로 곧게 선다. 거의 다 왔다.\n\n"
+                        "이제 남은 건, 이 작은 신호를 MK-II까지 이어 주는 일뿐이다."
                     ),
                 ),
-                Action(
-                    type=ActionType.UPDATE_STATE,
-                    value={"key": "antenna_build_step", "value": 9},
-                ),
-                Action(
-                    type=ActionType.UPDATE_STATE,
-                    value={"key": "antenna_built", "value": True},
-                ),
-                # 세 번 사용 후 파이프 묶음과 볼트는 사라짐
-                Action(
-                    type=ActionType.REMOVE_ITEM,
-                    value=KeywordId.METAL_PIPE_BUNDLE,
-                ),
-                Action(
-                    type=ActionType.REMOVE_ITEM,
-                    value=KeywordId.BOLT_SET,
-                ),
+                Action(type=ActionType.UPDATE_STATE, value={"key": "antenna_build_step", "value": 9}),
+                Action(type=ActionType.UPDATE_STATE, value={"key": "antenna_built", "value": True}),
+                Action(type=ActionType.REMOVE_ITEM, value=KeywordId.METAL_PIPE),
+                Action(type=ActionType.REMOVE_ITEM, value=KeywordId.BOLT_SET),
                 Action(
                     type=ActionType.PRINT_SYSTEM,
                     value="금속 파이프 묶음과 볼트를 모두 사용해 안테나 기둥을 완성했습니다.",
                 ),
             ],
         ),
+
         # =======================================
         # 2) 안테나 퍼즐 (placeholder)
         #    - 퍼즐 로직은 나중에 교체 가능

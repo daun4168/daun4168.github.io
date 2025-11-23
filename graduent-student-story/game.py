@@ -78,6 +78,7 @@ class Game:
         # --- 게임 상태 초기화 ---
         # 게임 시작 여부를 나타내는 플래그입니다.
         self.game_started = False
+        self.num_total_inputs = 0
 
         # TestRunner에 현재 게임 인스턴스를 설정합니다.
         self.test_runner.set_game(self)
@@ -183,7 +184,9 @@ class Game:
         """
         사용자로부터 입력받은 명령을 처리합니다.
         """
+        self.num_total_inputs += 1
         self.ui.print_user_log(command)  # 사용자가 입력한 명령을 UI에 출력합니다.
+        print(self.num_total_inputs)
 
         # 테스트 명령이 있는지 확인하고 처리합니다.
         if await self.test_runner.run_test_command(command):

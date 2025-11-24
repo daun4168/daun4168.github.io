@@ -71,7 +71,7 @@ CH0_SCENE2_DATA = SceneData(
                     actions=[
                         Action(
                             type=ActionType.PRINT_NARRATIVE,
-                            value="그냥 들어가려니 문이 덜렁거려서 닫히질 않는다. 이대로 가동했다간 우주 미아가 될 것이다. 무언가 **[도구]**로 단단히 조여야 한다."
+                            value="그냥 들어가려니 문이 덜렁거려서 닫히질 않는다. 이대로 가동했다간 우주 미아가 될 것이다. 무언가로 단단히 조여야 한다."
                         )
                     ]
                 )

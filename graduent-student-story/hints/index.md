@@ -10,7 +10,7 @@
 ### Chapter 0: 위기의 대학원생 - 서막
 * [**Scene 0: 교수님 오피스**](./chapter0/ch0scene0.md)
 * [**Scene 1: 제 2 연구실**](./chapter0/ch0scene1.md)
-* [**Scene 2: 제 2 연구실 - 청소 완료**](./chapter0/ch0scene2.md)
+* [**Scene 2: 제 2 연구실 (청소 완료)**](./chapter0/ch0scene2.md)
 
 ### Chapter 1: 과학적 생존법
 * [**Scene 0: 불시착**](./chapter1/ch1scene0.md)
@@ -18,12 +18,11 @@
 * [**Scene 2: 난파선 잔해**](./chapter1/ch1scene2.md)
 * [**Scene 3: 화물칸 (위험물 적재소)**](./chapter1/ch1scene3.md)
 * [**Scene 4: 공명하는 숲 (생태 관측소)**](./chapter1/ch1scene4.md)
-* [**Scene 5: 늪지대**](./chapter1/ch1scene5.md)
+* [**Scene 5: 늪지대 (맹독의 길목)**](./chapter1/ch1scene5.md)
 * [**Scene 6: 석회 동굴 (수정 동굴)**](./chapter1/ch1scene6.md)
 * [**Scene 7: 지하 호수 (발전기 가동)**](./chapter1/ch1scene7.md)
-* [**Scene 8: 절벽 (풍향계 제작)**](./chapter1/ch1scene8.md)
-* [**Scene 9: 안테나 설치**](./chapter1/ch1scene9.md)
-* [**Scene 10: 탈출 (엔딩)**](./chapter1/ch1scene10.md)
+* [**Scene 8: 가파른 절벽 (풍향계 제작)**](./chapter1/ch1scene8.md)
+* [**Scene 9: 섬 정상 (안테나 설치)**](./chapter1/ch1scene9.md)
+* [**Scene 10: 귀환 (엔딩)**](./chapter1/ch1scene10.md)
 
 ---
-*지속적으로 업데이트 예정입니다.*

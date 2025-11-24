@@ -54,14 +54,14 @@ CH1_SCENE0_DATA = SceneData(
                             value=(
                                 "기계는 엉망진창이다. 외장 패널은 찌그러졌고 엔진 쪽에서 검은 연기가 난다.\n"
                                 "내부를 들여다보니 다행히 핵심 부품은 무사한 것 같다.\n"
-                                "특히 계기판 안쪽에서 **[통신기]**라고 적힌 모듈의 붉은 LED가 깜빡거리고 있다. 아직 작동하는 것 같다!"
+                                "특히 계기판 안쪽에서 통신기라고 적힌 모듈의 붉은 LED가 깜빡거리고 있다. 아직 작동하는 것 같다!"
                             ),
                         ),
                         Action(
                             type=ActionType.UPDATE_STATE,
                             value={"keyword": KeywordId.COMMS, "state": KeywordState.HIDDEN},
                         ),
-                        Action(type=ActionType.PRINT_SYSTEM, value="**[통신기]**를 조사할 수 있게 되었습니다."),
+                        Action(type=ActionType.PRINT_SYSTEM, value="새로운 상호작용 대상이 발견되었습니다."),
                         Action(type=ActionType.UPDATE_STATE, value={"key": "mk_inspected", "value": True}),
                     ],
                 ),

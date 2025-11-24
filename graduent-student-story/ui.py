@@ -64,7 +64,7 @@ class UIManager:
             elif state == KeywordState.HIDDEN:
                 display_list.append("[?]")
 
-        self.sight_status.innerText = f"시야: {', '.join(display_list)}"
+        self.sight_status.innerText = f"시야: {' '.join(display_list)}"
 
     def update_inventory_status(self, items: dict):
         if not items:
@@ -72,7 +72,7 @@ class UIManager:
         else:
             display_list = [f"[{item}]" for item in items.values()]
 
-        self.inventory_status.innerText = f"주머니: {', '.join(display_list)}"
+        self.inventory_status.innerText = f"주머니: {' '.join(display_list)}"
 
     def _create_text_element(self, parent, text: str, classes: list, is_markdown: bool = False):
         p = document.createElement("p")

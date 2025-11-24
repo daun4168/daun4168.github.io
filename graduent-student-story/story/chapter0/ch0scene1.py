@@ -4,7 +4,6 @@ from schemas import Action, Combination, Condition, Interaction, KeywordData, Sc
 CH0_SCENE1_DATA = SceneData(
     id=SceneID.CH0_SCENE1,
     name="제 2 연구실",
-    # [수정 1] 초기 텍스트 변경: 빗자루가 바닥에 있다는 묘사를 삭제하고 청소도구함 묘사 추가
     initial_text="문을 열자 퀴퀴한 곰팡이 냄새와 먼지가 뒤섞여 코를 찌른다. 이곳은 신성한 연구실인가, 고고학 발굴 현장인가.\n\n구석에는 정체를 알 수 없는 쓰레기통이 넘칠 듯이 차 있고, 벽 한쪽에는 굳게 닫힌 시약장과 낡은 박스들이 산더미처럼 쌓여 있다.\n먼지 쌓인 오래된 컴퓨터는 켜지기는 할지 의문이며, 바닥에는 정체불명의 의문의 액체가 흥건하다. 벽에는 낡은 청소도구함이 하나 서 있다.",
     initial_state={
         "trash_step": 0,
@@ -13,11 +12,11 @@ CH0_SCENE1_DATA = SceneData(
         "box_opened": False,
         "cabinet_unlocked": False,
         "computer_solved": False,
-        # [수정 2] 새로운 상태 변수 추가
         "key_found": False,
         "cleaning_cabinet_opened": False,
     },
     keywords={
+        # ... (기존 키워드들은 동일) ...
         KeywordId.WALL_ALIAS: KeywordData(type=KeywordType.ALIAS, target=KeywordId.WALL),
         KeywordId.COMPUTER_ALIAS: KeywordData(type=KeywordType.ALIAS, target=KeywordId.OLD_COMPUTER),
         KeywordId.DOOR: KeywordData(
@@ -183,17 +182,47 @@ CH0_SCENE1_DATA = SceneData(
                 ),
             ],
         ),
+        # [수정 10] 의문의 액체 조사 시 네거티브 피드백 추가
         KeywordId.MYSTERY_LIQUID: KeywordData(
             type=KeywordType.OBJECT,
             state=KeywordState.HIDDEN,
-            description="바닥에 끈적하게 눌어붙은 액체다. 무슨 성분인지 알 수 없지만, 달콤한 향이 나는 것 같다.",
+            interactions=[
+                Interaction(
+                    actions=[
+                        Action(
+                            type=ActionType.PRINT_NARRATIVE,
+                            value="손을 대보려다 말았다. 맨손으로 만졌다간 내 손도 바닥처럼 눌어붙을 것 같다. 화학적으로 해결해야 한다.",
+                        )
+                    ]
+                )
+            ]
         ),
+        # [수정 11] 바닥(FLOOR)의 텍스트를 상태에 따라 분기 처리
         KeywordId.FLOOR: KeywordData(
             type=KeywordType.OBJECT,
             state=KeywordState.HIDDEN,
-            description="바닥 한쪽에 **[의문의 액체]**가 흥건하다. 끈적해서 밟고 싶지 않다.",
+            interactions=[
+                # Case 1: 액체가 치워진 후
+                Interaction(
+                    conditions=[Condition(type=ConditionType.STATE_IS, target="liquid_cleaned", value=True)],
+                    actions=[
+                        Action(
+                            type=ActionType.PRINT_NARRATIVE,
+                            value="끈적한 액체는 말끔히 사라졌다. 하지만 여전히 먼지와 흙이 가득하다.\n이제 **[빗자루]**로 쓸어낼 수 있을 것 같다.",
+                        )
+                    ]
+                ),
+                # Case 2: 기본 상태 (액체가 있음)
+                Interaction(
+                    actions=[
+                        Action(
+                            type=ActionType.PRINT_NARRATIVE,
+                            value="바닥 한쪽에 **[의문의 액체]**가 흥건하다. 끈적해서 밟고 싶지 않다. 먼저 저걸 제거해야 청소를 하든 말든 할 것 같다.",
+                        )
+                    ]
+                )
+            ]
         ),
-        # [수정 3] 랩 가운: 조사 시 열쇠 획득 로직 추가
         KeywordId.LAB_COAT: KeywordData(
             type=KeywordType.OBJECT,
             state=KeywordState.INACTIVE,
@@ -226,7 +255,6 @@ CH0_SCENE1_DATA = SceneData(
             ],
             description="새하얀 랩 가운이다. 입으면 왠지 졸업에 한 발짝 다가간 기분이 든다.",
         ),
-        # [수정 5] 청소도구함 오브젝트 추가
         KeywordId.CLEANING_CABINET: KeywordData(
             type=KeywordType.OBJECT,
             state=KeywordState.HIDDEN,
@@ -251,7 +279,7 @@ CH0_SCENE1_DATA = SceneData(
         ),
     },
     combinations=[
-        # ... (기존 컴퓨터/시약장 비밀번호 조합은 유지) ...
+        # ... (기존 조합) ...
         Combination(
             type=CombinationType.PASSWORD,
             targets=[KeywordId.OLD_COMPUTER, "12345678"],
@@ -278,7 +306,6 @@ CH0_SCENE1_DATA = SceneData(
                 Action(type=ActionType.UPDATE_STATE, value={"key": "cabinet_unlocked", "value": True}),
             ],
         ),
-        # [수정 7] 랩 가운 발견 시, 열쇠 획득 가능성에 대한 힌트(또는 자연스러운 유도)는 LAB_COAT description이나 interaction에서 처리됨.
         Combination(
             targets=[KeywordId.BOX, KeywordId.CORP_CARD],
             conditions=[Condition(type=ConditionType.HAS_ITEM, target=KeywordId.CORP_CARD)],
@@ -299,7 +326,6 @@ CH0_SCENE1_DATA = SceneData(
                 ),
             ],
         ),
-        # [수정 8] 열쇠 + 청소도구함 조합 추가 (빗자루 획득)
         Combination(
             targets=[KeywordId.CLEANING_CABINET, KeywordId.KEY],
             conditions=[Condition(type=ConditionType.HAS_ITEM, target=KeywordId.KEY)],
@@ -316,9 +342,34 @@ CH0_SCENE1_DATA = SceneData(
                     },
                 ),
                 Action(type=ActionType.UPDATE_STATE, value={"key": "cleaning_cabinet_opened", "value": True}),
-                Action(type=ActionType.REMOVE_ITEM, value=KeywordId.KEY),  # 열쇠 사용 후 제거 (선택 사항)
+                Action(type=ActionType.REMOVE_ITEM, value=KeywordId.KEY),
             ],
         ),
+
+        # [수정 12] 네거티브 피드백: 스패너로 청소도구함 강제 개방 시도
+        Combination(
+            targets=[KeywordId.CLEANING_CABINET, KeywordId.SPANNER],
+            conditions=[Condition(type=ConditionType.HAS_ITEM, target=KeywordId.SPANNER)],
+            actions=[
+                Action(
+                    type=ActionType.PRINT_NARRATIVE,
+                    value="**[스패너]**로 자물쇠를 내리쳐 보았지만, 흠집 하나 나지 않는다.\n힘으로 해결될 문제가 아니다. 맞는 열쇠가 어딘가에 있을 것이다."
+                )
+            ]
+        ),
+
+        # [수정 13] 네거티브 피드백: 먼지 제거제(냉매)로 의문의 액체 얼리기 시도
+        Combination(
+            targets=[KeywordId.AIR_DUSTER, KeywordId.MYSTERY_LIQUID],
+            conditions=[Condition(type=ConditionType.HAS_ITEM, target=KeywordId.AIR_DUSTER)],
+            actions=[
+                Action(
+                    type=ActionType.PRINT_NARRATIVE,
+                    value="**[먼지 제거제]**를 뒤집어 액체 질소처럼 뿌려보았다.\n치익- 소리와 함께 액체가 하얗게 얼어붙었지만, 잠시 후 다시 녹아 끈적해졌다.\n얼리는 걸로는 부족하다. 화학적으로 녹여버릴 무언가가 필요하다."
+                )
+            ]
+        ),
+
         Combination(
             targets=[KeywordId.ETHANOL, KeywordId.MYSTERY_LIQUID],
             conditions=[Condition(type=ConditionType.HAS_ITEM, target=KeywordId.ETHANOL)],
@@ -333,7 +384,6 @@ CH0_SCENE1_DATA = SceneData(
                 Action(type=ActionType.PRINT_SYSTEM, value="이제 **[바닥]**을 청소할 수 있을 것 같다."),
             ],
         ),
-        # [수정 9] 빗자루 청소 로직은 유지하되, 빗자루를 가지고 있어야 한다는 조건이 자연스럽게 HAS_ITEM 체크로 이어짐
         Combination(
             targets=[KeywordId.BROOM, KeywordId.FLOOR],
             conditions=[

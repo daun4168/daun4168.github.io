@@ -72,8 +72,13 @@ class Game:
         # HTML 문서에서 사용자 입력 필드와 제출 버튼 요소를 가져옵니다.
         self.user_input = document.getElementById("user-input")
         self.submit_button = document.getElementById("submit-button")
-        # Enter 키 입력과 버튼 클릭 이벤트에 핸들러를 연결합니다.
-        self.user_input.onkeypress = self._handle_enter
+
+        # [히스토리 기능 추가] 명령어 기록 초기화
+        self.command_history = []
+        self.history_index = 0
+
+        # [히스토리 기능 추가] Enter 키 입력과 화살표 키 입력을 처리하기 위해 onkeydown 사용
+        self.user_input.onkeydown = self._handle_keydown
         self.submit_button.onclick = self._handle_click
 
         # --- 게임 상태 초기화 ---
@@ -169,18 +174,65 @@ class Game:
         content = self.user_input.value.strip()
         if not content:  # 입력 내용이 없으면 아무것도 하지 않습니다.
             return
+
+        # [히스토리 기능 추가] 입력된 명령어를 히스토리에 저장
+        self.command_history.append(content)
+        self.history_index = len(self.command_history)
+
         # 비동기적으로 명령을 처리합니다.
         asyncio.ensure_future(self.process_command(content))
         self.user_input.value = ""  # 입력 필드를 비웁니다.
         self.user_input.focus()  # 입력 필드에 다시 포커스를 줍니다.
 
-    def _handle_enter(self, event):
+    def _handle_keydown(self, event):
         """
-        Enter 키 입력 이벤트를 처리합니다.
-        Enter 키가 눌리면 클릭 이벤트와 동일하게 처리합니다.
+        [히스토리 및 스크롤 기능] 키보드 입력 핸들러
+        - Enter: 명령 제출
+        - Up/Down: 명령어 히스토리 탐색
+        - Left/Right: 화면 스크롤 (페이지의 2/3 정도)
         """
-        if event.key == "Enter":  # 눌린 키가 Enter인지 확인합니다.
-            self._handle_click(event)  # _handle_click 메서드를 호출하여 명령을 처리합니다.
+        # [중요] 한글(IME) 입력 중일 때는 이벤트를 무시하여 중복 입력 방지
+        if event.isComposing:
+            return
+
+        key = event.key
+
+        if key == "Enter":  # Enter 키: 명령 제출
+            event.preventDefault()  # 기본 줄바꿈 막기
+            self._handle_click(event)
+
+        elif key == "ArrowUp":  # 위쪽 화살표: 이전 명령어로 이동
+            event.preventDefault()
+            if self.history_index > 0:
+                self.history_index -= 1
+                self.user_input.value = self.command_history[self.history_index]
+
+        elif key == "ArrowDown":  # 아래쪽 화살표: 다음 명령어로 이동
+            event.preventDefault()
+            if self.history_index < len(self.command_history) - 1:
+                self.history_index += 1
+                self.user_input.value = self.command_history[self.history_index]
+            else:
+                self.history_index = len(self.command_history)
+                self.user_input.value = ""
+
+        # [추가] 왼쪽 화살표: 위로 스크롤 (과거 내용 보기)
+        elif key == "ArrowLeft":
+            event.preventDefault()  # 입력창 커서 이동 막기
+            scroll_area = document.getElementById("content-scroll-area")
+            if scroll_area:
+                # 현재 보이는 화면 높이의 1/2만큼 스크롤을 위로 올림
+                scroll_amount = scroll_area.clientHeight * 0.5
+                scroll_area.scrollTop -= scroll_amount
+
+        # [추가] 오른쪽 화살표: 아래로 스크롤 (최신 내용 보기)
+        elif key == "ArrowRight":
+            event.preventDefault()  # 입력창 커서 이동 막기
+            scroll_area = document.getElementById("content-scroll-area")
+            if scroll_area:
+                # 현재 보이는 화면 높이의 1/2만큼 스크롤을 아래로 내림
+                scroll_amount = scroll_area.clientHeight * 0.5
+                scroll_area.scrollTop += scroll_amount
 
     async def process_command(self, command: str):
         """
@@ -188,7 +240,6 @@ class Game:
         """
         self.num_total_inputs += 1
         self.ui.print_user_log(command)  # 사용자가 입력한 명령을 UI에 출력합니다.
-        print(self.num_total_inputs)
 
         # 테스트 명령이 있는지 확인하고 처리합니다.
         if await self.test_runner.run_test_command(command):

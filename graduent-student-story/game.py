@@ -27,6 +27,12 @@ from story.chapter1 import (
 from test import TestRunner
 from ui import UIManager
 
+# [추가] 한글 초성 리스트 (유니코드 순서)
+CHOSUNG_LIST = [
+    'ㄱ', 'ㄲ', 'ㄴ', 'ㄷ', 'ㄸ', 'ㄹ', 'ㅁ', 'ㅂ', 'ㅃ', 'ㅅ',
+    'ㅆ', 'ㅇ', 'ㅈ', 'ㅉ', 'ㅊ', 'ㅋ', 'ㅌ', 'ㅍ', 'ㅎ'
+]
+
 # --- 게임 데이터 ---
 INTRO_TEXT = [
     "당신은 10년차 대학원생입니다.\n...아니, 사실 '학생'이라 불리기엔 너무 늙었고, '연구원'이라 불리기엔 통장에 찍히는 돈이 너무 적습니다.",
@@ -158,6 +164,7 @@ class Game:
         # 2. 현재 씬의 시야 내 키워드 추가
         current_scene = self.scene_manager.current_scene
         if current_scene:
+            # [주의] scene_data 구조에 맞춰 접근
             for key, data in current_scene.scene_data.keywords.items():
                 if data.type == KeywordType.ALIAS:
                     continue
@@ -167,23 +174,41 @@ class Game:
 
         return list(candidates)
 
+    def _get_chosung(self, text: str) -> str:
+        """
+        문자열을 받아 초성만으로 이루어진 문자열을 반환합니다.
+        예: '가방' -> 'ㄱㅂ', 'User' -> 'User'
+        """
+        result = []
+        for char in text:
+            code = ord(char)
+            # 한글 유니코드 범위 (가 ~ 힣) 확인
+            if 0xAC00 <= code <= 0xD7A3:
+                # (글자코드 - 시작코드) // (중성개수 * 종성개수) = 초성인덱스
+                chosung_index = (code - 0xAC00) // 588
+                result.append(CHOSUNG_LIST[chosung_index])
+            else:
+                result.append(char)
+        return "".join(result)
+
     def _handle_keydown(self, event):
         """
         키보드 입력 핸들러
         """
         key = event.key
-        # [수정] Shift 키 눌림 상태를 안전하게 확인 (JS 속성 'shiftKey' 또는 Python 변환 속성 'shift_key')
+        # [수정] Shift 키 눌림 상태를 안전하게 확인
         is_shift = getattr(event, "shiftKey", False) or getattr(event, "shift_key", False)
 
         # [자동 완성 로직] - Tab 키
         if key == "Tab":
             event.preventDefault()
             origin_user_input: str = self.user_input.value
-            idx = origin_user_input.rfind('+')
 
+            # '+' 기호가 있다면 그 뒤의 텍스트만 자동완성 대상으로 함
+            idx = origin_user_input.rfind('+')
             if idx != -1:
                 left = origin_user_input[:idx] + '+ '
-                right = origin_user_input[idx + 1:]  # 마지막 '+'
+                right = origin_user_input[idx + 1:]  # 마지막 '+' 뒤
             else:
                 left = ''
                 right = origin_user_input
@@ -196,10 +221,25 @@ class Game:
                 candidates = self._get_autocomplete_candidates()
                 self.original_prefix = right
 
-                self.tab_matches = [
-                    c for c in candidates
-                    if c.startswith(self.original_prefix)
-                ]
+                # [자음 검색 판단] 입력값의 첫 글자가 자음 범위(ㄱ ~ ㅎ)에 있는지 확인
+                # 'ㄱ'(0x3131) ~ 'ㅎ'(0x314E)
+                is_chosung_search = False
+                if self.original_prefix and 0x3131 <= ord(self.original_prefix[0]) <= 0x314E:
+                    is_chosung_search = True
+
+                self.tab_matches = []
+                for c in candidates:
+                    # 1. 일반적인 '시작하는 단어' 매칭 (예: '가' -> '가방')
+                    if c.startswith(self.original_prefix):
+                        self.tab_matches.append(c)
+
+                    # 2. 초성 매칭 (예: 'ㄱ' -> '가방')
+                    # 입력값이 자음이고, 후보의 초성이 입력값으로 시작할 때
+                    elif is_chosung_search:
+                        c_chosung = self._get_chosung(c)
+                        if c_chosung.startswith(self.original_prefix):
+                            self.tab_matches.append(c)
+
                 self.tab_matches.sort()
                 self.tab_index = 0
 
@@ -213,8 +253,7 @@ class Game:
 
             return
 
-            # [자동 완성 리셋]
-        # Tab이나 기능키, 화살표가 아닌 키 입력 시 리셋
+        # [자동 완성 리셋]
         if key not in ["Shift", "Control", "Alt", "Meta", "ArrowUp", "ArrowDown", "ArrowLeft", "ArrowRight"]:
             self.tab_matches = []
             self.original_prefix = ""
@@ -233,7 +272,7 @@ class Game:
             event.preventDefault()
 
             if is_shift:
-                # [Shift + Up] 스크롤 올리기 (과거 보기)
+                # [Shift + Up] 스크롤 올리기
                 scroll_area = document.getElementById("content-scroll-area")
                 if scroll_area:
                     scroll_amount = scroll_area.clientHeight * 0.66
@@ -249,7 +288,7 @@ class Game:
             event.preventDefault()
 
             if is_shift:
-                # [Shift + Down] 스크롤 내리기 (최신 보기)
+                # [Shift + Down] 스크롤 내리기
                 scroll_area = document.getElementById("content-scroll-area")
                 if scroll_area:
                     scroll_amount = scroll_area.clientHeight * 0.66

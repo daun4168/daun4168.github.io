@@ -25,18 +25,22 @@ class SceneID(StrEnum):
 
 
 class KeywordId(StrEnum):
-    # CH0
+    # --- CH0_SCENE0 ---
     PROFESSOR = "교수님"
     CORP_CARD = "법인카드"
-    SPANNER = "스패너"
     DOOR = "문"
-
-    # CH0_SCENE0
+    # -- UNSEEN --
     THESIS = "논문"
     DESK = "책상"
     GLASSES = "안경알"
+    POINT = "포인트"
+    SAUNA = "사우나"
+    CLEANING = "청소"
+    GUEST = "손님"
+    ME = "나"
 
     # CH0_SCENE1
+    SPANNER = "스패너"
     TRASH_CAN = "쓰레기통"
     BOX = "박스"
     BROOM = "빗자루"

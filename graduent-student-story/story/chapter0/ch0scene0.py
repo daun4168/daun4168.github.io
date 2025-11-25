@@ -105,7 +105,7 @@ CH0_SCENE0_DATA = SceneData(
                             type=ActionType.ADD_ITEM,
                             value={
                                 "name": KeywordId.CORP_CARD,
-                                "description": "긁히지는 않지만 날카로워서 무기나 도구로 쓸 수 있습니다.",
+                                "description": "한도는 초과되어 긁히지 않습니다. 하지만 모서리가 날카로워 무기나 도구로는 쓸 수 있을 것 같습니다.",
                             },
                         ),
                         Action(
@@ -149,12 +149,13 @@ CH0_SCENE0_DATA = SceneData(
                     actions=[
                         Action(
                             type=ActionType.PRINT_SYSTEM,
-                            value="이 문으로 나갈 수 있을 것 같다. 하지만 아직 무언가 잊은 기분이 든다.",
+                            value="그냥 나갔다가는 다시 불려 올 것이다. 교수님이 챙기라고 한 **물건**이 있지 않았나?",
                         )
                     ]
                 ),
             ],
         ),
+        # --- UNSEEN 오브젝트 ---
         KeywordId.THESIS: KeywordData(
             type=KeywordType.OBJECT,
             state=KeywordState.UNSEEN,
@@ -172,6 +173,36 @@ CH0_SCENE0_DATA = SceneData(
             state=KeywordState.UNSEEN,
             interactions=UNSEEN_INSPECTED_INTERACTIONS,
             description="교수님의 안경알이 빛을 번뜩인다. 저 너머의 눈은 웃고 있는지, 화를 내고 있는지 알 수 없다.",
+        ),
+        KeywordId.POINT: KeywordData(
+            type=KeywordType.OBJECT,
+            state=KeywordState.UNSEEN,
+            interactions=UNSEEN_INSPECTED_INTERACTIONS,
+            description="교수님이 생색내며 말한 카드 포인트다. 조회해보니 편의점 컵라면 하나 사 먹기도 애매한 액수다.",
+        ),
+        KeywordId.SAUNA: KeywordData(
+            type=KeywordType.OBJECT,
+            state=KeywordState.UNSEEN,
+            interactions=UNSEEN_INSPECTED_INTERACTIONS,
+            description="교수님의 머릿속은 이미 뜨끈한 온탕에 가 있는 게 분명하다. '미팅 준비'란 목욕 바구니를 챙기는 것을 의미할 것이다.",
+        ),
+        KeywordId.CLEANING: KeywordData(
+            type=KeywordType.OBJECT,
+            state=KeywordState.UNSEEN,
+            interactions=UNSEEN_INSPECTED_INTERACTIONS,
+            description="내 전공은 인공지능인데, 주특기는 '빗자루질'과 '분리수거'가 되어버렸다. 박사 학위 논문에 '연구실 미화 최적화 알고리즘'이라도 써야 할 판이다.",
+        ),
+        KeywordId.GUEST: KeywordData(
+            type=KeywordType.OBJECT,
+            state=KeywordState.UNSEEN,
+            interactions=UNSEEN_INSPECTED_INTERACTIONS,
+            description="교수님이 평소에 안 하던 청소를 시키는 걸 보니, 꽤 중요한 물주... 아니, 귀빈이 오시는 모양이다. 오시면 또 '행복하고 열정적인 연구원' 연기를 해야겠지.",
+        ),
+        KeywordId.ME: KeywordData(
+            type=KeywordType.OBJECT,
+            state=KeywordState.UNSEEN,
+            interactions=UNSEEN_INSPECTED_INTERACTIONS,
+            description="거울을 보지 않아도 알 수 있다. 퀭한 눈, 떡진 머리, 그리고 구부정한 거북목. 인간이라기보다는 '논문 쓰는 기계'의 형상에 더 가깝다.",
         ),
     },
 )

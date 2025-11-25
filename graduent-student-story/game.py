@@ -172,7 +172,7 @@ class Game:
         자동 완성 후보군을 생성합니다.
         """
         candidates = set()
-        candidates.add("둘러보기")
+        candidates.add(CommandType.LOOK_AROUND)
 
         # 1. 인벤토리 아이템 추가
         for item in self.inventory.items.values():

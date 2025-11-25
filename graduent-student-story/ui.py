@@ -3,7 +3,7 @@ import markdown
 # const에서 Enum 임포트 (타입 비교용)
 from const import KeywordState, KeywordType
 from pyscript import document
-
+from const import CommandType
 
 def get_josa(word: str, josa_pair: str) -> str:
     particles = josa_pair.split("/")
@@ -64,7 +64,7 @@ class UIManager:
             elif state == KeywordState.HIDDEN:
                 display_list.append("[?]")
 
-        self.sight_status.innerText = f"시야: [둘러보기] {' '.join(display_list)}"
+        self.sight_status.innerText = f"시야: [{CommandType.LOOK_AROUND}] {' '.join(display_list)}"
 
     def update_inventory_status(self, items: dict):
         if not items:

@@ -1,5 +1,6 @@
 from const import ActionType, ConditionType, KeywordId, KeywordState, KeywordType, SceneID
 from schemas import Action, Condition, Interaction, KeywordData, SceneData
+from const import CommandType
 
 UNSEEN_INSPECTED_INTERACTIONS = [
     Interaction(
@@ -50,7 +51,8 @@ CH0_SCENE0_DATA = SceneData(
             value=(
                 "이제부터 상호작용 방식을 알려드리겠습니다.\n\n"
                 "본문에 등장하는 **[키워드]**를 직접 입력하여 탐색하세요.\n\n"
-                "예를 들어, `교수님`을 입력해볼까요?"
+                "예를 들어, `교수님`을 입력해볼까요?\n\n"
+                f"`둘러보기`를 입력하면 본문을 다시 볼 수 있습니다."
             ),
         )
     ],

@@ -51,13 +51,20 @@ CHOSUNG_LIST = [
 ]
 
 # --- 게임 데이터 ---
-INTRO_TEXT = [
-    "당신은 10년차 대학원생입니다.\n...아니, 사실 '학생'이라 불리기엔 너무 늙었고, '연구원'이라 불리기엔 통장에 찍히는 돈이 너무 적습니다.",
-    "동기들은 5년 전에 모두 탈출했습니다. 대기업 과장, 스타트업 대표...\n하지만 당신은 아직 이곳에 남아있습니다.",
-    '왜냐고요?\n"자네, 이번 데이터만 잘 나오면 졸업 시켜주겠네."\n매 학기 반복되는 그 달콤한 거짓말. 희망 고문.',
-    "당신의 몸은 커피와 핫식스로 이루어져 있고,\n당신의 영혼은 이미 연구실 서버실 어딘가에 저당 잡혔습니다.",
-    "그리고 오늘...\n드디어 운명의 날이 밝았습니다.",
-]
+INTRO_TEXT = (
+    "당신은 10년차 대학원생입니다.\n\n<br>"
+    "...아니, 사실 '학생'이라 불리기엔 너무 늙었고, \n\n"
+    "'연구원'이라 불리기엔 통장에 찍히는 돈이 너무 적습니다.\n\n<br>"
+    "동기들은 5년 전에 모두 탈출했습니다. 대기업 과장, 스타트업 대표...\n\n"
+    "하지만 당신은 아직 이곳에 남아있습니다.\n\n<br>"
+    '왜냐고요?\n\n'
+    '"자네, 이번 데이터만 잘 나오면 졸업 시켜주겠네."\n\n'
+    '매 학기 반복되는 그 달콤한 거짓말. 희망 고문.\n\n<br>'
+    "당신의 몸은 커피와 핫식스로 이루어져 있고,\n\n"
+    "당신의 영혼은 이미 연구실 서버실 어딘가에 저당 잡혔습니다.\n\n<br>"
+    "그리고 오늘...\n\n"
+    "드디어 운명의 날이 밝았습니다.\n\n"
+)
 
 
 class Game:
@@ -137,9 +144,7 @@ class Game:
         asyncio.ensure_future(self.run_intro())
 
     async def run_intro(self):
-        for paragraph in INTRO_TEXT:
-            self.ui.print_narrative(paragraph, is_markdown=True)
-            await asyncio.sleep(0.1)
+        self.ui.print_narrative(INTRO_TEXT, is_markdown=True)
 
         self.ui.print_system_message(f"`{CommandType.WAKE_UP}`를 입력하면 눈을 뜹니다...")
         self.user_input.disabled = False

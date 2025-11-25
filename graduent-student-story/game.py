@@ -1,14 +1,14 @@
 import asyncio
 import copy
 
-from const import CommandType, SceneID  # 상수를 사용하기 위해 임포트
-from entity import Entity, Inventory, Player  # Player 추가 확인
+# const에서 KeywordState, KeywordType 추가 임포트 (필수)
+from const import CommandType, SceneID, KeywordState, KeywordType
+from entity import Entity, Inventory, Player
 from pyscript import document
 from scene import Scene
 from scene_manager import SceneFactory, SceneManager
 
 # --- 장면 클래스와 데이터 임포트 ---
-# 데이터 파일 임포트 (chapter1 추가)
 from story.chapter0 import CH0_SCENE0_DATA, CH0_SCENE1_DATA, CH0_SCENE2_DATA
 from story.chapter1 import (
     CH1_COMMON_DATA,
@@ -40,68 +40,50 @@ INTRO_TEXT = [
 class Game:
     """
     게임의 주요 로직을 관리하고, 각 컴포넌트를 초기화하고 연결합니다.
-    이 클래스는 게임의 전체적인 흐름을 제어하는 Composition Root 역할을 합니다.
     """
 
     def __init__(self, ui_manager: UIManager, inventory: Inventory, player: Player, test_runner: TestRunner):
-        """
-        Game 클래스의 생성자입니다. 필요한 의존성을 주입받고 게임 컴포넌트를 초기화합니다.
-        """
         # --- 의존성 주입 ---
-        # 외부에서 주입받은 객체들을 내부 필드로 저장합니다.
         self.ui = ui_manager
         self.inventory = inventory
-        self.player = player  # Player 필드 저장
+        self.player = player
         self.test_runner = test_runner
-        self.checkpoint_data = None  # 체크포인트 데이터
-
-        # [추가] 확인 요청 상태 저장 (None이면 대기 상태 아님)
-        # 구조: { "on_confirm": [Action...], "on_cancel": [Action...] }
+        self.checkpoint_data = None
         self.pending_confirmation = None
 
-        # 모든 Entity 객체가 UI 매니저를 사용할 수 있도록 설정합니다.
         Entity.set_ui_manager(self.ui)
 
         # --- 컴포넌트 생성 및 연결 ---
-        # SceneFactory를 생성하고 모든 장면 데이터를 등록합니다.
         scene_factory = self._create_and_register_scenes()
-        # SceneManager를 초기화하여 장면 전환 및 관리를 담당하게 합니다.
         self.scene_manager = SceneManager(scene_factory, self.ui)
 
         # --- HTML 요소 바인딩 ---
-        # HTML 문서에서 사용자 입력 필드와 제출 버튼 요소를 가져옵니다.
         self.user_input = document.getElementById("user-input")
         self.submit_button = document.getElementById("submit-button")
 
-        # [히스토리 기능 추가] 명령어 기록 초기화
+        # [히스토리 기능]
         self.command_history = []
         self.history_index = 0
 
-        # [히스토리 기능 추가] Enter 키 입력과 화살표 키 입력을 처리하기 위해 onkeydown 사용
+        # [자동 완성 기능] 상태 변수
+        self.tab_matches = []  # 현재 매칭된 후보 리스트
+        self.tab_index = 0  # 현재 보여주는 후보의 인덱스
+        self.original_prefix = ""  # [핵심] 사용자가 탭 누르기 전 입력했던 원본 문자열
+
+        # 이벤트 핸들러 바인딩
         self.user_input.onkeydown = self._handle_keydown
         self.submit_button.onclick = self._handle_click
 
         # --- 게임 상태 초기화 ---
-        # 게임 시작 여부를 나타내는 플래그입니다.
         self.game_started = False
         self.num_total_inputs = 0
 
-        # TestRunner에 현재 게임 인스턴스를 설정합니다.
         self.test_runner.set_game(self)
-        # 게임 UI를 초기 상태로 설정하고 인트로를 시작합니다.
         self._initialize_game_ui()
 
     def _create_and_register_scenes(self) -> SceneFactory:
-        """
-        SceneFactory를 생성하고 게임 내 모든 장면 데이터를 등록합니다.
-
-        Returns:
-            SceneFactory: 모든 장면이 등록된 SceneFactory 객체.
-        """
-        # 게임 인스턴스, UI 매니저, 인벤토리, 플레이어를 사용하여 SceneFactory를 초기화합니다.
         factory = SceneFactory(self, self.ui, self.inventory, self.player)
 
-        # 각 장면 ID에 해당하는 장면 클래스와 데이터를 팩토리에 등록합니다.
         # 챕터 0 씬 등록
         factory.register_scene(SceneID.CH0_SCENE0, Scene, CH0_SCENE0_DATA)
         factory.register_scene(SceneID.CH0_SCENE1, Scene, CH0_SCENE1_DATA)
@@ -122,160 +104,197 @@ class Game:
         return factory
 
     def _initialize_game_ui(self):
-        """
-        게임 시작 전 UI 요소를 초기 상태로 설정합니다.
-        사용자 입력 비활성화, 초기 위치 설정, 인벤토리 업데이트 등을 수행합니다.
-        """
-        # 사용자 입력 필드와 버튼을 비활성화하여 인트로 중 입력을 막습니다.
         self.user_input.disabled = True
         self.submit_button.disabled = True
-        # 초기 게임 위치 이름을 설정합니다.
         self.ui.set_location_name("어둠 속")
-        # 시야 상태와 인벤토리 상태를 초기화하여 UI에 반영합니다.
         self.ui.update_sight_status({})
         self.ui.update_inventory_status(self.inventory.items)
-        # 초기 체력 표시
         self.ui.update_stamina_status(self.player.current_stamina, self.player.max_stamina)
 
-        # 비동기적으로 인트로 텍스트를 실행합니다.
         asyncio.ensure_future(self.run_intro())
 
     async def run_intro(self):
-        """
-        게임 시작 시 인트로 텍스트를 순차적으로 출력합니다.
-        각 문단 사이에 잠시 대기 시간을 두어 읽기 편하게 합니다.
-        """
-        # 정의된 인트로 텍스트의 각 문단을 출력합니다.
         for paragraph in INTRO_TEXT:
             self.ui.print_narrative(paragraph, is_markdown=True)
-            await asyncio.sleep(0.1)  # 각 문단 출력 후 0.1초 대기
+            await asyncio.sleep(0.1)
 
-        # 인트로가 끝난 후 사용자에게 게임 시작 명령을 안내합니다.
         self.ui.print_system_message(f"`{CommandType.WAKE_UP}`를 입력하면 눈을 뜹니다...")
-        # 사용자 입력 필드와 버튼을 다시 활성화합니다.
         self.user_input.disabled = False
         self.submit_button.disabled = False
-        # 사용자 입력 필드에 포커스를 줍니다.
         self.user_input.focus()
 
     def start_game(self):
-        """
-        게임을 실제로 시작하고 첫 번째 장면으로 전환합니다.
-        """
-        self.game_started = True  # 게임 시작 플래그를 True로 설정합니다.
-        self.scene_manager.switch_scene(SceneID.CH0_SCENE0)  # 첫 장면으로 전환합니다.
+        self.game_started = True
+        self.scene_manager.switch_scene(SceneID.CH0_SCENE0)
 
     def _handle_click(self, event):
-        """
-        입력 버튼 클릭 이벤트를 처리합니다.
-        사용자 입력 값을 가져와 처리하고 입력 필드를 초기화합니다.
-        """
-        # 사용자 입력 필드의 값을 가져와 앞뒤 공백을 제거합니다.
         content = self.user_input.value.strip()
-        if not content:  # 입력 내용이 없으면 아무것도 하지 않습니다.
+        if not content:
             return
 
-        # [히스토리 기능 추가] 입력된 명령어를 히스토리에 저장
+        # 히스토리 저장
         self.command_history.append(content)
         self.history_index = len(self.command_history)
 
-        # 비동기적으로 명령을 처리합니다.
+        # [자동 완성 리셋] 제출 시 초기화
+        self.tab_matches = []
+        self.original_prefix = ""
+
         asyncio.ensure_future(self.process_command(content))
-        self.user_input.value = ""  # 입력 필드를 비웁니다.
-        self.user_input.focus()  # 입력 필드에 다시 포커스를 줍니다.
+        self.user_input.value = ""
+        self.user_input.focus()
+
+    def _get_autocomplete_candidates(self) -> list[str]:
+        """
+        자동 완성 후보군을 생성합니다.
+        """
+        candidates = set()
+        candidates.add("둘러보기")
+
+        # 1. 인벤토리 아이템 추가
+        for item in self.inventory.items.values():
+            candidates.add(item.name)
+
+        # 2. 현재 씬의 시야 내 키워드 추가
+        current_scene = self.scene_manager.current_scene
+        if current_scene:
+            for key, data in current_scene.scene_data.keywords.items():
+                if data.type == KeywordType.ALIAS:
+                    continue
+                if data.state == KeywordState.DISCOVERED:
+                    name = data.display_name if data.display_name else key
+                    candidates.add(name)
+
+        return list(candidates)
 
     def _handle_keydown(self, event):
         """
-        [히스토리 및 스크롤 기능] 키보드 입력 핸들러
-        - Enter: 명령 제출
-        - Up/Down: 명령어 히스토리 탐색
-        - Left/Right: 화면 스크롤 (페이지의 2/3 정도)
+        키보드 입력 핸들러
         """
-        # [중요] 한글(IME) 입력 중일 때는 이벤트를 무시하여 중복 입력 방지
+        key = event.key
+        # [수정] Shift 키 눌림 상태를 안전하게 확인 (JS 속성 'shiftKey' 또는 Python 변환 속성 'shift_key')
+        is_shift = getattr(event, "shiftKey", False) or getattr(event, "shift_key", False)
+
+        # [자동 완성 로직] - Tab 키
+        if key == "Tab":
+            event.preventDefault()
+            origin_user_input: str = self.user_input.value
+            idx = origin_user_input.rfind('+')
+
+            if idx != -1:
+                left = origin_user_input[:idx] + '+ '
+                right = origin_user_input[idx + 1:]  # 마지막 '+'
+            else:
+                left = ''
+                right = origin_user_input
+            right = right.strip()
+
+            if not self.tab_matches:
+                if not right:
+                    return
+
+                candidates = self._get_autocomplete_candidates()
+                self.original_prefix = right
+
+                self.tab_matches = [
+                    c for c in candidates
+                    if c.startswith(self.original_prefix)
+                ]
+                self.tab_matches.sort()
+                self.tab_index = 0
+
+            if self.tab_matches:
+                match = self.tab_matches[self.tab_index]
+                self.user_input.value = left + match
+                if not is_shift:
+                    self.tab_index = (self.tab_index + 1) % len(self.tab_matches)
+                else:
+                    self.tab_index = (self.tab_index - 1) % len(self.tab_matches)
+
+            return
+
+            # [자동 완성 리셋]
+        # Tab이나 기능키, 화살표가 아닌 키 입력 시 리셋
+        if key not in ["Shift", "Control", "Alt", "Meta", "ArrowUp", "ArrowDown", "ArrowLeft", "ArrowRight"]:
+            self.tab_matches = []
+            self.original_prefix = ""
+
+        # [IME 중복 입력 방지]
         if event.isComposing:
             return
 
-        key = event.key
-
-        if key == "Enter":  # Enter 키: 명령 제출
-            event.preventDefault()  # 기본 줄바꿈 막기
+        # [제출]
+        if key == "Enter":
+            event.preventDefault()
             self._handle_click(event)
 
-        elif key == "ArrowUp":  # 위쪽 화살표: 이전 명령어로 이동
+        # [위쪽 화살표] -> 히스토리(기본) OR 스크롤(Shift)
+        elif key == "ArrowUp":
             event.preventDefault()
-            if self.history_index > 0:
-                self.history_index -= 1
-                self.user_input.value = self.command_history[self.history_index]
 
-        elif key == "ArrowDown":  # 아래쪽 화살표: 다음 명령어로 이동
-            event.preventDefault()
-            if self.history_index < len(self.command_history) - 1:
-                self.history_index += 1
-                self.user_input.value = self.command_history[self.history_index]
+            if is_shift:
+                # [Shift + Up] 스크롤 올리기 (과거 보기)
+                scroll_area = document.getElementById("content-scroll-area")
+                if scroll_area:
+                    scroll_amount = scroll_area.clientHeight * 0.66
+                    scroll_area.scrollTop -= scroll_amount
             else:
-                self.history_index = len(self.command_history)
-                self.user_input.value = ""
+                # [Up] 히스토리 이전
+                if self.history_index > 0:
+                    self.history_index -= 1
+                    self.user_input.value = self.command_history[self.history_index]
 
-        # [추가] 왼쪽 화살표: 위로 스크롤 (과거 내용 보기)
-        elif key == "ArrowLeft":
-            event.preventDefault()  # 입력창 커서 이동 막기
-            scroll_area = document.getElementById("content-scroll-area")
-            if scroll_area:
-                # 현재 보이는 화면 높이의 1/2만큼 스크롤을 위로 올림
-                scroll_amount = scroll_area.clientHeight * 0.5
-                scroll_area.scrollTop -= scroll_amount
+        # [아래쪽 화살표] -> 히스토리(기본) OR 스크롤(Shift)
+        elif key == "ArrowDown":
+            event.preventDefault()
 
-        # [추가] 오른쪽 화살표: 아래로 스크롤 (최신 내용 보기)
-        elif key == "ArrowRight":
-            event.preventDefault()  # 입력창 커서 이동 막기
-            scroll_area = document.getElementById("content-scroll-area")
-            if scroll_area:
-                # 현재 보이는 화면 높이의 1/2만큼 스크롤을 아래로 내림
-                scroll_amount = scroll_area.clientHeight * 0.5
-                scroll_area.scrollTop += scroll_amount
+            if is_shift:
+                # [Shift + Down] 스크롤 내리기 (최신 보기)
+                scroll_area = document.getElementById("content-scroll-area")
+                if scroll_area:
+                    scroll_amount = scroll_area.clientHeight * 0.66
+                    scroll_area.scrollTop += scroll_amount
+            else:
+                # [Down] 히스토리 다음
+                if self.history_index < len(self.command_history) - 1:
+                    self.history_index += 1
+                    self.user_input.value = self.command_history[self.history_index]
+                else:
+                    self.history_index = len(self.command_history)
+                    self.user_input.value = ""
 
     async def process_command(self, command: str):
-        """
-        사용자로부터 입력받은 명령을 처리합니다.
-        """
         self.num_total_inputs += 1
-        self.ui.print_user_log(command)  # 사용자가 입력한 명령을 UI에 출력합니다.
+        self.ui.print_user_log(command)
+        print(self.num_total_inputs)
 
-        # 테스트 명령이 있는지 확인하고 처리합니다.
         if await self.test_runner.run_test_command(command):
-            return  # 테스트 명령이 처리되었으면 더 이상 진행하지 않습니다.
+            return
 
-        # 게임이 아직 시작되지 않은 상태(인트로 중)의 명령을 처리합니다.
         if not self.game_started:
             await self.scene_manager.process_command(command)
             return
 
-        cmd_lower = command.lower()  # 명령어를 소문자로 변환하여 비교에 용이하게 합니다.
+        cmd_lower = command.lower()
 
-        # [추가] 1. 대기 중인 확인 요청이 있는지 먼저 확인
         if self.pending_confirmation:
             await self.scene_manager.process_confirmation(command)
             return
 
-        # 인벤토리 명령 처리
         if cmd_lower == CommandType.INVENTORY:
             pass
 
-        # 둘러보기 명령 처리
         if cmd_lower == CommandType.LOOK_AROUND:
-            self.scene_manager.redisplay_current_scene()  # 현재 장면의 텍스트를 다시 출력합니다.
+            self.scene_manager.redisplay_current_scene()
             return
 
-        # 명령어가 인벤토리 아이템 이름과 일치하는지 확인하고 설명을 보여줍니다.
         if self.inventory.has(cmd_lower):
-            self.inventory.get(cmd_lower).show_description()  # 해당 아이템의 설명을 UI에 출력합니다.
+            self.inventory.get(cmd_lower).show_description()
             return
 
-        # 위의 모든 명령에 해당하지 않으면 현재 장면의 명령 처리기로 전달합니다.
         await self.scene_manager.process_command(command)
 
     def save_checkpoint(self, scene_id: str):
-        """현재 상태를 체크포인트로 저장합니다."""
         self.checkpoint_data = {
             "inventory_items": copy.deepcopy(self.inventory.items),
             "player_stamina": self.player.current_stamina,
@@ -284,25 +303,18 @@ class Game:
         }
 
     def load_checkpoint(self):
-        """체크포인트 상태로 복구하고 해당 장면을 새로 시작합니다."""
         if not self.checkpoint_data:
             self.ui.print_system_message("저장된 체크포인트가 없습니다. 처음부터 시작합니다.")
             self.start_game()
             return
 
-        # 1. 인벤토리 복구
         self.inventory._items = copy.deepcopy(self.checkpoint_data["inventory_items"])
         self.ui.update_inventory_status(self.inventory.items)
 
-        # 2. 체력 복구
         self.player.current_stamina = self.checkpoint_data["player_stamina"]
         self.player.max_stamina = self.checkpoint_data["player_max_stamina"]
         self.ui.update_stamina_status(self.player.current_stamina, self.player.max_stamina)
 
-        # 3. 씬 초기화 및 이동
         target_scene = self.checkpoint_data["scene_id"]
-
-        # [핵심 수정] 장면을 리셋하여 키워드 상태([?])를 초기화하고 새로운 인스턴스를 생성함
         self.scene_manager.reset_scene()
-
         self.scene_manager.switch_scene(target_scene)

@@ -64,7 +64,7 @@ class UIManager:
             elif state == KeywordState.HIDDEN:
                 display_list.append("[?]")
 
-        self.sight_status.innerText = f"시야: {' '.join(display_list)}"
+        self.sight_status.innerText = f"시야: [둘러보기] {' '.join(display_list)}"
 
     def update_inventory_status(self, items: dict):
         if not items:

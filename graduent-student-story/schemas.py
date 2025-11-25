@@ -20,6 +20,7 @@ class Action(BaseModel):
 class Interaction(BaseModel):
     conditions: list[Condition] = Field(default_factory=list)
     actions: list[Action]
+    continue_matching: bool = False
 
 
 class KeywordData(BaseModel):
@@ -51,7 +52,8 @@ class ChapterData(BaseModel):
 class SceneData(BaseModel):
     id: SceneID
     name: str
-    initial_text: str
+    body: str
+    initial_text: str | None = None
     initial_state: dict[str, Any] = Field(default_factory=dict)
     keywords: dict[str, KeywordData] = Field(default_factory=dict)
     combinations: list[Combination] = Field(default_factory=list)

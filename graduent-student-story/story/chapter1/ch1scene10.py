@@ -81,7 +81,7 @@ ENDING_INTERACTION = Interaction(
 CH1_SCENE10_DATA = SceneData(
     id=SceneID.CH1_SCENE10,
     name="제 2 연구실 (귀환)",
-    initial_text=(
+    body=(
         "MK-II의 모터음이 점점 가라앉더니, 갑자기 모든 소리가 흩어지고 시야가 어둡게 말려 들어간다.\n\n"
         "그리고——\n\n"
         "당신은 다시 제 2 연구실 바닥 위에 서 있다.\n\n"
@@ -92,11 +92,11 @@ CH1_SCENE10_DATA = SceneData(
         "일단은 숨을 고른다. 그리고 천천히, 주변을 살펴보기로 한다."
     ),
     initial_state={
-        "lab_overview_inspected": False,   # 연구실 전반을 본 적 있는지
-        "mk2_panel_inspected": False,     # 귀환 후 MK-II를 다시 살펴봤는지
+        "lab_overview_inspected": False,  # 연구실 전반을 본 적 있는지
+        "mk2_panel_inspected": False,  # 귀환 후 MK-II를 다시 살펴봤는지
         "ending_note_discovered": False,  # 책상에서 메모를 발견했는지
-        "ending_note_inspected": False,   # 메모 내용을 읽었는지
-        "ending_message_shown": False,    # 엔딩 시스템 메시지를 이미 보여줬는지
+        "ending_note_inspected": False,  # 메모 내용을 읽었는지
+        "ending_message_shown": False,  # 엔딩 시스템 메시지를 이미 보여줬는지
     },
     on_enter_actions=[
         Action(type=ActionType.REMOVE_ITEM, value=KeywordId.SPANNER),
@@ -148,7 +148,6 @@ CH1_SCENE10_DATA = SceneData(
                 ),
             ],
         ),
-
         # 귀환 후 MK-II
         KeywordId.MK_II: KeywordData(
             type=KeywordType.OBJECT,
@@ -196,7 +195,6 @@ CH1_SCENE10_DATA = SceneData(
                 ),
             ],
         ),
-
         # 책상/작업대: 수상한 메모 발견
         KeywordId.LAB_DESK: KeywordData(
             type=KeywordType.OBJECT,
@@ -246,7 +244,6 @@ CH1_SCENE10_DATA = SceneData(
                 ),
             ],
         ),
-
         # 수상한 메모 (다음편 암시)
         KeywordId.ENDING_NOTE: KeywordData(
             type=KeywordType.OBJECT,
@@ -263,9 +260,9 @@ CH1_SCENE10_DATA = SceneData(
                             type=ActionType.PRINT_NARRATIVE,
                             value=(
                                 "메모를 펼쳐 보니 익숙한 필체가 눈에 들어온다.\n\n"
-                                "  \"MK-II 수리, 잘 봤다.\n"
+                                '  "MK-II 수리, 잘 봤다.\n'
                                 "   이번엔 네 차례였고,\n"
-                                "   다음은… 스패너의 차례다.\"\n\n"
+                                '   다음은… 스패너의 차례다."\n\n'
                                 "아래에는 이해할 수 없는 기호와 좌표 같은 숫자들이 적혀 있다.\n"
                                 "마치 스패너를 들고 어딘가로 떠난 누군가가, 다음 목적지를 살짝 흘리고 간 것처럼."
                             ),

@@ -5,7 +5,7 @@ from schemas import Action, Combination, Condition, Interaction, KeywordData, Sc
 CH1_SCENE5_DATA = SceneData(
     id=SceneID.CH1_SCENE5,
     name="죽음의 늪 (맹독의 길목)",
-    initial_text=(
+    body=(
         "생태 관측소 뒤편의 좁은 길을 따라 한참을 내려오자, 발밑 흙이 점점 질어지기 시작한다.\n"
         "발밑에는 탁한 늪물이 질척거리며 고여 있어, 어디든 발을 잘못 디디면 그대로 빠질 것 같다.\n"
         "길 옆에는 껍질이 두껍고 줄기가 굵은 고무나무 몇 그루가 서 있고, 공기에서는 썩은 물 냄새가 올라온다.\n\n"

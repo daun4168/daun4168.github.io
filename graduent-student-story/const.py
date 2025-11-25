@@ -320,6 +320,7 @@ class KeywordState(StrEnum):
     HIDDEN = "hidden"
     DISCOVERED = "discovered"
     INACTIVE = "inactive"
+    UNSEEN = "unseen"
 
 
 class ConditionType(StrEnum):
@@ -359,7 +360,6 @@ class KeywordType(StrEnum):
 
 # 명령어 관리용 Enum
 class CommandType(StrEnum):
-    INVENTORY = "주머니"
     WAKE_UP = "일어나기"
     LOOK_AROUND = "둘러보기"
 

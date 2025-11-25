@@ -86,6 +86,8 @@ class AddItemHandler(ActionHandler):
     def execute(self, scene, value):
         new_item = Item(value["name"], value["description"])
         is_silent = value.get("silent", False)
+        if not is_silent:
+            new_item.show_description()
         scene.inventory.add(new_item, silent=is_silent)
 
 

@@ -13,7 +13,7 @@ from schemas import Action, Combination, Condition, Interaction, KeywordData, Sc
 CH1_SCENE7_DATA = SceneData(
     id=SceneID.CH1_SCENE7,
     name="지하 호수 (폭포 동굴)",
-    initial_text=(
+    body=(
         "석회 동굴의 바닥 경사로를 따라 조심스레 내려가자, 공기가 점점 더 축축해진다.\n"
         "발밑 바위가 미끄러워질 즈음, 앞에서부터 거대한 물소리가 벽을 타고 울려 온다.\n\n"
         "좁은 틈을 빠져나오자 갑자기 시야가 열린다. 머리 위 동굴 천장에서 흰 물줄기가 폭포처럼 쏟아져 내려 "

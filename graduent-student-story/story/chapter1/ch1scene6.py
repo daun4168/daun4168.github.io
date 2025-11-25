@@ -5,7 +5,7 @@ from schemas import Action, Combination, Condition, Interaction, KeywordData, Sc
 CH1_SCENE6_DATA = SceneData(
     id=SceneID.CH1_SCENE6,
     name="석회 동굴 (수정 동굴)",
-    initial_text=(
+    body=(
         "늪지대를 벗어나 바위 경사면을 따라 올라오자, 공기가 서늘하게 식어 간다.\n"
         "바위 틈 사이로 몸을 비집고 들어가자 곧 머리 위로 석회암 종유석이 빽빽이 매달린 동굴 홀이 펼쳐진다.\n\n"
         "입구 쪽에서 들어오는 희미한 빛이 동굴 바닥과 벽을 스치고 지나가며, 벽면에는 거대한 원형의 석회 문양이 어렴풋이 떠오른다.\n"

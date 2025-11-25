@@ -4,7 +4,7 @@ from schemas import Action, Combination, Condition, Interaction, KeywordData, Sc
 CH1_SCENE4_DATA = SceneData(
     id=SceneID.CH1_SCENE4,
     name="공명하는 숲 (생태 관측소)",
-    initial_text=(
+    body=(
         "모래사장에서 숲 입구를 지나 북쪽으로 조금 더 걸어가자, 공기부터 달라진다.\n"
         "짙은 초록빛 그림자가 드리운 숲의 입구. 빛과 소리가 뒤섞여 머릿속까지 울린다.\n\n"
         "숲 한가운데에는 낡은 생태 관측소 건물이 반쯤 덩굴에 먹힌 채 서 있고, "

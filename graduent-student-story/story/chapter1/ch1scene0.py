@@ -4,7 +4,7 @@ from schemas import Action, Combination, Condition, Interaction, KeywordData, Sc
 CH1_SCENE0_DATA = SceneData(
     id=SceneID.CH1_SCENE0,
     name="이름 모를 해변 (불시착)",
-    initial_text=(
+    body=(
         "---\n"
         "# Chapter 1\n"
         "## 과학적 생존법\n"
@@ -88,7 +88,7 @@ CH1_SCENE0_DATA = SceneData(
                         Action(
                             type=ActionType.PRINT_NARRATIVE,
                             value="지지직... 거리는 잡음 사이로 희미하게 사람 목소리가 들린다. **[스패너]** 같은 걸로 고칠 수 있을까?",
-                        )
+                        ),
                     ]
                 ),
             ],
@@ -216,7 +216,6 @@ CH1_SCENE0_DATA = SceneData(
                 Action(type=ActionType.MOVE_SCENE, value=SceneID.CH1_SCENE1),
             ],
         ),
-
         # [추가] 네거티브 피드백: MK-II 본체 + 스패너
         Combination(
             targets=[KeywordId.MK_II, KeywordId.SPANNER],
@@ -224,11 +223,10 @@ CH1_SCENE0_DATA = SceneData(
             actions=[
                 Action(
                     type=ActionType.PRINT_NARRATIVE,
-                    value="기계 본체를 **[스패너]**로 두들겨 봤자 찌그러진 외장만 더 찌그러질 뿐이다. 수리가 필요한 건 내부의 통신기다."
+                    value="기계 본체를 **[스패너]**로 두들겨 봤자 찌그러진 외장만 더 찌그러질 뿐이다. 수리가 필요한 건 내부의 통신기다.",
                 )
-            ]
+            ],
         ),
-
         # [추가] 네거티브 피드백: 바다 + 스패너
         Combination(
             targets=[KeywordId.SEA, KeywordId.SPANNER],
@@ -236,11 +234,10 @@ CH1_SCENE0_DATA = SceneData(
             actions=[
                 Action(
                     type=ActionType.PRINT_NARRATIVE,
-                    value="바다를 향해 **[스패너]**를 휘둘러 보았다. 파도를 고칠 수는 없다."
+                    value="바다를 향해 **[스패너]**를 휘둘러 보았다. 파도를 고칠 수는 없다.",
                 )
-            ]
+            ],
         ),
-
         # [추가] 네거티브 피드백: 태양 + 스패너
         Combination(
             targets=[KeywordId.SUN, KeywordId.SPANNER],
@@ -248,9 +245,9 @@ CH1_SCENE0_DATA = SceneData(
             actions=[
                 Action(
                     type=ActionType.PRINT_NARRATIVE,
-                    value="태양을 향해 **[스패너]**를 들어 올렸다. 눈만 부시다. 쓸데없는 짓으로 체력을 낭비하지 말자."
+                    value="태양을 향해 **[스패너]**를 들어 올렸다. 눈만 부시다. 쓸데없는 짓으로 체력을 낭비하지 말자.",
                 )
-            ]
+            ],
         ),
     ],
 )

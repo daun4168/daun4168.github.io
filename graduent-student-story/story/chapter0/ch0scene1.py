@@ -4,7 +4,7 @@ from schemas import Action, Combination, Condition, Interaction, KeywordData, Sc
 CH0_SCENE1_DATA = SceneData(
     id=SceneID.CH0_SCENE1,
     name="제 2 연구실",
-    initial_text="문을 열자 퀴퀴한 곰팡이 냄새와 먼지가 뒤섞여 코를 찌른다. 이곳은 신성한 연구실인가, 고고학 발굴 현장인가.\n\n구석에는 정체를 알 수 없는 쓰레기통이 넘칠 듯이 차 있고, 벽 한쪽에는 굳게 닫힌 시약장과 낡은 박스들이 산더미처럼 쌓여 있다.\n먼지 쌓인 오래된 컴퓨터는 켜지기는 할지 의문이며, 바닥에는 정체불명의 의문의 액체가 흥건하다. 벽에는 낡은 청소도구함이 하나 서 있다.",
+    body="문을 열자 퀴퀴한 곰팡이 냄새와 먼지가 뒤섞여 코를 찌른다. 이곳은 신성한 연구실인가, 고고학 발굴 현장인가.\n\n구석에는 정체를 알 수 없는 쓰레기통이 넘칠 듯이 차 있고, 벽 한쪽에는 굳게 닫힌 시약장과 낡은 박스들이 산더미처럼 쌓여 있다.\n먼지 쌓인 오래된 컴퓨터는 켜지기는 할지 의문이며, 바닥에는 정체불명의 의문의 액체가 흥건하다. 벽에는 낡은 청소도구함이 하나 서 있다.",
     initial_state={
         "trash_step": 0,
         "wall_inspected": False,
@@ -195,7 +195,7 @@ CH0_SCENE1_DATA = SceneData(
                         )
                     ]
                 )
-            ]
+            ],
         ),
         # [수정 11] 바닥(FLOOR)의 텍스트를 상태에 따라 분기 처리
         KeywordId.FLOOR: KeywordData(
@@ -210,7 +210,7 @@ CH0_SCENE1_DATA = SceneData(
                             type=ActionType.PRINT_NARRATIVE,
                             value="끈적한 액체는 말끔히 사라졌다. 하지만 여전히 먼지와 흙이 가득하다.\n이제 **[빗자루]**로 쓸어낼 수 있을 것 같다.",
                         )
-                    ]
+                    ],
                 ),
                 # Case 2: 기본 상태 (액체가 있음)
                 Interaction(
@@ -220,8 +220,8 @@ CH0_SCENE1_DATA = SceneData(
                             value="바닥 한쪽에 **[의문의 액체]**가 흥건하다. 끈적해서 밟고 싶지 않다. 먼저 저걸 제거해야 청소를 하든 말든 할 것 같다.",
                         )
                     ]
-                )
-            ]
+                ),
+            ],
         ),
         KeywordId.LAB_COAT: KeywordData(
             type=KeywordType.OBJECT,
@@ -345,7 +345,6 @@ CH0_SCENE1_DATA = SceneData(
                 Action(type=ActionType.REMOVE_ITEM, value=KeywordId.KEY),
             ],
         ),
-
         # [수정 12] 네거티브 피드백: 스패너로 청소도구함 강제 개방 시도
         Combination(
             targets=[KeywordId.CLEANING_CABINET, KeywordId.SPANNER],
@@ -353,11 +352,10 @@ CH0_SCENE1_DATA = SceneData(
             actions=[
                 Action(
                     type=ActionType.PRINT_NARRATIVE,
-                    value="**[스패너]**로 자물쇠를 내리쳐 보았지만, 흠집 하나 나지 않는다.\n힘으로 해결될 문제가 아니다. 맞는 열쇠가 어딘가에 있을 것이다."
+                    value="**[스패너]**로 자물쇠를 내리쳐 보았지만, 흠집 하나 나지 않는다.\n힘으로 해결될 문제가 아니다. 맞는 열쇠가 어딘가에 있을 것이다.",
                 )
-            ]
+            ],
         ),
-
         # [수정 13] 네거티브 피드백: 먼지 제거제(냉매)로 의문의 액체 얼리기 시도
         Combination(
             targets=[KeywordId.AIR_DUSTER, KeywordId.MYSTERY_LIQUID],
@@ -365,11 +363,10 @@ CH0_SCENE1_DATA = SceneData(
             actions=[
                 Action(
                     type=ActionType.PRINT_NARRATIVE,
-                    value="**[먼지 제거제]**를 뒤집어 액체 질소처럼 뿌려보았다.\n치익- 소리와 함께 액체가 하얗게 얼어붙었지만, 잠시 후 다시 녹아 끈적해졌다.\n얼리는 걸로는 부족하다. 화학적으로 녹여버릴 무언가가 필요하다."
+                    value="**[먼지 제거제]**를 뒤집어 액체 질소처럼 뿌려보았다.\n치익- 소리와 함께 액체가 하얗게 얼어붙었지만, 잠시 후 다시 녹아 끈적해졌다.\n얼리는 걸로는 부족하다. 화학적으로 녹여버릴 무언가가 필요하다.",
                 )
-            ]
+            ],
         ),
-
         Combination(
             targets=[KeywordId.ETHANOL, KeywordId.MYSTERY_LIQUID],
             conditions=[Condition(type=ConditionType.HAS_ITEM, target=KeywordId.ETHANOL)],

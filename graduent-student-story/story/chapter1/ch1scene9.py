@@ -12,7 +12,7 @@ from schemas import Action, Combination, Condition, Interaction, KeywordData, Sc
 CH1_SCENE9_DATA = SceneData(
     id=SceneID.CH1_SCENE9,
     name="가파른 능선 꼭대기 (섬 정상)",
-    initial_text=(
+    body=(
         "절벽을 따라 도르래에 몸을 맡기고 천천히 올라가자, 시야가 순식간에 넓어지며 능선 위가 모습을 드러낸다.\n"
         "발밑에는 오래전부터 쓰이던 듯한 좁은 콘크리트 기단이 있고, 그 위로는 녹슨 볼트와 부러진 금속 파이프 조각들이 흩어져 있다.\n"
         "조금 떨어진 바위 그늘 아래에는, 흙에 반쯤 묻힌 작은 금속 상자가 보인다. 누군가가 서둘러 숨겨 놓고 떠난 흔적처럼, 뚜껑 틈으로 낡은 전선 뭉치가 살짝 비친다.\n\n"
@@ -802,7 +802,7 @@ CH1_SCENE9_DATA = SceneData(
                 ),
                 Action(
                     type=ActionType.PRINT_SYSTEM,
-                    value=("조금 덜 앞서 나가도 괜찮습니다.\n\n" "지금까지의 선택들만, 정확히 세어 보세요."),
+                    value=("조금 덜 앞서 나가도 괜찮습니다.\n\n지금까지의 선택들만, 정확히 세어 보세요."),
                 ),
             ],
         ),

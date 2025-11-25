@@ -4,7 +4,7 @@ from schemas import Action, Combination, Condition, Interaction, KeywordData, Sc
 CH1_SCENE2_DATA = SceneData(
     id=SceneID.CH1_SCENE2,
     name="난파선 잔해 (화물칸 통로)",
-    initial_text=(
+    body=(
         "반쯤 모래에 파묻힌 거대한 난파선 잔해 안쪽입니다. 썩은 바닷물 냄새와 쇳가루 냄새가 진동합니다.\n"
         "발밑에는 정체모를 파이프와 전선들이 뱀처럼 얽혀 있고, 벽면에는 'DANGER'라고 적힌 붉은 경고문이 희미하게 보입니다.\n\n"
         "벽 한쪽에는 먼지 쌓인 비상 캐비닛이 위태롭게 매달려 있고, "

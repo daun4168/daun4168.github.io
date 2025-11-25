@@ -5,7 +5,7 @@ from schemas import Action, Combination, Condition, Interaction, KeywordData, Sc
 CH1_SCENE1_DATA = SceneData(
     id=SceneID.CH1_SCENE1,
     name="그늘진 해변 (베이스캠프)",
-    initial_text=(
+    body=(
         '"헥헥... 죽는 줄 알았네."\n\n'
         "당신은 젖 먹던 힘을 다해 MK-II를 거대한 야자수 그늘 아래로 옮기는 데 성공했습니다. "
         "기계도 나도 더 이상 직사광선에 고통받지 않아도 됩니다. 이곳은 이제 나의 훌륭한 베이스캠프입니다.\n\n"
@@ -450,8 +450,7 @@ CH1_SCENE1_DATA = SceneData(
                 Action(
                     type=ActionType.PRINT_NARRATIVE,
                     value=(
-                        "**[스패너]**를 던져 **[코코넛]**을 정확히 맞췄다.\n"
-                        "툭, 하고 열매가 떨어진다. 훌륭한 투구였다."
+                        "**[스패너]**를 던져 **[코코넛]**을 정확히 맞췄다.\n툭, 하고 열매가 떨어진다. 훌륭한 투구였다."
                     ),
                 ),
                 Action(
@@ -519,7 +518,7 @@ CH1_SCENE1_DATA = SceneData(
                 ),
             ],
         ),
-Combination(
+        Combination(
             targets=[KeywordId.MK_II, KeywordId.HEAVY_BATTERY],
             conditions=[
                 Condition(type=ConditionType.STATE_IS, target="mk2_all_parts_gathered", value=False),

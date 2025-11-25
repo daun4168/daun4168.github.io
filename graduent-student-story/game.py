@@ -29,8 +29,25 @@ from ui import UIManager
 
 # [추가] 한글 초성 리스트 (유니코드 순서)
 CHOSUNG_LIST = [
-    'ㄱ', 'ㄲ', 'ㄴ', 'ㄷ', 'ㄸ', 'ㄹ', 'ㅁ', 'ㅂ', 'ㅃ', 'ㅅ',
-    'ㅆ', 'ㅇ', 'ㅈ', 'ㅉ', 'ㅊ', 'ㅋ', 'ㅌ', 'ㅍ', 'ㅎ'
+    "ㄱ",
+    "ㄲ",
+    "ㄴ",
+    "ㄷ",
+    "ㄸ",
+    "ㄹ",
+    "ㅁ",
+    "ㅂ",
+    "ㅃ",
+    "ㅅ",
+    "ㅆ",
+    "ㅇ",
+    "ㅈ",
+    "ㅉ",
+    "ㅊ",
+    "ㅋ",
+    "ㅌ",
+    "ㅍ",
+    "ㅎ",
 ]
 
 # --- 게임 데이터 ---
@@ -205,12 +222,12 @@ class Game:
             origin_user_input: str = self.user_input.value
 
             # '+' 기호가 있다면 그 뒤의 텍스트만 자동완성 대상으로 함
-            idx = origin_user_input.rfind('+')
+            idx = origin_user_input.rfind("+")
             if idx != -1:
-                left = origin_user_input[:idx] + '+ '
-                right = origin_user_input[idx + 1:]  # 마지막 '+' 뒤
+                left = origin_user_input[:idx] + "+ "
+                right = origin_user_input[idx + 1 :]  # 마지막 '+' 뒤
             else:
-                left = ''
+                left = ""
                 right = origin_user_input
             right = right.strip()
 
@@ -305,7 +322,6 @@ class Game:
     async def process_command(self, command: str):
         self.num_total_inputs += 1
         self.ui.print_user_log(command)
-        print(self.num_total_inputs)
 
         if await self.test_runner.run_test_command(command):
             return
@@ -319,9 +335,6 @@ class Game:
         if self.pending_confirmation:
             await self.scene_manager.process_confirmation(command)
             return
-
-        if cmd_lower == CommandType.INVENTORY:
-            pass
 
         if cmd_lower == CommandType.LOOK_AROUND:
             self.scene_manager.redisplay_current_scene()

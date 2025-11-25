@@ -47,6 +47,8 @@ class Scene:
         """
         self.ui.set_location_name(self.scene_data.name)  # UI에 현재 장면 이름을 설정합니다.
         self.ui.print_narrative(self.scene_data.initial_text, is_markdown=True)  # 초기 설명 텍스트를 출력합니다.
+        self.ui.print_narrative(self.scene_data.body, is_markdown=True)  # 초기 설명 텍스트를 출력합니다.
+
         # 현재 장면의 키워드 상태를 UI에 업데이트하여 시야에 보이는 키워드를 표시합니다.
         self.ui.update_sight_status(self.scene_data.keywords)
 
@@ -60,7 +62,7 @@ class Scene:
         주로 '둘러보기' 명령 시 사용되며, 시스템 메시지와 초기 텍스트를 다시 출력합니다.
         """
         self.ui.print_system_message("주변을 다시 둘러봅니다.", is_markdown=True)
-        self.ui.print_narrative(self.scene_data.initial_text, is_markdown=True)
+        self.ui.print_narrative(self.scene_data.body, is_markdown=True)
 
     def resolve_alias(self, keyword: str) -> str:
         """
@@ -110,7 +112,11 @@ class Scene:
             for interaction in keyword_data.interactions:
                 if self._check_conditions(interaction.conditions):  # 조건이 충족되면
                     self.execute_actions(interaction.actions)  # 해당 액션들을 실행합니다.
-                    return True  # 상호작용 처리 성공.
+
+                    if interaction.continue_matching:
+                        continue
+                    else:
+                        return True
 
         # 상호작용이 없거나 조건이 충족되지 않았지만 설명이 있다면 설명을 출력합니다.
         if keyword_data.description:

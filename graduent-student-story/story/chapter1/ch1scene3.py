@@ -4,7 +4,7 @@ from schemas import Action, Combination, Condition, Interaction, KeywordData, Sc
 CH1_SCENE3_DATA = SceneData(
     id=SceneID.CH1_SCENE3,
     name="난파선 화물칸 (위험물 적재소)",
-    initial_text=(
+    body=(
         "배가 기울어져 걷기 힘든 화물칸 내부입니다. 코를 찌르는 매캐한 화학 약품 냄새가 진동합니다.\n"
         "통로 중앙에는 터진 드럼통에서 흘러나온 치명적인 산성 웅덩이가 길을 막고 있습니다. "
         "건너편에는 작업대와 전자 금고, 그리고 벽에 고정된 소방 도끼가 보이지만 접근할 수 없습니다.\n\n"

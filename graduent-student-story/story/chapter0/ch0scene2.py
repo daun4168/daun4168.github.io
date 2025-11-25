@@ -4,7 +4,7 @@ from schemas import Action, Combination, Condition, Interaction, KeywordData, Sc
 CH0_SCENE2_DATA = SceneData(
     id=SceneID.CH0_SCENE2,
     name="제 2 연구실 (청소 완료)",
-    initial_text='청소를 마치자마자 교수님이 땀을 뻘뻘 흘리며 거대한 기계를 들고 들어왔습니다.\n\n"자, 이게 내 역작 MK-II야. 배송비를 아껴줄 초공간 양자 전송 장치지. 해외 직구 배송비가 너무 비싸서 직접 만들었어."\n\n교수는 전선을 대충 콘센트에 꽂더니 나를 쳐다봅니다. 기계에서 불안한 웅웅 소리가 납니다.\n\n"테스트하게 저기 탑승구로 들어가. 자네 몸무게가 쌀 한 가마니랑 비슷하니까 딱이야."',
+    body='청소를 마치자마자 교수님이 땀을 뻘뻘 흘리며 거대한 기계를 들고 들어왔습니다.\n\n"자, 이게 내 역작 MK-II야. 배송비를 아껴줄 초공간 양자 전송 장치지. 해외 직구 배송비가 너무 비싸서 직접 만들었어."\n\n교수는 전선을 대충 콘센트에 꽂더니 나를 쳐다봅니다. 기계에서 불안한 웅웅 소리가 납니다.\n\n"테스트하게 저기 탑승구로 들어가. 자네 몸무게가 쌀 한 가마니랑 비슷하니까 딱이야."',
     initial_state={
         "professor_called_out": False,  # 교수가 카드를 달라고 소리쳤는지 여부
         "card_returned": False,  # 카드가 반납되었는지 여부
@@ -71,7 +71,7 @@ CH0_SCENE2_DATA = SceneData(
                     actions=[
                         Action(
                             type=ActionType.PRINT_NARRATIVE,
-                            value="그냥 들어가려니 문이 덜렁거려서 닫히질 않는다. 이대로 가동했다간 우주 미아가 될 것이다. 무언가로 단단히 조여야 한다."
+                            value="그냥 들어가려니 문이 덜렁거려서 닫히질 않는다. 이대로 가동했다간 우주 미아가 될 것이다. 무언가로 단단히 조여야 한다.",
                         )
                     ]
                 )
@@ -108,12 +108,14 @@ CH0_SCENE2_DATA = SceneData(
                     type=ActionType.PRINT_NARRATIVE,
                     value="**[스패너]**로 **[탑승구]**의 볼트를 조이려는 찰나, 교수님이 다급하게 소리친다.",
                 ),
-                Action(type=ActionType.PRINT_SYSTEM, value='교수님: "잠깐! 자네 주머니에 **[법인카드]**! 그거 놓고 타야지! 가지고 가면 횡령이야!"'),
+                Action(
+                    type=ActionType.PRINT_SYSTEM,
+                    value='교수님: "잠깐! 자네 주머니에 **[법인카드]**! 그거 놓고 타야지! 가지고 가면 횡령이야!"',
+                ),
                 Action(type=ActionType.UPDATE_STATE, value={"key": "professor_called_out", "value": True}),
                 Action(type=ActionType.PRINT_SYSTEM, value="교수님이 **[법인카드]**를 회수하려 합니다."),
             ],
         ),
-
         # [수정] 스패너로 탑승구 수리 시도 (카드를 이미 줬을 때 -> 성공 및 씬 이동)
         Combination(
             targets=[KeywordId.HATCH, KeywordId.SPANNER],
@@ -132,7 +134,6 @@ CH0_SCENE2_DATA = SceneData(
                 ),
             ],
         ),
-
         # [수정] 교수님에게 법인카드 반납 (언제든지 가능하도록 조건 완화)
         Combination(
             targets=[KeywordId.PROFESSOR, KeywordId.CORP_CARD],
@@ -143,14 +144,13 @@ CH0_SCENE2_DATA = SceneData(
             actions=[
                 Action(
                     type=ActionType.PRINT_NARRATIVE,
-                    value="교수님께 **[법인카드]**를 건네자, 교수님은 빛보다 빠른 속도로 카드를 낚아채 주머니에 넣는다.\n\n교수님: \"그래, 이건 연구실의 자산... 아니, 내 영혼과도 같은 거지.\"",
+                    value='교수님께 **[법인카드]**를 건네자, 교수님은 빛보다 빠른 속도로 카드를 낚아채 주머니에 넣는다.\n\n교수님: "그래, 이건 연구실의 자산... 아니, 내 영혼과도 같은 거지."',
                 ),
                 Action(type=ActionType.REMOVE_ITEM, value=KeywordId.CORP_CARD),
                 Action(type=ActionType.UPDATE_STATE, value={"key": "card_returned", "value": True}),
                 Action(type=ActionType.PRINT_SYSTEM, value="이제 방해 없이 **[탑승구]**를 수리할 수 있습니다."),
             ],
         ),
-
         # [네거티브 피드백] 스패너 + 교수님
         Combination(
             targets=[KeywordId.PROFESSOR, KeywordId.SPANNER],
@@ -158,11 +158,10 @@ CH0_SCENE2_DATA = SceneData(
             actions=[
                 Action(
                     type=ActionType.PRINT_NARRATIVE,
-                    value='**[스패너]**를 들어 올리자 교수님이 기겁하며 뒤로 물러선다.\n\n교수님: "이보게! 대학원생의 분노는 이해하지만, 폭력은 안 돼! 졸업은 해야지!"'
+                    value='**[스패너]**를 들어 올리자 교수님이 기겁하며 뒤로 물러선다.\n\n교수님: "이보게! 대학원생의 분노는 이해하지만, 폭력은 안 돼! 졸업은 해야지!"',
                 )
-            ]
+            ],
         ),
-
         # [네거티브 피드백] 스패너 + 콘센트/전선
         Combination(
             targets=[KeywordId.OUTLET, KeywordId.SPANNER],
@@ -170,9 +169,9 @@ CH0_SCENE2_DATA = SceneData(
             actions=[
                 Action(
                     type=ActionType.PRINT_NARRATIVE,
-                    value="금속 **[스패너]**를 전기가 흐르는 **[콘센트]**에 갖다 대는 건 자살 행위나 마찬가지다. 아직은 살고 싶다."
+                    value="금속 **[스패너]**를 전기가 흐르는 **[콘센트]**에 갖다 대는 건 자살 행위나 마찬가지다. 아직은 살고 싶다.",
                 )
-            ]
+            ],
         ),
         Combination(
             targets=[KeywordId.WIRE, KeywordId.SPANNER],
@@ -180,9 +179,9 @@ CH0_SCENE2_DATA = SceneData(
             actions=[
                 Action(
                     type=ActionType.PRINT_NARRATIVE,
-                    value="이 엉성한 **[전선]**을 건드렸다간 기계가 폭발할지도 모른다. 교수님이 보고 있다."
+                    value="이 엉성한 **[전선]**을 건드렸다간 기계가 폭발할지도 모른다. 교수님이 보고 있다.",
                 )
-            ]
+            ],
         ),
     ],
 )

@@ -199,7 +199,7 @@ CH1_SCENE1_DATA = SceneData(
             ],
         ),
         # 7. MK-II (최종 수리 대상)
-        KeywordId.MK_II: KeywordData(
+        KeywordId.QUANTUM_CAULDRON: KeywordData(
             type=KeywordType.OBJECT,
             state=KeywordState.DISCOVERED,
             interactions=[
@@ -477,7 +477,7 @@ CH1_SCENE1_DATA = SceneData(
         # ==========================
         # (A) 부품이 모두 모이기 전에 조립 시도 → 부정 피드백 (석영/배터리/전선 공통)
         Combination(
-            targets=[KeywordId.MK_II, KeywordId.QUARTZ_SHARD],
+            targets=[KeywordId.QUANTUM_CAULDRON, KeywordId.QUARTZ_SHARD],
             conditions=[
                 Condition(type=ConditionType.STATE_IS, target="mk2_all_parts_gathered", value=False),
                 Condition(type=ConditionType.HAS_ITEM, target=KeywordId.QUARTZ_SHARD),
@@ -498,7 +498,7 @@ CH1_SCENE1_DATA = SceneData(
             ],
         ),
         Combination(
-            targets=[KeywordId.MK_II, KeywordId.CHARGED_HEAVY_BATTERY],
+            targets=[KeywordId.QUANTUM_CAULDRON, KeywordId.CHARGED_HEAVY_BATTERY],
             conditions=[
                 Condition(type=ConditionType.STATE_IS, target="mk2_all_parts_gathered", value=False),
                 Condition(type=ConditionType.HAS_ITEM, target=KeywordId.CHARGED_HEAVY_BATTERY),
@@ -519,7 +519,7 @@ CH1_SCENE1_DATA = SceneData(
             ],
         ),
         Combination(
-            targets=[KeywordId.MK_II, KeywordId.HEAVY_BATTERY],
+            targets=[KeywordId.QUANTUM_CAULDRON, KeywordId.HEAVY_BATTERY],
             conditions=[
                 Condition(type=ConditionType.STATE_IS, target="mk2_all_parts_gathered", value=False),
                 Condition(type=ConditionType.HAS_ITEM, target=KeywordId.HEAVY_BATTERY),
@@ -539,7 +539,7 @@ CH1_SCENE1_DATA = SceneData(
             ],
         ),
         Combination(
-            targets=[KeywordId.MK_II, KeywordId.LONG_WIRE_FREE_END],
+            targets=[KeywordId.QUANTUM_CAULDRON, KeywordId.LONG_WIRE_FREE_END],
             conditions=[
                 Condition(type=ConditionType.STATE_IS, target="mk2_all_parts_gathered", value=False),
                 Condition(type=ConditionType.HAS_ITEM, target=KeywordId.LONG_WIRE_FREE_END),
@@ -561,7 +561,7 @@ CH1_SCENE1_DATA = SceneData(
         ),
         # (B) 부품이 모두 모인 뒤 실제 연결: 석영 조각
         Combination(
-            targets=[KeywordId.MK_II, KeywordId.QUARTZ_SHARD],
+            targets=[KeywordId.QUANTUM_CAULDRON, KeywordId.QUARTZ_SHARD],
             conditions=[
                 Condition(type=ConditionType.STATE_IS, target="mk2_all_parts_gathered", value=True),
                 Condition(type=ConditionType.STATE_IS, target="mk2_quartz_connected", value=False),
@@ -588,7 +588,7 @@ CH1_SCENE1_DATA = SceneData(
         ),
         # (C) 부품이 모두 모인 뒤 실제 연결: 충전된 산업용 배터리
         Combination(
-            targets=[KeywordId.MK_II, KeywordId.CHARGED_HEAVY_BATTERY],
+            targets=[KeywordId.QUANTUM_CAULDRON, KeywordId.CHARGED_HEAVY_BATTERY],
             conditions=[
                 Condition(type=ConditionType.STATE_IS, target="mk2_all_parts_gathered", value=True),
                 Condition(type=ConditionType.STATE_IS, target="mk2_battery_connected", value=False),
@@ -615,7 +615,7 @@ CH1_SCENE1_DATA = SceneData(
         ),
         # (D) 부품이 모두 모인 뒤 실제 연결: 기다란 전선 끝
         Combination(
-            targets=[KeywordId.MK_II, KeywordId.LONG_WIRE_FREE_END],
+            targets=[KeywordId.QUANTUM_CAULDRON, KeywordId.LONG_WIRE_FREE_END],
             conditions=[
                 Condition(type=ConditionType.STATE_IS, target="mk2_all_parts_gathered", value=True),
                 Condition(type=ConditionType.STATE_IS, target="mk2_wire_connected", value=False),
@@ -644,7 +644,7 @@ CH1_SCENE1_DATA = SceneData(
         #   - 먼저 '모든 부품이 연결된 경우'를 만족하는 조합을 위에 두고,
         #     그렇지 않을 때는 아래의 부정 피드백 조합이 동작하도록 순서를 조절한다.
         Combination(
-            targets=[KeywordId.MK_II, KeywordId.SPANNER],
+            targets=[KeywordId.QUANTUM_CAULDRON, KeywordId.SPANNER],
             conditions=[
                 Condition(type=ConditionType.STATE_IS, target="mk2_quartz_connected", value=True),
                 Condition(type=ConditionType.STATE_IS, target="mk2_battery_connected", value=True),
@@ -696,7 +696,7 @@ CH1_SCENE1_DATA = SceneData(
         ),
         # (F) MK-II + 스패너 : 아직 부품이 덜 연결된 경우 → 부정 피드백
         Combination(
-            targets=[KeywordId.MK_II, KeywordId.SPANNER],
+            targets=[KeywordId.QUANTUM_CAULDRON, KeywordId.SPANNER],
             conditions=[
                 Condition(type=ConditionType.STATE_IS, target="mk2_launched", value=False),
             ],

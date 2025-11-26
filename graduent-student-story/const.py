@@ -53,9 +53,7 @@ class KeywordId(StrEnum):
     ETHANOL = "에탄올"
 
     # CH0_SCENE2
-    MK_II = "MK-II"
-    WIRE = "전선"
-    OUTLET = "콘센트"
+    QUANTUM_CAULDRON = "양자 가마솥"
     HATCH = "탑승구"
 
     # CH1_SCENE0
@@ -65,6 +63,7 @@ class KeywordId(StrEnum):
     SKY = "하늘"
     SAND = "모래"
     SANDY_BEACH = "모래사장"
+    WIRE = "전선"
 
     # CH1_SCENE1
     WRECKAGE = "난파선 잔해"

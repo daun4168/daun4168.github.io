@@ -4,6 +4,7 @@ from schemas import Action, Combination, Condition, Interaction, KeywordData, Sc
 CH0_SCENE1_DATA = SceneData(
     id=SceneID.CH0_SCENE1,
     name="제 2 연구실",
+    initial_text="---\n## 제 2 연구실\n---\n",
     body=(
         "문을 여는 순간, 콧속으로 숙성된 곰팡이의 향기가 훅 끼쳐온다.\n\n"
         "이곳은 제 2 연구실인가, 아니면 엔트로피가 극대화된 쓰레기장인가.\n\n"
@@ -299,7 +300,7 @@ CH0_SCENE1_DATA = SceneData(
                 )
             ],
         ),
-        # --- 6. 컴퓨터 비밀번호 잠금 해제 ---
+        # --- 6. 컴퓨터 비밀번호 잠금 해제, 주문 내역 획득 ---
         KeywordId.COMPUTER: KeywordData(
             type=KeywordType.OBJECT,
             state=KeywordState.HIDDEN,
@@ -359,6 +360,7 @@ CH0_SCENE1_DATA = SceneData(
                 )
             ],
         ),
+        # --- 7. 시약장 비밀번호 잠금 해제, 에탄올 획득 ---
         KeywordId.CABINET: KeywordData(
             type=KeywordType.OBJECT,
             state=KeywordState.HIDDEN,
@@ -394,20 +396,7 @@ CH0_SCENE1_DATA = SceneData(
                 ),
             ],
         ),
-        KeywordId.MYSTERY_LIQUID: KeywordData(
-            type=KeywordType.OBJECT,
-            state=KeywordState.HIDDEN,
-            interactions=[
-                Interaction(
-                    actions=[
-                        Action(
-                            type=ActionType.PRINT_NARRATIVE,
-                            value="손을 대보려다 말았다. 맨손으로 만졌다간 내 손도 바닥과 한 몸이 될 것 같다. 물리적인 방법보다는 화학적으로 해결해야 한다.",
-                        )
-                    ]
-                )
-            ],
-        ),
+        # -- 8. 의문의 액체 제거, 빗자루질 ---
         KeywordId.FLOOR: KeywordData(
             type=KeywordType.OBJECT,
             state=KeywordState.HIDDEN,
@@ -417,20 +406,19 @@ CH0_SCENE1_DATA = SceneData(
                     actions=[
                         Action(
                             type=ActionType.PRINT_NARRATIVE,
-                            value="바닥 한쪽에 **[의문의 액체]**가 흥건하다. 밟으면 신발 밑창이 녹을 것 같다. 저 흉물스러운 것을 먼저 처리해야 한다.",
+                            value="바닥 한쪽에 **의문의 액체**가 흥건하다. 손을 대보려다 말았다.\n\n물리적인 방법보다는 화학적으로 해결해야 할 것 같다.",
                         )
-                    ]
+                    ],
                 ),
                 Interaction(
                     conditions=[Condition(type=ConditionType.STATE_IS, target="liquid_cleaned", value=True)],
                     actions=[
                         Action(
                             type=ActionType.PRINT_NARRATIVE,
-                            value="끈적한 액체는 말끔히 사라졌다. 이제야 좀 사람 사는 곳의 바닥 같다.\n마무리로 **[빗자루]**질을 하면 완벽할 것이다.",
+                            value="끈적한 액체는 말끔히 사라졌다. 이제야 좀 사람 사는 곳의 바닥 같다.\n\n마무리로 **[빗자루]**질을 하면 완벽할 것이다.",
                         )
                     ],
                 ),
-
             ],
         ),
         # --- 배경/분위기용 UNSEEN 오브젝트 (게임 플레이에 영향 없음) ---
@@ -584,10 +572,13 @@ CH0_SCENE1_DATA = SceneData(
                 ),
             ],
         ),
-        # [네거티브 피드백] 먼지 제거제(냉매)로 의문의 액체 얼리기 시도
+        # [수정] 네거티브 피드백: 먼지 제거제(냉매)로 바닥(액체) 얼리기 시도
         Combination(
-            targets=[KeywordId.AIR_DUSTER, KeywordId.MYSTERY_LIQUID],
-            conditions=[Condition(type=ConditionType.HAS_ITEM, target=KeywordId.AIR_DUSTER)],
+            targets=[KeywordId.AIR_DUSTER, KeywordId.FLOOR],
+            conditions=[
+                Condition(type=ConditionType.HAS_ITEM, target=KeywordId.AIR_DUSTER),
+                Condition(type=ConditionType.STATE_IS, target="liquid_cleaned", value=False),
+            ],
             actions=[
                 Action(
                     type=ActionType.PRINT_NARRATIVE,
@@ -595,18 +586,20 @@ CH0_SCENE1_DATA = SceneData(
                 )
             ],
         ),
+        # [수정] 에탄올 + 바닥 -> 성공
         Combination(
-            targets=[KeywordId.ETHANOL, KeywordId.MYSTERY_LIQUID],
-            conditions=[Condition(type=ConditionType.HAS_ITEM, target=KeywordId.ETHANOL)],
+            targets=[KeywordId.ETHANOL, KeywordId.FLOOR],
+            conditions=[
+                Condition(type=ConditionType.HAS_ITEM, target=KeywordId.ETHANOL),
+                Condition(type=ConditionType.STATE_IS, target="liquid_cleaned", value=False),
+            ],
             actions=[
                 Action(
                     type=ActionType.PRINT_NARRATIVE,
-                    value="**[에탄올]**을 들이붓자, 치이익 소리와 함께 끈적한 **[의문의 액체]**가 거품처럼 녹아내렸다!\n잠시 후, 바닥이 뽀득뽀득해졌다.",
+                    value="**[에탄올]**을 들이붓자, 치이익 소리와 함께 끈적한 **의문의 액체**가 거품처럼 녹아내렸다!\n\n잠시 후, 바닥이 뽀득뽀득해졌다.",
                 ),
                 Action(type=ActionType.REMOVE_ITEM, value=KeywordId.ETHANOL),
-                Action(type=ActionType.REMOVE_KEYWORD, value=KeywordId.MYSTERY_LIQUID),
                 Action(type=ActionType.UPDATE_STATE, value={"key": "liquid_cleaned", "value": True}),
-                Action(type=ActionType.PRINT_SYSTEM, value="이제 **[바닥]**을 빗자루로 청소할 수 있을 것 같습니다."),
             ],
         ),
         Combination(
@@ -618,7 +611,7 @@ CH0_SCENE1_DATA = SceneData(
             actions=[
                 Action(
                     type=ActionType.PRINT_NARRATIVE,
-                    value="바닥의 끈적한 **[의문의 액체]** 때문에 **[빗자루]**가 쩍쩍 달라붙는다. 억지로 쓸다간 빗자루 털이 다 빠질 것 같다. 액체부터 없애야 한다.",
+                    value="바닥의 끈적한 **의문의 액체** 때문에 **[빗자루]**가 쩍쩍 달라붙는다. 억지로 쓸다간 빗자루 털이 다 빠질 것 같다. 액체부터 없애야 한다.",
                 )
             ],
         ),
@@ -626,7 +619,7 @@ CH0_SCENE1_DATA = SceneData(
             targets=[KeywordId.BROOM, KeywordId.FLOOR],
             conditions=[
                 Condition(type=ConditionType.STATE_IS, target="liquid_cleaned", value=True),
-                Condition(type=ConditionType.STATE_NOT, target="trash_step", value=2),
+                Condition(type=ConditionType.STATE_NOT, target="trash_step", value=3),
                 Condition(type=ConditionType.HAS_ITEM, target=KeywordId.BROOM),
             ],
             actions=[
@@ -640,7 +633,7 @@ CH0_SCENE1_DATA = SceneData(
             targets=[KeywordId.BROOM, KeywordId.FLOOR],
             conditions=[
                 Condition(type=ConditionType.STATE_IS, target="liquid_cleaned", value=True),
-                Condition(type=ConditionType.STATE_IS, target="trash_step", value=2),
+                Condition(type=ConditionType.STATE_IS, target="trash_step", value=3),
                 Condition(type=ConditionType.HAS_ITEM, target=KeywordId.BROOM),
             ],
             actions=[

@@ -39,7 +39,7 @@ CH1_SCENE0_DATA = SceneData(
     ],
     keywords={
         KeywordId.SANDY_BEACH: KeywordData(type=KeywordType.ALIAS, target=KeywordId.SAND),
-        KeywordId.MK_II: KeywordData(
+        KeywordId.QUANTUM_CAULDRON: KeywordData(
             type=KeywordType.OBJECT,
             state=KeywordState.HIDDEN,
             interactions=[
@@ -218,7 +218,7 @@ CH1_SCENE0_DATA = SceneData(
         ),
         # [추가] 네거티브 피드백: MK-II 본체 + 스패너
         Combination(
-            targets=[KeywordId.MK_II, KeywordId.SPANNER],
+            targets=[KeywordId.QUANTUM_CAULDRON, KeywordId.SPANNER],
             conditions=[Condition(type=ConditionType.HAS_ITEM, target=KeywordId.SPANNER)],
             actions=[
                 Action(

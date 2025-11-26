@@ -149,7 +149,7 @@ CH1_SCENE10_DATA = SceneData(
             ],
         ),
         # 귀환 후 MK-II
-        KeywordId.MK_II: KeywordData(
+        KeywordId.QUANTUM_CAULDRON: KeywordData(
             type=KeywordType.OBJECT,
             state=KeywordState.DISCOVERED,
             description=(

@@ -8,30 +8,28 @@ CH1_SCENE1_DATA = SceneData(
     initial_text="---\n## 그늘진 해변 (베이스캠프)\n---\n\n",
     body=(
         '"헥헥... 죽는 줄 알았네."\n\n'
-        "당신은 젖 먹던 힘을 다해 양자 가마솥를 거대한 야자수 그늘 아래로 옮기는 데 성공했습니다.\n\n"
+        "당신은 젖 먹던 힘을 다해 양자 가마솥을 거대한 야자수 그늘 아래로 옮기는 데 성공했습니다.\n\n"
         "기계도 나도 더 이상 직사광선에 고통받지 않아도 됩니다. 이곳은 이제 나의 훌륭한 베이스캠프입니다.\n\n"
-        "그늘 밖은 여전히 용광로 같습니다. 동쪽 해변 끝에는 난파선 잔해가 아지랑이 너머로 보이고,\n\n"
-        "북쪽에는 숲 입구가 보입니다. 바로 앞에는 파도에 떠밀려온 쓰레기 더미가 쌓여 있고,\n\n"
-        "시원한 바다와 따뜻한 모래사장이 펼쳐져 있습니다.\n\n"
+        "그늘 밖은 여전히 용광로 같습니다.\n\n"
+        "동쪽 해변 끝에는 난파선 잔해가 아지랑이 너머로 보이고, 북쪽에는 숲 입구가 보입니다.\n\n"
+        "바로 앞에는 파도에 떠밀려온 쓰레기 더미가 쌓여 있고, 시원한 바다와 따뜻한 모래사장이 펼쳐져 있습니다.\n\n"
         "일단은 안전합니다. 이제 어떻게 할까요?"
     ),
     initial_state={
         "wreck_path_inspected": False,
         "tree_inspected": False,
         "coconut_obtained": False,  # 코코넛 획득 여부
-        "crab_caught": False,
         "searched_trash": False,
-        "has_shelter": False,
         "forest_cleared": False,  # 숲길 개척 여부
         "vines_collected": False,
         "forest_inspected": False,
-        "mk2_inspected": False,  # 양자 가마솥 처음 조사 여부
+        "quantum_inspected": False,  # 양자 가마솥 처음 조사 여부
         # 양자 가마솥 최종 수리용 상태
-        "mk2_all_parts_gathered": False,  # 석영 조각 / 충전 배터리 / 전선 끝 세 개를 모두 들고 양자 가마솥를 확인했는지
-        "mk2_quartz_connected": False,  # 석영 조각 연결 여부
-        "mk2_battery_connected": False,  # 충전 배터리 연결 여부
-        "mk2_wire_connected": False,  # 전선 끝 연결 여부
-        "mk2_launched": False,  # 최종 발진 여부 (플래그용)
+        "quantum_all_parts_gathered": False,  # 석영 조각 / 충전 배터리 / 전선 끝 세 개를 모두 들고 양자 가마솥를 확인했는지
+        "quantum_quartz_connected": False,  # 석영 조각 연결 여부
+        "quantum_battery_connected": False,  # 충전 배터리 연결 여부
+        "quantum_wire_connected": False,  # 전선 끝 연결 여부
+        "quantum_launched": False,  # 최종 발진 여부 (플래그용)
     },
     keywords={
         # 1. 모래사장 (안전 지대)
@@ -204,7 +202,7 @@ CH1_SCENE1_DATA = SceneData(
             interactions=[
                 Interaction(
                     conditions=[
-                        Condition(type=ConditionType.STATE_IS, target="mk2_inspected", value=False),
+                        Condition(type=ConditionType.STATE_IS, target="quantum_inspected", value=False),
                     ],
                     actions=[
                         Action(
@@ -217,13 +215,13 @@ CH1_SCENE1_DATA = SceneData(
                         ),
                         Action(
                             type=ActionType.UPDATE_STATE,
-                            value={"key": "mk2_inspected", "value": True},
+                            value={"key": "quantum_inspected", "value": True},
                         ),
                     ],
                 ),
                 Interaction(
                     conditions=[
-                        Condition(type=ConditionType.STATE_IS, target="mk2_all_parts_gathered", value=False),
+                        Condition(type=ConditionType.STATE_IS, target="quantum_all_parts_gathered", value=False),
                         Condition(type=ConditionType.NOT_HAS_ITEM, target=KeywordId.QUARTZ_SHARD),
                     ],
                     actions=[
@@ -241,10 +239,10 @@ CH1_SCENE1_DATA = SceneData(
                         ),
                     ],
                 ),
-                # (1) 아직 mk2_all_parts_gathered == False 이고, 세 부품이 모두 없는/부족한 상태
+                # (1) 아직 quantum_all_parts_gathered == False 이고, 세 부품이 모두 없는/부족한 상태
                 Interaction(
                     conditions=[
-                        Condition(type=ConditionType.STATE_IS, target="mk2_all_parts_gathered", value=False),
+                        Condition(type=ConditionType.STATE_IS, target="quantum_all_parts_gathered", value=False),
                         Condition(type=ConditionType.NOT_HAS_ITEM, target=KeywordId.CHARGED_HEAVY_BATTERY),
                     ],
                     actions=[
@@ -264,7 +262,7 @@ CH1_SCENE1_DATA = SceneData(
                 ),
                 Interaction(
                     conditions=[
-                        Condition(type=ConditionType.STATE_IS, target="mk2_all_parts_gathered", value=False),
+                        Condition(type=ConditionType.STATE_IS, target="quantum_all_parts_gathered", value=False),
                         Condition(type=ConditionType.NOT_HAS_ITEM, target=KeywordId.LONG_WIRE_FREE_END),
                     ],
                     actions=[
@@ -282,10 +280,10 @@ CH1_SCENE1_DATA = SceneData(
                         ),
                     ],
                 ),
-                # (2) 부품 세 개를 모두 들고 있는데 아직 mk2_all_parts_gathered는 False인 경우 → '훌륭하다' 멘트 + 준비 완료
+                # (2) 부품 세 개를 모두 들고 있는데 아직 quantum_all_parts_gathered는 False인 경우 → '훌륭하다' 멘트 + 준비 완료
                 Interaction(
                     conditions=[
-                        Condition(type=ConditionType.STATE_IS, target="mk2_all_parts_gathered", value=False),
+                        Condition(type=ConditionType.STATE_IS, target="quantum_all_parts_gathered", value=False),
                         Condition(type=ConditionType.HAS_ITEM, target=KeywordId.QUARTZ_SHARD),
                         Condition(type=ConditionType.HAS_ITEM, target=KeywordId.CHARGED_HEAVY_BATTERY),
                         Condition(type=ConditionType.HAS_ITEM, target=KeywordId.LONG_WIRE_FREE_END),
@@ -306,15 +304,15 @@ CH1_SCENE1_DATA = SceneData(
                         ),
                         Action(
                             type=ActionType.UPDATE_STATE,
-                            value={"key": "mk2_all_parts_gathered", "value": True},
+                            value={"key": "quantum_all_parts_gathered", "value": True},
                         ),
                     ],
                 ),
-                # (3) mk2_all_parts_gathered == True 이후 양자 가마솥를 살펴볼 때
+                # (3) quantum_all_parts_gathered == True 이후 양자 가마솥를 살펴볼 때
                 Interaction(
                     conditions=[
-                        Condition(type=ConditionType.STATE_IS, target="mk2_all_parts_gathered", value=True),
-                        Condition(type=ConditionType.STATE_IS, target="mk2_launched", value=False),
+                        Condition(type=ConditionType.STATE_IS, target="quantum_all_parts_gathered", value=True),
+                        Condition(type=ConditionType.STATE_IS, target="quantum_launched", value=False),
                     ],
                     actions=[
                         Action(
@@ -328,10 +326,10 @@ CH1_SCENE1_DATA = SceneData(
                         ),
                     ],
                 ),
-                # (4) mk2_launched == True 이후 (이 씬으로 다시 돌아올 일은 거의 없겠지만 방어용)
+                # (4) quantum_launched == True 이후 (이 씬으로 다시 돌아올 일은 거의 없겠지만 방어용)
                 Interaction(
                     conditions=[
-                        Condition(type=ConditionType.STATE_IS, target="mk2_launched", value=True),
+                        Condition(type=ConditionType.STATE_IS, target="quantum_launched", value=True),
                     ],
                     actions=[
                         Action(
@@ -478,7 +476,7 @@ CH1_SCENE1_DATA = SceneData(
         Combination(
             targets=[KeywordId.QUANTUM_CAULDRON, KeywordId.QUARTZ_SHARD],
             conditions=[
-                Condition(type=ConditionType.STATE_IS, target="mk2_all_parts_gathered", value=False),
+                Condition(type=ConditionType.STATE_IS, target="quantum_all_parts_gathered", value=False),
                 Condition(type=ConditionType.HAS_ITEM, target=KeywordId.QUARTZ_SHARD),
             ],
             actions=[
@@ -499,7 +497,7 @@ CH1_SCENE1_DATA = SceneData(
         Combination(
             targets=[KeywordId.QUANTUM_CAULDRON, KeywordId.CHARGED_HEAVY_BATTERY],
             conditions=[
-                Condition(type=ConditionType.STATE_IS, target="mk2_all_parts_gathered", value=False),
+                Condition(type=ConditionType.STATE_IS, target="quantum_all_parts_gathered", value=False),
                 Condition(type=ConditionType.HAS_ITEM, target=KeywordId.CHARGED_HEAVY_BATTERY),
             ],
             actions=[
@@ -520,7 +518,7 @@ CH1_SCENE1_DATA = SceneData(
         Combination(
             targets=[KeywordId.QUANTUM_CAULDRON, KeywordId.HEAVY_BATTERY],
             conditions=[
-                Condition(type=ConditionType.STATE_IS, target="mk2_all_parts_gathered", value=False),
+                Condition(type=ConditionType.STATE_IS, target="quantum_all_parts_gathered", value=False),
                 Condition(type=ConditionType.HAS_ITEM, target=KeywordId.HEAVY_BATTERY),
             ],
             actions=[
@@ -540,7 +538,7 @@ CH1_SCENE1_DATA = SceneData(
         Combination(
             targets=[KeywordId.QUANTUM_CAULDRON, KeywordId.LONG_WIRE_FREE_END],
             conditions=[
-                Condition(type=ConditionType.STATE_IS, target="mk2_all_parts_gathered", value=False),
+                Condition(type=ConditionType.STATE_IS, target="quantum_all_parts_gathered", value=False),
                 Condition(type=ConditionType.HAS_ITEM, target=KeywordId.LONG_WIRE_FREE_END),
             ],
             actions=[
@@ -562,8 +560,8 @@ CH1_SCENE1_DATA = SceneData(
         Combination(
             targets=[KeywordId.QUANTUM_CAULDRON, KeywordId.QUARTZ_SHARD],
             conditions=[
-                Condition(type=ConditionType.STATE_IS, target="mk2_all_parts_gathered", value=True),
-                Condition(type=ConditionType.STATE_IS, target="mk2_quartz_connected", value=False),
+                Condition(type=ConditionType.STATE_IS, target="quantum_all_parts_gathered", value=True),
+                Condition(type=ConditionType.STATE_IS, target="quantum_quartz_connected", value=False),
                 Condition(type=ConditionType.HAS_ITEM, target=KeywordId.QUARTZ_SHARD),
             ],
             actions=[
@@ -581,7 +579,7 @@ CH1_SCENE1_DATA = SceneData(
                 ),
                 Action(
                     type=ActionType.UPDATE_STATE,
-                    value={"key": "mk2_quartz_connected", "value": True},
+                    value={"key": "quantum_quartz_connected", "value": True},
                 ),
             ],
         ),
@@ -589,8 +587,8 @@ CH1_SCENE1_DATA = SceneData(
         Combination(
             targets=[KeywordId.QUANTUM_CAULDRON, KeywordId.CHARGED_HEAVY_BATTERY],
             conditions=[
-                Condition(type=ConditionType.STATE_IS, target="mk2_all_parts_gathered", value=True),
-                Condition(type=ConditionType.STATE_IS, target="mk2_battery_connected", value=False),
+                Condition(type=ConditionType.STATE_IS, target="quantum_all_parts_gathered", value=True),
+                Condition(type=ConditionType.STATE_IS, target="quantum_battery_connected", value=False),
                 Condition(type=ConditionType.HAS_ITEM, target=KeywordId.CHARGED_HEAVY_BATTERY),
             ],
             actions=[
@@ -608,7 +606,7 @@ CH1_SCENE1_DATA = SceneData(
                 ),
                 Action(
                     type=ActionType.UPDATE_STATE,
-                    value={"key": "mk2_battery_connected", "value": True},
+                    value={"key": "quantum_battery_connected", "value": True},
                 ),
             ],
         ),
@@ -616,8 +614,8 @@ CH1_SCENE1_DATA = SceneData(
         Combination(
             targets=[KeywordId.QUANTUM_CAULDRON, KeywordId.LONG_WIRE_FREE_END],
             conditions=[
-                Condition(type=ConditionType.STATE_IS, target="mk2_all_parts_gathered", value=True),
-                Condition(type=ConditionType.STATE_IS, target="mk2_wire_connected", value=False),
+                Condition(type=ConditionType.STATE_IS, target="quantum_all_parts_gathered", value=True),
+                Condition(type=ConditionType.STATE_IS, target="quantum_wire_connected", value=False),
                 Condition(type=ConditionType.HAS_ITEM, target=KeywordId.LONG_WIRE_FREE_END),
             ],
             actions=[
@@ -635,7 +633,7 @@ CH1_SCENE1_DATA = SceneData(
                 ),
                 Action(
                     type=ActionType.UPDATE_STATE,
-                    value={"key": "mk2_wire_connected", "value": True},
+                    value={"key": "quantum_wire_connected", "value": True},
                 ),
             ],
         ),
@@ -645,10 +643,10 @@ CH1_SCENE1_DATA = SceneData(
         Combination(
             targets=[KeywordId.QUANTUM_CAULDRON, KeywordId.SPANNER],
             conditions=[
-                Condition(type=ConditionType.STATE_IS, target="mk2_quartz_connected", value=True),
-                Condition(type=ConditionType.STATE_IS, target="mk2_battery_connected", value=True),
-                Condition(type=ConditionType.STATE_IS, target="mk2_wire_connected", value=True),
-                Condition(type=ConditionType.STATE_IS, target="mk2_launched", value=False),
+                Condition(type=ConditionType.STATE_IS, target="quantum_quartz_connected", value=True),
+                Condition(type=ConditionType.STATE_IS, target="quantum_battery_connected", value=True),
+                Condition(type=ConditionType.STATE_IS, target="quantum_wire_connected", value=True),
+                Condition(type=ConditionType.STATE_IS, target="quantum_launched", value=False),
             ],
             actions=[
                 Action(
@@ -672,7 +670,7 @@ CH1_SCENE1_DATA = SceneData(
                             ),
                             Action(
                                 type=ActionType.UPDATE_STATE,
-                                value={"key": "mk2_launched", "value": True},
+                                value={"key": "quantum_launched", "value": True},
                             ),
                             Action(
                                 type=ActionType.MOVE_SCENE,
@@ -697,7 +695,7 @@ CH1_SCENE1_DATA = SceneData(
         Combination(
             targets=[KeywordId.QUANTUM_CAULDRON, KeywordId.SPANNER],
             conditions=[
-                Condition(type=ConditionType.STATE_IS, target="mk2_launched", value=False),
+                Condition(type=ConditionType.STATE_IS, target="quantum_launched", value=False),
             ],
             actions=[
                 Action(

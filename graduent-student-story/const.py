@@ -59,11 +59,9 @@ class KeywordId(StrEnum):
     # CH1_SCENE0
     COMMS = "통신기"
     SEA = "바다"
-    SUN = "태양"
-    SKY = "하늘"
     SAND = "모래"
     SANDY_BEACH = "모래사장"
-    WIRE = "전선"
+    SHADY_BEACH = "그늘진 해변"
 
     # CH1_SCENE1
     WRECKAGE = "난파선 잔해"
@@ -74,6 +72,7 @@ class KeywordId(StrEnum):
     COCONUT = "코코넛"
     PLASTIC_BOTTLE = "빈 페트병"
     VINYL = "비닐"
+    WIRE = "전선"
 
     # CH1_SCENE2
     RUSTY_BUCKET = "녹슨 양동이"

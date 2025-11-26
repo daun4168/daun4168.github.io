@@ -5,6 +5,7 @@ from schemas import Action, Combination, Condition, Interaction, KeywordData, Sc
 CH1_SCENE1_DATA = SceneData(
     id=SceneID.CH1_SCENE1,
     name="그늘진 해변 (베이스캠프)",
+    initial_text="---\n## 그늘진 해변 (베이스캠프)\n---\n\n",
     body=(
         '"헥헥... 죽는 줄 알았네."\n\n'
         "당신은 젖 먹던 힘을 다해 MK-II를 거대한 야자수 그늘 아래로 옮기는 데 성공했습니다. "
@@ -31,10 +32,6 @@ CH1_SCENE1_DATA = SceneData(
         "mk2_wire_connected": False,  # 전선 끝 연결 여부
         "mk2_launched": False,  # 최종 발진 여부 (플래그용)
     },
-    on_enter_actions=[
-        # 체력 UI 표시
-        Action(type=ActionType.SHOW_STAMINA_UI, value=True),
-    ],
     keywords={
         # 1. 모래사장 (안전 지대)
         KeywordId.SAND: KeywordData(

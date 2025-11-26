@@ -24,7 +24,7 @@ CH1_COMMON_DATA = ChapterData(
                     },
                 ),
                 Action(type=ActionType.MODIFY_STAMINA, value=5),
-                Action(type=ActionType.PRINT_SYSTEM, value="갈증 해소! 체력 +5"),
+                Action(type=ActionType.PRINT_SYSTEM, value="갈증을 해소해서 체력이 증가했습니다."),
             ],
         ),
         # [공통 조합] 소방 도끼 + 코코넛 = 섭취
@@ -47,7 +47,7 @@ CH1_COMMON_DATA = ChapterData(
                     },
                 ),
                 Action(type=ActionType.MODIFY_STAMINA, value=5),
-                Action(type=ActionType.PRINT_SYSTEM, value="갈증 해소! 체력 +5"),
+                Action(type=ActionType.PRINT_SYSTEM, value="갈증을 해소해서 체력이 증가했습니다."),
             ],
         ),
         # [준비용 조합] 고무 + 전선 = 절연 전선

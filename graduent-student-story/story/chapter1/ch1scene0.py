@@ -4,11 +4,8 @@ from schemas import Action, Combination, Condition, Interaction, KeywordData, Sc
 CH1_SCENE0_DATA = SceneData(
     id=SceneID.CH1_SCENE0,
     name="이름 모를 해변 (불시착)",
+    initial_text="---\n# Chapter 1\n## 과학적 생존법\n---\n\n",
     body=(
-        "---\n"
-        "# Chapter 1\n"
-        "## 과학적 생존법\n"
-        "---\n\n"
         "쿠당탕!!\n"
         "엄청난 굉음과 함께 엉덩이에 전해지는 고통. 전두엽까지 울리는 충격에 정신이 아득하다.\n\n"
         "눈을 떠보니 익숙한 회색 랩실 천장이 아니라, 눈이 시릴 만큼 파란 하늘과 작열하는 태양이 보인다.\n\n"
@@ -18,9 +15,7 @@ CH1_SCENE0_DATA = SceneData(
         "덥다. 너무 덥다. 에어컨이 고장 난 8월의 서버실보다 더 덥다."
     ),
     initial_state={
-        "mk_inspected": False,
-        "comm_connected": False,
-        "comm_found": False,
+        "quantum_inspected": False,
         "sea_step": 0,
         "sand_step": 0,
     },
@@ -29,13 +24,13 @@ CH1_SCENE0_DATA = SceneData(
         Action(type=ActionType.SAVE_CHECKPOINT, value=None),
         Action(
             type=ActionType.PRINT_SYSTEM,
-            value="[System] 낯선 환경에 진입했습니다. 현재 상태가 **체크포인트**에 저장됩니다.",
+            value=(
+                "⚠️ **낯선 차원에 진입했습니다.**\n\n"
+                "현재 시공간 좌표가 **[체크포인트]**로 저장되었습니다.\n\n"
+                "우측 상단에 **[체력]** 게이지가 활성화됩니다. \n\n"
+                "무리한 행동으로 체력이 0이 되면, 시간은 다시 이곳으로 되감깁니다."
+            ),
         ),
-        Action(
-            type=ActionType.PRINT_SYSTEM,
-            value="[System] 오른쪽 상단에 체력이 생겼습니다. 이제 체력을 신경쓰면서 움직여야 합니다.",
-        ),
-        Action(type=ActionType.PRINT_SYSTEM, value="[Tip] 체력이 0이 되면 이 지점에서 다시 시작합니다."),
     ],
     keywords={
         KeywordId.SANDY_BEACH: KeywordData(type=KeywordType.ALIAS, target=KeywordId.SAND),
@@ -45,8 +40,7 @@ CH1_SCENE0_DATA = SceneData(
             interactions=[
                 Interaction(
                     conditions=[
-                        Condition(type=ConditionType.STATE_IS, target="mk_inspected", value=False),
-                        Condition(type=ConditionType.STATE_IS, target="comm_found", value=False),
+                        Condition(type=ConditionType.STATE_IS, target="quantum_inspected", value=False),
                     ],
                     actions=[
                         Action(
@@ -58,11 +52,10 @@ CH1_SCENE0_DATA = SceneData(
                             ),
                         ),
                         Action(
-                            type=ActionType.UPDATE_STATE,
-                            value={"keyword": KeywordId.COMMS, "state": KeywordState.HIDDEN},
+                            type=ActionType.DISCOVER_KEYWORD,
+                            value=KeywordId.COMMS,
                         ),
-                        Action(type=ActionType.PRINT_SYSTEM, value="새로운 상호작용 대상이 발견되었습니다."),
-                        Action(type=ActionType.UPDATE_STATE, value={"key": "mk_inspected", "value": True}),
+                        Action(type=ActionType.UPDATE_STATE, value={"key": "quantum_inspected", "value": True}),
                     ],
                 ),
                 Interaction(
@@ -80,11 +73,10 @@ CH1_SCENE0_DATA = SceneData(
             type=KeywordType.OBJECT,
             state=KeywordState.INACTIVE,
             # 힌트 강화: 도구 사용 유도
-            description="전선이 끊어져 지직거리는 소리만 난다. 단단한 **[도구]**로 커버를 뜯어내고 내부 회로를 다시 연결하면 될 것 같다.",
+            description="전선이 끊어져 지직거리는 소리만 난다. 단단한 도구로 커버를 뜯어내고 내부 회로를 다시 연결하면 될 것 같다.",
             interactions=[
                 Interaction(
                     actions=[
-                        Action(type=ActionType.UPDATE_STATE, value={"key": "comm_found", "value": True}),
                         Action(
                             type=ActionType.PRINT_NARRATIVE,
                             value="지지직... 거리는 잡음 사이로 희미하게 사람 목소리가 들린다. **[스패너]** 같은 걸로 고칠 수 있을까?",
@@ -113,16 +105,17 @@ CH1_SCENE0_DATA = SceneData(
                         Action(
                             type=ActionType.PRINT_NARRATIVE,
                             value=(
-                                "목이 너무 말라 바닷물이라도 마시려 손을 뻗었다.\n"
+                                "목이 너무 말라 바닷물이라도 마시려 손을 뻗었다.\n\n"
                                 "...윽! 혀가 아릴 정도로 짜다. 구역질이 올라오며 오히려 더 목이 마르다."
                             ),
                         ),
-                        Action(type=ActionType.MODIFY_STAMINA, value=-10),
+                        Action(type=ActionType.MODIFY_STAMINA, value=-5),
                         Action(
                             type=ActionType.PRINT_SYSTEM,
                             value="[경고] 짠물을 마셔 체력이 감소했습니다. 잘못된 행동은 생명을 위협합니다.",
                         ),
                         Action(type=ActionType.UPDATE_STATE, value={"key": "sea_step", "value": 2}),
+                        Action(type=ActionType.UPDATE_STATE, value={"keyword": KeywordId.SEA, "state" : KeywordState.UNSEEN})
                     ],
                 ),
                 Interaction(
@@ -136,16 +129,6 @@ CH1_SCENE0_DATA = SceneData(
                 ),
             ],
         ),
-        KeywordId.SUN: KeywordData(
-            type=KeywordType.OBJECT,
-            state=KeywordState.HIDDEN,
-            description="머리 꼭대기에서 이글거린다. 가만히 서 있어도 수분이 증발하는 기분이다.",
-        ),
-        KeywordId.SKY: KeywordData(
-            type=KeywordType.OBJECT,
-            state=KeywordState.HIDDEN,
-            description="구름 한 점 없이 맑다. 너무 광활해서 오히려 공포감이 든다. 교수가 없는 하늘은 이렇게나 넓구나.",
-        ),
         KeywordId.SAND: KeywordData(
             type=KeywordType.OBJECT,
             state=KeywordState.HIDDEN,
@@ -156,7 +139,7 @@ CH1_SCENE0_DATA = SceneData(
                         Action(
                             type=ActionType.PRINT_NARRATIVE,
                             value=(
-                                "손을 대자마자 화상을 입을 뻔했다. 삼겹살을 올려두면 3초 만에 마이야르 반응이 일어날 온도다.\n"
+                                "손을 대자마자 화상을 입을 뻔했다. 삼겹살을 올려두면 3초 만에 마이야르 반응이 일어날 온도다.\n\n"
                                 "신발 밑창이 녹기 전에 그늘을 찾아야 한다."
                             ),
                         ),
@@ -172,6 +155,7 @@ CH1_SCENE0_DATA = SceneData(
                         ),
                         Action(type=ActionType.MODIFY_STAMINA, value=-5),
                         Action(type=ActionType.PRINT_SYSTEM, value="[경고] 뜨거운 모래에 데여 체력이 감소했습니다."),
+                        Action(type=ActionType.UPDATE_STATE, value={"keyword": KeywordId.SAND, "state" : KeywordState.UNSEEN})
                     ],
                 ),
                 Interaction(
@@ -184,6 +168,17 @@ CH1_SCENE0_DATA = SceneData(
                     ],
                 ),
             ],
+        ),
+        # --- 배경/분위기용 UNSEEN 오브젝트 (게임 플레이에 영향 없음) ---
+        KeywordId.SUN: KeywordData(
+            type=KeywordType.OBJECT,
+            state=KeywordState.UNSEEN,
+            description="머리 꼭대기에서 이글거린다. 가만히 서 있어도 수분이 증발하는 기분이다.",
+        ),
+        KeywordId.SKY: KeywordData(
+            type=KeywordType.OBJECT,
+            state=KeywordState.UNSEEN,
+            description="구름 한 점 없이 맑다. 너무 광활해서 오히려 공포감이 든다. 교수가 없는 하늘은 이렇게나 넓구나.",
         ),
     },
     combinations=[
@@ -211,7 +206,6 @@ CH1_SCENE0_DATA = SceneData(
                     ),
                 ),
                 Action(type=ActionType.PRINT_SYSTEM, value="[목표 갱신] 1. MK-II 수리 재료 찾기"),
-                Action(type=ActionType.UPDATE_STATE, value={"key": "comm_connected", "value": True}),
                 Action(type=ActionType.PRINT_SYSTEM, value="이제 본격적으로 섬을 탐색하기 위해 이동합니다."),
                 Action(type=ActionType.MOVE_SCENE, value=SceneID.CH1_SCENE1),
             ],
@@ -224,28 +218,6 @@ CH1_SCENE0_DATA = SceneData(
                 Action(
                     type=ActionType.PRINT_NARRATIVE,
                     value="기계 본체를 **[스패너]**로 두들겨 봤자 찌그러진 외장만 더 찌그러질 뿐이다. 수리가 필요한 건 내부의 통신기다.",
-                )
-            ],
-        ),
-        # [추가] 네거티브 피드백: 바다 + 스패너
-        Combination(
-            targets=[KeywordId.SEA, KeywordId.SPANNER],
-            conditions=[Condition(type=ConditionType.HAS_ITEM, target=KeywordId.SPANNER)],
-            actions=[
-                Action(
-                    type=ActionType.PRINT_NARRATIVE,
-                    value="바다를 향해 **[스패너]**를 휘둘러 보았다. 파도를 고칠 수는 없다.",
-                )
-            ],
-        ),
-        # [추가] 네거티브 피드백: 태양 + 스패너
-        Combination(
-            targets=[KeywordId.SUN, KeywordId.SPANNER],
-            conditions=[Condition(type=ConditionType.HAS_ITEM, target=KeywordId.SPANNER)],
-            actions=[
-                Action(
-                    type=ActionType.PRINT_NARRATIVE,
-                    value="태양을 향해 **[스패너]**를 들어 올렸다. 눈만 부시다. 쓸데없는 짓으로 체력을 낭비하지 말자.",
                 )
             ],
         ),

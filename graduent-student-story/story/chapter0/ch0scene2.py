@@ -91,6 +91,7 @@ CH0_SCENE2_DATA = SceneData(
             ],
             description="사람 하나가 웅크리고 들어갈 만한 좁은 입구다. 경첩이 헐거워서 손으로 만지면 덜그럭거린다. 꽉 조일만한 게 필요하다.",
         ),
+        # --- 배경/분위기용 UNSEEN 오브젝트 (게임 플레이에 영향 없음) ---
         "고철 덩어리": KeywordData(
             type=KeywordType.OBJECT,
             state=KeywordState.UNSEEN,

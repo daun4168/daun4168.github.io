@@ -26,14 +26,10 @@ UNSEEN_INSPECTED_INTERACTIONS = [
 CH0_SCENE0_DATA = SceneData(
     id=SceneID.CH0_SCENE0,
     name="교수님 오피스",
-    initial_text=(
-        "---\n"
-        "# Chapter 0\n"
-        "## 위기의 대학원생: 서막\n"
-        "---\n"
-    ),
+    initial_text="---\n# Chapter 0\n## 위기의 대학원생: 서막\n---\n",
     body=(
-        "눈을 뜨자 익숙한 풍경이 보인다. 책상 위에 쌓인 논문 탑, 그리고 그 뒤에서 번뜩이는 안경알.\n\n"
+        "눈을 뜨자 익숙한 풍경이 보인다. \n\n"
+        "책상 위에 쌓인 논문 탑, 그리고 그 뒤에서 번뜩이는 안경알.\n\n"
         '"자네, 정신이 드나? 서서 조는 기술이 아주 일취월장했어."\n\n'
         "교수님이 혀를 차며 나를 바라본다. 10년째 듣는 잔소리다. 타격감도 없다.\n\n"
         '"연구실 제2섹터 청소나 하게. 외부 손님이 온다니까. '
@@ -111,7 +107,14 @@ CH0_SCENE0_DATA = SceneData(
                             },
                         ),
                         Action(
-                            type=ActionType.PRINT_SYSTEM, value="어떤 **[키워드]**는 발견해서 **주머니**에 보관할 수 있습니다."
+                            type=ActionType.PRINT_SYSTEM,
+                            value="어떤 **[키워드]**는 발견해서 **주머니**에 보관할 수 있습니다.",
+                        ),
+                        Action(
+                            type=ActionType.PRINT_SYSTEM,
+                            value=(
+                                "**주머니**에 있는 **물건**의 이름을 입력하면 설명을 확인할 수 있습니다.\n\n"
+                            ),
                         ),
                         Action(type=ActionType.REMOVE_KEYWORD, value=KeywordId.CORP_CARD),
                     ],

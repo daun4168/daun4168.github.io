@@ -46,7 +46,8 @@ class Scene:
         장면 이름 설정, 초기 텍스트 출력, 시야 상태 업데이트 및 진입 액션 실행을 담당합니다.
         """
         self.ui.set_location_name(self.scene_data.name)  # UI에 현재 장면 이름을 설정합니다.
-        self.ui.print_narrative(self.scene_data.initial_text, is_markdown=True)  # 초기 설명 텍스트를 출력합니다.
+        if self.scene_data.initial_text is not None:
+            self.ui.print_narrative(self.scene_data.initial_text, is_markdown=True)  # 초기 설명 텍스트를 출력합니다.
         self.ui.print_narrative(self.scene_data.body, is_markdown=True)  # 초기 설명 텍스트를 출력합니다.
 
         # 현재 장면의 키워드 상태를 UI에 업데이트하여 시야에 보이는 키워드를 표시합니다.

@@ -339,8 +339,10 @@ class ConditionType(StrEnum):
 class ActionType(StrEnum):
     PRINT_NARRATIVE = "print_narrative"
     PRINT_SYSTEM = "print_system"
+    PRINT_IMAGE = "print_image"
     ADD_ITEM = "add_item"
     REMOVE_ITEM = "remove_item"
+    DISCOVER_KEYWORD = "discover_keyword"
     MOVE_SCENE = "move_scene"
     REMOVE_KEYWORD = "remove_keyword"
     UPDATE_STATE = "update_state"

@@ -1,8 +1,9 @@
 from abc import ABC, abstractmethod
 
-from const import ActionType, ConditionType
+from const import ActionType, ConditionType, KeywordState
 from entity import Item
 import json
+from ui import get_josa
 
 # --- Base Interfaces ---
 
@@ -82,18 +83,38 @@ class PrintSystemHandler(ActionHandler):
         scene.ui.print_system_message(value, is_markdown=True)
 
 
+class PrintImageHandler(ActionHandler):
+    def execute(self, scene, value):
+        src = value.get("src", "")
+        alt = value.get("alt", "")
+        width = value.get("width", 400)
+        text = f"""
+        <img src="{src}" alt="{alt}" width="{width}">
+        """.strip()
+        scene.ui.print_system_message(text, is_markdown=False)
+
+
 class AddItemHandler(ActionHandler):
     def execute(self, scene, value):
         new_item = Item(value["name"], value["description"])
         is_silent = value.get("silent", False)
+        scene.inventory.add(new_item, silent=is_silent)
         if not is_silent:
             new_item.show_description()
-        scene.inventory.add(new_item, silent=is_silent)
 
 
 class RemoveItemHandler(ActionHandler):
     def execute(self, scene, value):
         scene.inventory.remove(value)
+
+
+class DiscoverKeywordHandler(ActionHandler):
+    def execute(self, scene, value):
+        if value in scene.scene_data.keywords:
+            scene.scene_data.keywords[value].state = KeywordState.DISCOVERED
+            scene.ui.update_sight_status(scene.scene_data.keywords)
+            text = f"새로운 키워드 `{value}`를 **시야**에 추가했습니다."
+            scene.ui.print_system_message(text, is_markdown=True)
 
 
 class RemoveKeywordHandler(ActionHandler):
@@ -235,10 +256,14 @@ CONDITION_HANDLERS = {
 }
 
 ACTION_HANDLERS = {
+    # Print
     ActionType.PRINT_NARRATIVE: PrintNarrativeHandler(),
     ActionType.PRINT_SYSTEM: PrintSystemHandler(),
+    ActionType.PRINT_IMAGE: PrintImageHandler(),
+    # Modify
     ActionType.ADD_ITEM: AddItemHandler(),
     ActionType.REMOVE_ITEM: RemoveItemHandler(),
+    ActionType.DISCOVER_KEYWORD: DiscoverKeywordHandler(),
     ActionType.REMOVE_KEYWORD: RemoveKeywordHandler(),
     ActionType.UPDATE_STATE: UpdateStateHandler(),
     ActionType.MOVE_SCENE: MoveSceneHandler(),

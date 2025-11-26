@@ -4,6 +4,8 @@ import markdown
 from const import KeywordState, KeywordType
 from pyscript import document
 from const import CommandType
+from pyodide.ffi import create_proxy
+
 
 def get_josa(word: str, josa_pair: str) -> str:
     particles = josa_pair.split("/")
@@ -81,6 +83,25 @@ class UIManager:
         p.innerHTML = markdown.markdown(text, extensions=["tables", "fenced_code"]) if is_markdown else text
         parent.appendChild(p)
         self.scroll_to_bottom()
+
+        # 내부의 이미지 태그들을 찾아서 로드 완료 이벤트를 겁니다.
+        images = p.querySelectorAll("img")
+        if images.length > 0:
+            # 이미지가 다 로드되면 스크롤을 내리는 콜백 함수
+            def on_image_load(event):
+                self.scroll_to_bottom()
+
+            # PyScript에서 JS 이벤트에 파이썬 함수를 연결하기 위한 프록시 생성
+            load_proxy = create_proxy(on_image_load)
+
+            for i in range(images.length):
+                img = images.item(i)
+                # 이미지가 이미 캐시되어 로드 완료된 경우 즉시 스크롤
+                if img.complete:
+                    self.scroll_to_bottom()
+                else:
+                    # 로딩이 덜 되었다면 onload 이벤트에 연결
+                    img.onload = load_proxy
 
     def print_user_log(self, text: str):
         self._create_text_element(self.main_text_output, text, ["user-input-log"])

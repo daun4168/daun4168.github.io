@@ -112,9 +112,7 @@ CH0_SCENE0_DATA = SceneData(
                         ),
                         Action(
                             type=ActionType.PRINT_SYSTEM,
-                            value=(
-                                "**주머니**에 있는 **물건**의 이름을 입력하면 설명을 확인할 수 있습니다.\n\n"
-                            ),
+                            value=("**주머니**에 있는 **물건**의 이름을 입력하면 설명을 확인할 수 있습니다.\n\n"),
                         ),
                         Action(type=ActionType.REMOVE_KEYWORD, value=KeywordId.CORP_CARD),
                     ],
@@ -160,50 +158,50 @@ CH0_SCENE0_DATA = SceneData(
                 ),
             ],
         ),
-        # --- UNSEEN 오브젝트 ---
-        KeywordId.THESIS: KeywordData(
+        # --- 배경/분위기용 UNSEEN 오브젝트 (게임 플레이에 영향 없음) ---
+        "논문": KeywordData(
             type=KeywordType.OBJECT,
             state=KeywordState.UNSEEN,
             interactions=UNSEEN_INSPECTED_INTERACTIONS,
             description="읽어야 할 논문이 산더미처럼 쌓여있다. 보기만 해도 숨이 막힌다.",
         ),
-        KeywordId.DESK: KeywordData(
+        "책상": KeywordData(
             type=KeywordType.OBJECT,
             state=KeywordState.UNSEEN,
             interactions=UNSEEN_INSPECTED_INTERACTIONS,
             description="교수님의 책상이다. 각종 서류와 논문이 어지럽게 널려있다.",
         ),
-        KeywordId.GLASSES: KeywordData(
+        "안경알": KeywordData(
             type=KeywordType.OBJECT,
             state=KeywordState.UNSEEN,
             interactions=UNSEEN_INSPECTED_INTERACTIONS,
             description="교수님의 안경알이 빛을 번뜩인다. 저 너머의 눈은 웃고 있는지, 화를 내고 있는지 알 수 없다.",
         ),
-        KeywordId.POINT: KeywordData(
+        "포인트": KeywordData(
             type=KeywordType.OBJECT,
             state=KeywordState.UNSEEN,
             interactions=UNSEEN_INSPECTED_INTERACTIONS,
             description="교수님이 생색내며 말한 카드 포인트다. 조회해보니 편의점 컵라면 하나 사 먹기도 애매한 액수다.",
         ),
-        KeywordId.SAUNA: KeywordData(
+        "사우나": KeywordData(
             type=KeywordType.OBJECT,
             state=KeywordState.UNSEEN,
             interactions=UNSEEN_INSPECTED_INTERACTIONS,
             description="교수님의 머릿속은 이미 뜨끈한 온탕에 가 있는 게 분명하다. '미팅 준비'란 목욕 바구니를 챙기는 것을 의미할 것이다.",
         ),
-        KeywordId.CLEANING: KeywordData(
+        "청소": KeywordData(
             type=KeywordType.OBJECT,
             state=KeywordState.UNSEEN,
             interactions=UNSEEN_INSPECTED_INTERACTIONS,
-            description="내 전공은 인공지능인데, 주특기는 '빗자루질'과 '분리수거'가 되어버렸다. 박사 학위 논문에 '연구실 미화 최적화 알고리즘'이라도 써야 할 판이다.",
+            description="내 전공은 기계공학인데, 정작 다루는 기계라고는 빗자루와 대걸레뿐이다. 박사 학위 논문에 '연구실 바닥 마찰계수에 따른 빗자루질의 역학적 고찰'이라도 써야 할 판이다.",
         ),
-        KeywordId.GUEST: KeywordData(
+        "손님": KeywordData(
             type=KeywordType.OBJECT,
             state=KeywordState.UNSEEN,
             interactions=UNSEEN_INSPECTED_INTERACTIONS,
             description="교수님이 평소에 안 하던 청소를 시키는 걸 보니, 꽤 중요한 물주... 아니, 귀빈이 오시는 모양이다. 오시면 또 '행복하고 열정적인 연구원' 연기를 해야겠지.",
         ),
-        KeywordId.ME: KeywordData(
+        "나": KeywordData(
             type=KeywordType.OBJECT,
             state=KeywordState.UNSEEN,
             interactions=UNSEEN_INSPECTED_INTERACTIONS,

@@ -29,17 +29,8 @@ class KeywordId(StrEnum):
     PROFESSOR = "교수님"
     CORP_CARD = "법인카드"
     DOOR = "문"
-    # -- UNSEEN --
-    THESIS = "논문"
-    DESK = "책상"
-    GLASSES = "안경알"
-    POINT = "포인트"
-    SAUNA = "사우나"
-    CLEANING = "청소"
-    GUEST = "손님"
-    ME = "나"
 
-    # CH0_SCENE1
+    # --- CH0_SCENE1 ---
     SPANNER = "스패너"
     TRASH_CAN = "쓰레기통"
     BOX = "박스"

@@ -220,7 +220,7 @@ class Scene:
             return True
 
         # 키워드가 HIDDEN 상태이면 보이지 않는 것으로 간주합니다.
-        if k_data.state == KeywordState.HIDDEN:
+        if k_data.state in (KeywordState.HIDDEN, KeywordState.INACTIVE):
             return False
 
         return True  # 그 외의 경우는 보이는 것으로 간주합니다.

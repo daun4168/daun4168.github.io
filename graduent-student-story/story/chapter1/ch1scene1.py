@@ -8,10 +8,10 @@ CH1_SCENE1_DATA = SceneData(
     initial_text="---\n## 그늘진 해변 (베이스캠프)\n---\n\n",
     body=(
         '"헥헥... 죽는 줄 알았네."\n\n'
-        "당신은 젖 먹던 힘을 다해 MK-II를 거대한 야자수 그늘 아래로 옮기는 데 성공했습니다. "
+        "당신은 젖 먹던 힘을 다해 양자 가마솥를 거대한 야자수 그늘 아래로 옮기는 데 성공했습니다.\n\n"
         "기계도 나도 더 이상 직사광선에 고통받지 않아도 됩니다. 이곳은 이제 나의 훌륭한 베이스캠프입니다.\n\n"
-        "그늘 밖은 여전히 용광로 같습니다. 동쪽 해변 끝에는 난파선 잔해가 아지랑이 너머로 보이고, "
-        "북쪽에는 숲 입구가 보입니다. 바로 앞에는 파도에 떠밀려온 쓰레기 더미가 쌓여 있고, "
+        "그늘 밖은 여전히 용광로 같습니다. 동쪽 해변 끝에는 난파선 잔해가 아지랑이 너머로 보이고,\n\n"
+        "북쪽에는 숲 입구가 보입니다. 바로 앞에는 파도에 떠밀려온 쓰레기 더미가 쌓여 있고,\n\n"
         "시원한 바다와 따뜻한 모래사장이 펼쳐져 있습니다.\n\n"
         "일단은 안전합니다. 이제 어떻게 할까요?"
     ),
@@ -24,9 +24,9 @@ CH1_SCENE1_DATA = SceneData(
         "has_shelter": False,
         "forest_cleared": False,  # 숲길 개척 여부
         "vines_collected": False,
-        "mk2_inspected": False,  # MK-II 처음 조사 여부
-        # MK-II 최종 수리용 상태
-        "mk2_all_parts_gathered": False,  # 석영 조각 / 충전 배터리 / 전선 끝 세 개를 모두 들고 MK-II를 확인했는지
+        "mk2_inspected": False,  # 양자 가마솥 처음 조사 여부
+        # 양자 가마솥 최종 수리용 상태
+        "mk2_all_parts_gathered": False,  # 석영 조각 / 충전 배터리 / 전선 끝 세 개를 모두 들고 양자 가마솥를 확인했는지
         "mk2_quartz_connected": False,  # 석영 조각 연결 여부
         "mk2_battery_connected": False,  # 충전 배터리 연결 여부
         "mk2_wire_connected": False,  # 전선 끝 연결 여부
@@ -61,16 +61,13 @@ CH1_SCENE1_DATA = SceneData(
                         Action(
                             type=ActionType.PRINT_NARRATIVE,
                             value=(
-                                "동쪽을 보니 **[난파선 잔해]**가 꽤 멀리 있다.\n"
-                                "가는 길에 그늘이 하나도 없어서, 저기까지 가려면 땀 좀 뺄 것 같다. (체력 소모 예상)"
+                                "동쪽을 보니 **[난파선 잔해]**가 꽤 멀리 있다.\n\n"
+                                "가는 길에 그늘이 하나도 없어서, 저기까지 가려면 땀 좀 뺄 것 같다."
                             ),
-                        ),
-                        Action(
-                            type=ActionType.PRINT_SYSTEM,
-                            value="다시 한번 **[난파선 잔해]**를 선택하면 이동 여부를 결정합니다.",
                         ),
                         Action(type=ActionType.UPDATE_STATE, value={"key": "wreck_path_inspected", "value": True}),
                     ],
+                    continue_matching=True,
                 ),
                 # 두 번째 이후: 이동 여부 확인
                 Interaction(
@@ -195,7 +192,7 @@ CH1_SCENE1_DATA = SceneData(
                 ),
             ],
         ),
-        # 7. MK-II (최종 수리 대상)
+        # 7. 양자 가마솥 (최종 수리 대상)
         KeywordId.QUANTUM_CAULDRON: KeywordData(
             type=KeywordType.OBJECT,
             state=KeywordState.DISCOVERED,
@@ -209,7 +206,7 @@ CH1_SCENE1_DATA = SceneData(
                             type=ActionType.PRINT_NARRATIVE,
                             value=(
                                 "그늘에 두니 엔진 열기가 조금 식은 것 같다. 하지만 여전히 작동 불능이다."
-                                "거대한 야자수 그늘 아래에 세워둔 MK-II는, 겉보기엔 조용히 식어 가는 고철 덩어리일 뿐이다.\n"
+                                "거대한 야자수 그늘 아래에 세워둔 양자 가마솥는, 겉보기엔 조용히 식어 가는 고철 덩어리일 뿐이다.\n"
                                 "하지만, 한 번쯤은 더, 당신을 어디론가 데려다 줄 힘이 남아 있을지도 모른다."
                             ),
                         ),
@@ -228,14 +225,14 @@ CH1_SCENE1_DATA = SceneData(
                         Action(
                             type=ActionType.PRINT_NARRATIVE,
                             value=(
-                                "MK-II의 패널을 열어 보니, 석영 발진기와 주 전원, 외부 통신선을 꽂아야 할 자리가 텅 비어 있다.\n"
+                                "양자 가마솥의 패널을 열어 보니, 석영 발진기와 주 전원, 외부 통신선을 꽂아야 할 자리가 텅 비어 있다.\n"
                                 "이대로는 아무리 버튼을 눌러도, 그저 조용한 철제 상자일 뿐이다.\n\n"
                                 "이 기계를 다시 깨우려면, 석영 조각, 완전히 충전된 배터리, 그리고 안테나와 이어진 전선이 필요할 것 같다.\n\n"
                             ),
                         ),
                         Action(
                             type=ActionType.PRINT_SYSTEM,
-                            value="지금은 MK-II를 고칠 재료가 부족합니다. 세 가지 부품을 모두 모아 다시 점검해 보세요.",
+                            value="지금은 양자 가마솥를 고칠 재료가 부족합니다. 세 가지 부품을 모두 모아 다시 점검해 보세요.",
                         ),
                     ],
                 ),
@@ -249,14 +246,14 @@ CH1_SCENE1_DATA = SceneData(
                         Action(
                             type=ActionType.PRINT_NARRATIVE,
                             value=(
-                                "MK-II의 패널을 열어 보니, 석영 발진기와 주 전원, 외부 통신선을 꽂아야 할 자리가 텅 비어 있다.\n"
+                                "양자 가마솥의 패널을 열어 보니, 석영 발진기와 주 전원, 외부 통신선을 꽂아야 할 자리가 텅 비어 있다.\n"
                                 "이대로는 아무리 버튼을 눌러도, 그저 조용한 철제 상자일 뿐이다.\n\n"
                                 "이 기계를 다시 깨우려면, 석영 조각, 완전히 충전된 배터리, 그리고 안테나와 이어진 전선이 필요할 것 같다.\n\n"
                             ),
                         ),
                         Action(
                             type=ActionType.PRINT_SYSTEM,
-                            value="지금은 MK-II를 고칠 재료가 부족합니다. 세 가지 부품을 모두 모아 다시 점검해 보세요.",
+                            value="지금은 양자 가마솥를 고칠 재료가 부족합니다. 세 가지 부품을 모두 모아 다시 점검해 보세요.",
                         ),
                     ],
                 ),
@@ -269,14 +266,14 @@ CH1_SCENE1_DATA = SceneData(
                         Action(
                             type=ActionType.PRINT_NARRATIVE,
                             value=(
-                                "MK-II의 패널을 열어 보니, 석영 발진기와 주 전원, 외부 통신선을 꽂아야 할 자리가 텅 비어 있다.\n"
+                                "양자 가마솥의 패널을 열어 보니, 석영 발진기와 주 전원, 외부 통신선을 꽂아야 할 자리가 텅 비어 있다.\n"
                                 "이대로는 아무리 버튼을 눌러도, 그저 조용한 철제 상자일 뿐이다.\n\n"
                                 "이 기계를 다시 깨우려면, 석영 조각, 완전히 충전된 배터리, 그리고 안테나와 이어진 전선이 필요할 것 같다.\n\n"
                             ),
                         ),
                         Action(
                             type=ActionType.PRINT_SYSTEM,
-                            value="지금은 MK-II를 고칠 재료가 부족합니다. 세 가지 부품을 모두 모아 다시 점검해 보세요.",
+                            value="지금은 양자 가마솥를 고칠 재료가 부족합니다. 세 가지 부품을 모두 모아 다시 점검해 보세요.",
                         ),
                     ],
                 ),
@@ -295,7 +292,7 @@ CH1_SCENE1_DATA = SceneData(
                                 "패널을 열어 내부를 확인하는 순간, 배낭 속에서 딸깍딸깍 서로 부딪히는 세 가지 부품의 감촉이 느껴진다.\n\n"
                                 "석영 조각, 완전히 충전된 산업용 배터리, 그리고 능선 위 안테나와 이어질 기다란 전선 끝.\n"
                                 "이 섬 구석구석에서 모아 온 조각들이, 이제 눈앞에서 하나의 퍼즐처럼 제자리를 기다리고 있다.\n\n"
-                                "이 정도면… 정말로 MK-II를 고칠 준비가 된 것 같다."
+                                "이 정도면… 정말로 양자 가마솥를 고칠 준비가 된 것 같다."
                             ),
                         ),
                         Action(
@@ -308,7 +305,7 @@ CH1_SCENE1_DATA = SceneData(
                         ),
                     ],
                 ),
-                # (3) mk2_all_parts_gathered == True 이후 MK-II를 살펴볼 때
+                # (3) mk2_all_parts_gathered == True 이후 양자 가마솥를 살펴볼 때
                 Interaction(
                     conditions=[
                         Condition(type=ConditionType.STATE_IS, target="mk2_all_parts_gathered", value=True),
@@ -318,7 +315,7 @@ CH1_SCENE1_DATA = SceneData(
                         Action(
                             type=ActionType.PRINT_NARRATIVE,
                             value=(
-                                "MK-II 옆에는 석영 조각과 충전된 배터리, 기다란 전선 끝이 가지런히 놓여 있다.\n\n"
+                                "양자 가마솥 옆에는 석영 조각과 충전된 배터리, 기다란 전선 끝이 가지런히 놓여 있다.\n\n"
                                 "패널 안쪽의 빈 소켓들은 마치 ‘여기에 끼워 달라’고 손을 내밀고 있는 것 같다.\n\n"
                                 "이제 남은 일은 간단하다. 그동안의 여정을 함께해 준 이 조각들을, 각자의 자리로 돌려보내는 것뿐이다.\n\n"
                                 "연구실에서부터 이 섬 구석구석까지 함께 굴러온 스패너는, 그 마지막 자리를 굳게 잠가 줄 순간만을 조용히 기다리고 있다."
@@ -335,7 +332,7 @@ CH1_SCENE1_DATA = SceneData(
                         Action(
                             type=ActionType.PRINT_NARRATIVE,
                             value=(
-                                "지금 이 MK-II는 더 이상 ‘출발 전’ 상태가 아니다.\n"
+                                "지금 이 양자 가마솥는 더 이상 ‘출발 전’ 상태가 아니다.\n"
                                 "당신이 내린 마지막 선택은 이미 어딘가로 향해 버렸고, 이곳의 시간은 조용히 흘러갔을 뿐이다."
                             ),
                         )
@@ -470,7 +467,7 @@ CH1_SCENE1_DATA = SceneData(
             ],
         ),
         # ==========================
-        # MK-II 수리 조합들
+        # 양자 가마솥 수리 조합들
         # ==========================
         # (A) 부품이 모두 모이기 전에 조립 시도 → 부정 피드백 (석영/배터리/전선 공통)
         Combination(
@@ -484,7 +481,7 @@ CH1_SCENE1_DATA = SceneData(
                     type=ActionType.PRINT_NARRATIVE,
                     value=(
                         "석영 조각을 손에 쥐고 소켓을 바라보다가, 당신은 잠시 멈칫한다.\n\n"
-                        "이 한 조각만 억지로 끼워 넣기엔, 아직 MK-II 안쪽이 너무 많은 빈자리로 가득 차 있다.\n"
+                        "이 한 조각만 억지로 끼워 넣기엔, 아직 양자 가마솥 안쪽이 너무 많은 빈자리로 가득 차 있다.\n"
                         "모든 부품이 모였을 때 한 번에 조립하는 편이, 이 마지막 기계에게도 예의일 것 같다."
                     ),
                 ),
@@ -526,7 +523,7 @@ CH1_SCENE1_DATA = SceneData(
                     type=ActionType.PRINT_NARRATIVE,
                     value=(
                         "배터리를 들어 단자에 가져가 보지만, "
-                        "완전히 충전되지 않은 상태의 배터리로는 MK-II를 작동시킬 수 없을 것 같다.\n"
+                        "완전히 충전되지 않은 상태의 배터리로는 양자 가마솥를 작동시킬 수 없을 것 같다.\n"
                     ),
                 ),
                 Action(
@@ -596,7 +593,7 @@ CH1_SCENE1_DATA = SceneData(
                     type=ActionType.PRINT_NARRATIVE,
                     value=(
                         "충전된 산업용 배터리를 주 전원 단자에 밀어 넣는다.\n\n"
-                        "단자가 맞물리는 순간, MK-II 내부 어딘가에서 묵직한 ‘탁’ 하는 소리가 난다.\n"
+                        "단자가 맞물리는 순간, 양자 가마솥 내부 어딘가에서 묵직한 ‘탁’ 하는 소리가 난다.\n"
                         "한동안 돌려 두었던 수력 발전기의 시간이, 이제 이 한 기계의 심장으로 흘러들어온다."
                     ),
                 ),
@@ -637,7 +634,7 @@ CH1_SCENE1_DATA = SceneData(
                 ),
             ],
         ),
-        # (E) MK-II + 스패너 : 최종 조임 & 발진 여부 확인
+        # (E) 양자 가마솥 + 스패너 : 최종 조임 & 발진 여부 확인
         #   - 먼저 '모든 부품이 연결된 경우'를 만족하는 조합을 위에 두고,
         #     그렇지 않을 때는 아래의 부정 피드백 조합이 동작하도록 순서를 조절한다.
         Combination(
@@ -653,17 +650,17 @@ CH1_SCENE1_DATA = SceneData(
                     type=ActionType.REQUEST_CONFIRMATION,
                     value={
                         "prompt": (
-                            "스패너를 손에 쥐고 MK-II의 마지막 볼트들을 하나씩 조여 나간다.\n\n"
+                            "스패너를 손에 쥐고 양자 가마솥의 마지막 볼트들을 하나씩 조여 나간다.\n\n"
                             "석영은 제자리를 찾았고, 배터리는 숨을 고르고 있으며, 전선은 능선 위 안테나와 이곳을 단단히 이어 주고 있다.\n"
                             "이제, 이 기계를 다시 한 번 세상으로 던져 보낼 수 있다.\n\n"
-                            "MK-II를 기동해 새로운 목적지로 향하시겠습니까?\n"
+                            "양자 가마솥를 기동해 새로운 목적지로 향하시겠습니까?\n"
                             "이 선택 이후에는, 더 이상 이 섬으로 돌아오지 못할 수도 있습니다."
                         ),
                         "confirm_actions": [
                             Action(
                                 type=ActionType.PRINT_NARRATIVE,
                                 value=(
-                                    "마지막 볼트를 조여 고정하자, MK-II 내부에서 저속 모터가 도는 소리가 서서히 커져 간다.\n\n"
+                                    "마지막 볼트를 조여 고정하자, 양자 가마솥 내부에서 저속 모터가 도는 소리가 서서히 커져 간다.\n\n"
                                     "계기판의 불빛들이 하나둘 살아나고, 안테나를 타고 올라간 신호가 어딘가 먼 곳을 향해 날아간다.\n"
                                     "당신은 조용히 숨을 고른 뒤, 기체 안으로 몸을 밀어 넣는다."
                                 ),
@@ -681,7 +678,7 @@ CH1_SCENE1_DATA = SceneData(
                             Action(
                                 type=ActionType.PRINT_NARRATIVE,
                                 value=(
-                                    "스패너를 잠시 내려놓고 MK-II 옆에 선다.\n"
+                                    "스패너를 잠시 내려놓고 양자 가마솥 옆에 선다.\n"
                                     "지금 이 선택이 마지막일지도 모른다는 생각이 머릿속을 맴돈다.\n"
                                     "조금 더 정리하고, 천천히 마음을 고르기로 한다."
                                 ),
@@ -691,7 +688,7 @@ CH1_SCENE1_DATA = SceneData(
                 )
             ],
         ),
-        # (F) MK-II + 스패너 : 아직 부품이 덜 연결된 경우 → 부정 피드백
+        # (F) 양자 가마솥 + 스패너 : 아직 부품이 덜 연결된 경우 → 부정 피드백
         Combination(
             targets=[KeywordId.QUANTUM_CAULDRON, KeywordId.SPANNER],
             conditions=[
@@ -701,7 +698,7 @@ CH1_SCENE1_DATA = SceneData(
                 Action(
                     type=ActionType.PRINT_NARRATIVE,
                     value=(
-                        "스패너를 쥐고 MK-II의 패널을 바라보다가, 당신은 손을 멈춘다.\n\n"
+                        "스패너를 쥐고 양자 가마솥의 패널을 바라보다가, 당신은 손을 멈춘다.\n\n"
                         "아직은 몇 군데 소켓이 비어 있고, 전선이 연결되지 않은 단자가 남아 있다.\n"
                         "지금 볼트를 조여 버리면, 이 기계는 반쯤만 깨어난 채 다시 잠들지도 모른다."
                     ),

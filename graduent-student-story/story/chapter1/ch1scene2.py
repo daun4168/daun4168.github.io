@@ -38,12 +38,9 @@ CH1_SCENE2_DATA = SceneData(
                             type=ActionType.PRINT_NARRATIVE,
                             value="서쪽을 보니 베이스캠프가 아지랑이 속에 보인다. 돌아가는 길도 험난해 보인다. (체력 소모 예상)",
                         ),
-                        Action(
-                            type=ActionType.PRINT_SYSTEM,
-                            value="다시 한번 **[해변]**을 입력하면 이동 여부를 결정합니다.",
-                        ),
                         Action(type=ActionType.UPDATE_STATE, value={"key": "beach_path_inspected", "value": True}),
                     ],
+                    continue_matching=True,
                 ),
                 Interaction(
                     conditions=[Condition(type=ConditionType.STATE_IS, target="beach_path_inspected", value=True)],

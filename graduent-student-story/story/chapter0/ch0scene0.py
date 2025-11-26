@@ -193,7 +193,7 @@ CH0_SCENE0_DATA = SceneData(
             type=KeywordType.OBJECT,
             state=KeywordState.UNSEEN,
             interactions=UNSEEN_INSPECTED_INTERACTIONS,
-            description="내 전공은 기계공학인데, 정작 다루는 기계라고는 빗자루와 대걸레뿐이다. 박사 학위 논문에 '연구실 바닥 마찰계수에 따른 빗자루질의 역학적 고찰'이라도 써야 할 판이다.",
+            description="내 전공은 인공지능인데, 주특기는 '빗자루질'과 '분리수거'가 되어버렸다. 박사 학위 논문에 '연구실 미화 최적화 알고리즘'이라도 써야 할 판이다.",
         ),
         "손님": KeywordData(
             type=KeywordType.OBJECT,

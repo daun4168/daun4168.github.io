@@ -44,6 +44,7 @@ CH0_SCENE1_DATA = SceneData(
     keywords={
         # --- 기존 핵심 오브젝트 (퍼즐용) ---
         KeywordId.COMPUTER_ALIAS: KeywordData(type=KeywordType.ALIAS, target=KeywordId.OLD_COMPUTER),
+        KeywordId.WALL_ALIAS: KeywordData(type=KeywordType.ALIAS, target=KeywordId.WALL),
         # --- 1. 쓰레기통 조사 ---
         KeywordId.TRASH_CAN: KeywordData(
             type=KeywordType.OBJECT,
@@ -133,6 +134,7 @@ CH0_SCENE1_DATA = SceneData(
                 ),
             ],
         ),
+        # --- 2. 박스 조사, 박스 개봉 ---
         KeywordId.BOX: KeywordData(
             type=KeywordType.OBJECT,
             state=KeywordState.HIDDEN,
@@ -176,6 +178,72 @@ CH0_SCENE1_DATA = SceneData(
                 ),
             ],
         ),
+        # --- 3. 실험용 랩 가운 조사, 열쇠 획득 ---
+        KeywordId.LAB_COAT: KeywordData(
+            type=KeywordType.OBJECT,
+            state=KeywordState.INACTIVE,
+            interactions=[
+                Interaction(
+                    conditions=[Condition(type=ConditionType.STATE_IS, target="key_found", value=False)],
+                    actions=[
+                        Action(
+                            type=ActionType.PRINT_NARRATIVE,
+                            value=(
+                                "가운 주머니를 뒤적거리자 짤그랑 소리가 난다.\n\n"
+                                "주머니 속에서 작은 **[열쇠]**를 발견했다!\n\n"
+                                "역시 가운은 입으라고 있는 게 아니라 수납하라고 있는 것이다."
+                            ),
+                        ),
+                        Action(
+                            type=ActionType.ADD_ITEM,
+                            value={
+                                "name": KeywordId.KEY,
+                                "description": "작은 은색 열쇠. '청소'라고 적힌 라벨이 붙어있다.",
+                            },
+                        ),
+                        Action(type=ActionType.UPDATE_STATE, value={"key": "key_found", "value": True}),
+                        Action(
+                            type=ActionType.UPDATE_STATE,
+                            value={"keyword": KeywordId.LAB_COAT, "state": KeywordState.UNSEEN},
+                        ),
+                    ],
+                ),
+                Interaction(
+                    conditions=[Condition(type=ConditionType.STATE_IS, target="key_found", value=True)],
+                    actions=[
+                        Action(
+                            type=ActionType.PRINT_NARRATIVE,
+                            value="새하얀 랩 가운이다. 더 이상 주머니에 든 것은 없다. 이제 이걸 입으면 나도 어엿한 연구 노예다.",
+                        ),
+                    ],
+                ),
+            ],
+        ),
+        # --- 4. 청소도구함 + 열쇠, 빗자루 획득 ---
+        KeywordId.CLEANING_CABINET: KeywordData(
+            type=KeywordType.OBJECT,
+            state=KeywordState.HIDDEN,
+            interactions=[
+                Interaction(
+                    conditions=[Condition(type=ConditionType.STATE_IS, target="cleaning_cabinet_opened", value=False)],
+                    actions=[
+                        Action(
+                            type=ActionType.PRINT_NARRATIVE,
+                            value="녹슨 철제 캐비닛이다. 자물쇠로 단단히 잠겨있다. '청소도구함'이라고 매직으로 휘갈겨 써있다.",
+                        ),
+                        Action(
+                            type=ActionType.PRINT_SYSTEM,
+                            value="잠겨있습니다. 열 수 있는 도구가 필요합니다.",
+                        ),
+                    ],
+                ),
+                Interaction(
+                    conditions=[Condition(type=ConditionType.STATE_IS, target="cleaning_cabinet_opened", value=True)],
+                    actions=[Action(type=ActionType.PRINT_NARRATIVE, value="이미 열려있다. 안은 텅 비었다.")],
+                ),
+            ],
+        ),
+        # --- 5. 벽에서 메모 발견 ---
         KeywordId.WALL: KeywordData(
             type=KeywordType.OBJECT,
             state=KeywordState.HIDDEN,
@@ -194,14 +262,15 @@ CH0_SCENE1_DATA = SceneData(
                         ),
                         Action(
                             type=ActionType.UPDATE_STATE,
-                            value={"keyword": KeywordId.BOX, "state": KeywordState.UNSEEN},
+                            value={"keyword": KeywordId.WALL, "state": KeywordState.UNSEEN},
                         ),
                     ],
                 ),
                 Interaction(
+                    conditions=[Condition(type=ConditionType.STATE_IS, target="wall_inspected", value=True)],
                     actions=[
                         Action(type=ActionType.PRINT_NARRATIVE, value="구석에 꼬질꼬질한 포스트잇 메모가 붙어있다.")
-                    ]
+                    ],
                 ),
             ],
         ),
@@ -225,13 +294,13 @@ CH0_SCENE1_DATA = SceneData(
                             value=(
                                 "커피 얼룩이 묻은 낡은 포스트잇이다.\n"
                                 "알 수 없는 기하학적인 그림이 그려져 있다. 암호인가? 아니면 그냥 낙서인가?\n"
-                                "빨간색 화살표가 시작(START)과 끝(END)을 가리키고 있다."
                             ),
                         ),
                     ]
                 )
             ],
         ),
+        # --- 6. 컴퓨터 비밀번호 잠금 해제 ---
         KeywordId.OLD_COMPUTER: KeywordData(
             type=KeywordType.OBJECT,
             state=KeywordState.HIDDEN,
@@ -327,60 +396,6 @@ CH0_SCENE1_DATA = SceneData(
                 ),
             ],
         ),
-        KeywordId.LAB_COAT: KeywordData(
-            type=KeywordType.OBJECT,
-            state=KeywordState.INACTIVE,
-            interactions=[
-                Interaction(
-                    conditions=[Condition(type=ConditionType.STATE_IS, target="key_found", value=False)],
-                    actions=[
-                        Action(
-                            type=ActionType.PRINT_NARRATIVE,
-                            value="가운 주머니를 뒤적거리자 짤그랑 소리가 난다. 주머니 속에서 작은 **[열쇠]**를 발견했다! 역시 가운은 입으라고 있는 게 아니라 수납하라고 있는 것이다.",
-                        ),
-                        Action(
-                            type=ActionType.ADD_ITEM,
-                            value={
-                                "name": KeywordId.KEY,
-                                "description": "작은 은색 열쇠. '청소'라고 적힌 라벨이 붙어있다.",
-                            },
-                        ),
-                        Action(type=ActionType.UPDATE_STATE, value={"key": "key_found", "value": True}),
-                    ],
-                ),
-                Interaction(
-                    actions=[
-                        Action(
-                            type=ActionType.PRINT_NARRATIVE,
-                            value="새하얀 랩 가운이다. 더 이상 주머니에 든 것은 없다. 이제 이걸 입으면 나도 어엿한 연구 노예다.",
-                        )
-                    ]
-                ),
-            ],
-            description="새하얀 랩 가운이다. 입으면 왠지 졸업에 한 발짝 다가간 기분...이 들 리가 없지.",
-        ),
-        KeywordId.CLEANING_CABINET: KeywordData(
-            type=KeywordType.OBJECT,
-            state=KeywordState.HIDDEN,
-            interactions=[
-                Interaction(
-                    conditions=[Condition(type=ConditionType.STATE_IS, target="cleaning_cabinet_opened", value=True)],
-                    actions=[Action(type=ActionType.PRINT_NARRATIVE, value="이미 열려있다. 안은 텅 비었다.")],
-                ),
-                Interaction(
-                    actions=[
-                        Action(
-                            type=ActionType.PRINT_NARRATIVE,
-                            value="녹슨 철제 캐비닛이다. 자물쇠로 단단히 잠겨있다. '청소도구함'이라고 매직으로 휘갈겨 써있다.",
-                        ),
-                        Action(
-                            type=ActionType.PRINT_SYSTEM,
-                            value="잠겨있습니다. 열 수 있는 도구가 필요합니다.",
-                        ),
-                    ]
-                ),
-            ],
-        ),
         # --- 배경/분위기용 UNSEEN 오브젝트 (게임 플레이에 영향 없음) ---
         "문": KeywordData(
             type=KeywordType.OBJECT,
@@ -450,6 +465,40 @@ CH0_SCENE1_DATA = SceneData(
                 ),
             ],
         ),
+        Combination(
+            targets=[KeywordId.CLEANING_CABINET, KeywordId.KEY],
+            conditions=[Condition(type=ConditionType.HAS_ITEM, target=KeywordId.KEY)],
+            actions=[
+                Action(
+                    type=ActionType.PRINT_NARRATIVE,
+                    value="**[열쇠]**를 꽂고 돌리자 경쾌한 '딸깍' 소리가 난다. 문을 열자 안에서 **[빗자루]**가 내 몸쪽으로 쓰러졌다.",
+                ),
+                Action(
+                    type=ActionType.ADD_ITEM,
+                    value={
+                        "name": KeywordId.BROOM,
+                        "description": "다소 낡았지만 튼튼해 보이는 빗자루. 이걸로 바닥을 쓸면 내 마음의 번뇌도 쓸려나갈까.",
+                    },
+                ),
+                Action(type=ActionType.UPDATE_STATE, value={"key": "cleaning_cabinet_opened", "value": True}),
+                Action(type=ActionType.REMOVE_ITEM, value=KeywordId.KEY),
+                Action(
+                    type=ActionType.UPDATE_STATE,
+                    value={"keyword": KeywordId.CLEANING_CABINET, "state": KeywordState.UNSEEN},
+                ),
+            ],
+        ),
+        # [네거티브 피드백] 스패너로 청소도구함 강제 개방 시도
+        Combination(
+            targets=[KeywordId.CLEANING_CABINET, KeywordId.SPANNER],
+            conditions=[Condition(type=ConditionType.HAS_ITEM, target=KeywordId.SPANNER)],
+            actions=[
+                Action(
+                    type=ActionType.PRINT_NARRATIVE,
+                    value="**[스패너]**로 자물쇠를 힘껏 내리쳐 보았다. 캉! 하는 소리만 요란하고 자물쇠는 멀쩡하다.\n내 손목만 아프다. 힘보다는 머리(혹은 열쇠)를 써야 할 때다.",
+                )
+            ],
+        ),
         # ... (기존 조합 유지 + 키패드 비밀번호 수정) ...
         Combination(
             type=CombinationType.PASSWORD,
@@ -478,36 +527,6 @@ CH0_SCENE1_DATA = SceneData(
                     },
                 ),
                 Action(type=ActionType.UPDATE_STATE, value={"key": "cabinet_unlocked", "value": True}),
-            ],
-        ),
-        Combination(
-            targets=[KeywordId.CLEANING_CABINET, KeywordId.KEY],
-            conditions=[Condition(type=ConditionType.HAS_ITEM, target=KeywordId.KEY)],
-            actions=[
-                Action(
-                    type=ActionType.PRINT_NARRATIVE,
-                    value="**[열쇠]**를 꽂고 돌리자 경쾌한 '딸깍' 소리가 난다. 문을 열자 안에서 **[빗자루]**가 내 몸쪽으로 쓰러졌다.",
-                ),
-                Action(
-                    type=ActionType.ADD_ITEM,
-                    value={
-                        "name": KeywordId.BROOM,
-                        "description": "다소 낡았지만 튼튼해 보이는 빗자루. 이걸로 바닥을 쓸면 내 마음의 번뇌도 쓸려나갈까.",
-                    },
-                ),
-                Action(type=ActionType.UPDATE_STATE, value={"key": "cleaning_cabinet_opened", "value": True}),
-                Action(type=ActionType.REMOVE_ITEM, value=KeywordId.KEY),
-            ],
-        ),
-        # [네거티브 피드백] 스패너로 청소도구함 강제 개방 시도
-        Combination(
-            targets=[KeywordId.CLEANING_CABINET, KeywordId.SPANNER],
-            conditions=[Condition(type=ConditionType.HAS_ITEM, target=KeywordId.SPANNER)],
-            actions=[
-                Action(
-                    type=ActionType.PRINT_NARRATIVE,
-                    value="**[스패너]**로 자물쇠를 힘껏 내리쳐 보았다. 캉! 하는 소리만 요란하고 자물쇠는 멀쩡하다.\n내 손목만 아프다. 힘보다는 머리(혹은 열쇠)를 써야 할 때다.",
-                )
             ],
         ),
         # [네거티브 피드백] 먼지 제거제(냉매)로 의문의 액체 얼리기 시도

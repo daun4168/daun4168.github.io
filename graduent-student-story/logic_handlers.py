@@ -113,7 +113,9 @@ class DiscoverKeywordHandler(ActionHandler):
         if value in scene.scene_data.keywords:
             scene.scene_data.keywords[value].state = KeywordState.DISCOVERED
             scene.ui.update_sight_status(scene.scene_data.keywords)
-            text = f"새로운 키워드 `{value}`를 **시야**에 추가했습니다."
+            text = f"**[{value}]**{get_josa(str(value), '을/를')} 발견하여 **시야**에 추가합니다."
+            print(text)
+            print(value)
             scene.ui.print_system_message(text, is_markdown=True)
 
 

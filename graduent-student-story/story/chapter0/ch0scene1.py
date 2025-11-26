@@ -24,23 +24,61 @@ CH0_SCENE1_DATA = SceneData(
         "key_found": False,
         "cleaning_cabinet_opened": False,
     },
+    on_enter_actions=[
+        Action(
+            type=ActionType.PRINT_SYSTEM,
+            value=(
+                "연구실 생존을 위한 **새로운 조작법**을 알려드립니다.\n\n<br>"
+                "**1. 명령어 기록 (History)**\n\n"
+                "키보드 **[↑ / ↓]** 방향키를 눌러보세요. 이전에 입력했던 명령어들을 다시 불러올 수 있습니다.\n\n<br>"
+                "**2. 화면 스크롤 (Scroll)**\n\n"
+                "**[Shift] + [↑ / ↓]** 키를 누르면 마우스 없이도 지나간 텍스트를 위아래로 훑어볼 수 있습니다.\n\n<br>"
+                "**3. 자동완성 (Auto Complete)**\n\n"
+                "긴 단어를 다 치기 귀찮다면, 앞글자만 입력하고 **[Tab]** 키를 눌러보세요. 알아서 완성해줍니다.\n\n"
+                "`둘`, `둘러`, `ㄷ`, `ㄷㄹ` 등을 입력하고 **[Tab]** 키를 눌러보세요.\n\n<br>"
+                "이제 본문에 등장하는 **[키워드]**를 입력하여 조사를 시작하세요.\n\n"
+                "내용이 기억나지 않으면 언제든 `둘러보기`를 입력하면 됩니다."
+            ),
+        )
+    ],
     keywords={
         # --- 기존 핵심 오브젝트 (퍼즐용) ---
         KeywordId.COMPUTER_ALIAS: KeywordData(type=KeywordType.ALIAS, target=KeywordId.OLD_COMPUTER),
+        # --- 1. 쓰레기통 조사 ---
         KeywordId.TRASH_CAN: KeywordData(
             type=KeywordType.OBJECT,
             state=KeywordState.HIDDEN,
             interactions=[
+                # [Step 0] 첫 번째 시도: 꽝 (쓰레기만 나옴)
                 Interaction(
                     conditions=[Condition(type=ConditionType.STATE_IS, target="trash_step", value=0)],
                     actions=[
                         Action(
                             type=ActionType.PRINT_NARRATIVE,
                             value=(
-                                "쓰레기통을 뒤적거리자, 잡동사니 사이에서 **[먼지 제거제]** 캔이 손에 잡혔다.\n"
+                                "쓰레기통을 뒤적거려 보았다. 코를 찌르는 냄새와 함께 구겨진 논문 초안, 다 먹은 컵라면 용기, 코 푼 휴지 뭉치만 딸려 나온다.\n"
+                                "손을 털고 일어서려는데, 쓰레기 더미 깊은 곳에서 무언가 '달그락'거리는 소리가 났다.\n"
+                                "비위가 상하지만, 조금 더 깊이 파보면 쓸만한 게 나올지도 모른다."
+                            ),
+                        ),
+                        Action(
+                            type=ActionType.PRINT_SYSTEM,
+                            value="**[쓰레기통]** 깊은 곳에 무언가 있는 것 같습니다. 다시 조사해 보세요.",
+                        ),
+                        Action(type=ActionType.UPDATE_STATE, value={"key": "trash_step", "value": 1}),
+                    ],
+                ),
+                # [Step 1] 두 번째 시도: 먼지 제거제 발견
+                Interaction(
+                    conditions=[Condition(type=ConditionType.STATE_IS, target="trash_step", value=1)],
+                    actions=[
+                        Action(
+                            type=ActionType.PRINT_NARRATIVE,
+                            value=(
+                                "숨을 참으며 쓰레기통을 더 깊숙이 뒤적거리자, 잡동사니 사이에서 **[먼지 제거제]** 캔이 손에 잡혔다.\n"
                                 "가스는 다 빠져서 바람은 안 나오지만, 흔들어보니 찰랑거리는 액체 소리가 난다.\n\n"
-                                '"학부생 녀석들, 액체 냉매가 절반이나 남았는데 이걸 그냥 버려? 연구비가 썩어나지?"\n'
-                                "당신은 혀를 차며 캔을 주머니에 챙겼다.\n"
+                                '"학부생 녀석들, 액체 냉매가 절반이나 남았는데 이걸 그냥 버려? 연구비가 썩어나지?"\n\n'
+                                "당신은 혀를 차며 캔을 주머니에 챙겼다.\n\n"
                                 "쓰레기 더미 아래에 무언가 더 있는 것 같다."
                             ),
                         ),
@@ -49,22 +87,25 @@ CH0_SCENE1_DATA = SceneData(
                             value={
                                 "name": KeywordId.AIR_DUSTER,
                                 "description": (
-                                    "컴퓨터 청소용 에어 스프레이. 측면에 '절대 기울여 사용하지 마시오'라는 붉은 경고 문구가 있다.\n"
+                                    "컴퓨터 청소용 에어 스프레이. 측면에 '절대 기울여 사용하지 마시오'라는 붉은 경고 문구가 있다.\n\n"
                                     "하지만 이공계생의 상식으로 볼 때, 이 문구는 **'뒤집어서 뿌리면 영하 50도의 급속 냉각기가 됨'**이라는 뜻과 같다.\n"
-                                    "흔들어보니 액체 가스가 꽤 많이 남아있다."
                                 ),
                             },
                         ),
-                        Action(type=ActionType.PRINT_SYSTEM, value="**[쓰레기통]**을 다시 한번 조사해 보세요."),
-                        Action(type=ActionType.UPDATE_STATE, value={"key": "trash_step", "value": 1}),
+                        Action(
+                            type=ActionType.PRINT_SYSTEM,
+                            value="**[쓰레기통]** 바닥에 아직 무언가 남아있는 것 같습니다.",
+                        ),
+                        Action(type=ActionType.UPDATE_STATE, value={"key": "trash_step", "value": 2}),
                     ],
                 ),
+                # [Step 2] 세 번째 시도: 스패너 발견
                 Interaction(
-                    conditions=[Condition(type=ConditionType.STATE_IS, target="trash_step", value=1)],
+                    conditions=[Condition(type=ConditionType.STATE_IS, target="trash_step", value=2)],
                     actions=[
                         Action(
                             type=ActionType.PRINT_NARRATIVE,
-                            value="다시 한번 쓰레기통을 뒤지자, 깊숙한 곳에서 녹슨 **[스패너]**를 발견했다. 이제 쓰레기통은 완전히 비었다.",
+                            value="다시 한번 바닥까지 싹싹 긁어 뒤지자, 제일 밑바닥에서 녹슨 **[스패너]**를 발견했다. 이제 쓰레기통은 완전히 비었다.",
                         ),
                         Action(
                             type=ActionType.ADD_ITEM,
@@ -73,16 +114,21 @@ CH0_SCENE1_DATA = SceneData(
                                 "description": "녹슬었지만 묵직하다. 무언가를 강제로 열거나 부술 때 쓸만해 보인다.",
                             },
                         ),
-                        Action(type=ActionType.UPDATE_STATE, value={"key": "trash_step", "value": 2}),
+                        Action(type=ActionType.UPDATE_STATE, value={"key": "trash_step", "value": 3}),
+                        Action(
+                            type=ActionType.UPDATE_STATE,
+                            value={"keyword": KeywordId.TRASH_CAN, "state": KeywordState.UNSEEN},
+                        ),
                     ],
                 ),
+                # [Step 3] 완료: 텅 빔
                 Interaction(
-                    conditions=[Condition(type=ConditionType.STATE_IS, target="trash_step", value=2)],
+                    conditions=[Condition(type=ConditionType.STATE_IS, target="trash_step", value=3)],
                     actions=[
                         Action(
                             type=ActionType.PRINT_NARRATIVE,
-                            value="텅 빈 쓰레기통이다. 컵라면 국물 자국만 애처롭게 남아있다.",
-                        )
+                            value="텅 빈 쓰레기통이다. 국물 자국과 절망만이 남아있다. 더 뒤져봤자 손만 더러워질 뿐이다.",
+                        ),
                     ],
                 ),
             ],
@@ -91,25 +137,42 @@ CH0_SCENE1_DATA = SceneData(
             type=KeywordType.OBJECT,
             state=KeywordState.HIDDEN,
             interactions=[
+                # Case 1: 아직 열지 않은 경우
+                Interaction(
+                    conditions=[Condition(type=ConditionType.STATE_IS, target="box_opened", value=False)],
+                    actions=[
+                        Action(
+                            type=ActionType.PRINT_NARRATIVE,
+                            value=(
+                                "누군가 꼼꼼하게 포장해 둔 박스다. 테이프로 칭칭 감겨 있어 손톱으로는 뜯을 수 없다.\n"
+                                "하지만 들어보니 **묵직한 무게감**이 느껴진다. 안에는 분명 **중요한 물건**이 들어있다.\n"
+                                "테이프를 자를 만한 **날카로운 도구**가 필요하다."
+                            ),
+                        ),
+                        Action(
+                            type=ActionType.PRINT_SYSTEM,
+                            value=(
+                                "💡 **조합 시스템 가이드**\n\n"
+                                "두 가지 요소를 **더하기(+)** 기호로 연결하여 새로운 결과를 만들어낼 수 있습니다.\n\n<br>"
+                                "✅ **조합 가능:**\n\n"
+                                "· `[주머니의 물건] + [주머니의 물건]` (아이템 결합)\n\n"
+                                "· `[주머니의 물건] + [시야의 사물]` (아이템 사용)\n\n"
+                                "· 예시: `법인카드 + 박스`\n\n<br>"
+                                "🚫 **조합 불가능:**\n\n"
+                                "· 단순한 배경 묘사나 환경 요소(예: 곰팡이, 엔트로피, 팬 등)는 조합의 대상이 아닙니다."
+                            ),
+                        ),
+                    ],
+                ),
+                # Case 2: 이미 열어본 경우
                 Interaction(
                     conditions=[Condition(type=ConditionType.STATE_IS, target="box_opened", value=True)],
                     actions=[
                         Action(
-                            type=ActionType.PRINT_NARRATIVE, value="안에는 아무것도 없는 빈 박스다. 먼지만 폴폴 날린다."
+                            type=ActionType.PRINT_NARRATIVE,
+                            value="이미 내용물을 꺼내고 남은 빈 박스다. 바닥에 뒹구는 테이프 조각들이 왠지 처량해 보인다.",
                         )
                     ],
-                ),
-                Interaction(
-                    actions=[
-                        Action(
-                            type=ActionType.PRINT_NARRATIVE,
-                            value="누가 이렇게 꼼꼼하게 포장했는지, 테이프로 칭칭 감겨 있다. 맨손으로는 어림도 없다. 날카로운 게 필요하다.",
-                        ),
-                        Action(
-                            type=ActionType.PRINT_SYSTEM,
-                            value="힌트: `도구 + 대상` 형태로 조합해 보세요. (예: `법인카드 + 박스`)",
-                        ),
-                    ]
                 ),
             ],
         ),
@@ -130,8 +193,8 @@ CH0_SCENE1_DATA = SceneData(
                             value=KeywordId.MEMO,
                         ),
                         Action(
-                            type=ActionType.PRINT_SYSTEM,
-                            value="**시야**의 잡동사니 속에 **[메모]**가 추가되었습니다.\n`메모`를 입력해서 확인해 보세요.",
+                            type=ActionType.UPDATE_STATE,
+                            value={"keyword": KeywordId.BOX, "state": KeywordState.UNSEEN},
                         ),
                     ],
                 ),
@@ -371,6 +434,22 @@ CH0_SCENE1_DATA = SceneData(
         ),
     },
     combinations=[
+        Combination(
+            targets=[KeywordId.BOX, KeywordId.CORP_CARD],
+            conditions=[Condition(type=ConditionType.HAS_ITEM, target=KeywordId.CORP_CARD)],
+            actions=[
+                Action(
+                    type=ActionType.PRINT_NARRATIVE,
+                    value="**[법인카드]**의 날카로운 모서리로 테이프를 찢었다. (한도 초과된 카드라 마음이 덜 아프다.)\n박스를 열자 지저분한 **[실험용 랩 가운]**이 나왔다!",
+                ),
+                Action(type=ActionType.DISCOVER_KEYWORD, value=KeywordId.LAB_COAT),
+                Action(type=ActionType.UPDATE_STATE, value={"key": "box_opened", "value": True}),
+                Action(
+                    type=ActionType.UPDATE_STATE,
+                    value={"keyword": KeywordId.BOX, "state": KeywordState.UNSEEN},
+                ),
+            ],
+        ),
         # ... (기존 조합 유지 + 키패드 비밀번호 수정) ...
         Combination(
             type=CombinationType.PASSWORD,
@@ -399,26 +478,6 @@ CH0_SCENE1_DATA = SceneData(
                     },
                 ),
                 Action(type=ActionType.UPDATE_STATE, value={"key": "cabinet_unlocked", "value": True}),
-            ],
-        ),
-        Combination(
-            targets=[KeywordId.BOX, KeywordId.CORP_CARD],
-            conditions=[Condition(type=ConditionType.HAS_ITEM, target=KeywordId.CORP_CARD)],
-            actions=[
-                Action(
-                    type=ActionType.PRINT_NARRATIVE,
-                    value="**[법인카드]**의 날카로운 모서리로 테이프를 찢었다. (한도 초과된 카드라 마음이 덜 아프다.)\n박스를 열자 지저분한 **[실험용 랩 가운]**이 나왔다!",
-                ),
-                Action(
-                    type=ActionType.UPDATE_STATE,
-                    value={"keyword": KeywordId.LAB_COAT, "state": KeywordState.DISCOVERED},
-                ),
-                Action(type=ActionType.PRINT_SYSTEM, value="시야에 **[실험용 랩 가운]**이 추가되었습니다."),
-                Action(type=ActionType.UPDATE_STATE, value={"key": "box_opened", "value": True}),
-                Action(
-                    type=ActionType.UPDATE_STATE,
-                    value={"keyword": KeywordId.BOX, "state": KeywordState.DISCOVERED},
-                ),
             ],
         ),
         Combination(

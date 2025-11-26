@@ -107,6 +107,7 @@ class Game:
         # --- 게임 상태 초기화 ---
         self.game_started = False
         self.num_total_inputs = 0
+        self.chapter_states = {}
 
         self.test_runner.set_game(self)
         self._initialize_game_ui()

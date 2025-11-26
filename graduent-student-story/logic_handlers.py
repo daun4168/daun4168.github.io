@@ -43,6 +43,17 @@ class StateNotHandler(ConditionHandler):
         return scene.state.get(target) != value
 
 
+class ChapterStateIsHandler(ConditionHandler):
+    def check(self, scene, target, value) -> bool:
+        # scene.chapter_state에서 target 키의 값을 확인
+        return scene.chapter_state.get(target) == value
+
+
+class ChapterStateNotHandler(ConditionHandler):
+    def check(self, scene, target, value) -> bool:
+        return scene.chapter_state.get(target) != value
+
+
 class StaminaMinHandler(ConditionHandler):
     def check(self, scene, target, value) -> bool:
         return scene.player.current_stamina >= int(value)
@@ -114,8 +125,6 @@ class DiscoverKeywordHandler(ActionHandler):
             scene.scene_data.keywords[value].state = KeywordState.DISCOVERED
             scene.ui.update_sight_status(scene.scene_data.keywords)
             text = f"**[{value}]**{get_josa(str(value), '을/를')} 발견하여 **시야**에 추가합니다."
-            print(text)
-            print(value)
             scene.ui.print_system_message(text, is_markdown=True)
 
 
@@ -137,6 +146,13 @@ class UpdateStateHandler(ActionHandler):
             if k_name in scene.scene_data.keywords:
                 scene.scene_data.keywords[k_name].state = value["state"]
                 scene.ui.update_sight_status(scene.scene_data.keywords)
+
+
+class UpdateChapterStateHandler(ActionHandler):
+    def execute(self, scene, value):
+        # value 구조 예시: {"key": "has_met_professor", "value": True}
+        if "key" in value:
+            scene.chapter_state[value["key"]] = value["value"]
 
 
 class MoveSceneHandler(ActionHandler):
@@ -207,29 +223,6 @@ class RequestConfirmationHandler(ActionHandler):
         }
 
 
-class UpdateKeywordDataHandler(ActionHandler):
-    def execute(self, scene, value):
-        """
-        value 구조:
-        {
-            "keyword": KeywordId,
-            "field": "display_name" | "description",
-            "value": "변경할 내용"
-        }
-        """
-        keyword_id = value.get("keyword")
-        field = value.get("field")
-        new_value = value.get("value")
-
-        if keyword_id in scene.scene_data.keywords:
-            keyword_data = scene.scene_data.keywords[keyword_id]
-            if field == "display_name":
-                keyword_data.display_name = new_value
-            elif field == "description":
-                keyword_data.description = new_value
-            scene.ui.update_sight_status(scene.scene_data.keywords)
-
-
 class UpdateItemDataHandler(ActionHandler):
     def execute(self, scene, value):
         """
@@ -268,13 +261,13 @@ ACTION_HANDLERS = {
     ActionType.DISCOVER_KEYWORD: DiscoverKeywordHandler(),
     ActionType.REMOVE_KEYWORD: RemoveKeywordHandler(),
     ActionType.UPDATE_STATE: UpdateStateHandler(),
+    ActionType.UPDATE_ITEM_DATA: UpdateItemDataHandler(),
+    # Game
     ActionType.MOVE_SCENE: MoveSceneHandler(),
-    ActionType.GAME_END: GameEndHandler(),
-    ActionType.MODIFY_STAMINA: ModifyStaminaHandler(),
     ActionType.SAVE_CHECKPOINT: SaveCheckpointHandler(),
     ActionType.RELOAD_CHECKPOINT: ReloadCheckpointHandler(),
     ActionType.SHOW_STAMINA_UI: ShowStaminaUIHandler(),
+    ActionType.GAME_END: GameEndHandler(),
+    ActionType.MODIFY_STAMINA: ModifyStaminaHandler(),
     ActionType.REQUEST_CONFIRMATION: RequestConfirmationHandler(),
-    ActionType.UPDATE_KEYWORD_DATA: UpdateKeywordDataHandler(),
-    ActionType.UPDATE_ITEM_DATA: UpdateItemDataHandler(),
 }

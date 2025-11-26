@@ -24,6 +24,7 @@ CH1_SCENE1_DATA = SceneData(
         "has_shelter": False,
         "forest_cleared": False,  # 숲길 개척 여부
         "vines_collected": False,
+        "forest_inspected": False,
         "mk2_inspected": False,  # 양자 가마솥 처음 조사 여부
         # 양자 가마솥 최종 수리용 상태
         "mk2_all_parts_gathered": False,  # 석영 조각 / 충전 배터리 / 전선 끝 세 개를 모두 들고 양자 가마솥를 확인했는지
@@ -69,7 +70,7 @@ CH1_SCENE1_DATA = SceneData(
                     ],
                     continue_matching=True,
                 ),
-                # 두 번째 이후: 이동 여부 확인
+                # 이동 여부 확인
                 Interaction(
                     conditions=[
                         Condition(type=ConditionType.STATE_IS, target="wreck_path_inspected", value=True),
@@ -107,6 +108,22 @@ CH1_SCENE1_DATA = SceneData(
             type=KeywordType.PORTAL,
             state=KeywordState.HIDDEN,
             interactions=[
+                # 기본: 길이 막혀 있음
+                Interaction(
+                    conditions=[
+                        Condition(type=ConditionType.STATE_IS, target="forest_cleared", value=False),
+                        Condition(type=ConditionType.STATE_IS, target="vines_collected", value=False),
+                    ],
+                    actions=[
+                        Action(
+                            type=ActionType.PRINT_NARRATIVE,
+                            value=(
+                                "울창한 밀림이다. 억센 덩굴이 그물처럼 얽혀 있어 맨몸으로는 뚫고 지나갈 수 없다.\n"
+                                "무언가 **날카롭고 무거운 도구**가 있다면 길을 낼 수 있을 것 같다."
+                            ),
+                        ),
+                    ],
+                ),
                 # 숲길 개척 + 아직 덩굴 안 챙김
                 Interaction(
                     conditions=[
@@ -175,18 +192,6 @@ CH1_SCENE1_DATA = SceneData(
                                     Action(type=ActionType.PRINT_NARRATIVE, value="아직 준비가 덜 된 것 같다."),
                                 ],
                             },
-                        ),
-                    ],
-                ),
-                # 기본: 길이 막혀 있음
-                Interaction(
-                    actions=[
-                        Action(
-                            type=ActionType.PRINT_NARRATIVE,
-                            value=(
-                                "울창한 밀림이다. 억센 덩굴이 그물처럼 얽혀 있어 맨몸으로는 뚫고 지나갈 수 없다.\n"
-                                "무언가 **날카롭고 무거운 도구**가 있다면 길을 낼 수 있을 것 같다."
-                            ),
                         ),
                     ],
                 ),

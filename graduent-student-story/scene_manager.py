@@ -66,9 +66,20 @@ class SceneFactory:
         # 등록된 장면 클래스와 데이터를 가져옵니다.
         scene_class, scene_data, chapter_data = self._scene_registry[scene_id]
 
+        # 챕터 데이터가 있는 경우, Game에서 해당 챕터의 상태를 가져옴
+        chapter_state = {}
+        if chapter_data:
+            chapter_id = chapter_data.id
+            # 게임 인스턴스에 해당 챕터 상태가 없으면 초기화
+            if chapter_id not in self.game.chapter_states:
+                self.game.chapter_states[chapter_id] = {}
+
+            # 참조(Reference)를 가져옴 (Scene에서 수정하면 Game에도 반영됨)
+            chapter_state = self.game.chapter_states[chapter_id]
+
         # Scene 인스턴스를 생성하여 반환합니다.
         # [수정] player 인자 전달 확인
-        return scene_class(self.game, self.ui, self.inventory, self.player, scene_data, chapter_data)
+        return scene_class(self.game, self.ui, self.inventory, self.player, scene_data, chapter_data, chapter_state)
 
 
 class SceneManager:

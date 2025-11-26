@@ -324,6 +324,8 @@ class ConditionType(StrEnum):
     NOT_HAS_ITEM = "not_has_item"
     STATE_IS = "state_is"
     STATE_NOT = "state_not"
+    CHAPTER_STATE_IS = "chapter_state_is"
+    CHAPTER_STATE_NOT = "chapter_state_not"
     STAMINA_MIN = "stamina_min"
     STONE_PUZZLE = "stone_puzzle"
 
@@ -346,6 +348,7 @@ class ActionType(StrEnum):
     REQUEST_CONFIRMATION = "request_confirmation"  # [추가] 확인 요청 액션
     UPDATE_KEYWORD_DATA = "update_keyword_data"
     UPDATE_ITEM_DATA = "update_item_data"
+    UPDATE_CHAPTER_STATE = "update_chapter_state"
 
 
 class KeywordType(StrEnum):

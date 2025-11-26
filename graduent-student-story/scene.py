@@ -12,7 +12,16 @@ class Scene:
     장면의 데이터, 상태, 키워드 및 상호작용 로직을 관리합니다.
     """
 
-    def __init__(self, game, ui, inventory, player, scene_data: SceneData, chapter_data: ChapterData | None = None):
+    def __init__(
+        self,
+        game,
+        ui,
+        inventory,
+        player,
+        scene_data: SceneData,
+        chapter_data: ChapterData | None = None,
+        chapter_state: dict = None,
+    ):
         """
         Scene 클래스의 생성자입니다.
 
@@ -30,6 +39,7 @@ class Scene:
         # (혹은 scene_data.model_copy(deep=True)를 사용할 수도 있습니다.)
         self.scene_data = copy.deepcopy(scene_data)
         self.chapter_data = chapter_data  # 챕터 데이터 저장
+        self.chapter_state = chapter_state if chapter_state is not None else {}
         # 장면의 동적 상태를 초기화합니다.
         self.state = self.scene_data.initial_state
 

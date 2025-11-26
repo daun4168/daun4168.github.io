@@ -185,7 +185,9 @@ CH1_SCENE0_DATA = SceneData(
                             value="[경고] 짠물을 마셔 체력이 감소했습니다. 갈증이 더 심해집니다.",
                         ),
                         Action(type=ActionType.UPDATE_STATE, value={"key": "sea_step", "value": 2}),
-                        Action(type=ActionType.UPDATE_STATE, value={"keyword": KeywordId.SEA, "state": KeywordState.UNSEEN}),
+                        Action(
+                            type=ActionType.UPDATE_STATE, value={"keyword": KeywordId.SEA, "state": KeywordState.UNSEEN}
+                        ),
                     ],
                 ),
                 Interaction(
@@ -300,7 +302,9 @@ CH1_SCENE0_DATA = SceneData(
                 ),
                 Action(type=ActionType.UPDATE_STATE, value={"key": "antenna_found", "value": True}),
                 Action(type=ActionType.UPDATE_STATE, value={"key": "sand_step", "value": 3}),
-                Action(type=ActionType.UPDATE_STATE, value={"keyword": KeywordId.SANDY_BEACH, "state": KeywordState.UNSEEN}),
+                Action(
+                    type=ActionType.UPDATE_STATE, value={"keyword": KeywordId.SANDY_BEACH, "state": KeywordState.UNSEEN}
+                ),
             ],
         ),
         # [수정] 안테나 + 통신기 = 이벤트 발생

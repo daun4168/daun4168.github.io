@@ -43,7 +43,6 @@ CH0_SCENE1_DATA = SceneData(
     ],
     keywords={
         # --- 기존 핵심 오브젝트 (퍼즐용) ---
-        KeywordId.COMPUTER_ALIAS: KeywordData(type=KeywordType.ALIAS, target=KeywordId.OLD_COMPUTER),
         KeywordId.WALL_ALIAS: KeywordData(type=KeywordType.ALIAS, target=KeywordId.WALL),
         # --- 1. 쓰레기통 조사 ---
         KeywordId.TRASH_CAN: KeywordData(
@@ -301,61 +300,97 @@ CH0_SCENE1_DATA = SceneData(
             ],
         ),
         # --- 6. 컴퓨터 비밀번호 잠금 해제 ---
-        KeywordId.OLD_COMPUTER: KeywordData(
+        KeywordId.COMPUTER: KeywordData(
             type=KeywordType.OBJECT,
             state=KeywordState.HIDDEN,
             interactions=[
                 Interaction(
-                    conditions=[Condition(type=ConditionType.STATE_IS, target="computer_solved", value=True)],
-                    actions=[
-                        Action(
-                            type=ActionType.PRINT_SYSTEM,
-                            value="컴퓨터 화면에는 `시약장 비밀번호: 0815` 라는 메모장 파일만 덩그러니 띄워져 있다.",
-                        )
-                    ],
-                ),
-                Interaction(
+                    conditions=[Condition(type=ConditionType.STATE_IS, target="computer_solved", value=False)],
                     actions=[
                         Action(
                             type=ActionType.PRINT_NARRATIVE,
                             value=(
                                 "전원 버튼을 누르자, 이륙하는 비행기 같은 소음을 내며 팬이 돌아간다.\n"
                                 "키보드는 글자가 다 지워졌지만, **오른쪽 숫자 패드(Number Pad)**만큼은 손때가 타서 반질거린다.\n"
-                                "Num Lock 키에 초록불이 깜빡이며 암호 입력창이 떴다."
+                                "Num Lock 키에 초록불이 깜빡이며 암호 입력창이 떴다.\n\n"
+                                "이런 복잡한 암호를 맨정신으로 외우고 다닐 리가 없다.\n"
+                                "분명 주변 어딘가, 눈에 잘 띄는 **벽** 같은 곳에 **메모**를 해뒀을 것이다."
                             ),
                         ),
                         Action(
                             type=ActionType.PRINT_SYSTEM,
-                            value="암호를 알아내어 `컴퓨터 : [비밀번호]` 형식으로 입력해야 할 것 같다.",
+                            value="암호를 알아내어 `컴퓨터 : [비밀번호]` 형식으로 입력해 보세요.",
+                        ),
+                    ],
+                ),
+                Interaction(
+                    conditions=[Condition(type=ConditionType.STATE_IS, target="computer_solved", value=True)],
+                    actions=[
+                        Action(
+                            type=ActionType.PRINT_NARRATIVE,
+                            value=(
+                                "화면에 **[주문내역]** 페이지가 떠 있다.\n\n"
+                                "브라우저 창 옆 바탕화면에는 `시약장_비번_주문수량_제발까먹지마.txt` 라는 처절한 이름의 텍스트 파일이 보인다."
+                            ),
+                        )
+                    ],
+                ),
+            ],
+        ),
+        KeywordId.ORDER_LIST: KeywordData(
+            type=KeywordType.OBJECT,
+            state=KeywordState.INACTIVE,  # 처음엔 숨겨져 있음
+            interactions=[
+                Interaction(
+                    actions=[
+                        Action(
+                            type=ActionType.PRINT_NARRATIVE,
+                            value=(
+                                "웹 브라우저에 '랩-마켓(Lab-Market)' 최근 주문 내역이 띄워져 있다.\n"
+                                "배송 상태가 **배송 완료**로 되어 있는 최근 4건의 목록이다.\n\n"
+                                "· [실험] 공업용 에탄올 (99%) ------- **2** Box\n\n"
+                                "· [기자재] 백금 코팅 비커 세트 ------ **0** Set (주문 취소됨: 사유-예산 초과)\n\n"
+                                "· [소모품] 대용량 킴와이프 --------- **1** Box\n\n"
+                                "· [식비] 얼큰한 매운맛 컵라면 ------ **9** Box\n\n<br>"
+                                "스크롤을 내려보니 '연구 책임자(교수) 승인 완료' 도장이 찍혀 있다."
+                            ),
                         ),
                     ]
-                ),
+                )
             ],
         ),
         KeywordId.CABINET: KeywordData(
             type=KeywordType.OBJECT,
             state=KeywordState.HIDDEN,
             interactions=[
+                # Case 1: 잠겨 있음 (라벨 힌트 제공)
                 Interaction(
-                    conditions=[Condition(type=ConditionType.STATE_IS, target="cabinet_unlocked", value=True)],
+                    conditions=[Condition(type=ConditionType.STATE_IS, target="cabinet_unlocked", value=False)],
                     actions=[
                         Action(
                             type=ActionType.PRINT_NARRATIVE,
-                            value="시약장 문이 열려있다. 안에는 위험해 보이는(하지만 청소에는 유용한) 약품들이 널려있다.",
-                        )
-                    ],
-                ),
-                Interaction(
-                    actions=[
-                        Action(
-                            type=ActionType.PRINT_NARRATIVE,
-                            value="굳게 닫힌 시약장이다. 4자리 숫자 자물쇠가 걸려있다. 보통 이런 건 생일이나 기념일로 해두던데.",
+                            value=(
+                                "유리문으로 된 견고한 시약장이다. 4자리 숫자 자물쇠로 잠겨 있다.\n\n"
+                                "유리문에는 보관 품목을 표시하는 라벨이 왼쪽부터 오른쪽 순서대로 붙어있다.\n\n"
+                                "🏷️ **킴와이프** - **비커** - **에탄올** - **컵라면**\n\n"
+                                "시약장에 컵라면을 넣는 건 명백한 안전 수칙 위반이지만, 대학원생에게는 밥이 더 중요한 모양이다."
+                            ),
                         ),
                         Action(
                             type=ActionType.PRINT_SYSTEM,
                             value="`시약장 : [비밀번호]` 형식으로 열 수 있을 것 같다.",
                         ),
-                    ]
+                    ],
+                ),
+                # Case 2: 잠금 해제됨
+                Interaction(
+                    conditions=[Condition(type=ConditionType.STATE_IS, target="cabinet_unlocked", value=True)],
+                    actions=[
+                        Action(
+                            type=ActionType.PRINT_NARRATIVE,
+                            value="시약장 문이 열려있다. 안에는 위험해 보이는 약품들과 컵라면이 위태롭게 공존하고 있다.",
+                        )
+                    ],
                 ),
             ],
         ),
@@ -378,6 +413,15 @@ CH0_SCENE1_DATA = SceneData(
             state=KeywordState.HIDDEN,
             interactions=[
                 Interaction(
+                    conditions=[Condition(type=ConditionType.STATE_IS, target="liquid_cleaned", value=False)],
+                    actions=[
+                        Action(
+                            type=ActionType.PRINT_NARRATIVE,
+                            value="바닥 한쪽에 **[의문의 액체]**가 흥건하다. 밟으면 신발 밑창이 녹을 것 같다. 저 흉물스러운 것을 먼저 처리해야 한다.",
+                        )
+                    ]
+                ),
+                Interaction(
                     conditions=[Condition(type=ConditionType.STATE_IS, target="liquid_cleaned", value=True)],
                     actions=[
                         Action(
@@ -386,14 +430,7 @@ CH0_SCENE1_DATA = SceneData(
                         )
                     ],
                 ),
-                Interaction(
-                    actions=[
-                        Action(
-                            type=ActionType.PRINT_NARRATIVE,
-                            value="바닥 한쪽에 **[의문의 액체]**가 흥건하다. 밟으면 신발 밑창이 녹을 것 같다. 저 흉물스러운 것을 먼저 처리해야 한다.",
-                        )
-                    ]
-                ),
+
             ],
         ),
         # --- 배경/분위기용 UNSEEN 오브젝트 (게임 플레이에 영향 없음) ---
@@ -499,25 +536,34 @@ CH0_SCENE1_DATA = SceneData(
                 )
             ],
         ),
-        # ... (기존 조합 유지 + 키패드 비밀번호 수정) ...
         Combination(
             type=CombinationType.PASSWORD,
-            targets=[KeywordId.OLD_COMPUTER, "12365478"],  # [기획 반영] 키패드 패턴 'ㄹ' 뒤집은 모양
+            targets=[KeywordId.COMPUTER, "12365478"],
             actions=[
                 Action(
                     type=ActionType.PRINT_NARRATIVE,
-                    value="띠리링- 경쾌한음과 함께 잠금이 해제되었다!\n바탕화면 한구석에 `시약장 비밀번호: 내 생일 (0815)` 라는 메모 파일이 보인다.\n교수님 생일이 광복절이라니, 그래서 우리에게 광복은 언제 오는 걸까.",
+                    value=(
+                        "띠리링- 경쾌한음과 함께 잠금이 해제되었다!\n\n"
+                        "바탕화면이 뜰 줄 알았는데, 켜놓고 끄지 않은 **[주문 내역]** 웹페이지가 바로 나타났다.\n\n"
+                        "그리고 브라우저 창 바로 옆에, **`시약장_비번_주문수량_제발까먹지마.txt`** 라는 눈물겨운 이름의 파일이 보인다."
+                    ),
                 ),
                 Action(type=ActionType.UPDATE_STATE, value={"key": "computer_solved", "value": True}),
+                Action(type=ActionType.DISCOVER_KEYWORD, value=KeywordId.ORDER_LIST),
+                Action(type=ActionType.UPDATE_STATE, value={"keyword": KeywordId.MEMO, "state": KeywordState.UNSEEN}),
             ],
         ),
         Combination(
             type=CombinationType.PASSWORD,
-            targets=[KeywordId.CABINET, "0815"],
+            targets=[KeywordId.CABINET, "1029"],  # 킴와이프(1)-비커(0)-에탄올(2)-컵라면(9)
             actions=[
                 Action(
                     type=ActionType.PRINT_NARRATIVE,
-                    value="철컥, 소리와 함께 **[시약장]** 문이 열렸다.\n안쪽 깊숙한 곳에서 공업용 **[에탄올]** 병을 발견했다. 알코올 냄새가 진동을 한다.",
+                    value=(
+                        "자물쇠를 맞추자 '철컥' 소리와 함께 **[시약장]** 문이 열렸다.\n\n"
+                        "라벨에 적힌 대로 물건들이 정렬되어... 있지는 않고 엉망진창이지만,\n\n"
+                        "구석에서 굴러다니던 공업용 **[에탄올]** 병 하나는 건질 수 있었다."
+                    ),
                 ),
                 Action(
                     type=ActionType.ADD_ITEM,
@@ -527,6 +573,15 @@ CH0_SCENE1_DATA = SceneData(
                     },
                 ),
                 Action(type=ActionType.UPDATE_STATE, value={"key": "cabinet_unlocked", "value": True}),
+                Action(
+                    type=ActionType.UPDATE_STATE, value={"keyword": KeywordId.CABINET, "state": KeywordState.UNSEEN}
+                ),
+                Action(
+                    type=ActionType.UPDATE_STATE, value={"keyword": KeywordId.COMPUTER, "state": KeywordState.UNSEEN}
+                ),
+                Action(
+                    type=ActionType.UPDATE_STATE, value={"keyword": KeywordId.ORDER_LIST, "state": KeywordState.UNSEEN}
+                ),
             ],
         ),
         # [네거티브 피드백] 먼지 제거제(냉매)로 의문의 액체 얼리기 시도

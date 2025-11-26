@@ -31,23 +31,26 @@ class KeywordId(StrEnum):
     DOOR = "문"
 
     # --- CH0_SCENE1 ---
-    SPANNER = "스패너"
     TRASH_CAN = "쓰레기통"
+    AIR_DUSTER = "먼지 제거제"
+    SPANNER = "스패너"
     BOX = "박스"
+    LAB_COAT = "실험용 랩 가운"
+    KEY = "열쇠"
+    CLEANING_CABINET = "청소도구함"
     BROOM = "빗자루"
-    OLD_COMPUTER = "오래된 컴퓨터"
-    COMPUTER_ALIAS = "컴퓨터"
-    MYSTERY_LIQUID = "의문의 액체"
-    CABINET = "시약장"
-    FLOOR = "바닥"
+
     WALL = "벽"
     WALL_ALIAS = "벽면"
     MEMO = "메모"
-    AIR_DUSTER = "먼지 제거제"
-    LAB_COAT = "실험용 랩 가운"
+    COMPUTER = "컴퓨터"
+    ORDER_LIST = "주문 내역"
+
+    MYSTERY_LIQUID = "의문의 액체"
+    CABINET = "시약장"
+    FLOOR = "바닥"
+
     ETHANOL = "에탄올"
-    KEY = "열쇠"
-    CLEANING_CABINET = "청소도구함"
 
     # CH0_SCENE2
     MK_II = "MK-II"

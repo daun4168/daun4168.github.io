@@ -3,6 +3,9 @@ from schemas import Action, ChapterData, Combination, Condition
 
 CH1_COMMON_DATA = ChapterData(
     id=ChapterID.CH1,
+    initial_state={
+        "distiller_state": 0,
+    },
     combinations=[
         # [공통 조합] 스패너 + 코코넛 = 섭취
         Combination(

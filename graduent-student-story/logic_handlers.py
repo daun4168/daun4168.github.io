@@ -258,6 +258,8 @@ CONDITION_HANDLERS = {
     ConditionType.STATE_NOT: StateNotHandler(),
     ConditionType.STAMINA_MIN: StaminaMinHandler(),
     ConditionType.STONE_PUZZLE: StonePuzzleHandler(),
+    ConditionType.CHAPTER_STATE_IS: ChapterStateIsHandler(),
+    ConditionType.CHAPTER_STATE_NOT: ChapterStateNotHandler(),
 }
 
 ACTION_HANDLERS = {
@@ -272,6 +274,7 @@ ACTION_HANDLERS = {
     ActionType.REMOVE_KEYWORD: RemoveKeywordHandler(),
     ActionType.UPDATE_STATE: UpdateStateHandler(),
     ActionType.UPDATE_ITEM_DATA: UpdateItemDataHandler(),
+    ActionType.UPDATE_CHAPTER_STATE: UpdateChapterStateHandler(),
     # Game
     ActionType.MOVE_SCENE: MoveSceneHandler(),
     ActionType.SAVE_CHECKPOINT: SaveCheckpointHandler(),

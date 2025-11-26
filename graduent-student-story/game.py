@@ -2,7 +2,7 @@ import asyncio
 import copy
 
 # const에서 KeywordState, KeywordType 추가 임포트 (필수)
-from const import CommandType, SceneID, KeywordState, KeywordType
+from const import CommandType, SceneID, KeywordState, KeywordType, ChapterID
 from entity import Entity, Inventory, Player
 from pyscript import document
 from scene import Scene
@@ -107,7 +107,7 @@ class Game:
         # --- 게임 상태 초기화 ---
         self.game_started = False
         self.num_total_inputs = 0
-        self.chapter_states = {}
+        self.chapter_states = {ChapterID.CH1: CH1_COMMON_DATA.initial_state.copy()}
 
         self.test_runner.set_game(self)
         self._initialize_game_ui()

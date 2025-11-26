@@ -47,6 +47,7 @@ class Combination(BaseModel):
 class ChapterData(BaseModel):
     id: ChapterID
     combinations: list[Combination] = Field(default_factory=list)
+    initial_state: dict[str, Any] = Field(default_factory=dict)
 
 
 class SceneData(BaseModel):

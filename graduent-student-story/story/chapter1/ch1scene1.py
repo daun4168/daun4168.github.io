@@ -34,101 +34,13 @@ CH1_SCENE1_DATA = SceneData(
     },
     keywords={
         KeywordId.SAND: KeywordData(type=KeywordType.ALIAS, target=KeywordId.SANDY_BEACH),
-        # 1. 쓰레기 더미
-        KeywordId.TRASH_PILE: KeywordData(
-            type=KeywordType.OBJECT,
-            state=KeywordState.HIDDEN,
-            interactions=[
-                Interaction(
-                    conditions=[Condition(type=ConditionType.STATE_IS, target="searched_trash", value=False)],
-                    actions=[
-                        Action(
-                            type=ActionType.PRINT_NARRATIVE,
-                            value=(
-                                "역겨운 냄새를 참으며 쓰레기를 뒤진다. 베이스캠프 바로 앞이라 안전하게 파밍할 수 있다.\n"
-                                "쓸만해 보이는 **[빈 페트병]**과 **[비닐]** 조각을 발견했다."
-                            ),
-                        ),
-                        Action(type=ActionType.MODIFY_STAMINA, value=-2),
-                        Action(
-                            type=ActionType.ADD_ITEM,
-                            value={"name": KeywordId.PLASTIC_BOTTLE, "description": "찌그러진 페트병이다."},
-                        ),
-                        Action(
-                            type=ActionType.ADD_ITEM,
-                            value={"name": KeywordId.VINYL, "description": "구멍 나지 않은 튼튼한 비닐이다."},
-                        ),
-                        Action(type=ActionType.UPDATE_STATE, value={"key": "searched_trash", "value": True}),
-                        Action(
-                            type=ActionType.UPDATE_STATE,
-                            value={"keyword": KeywordId.TRASH_PILE, "state": KeywordState.UNSEEN},
-                        ),
-                    ],
-                ),
-                Interaction(
-                    conditions=[Condition(type=ConditionType.STATE_IS, target="searched_trash", value=True)],
-                    actions=[
-                        Action(
-                            type=ActionType.PRINT_NARRATIVE,
-                            value="더 이상 쓸만한 건 없다.",
-                        )
-                    ],
-                ),
-            ],
-        ),
-        # 2. 바다 (물 뜨기 기능 추가)
-        KeywordId.SEA: KeywordData(
-            type=KeywordType.OBJECT,
-            state=KeywordState.HIDDEN,
-            interactions=[
-                Interaction(
-                    actions=[
-                        Action(
-                            type=ActionType.PRINT_NARRATIVE,
-                            value=(
-                                "보기만 해도 시원해 보인다. 하지만 이것은 염분 농도 3.5%의 수용액이다.\n\n"
-                                "마시면 삼투압 현상으로 탈수가 가속화된다는 건 상식이다.\n\n"
-                                "경험적으로든 이론적으로든, 다시는 입에 대고 싶지 않다."
-                            ),
-                        )
-                    ]
-                ),
-            ],
-        ),
-        # 3. 모래사장
-        KeywordId.SANDY_BEACH: KeywordData(
-            type=KeywordType.OBJECT,
-            state=KeywordState.HIDDEN,
-            description=(
-                "달궈진 모래의 열기는 식을 줄 모른다. 엉덩이를 붙이고 앉기 힘들 정도로 뜨겁다.\n\n"
-                "하지만 이 **고온**은 열역학적으로 볼 때 **증발**을 가속화하는 훌륭한 에너지원이다.\n\n"
-                "간이 정수기를 설치하기엔 더할 나위 없는 조건이다."
-            ),
-        ),
-        # 4. 정수기 제작
-        KeywordId.DISTILLER: KeywordData(
-            type=KeywordType.OBJECT,
-            state=KeywordState.INACTIVE,  # 설치 전에는 비활성 상태
-            description="모래 구덩이, 바닷물 병, 비닐 덮개로 만든 생존 과학의 결정체다. 비닐 안쪽에 맑은 물방울이 맺혀 뚝뚝 떨어진다.",
-            interactions=[
-                Interaction(
-                    actions=[
-                        Action(
-                            type=ActionType.PRINT_NARRATIVE,
-                            value="비닐에 맺힌 맑은 증류수를 조심스럽게 모아 마셨다. 미지근하지만, 그 어떤 음료수보다 달콤하다.",
-                        ),
-                        Action(type=ActionType.MODIFY_STAMINA, value=15),  # 체력 회복
-                        Action(type=ActionType.PRINT_SYSTEM, value="갈증이 해소되고 체력이 크게 회복되었습니다."),
-                    ]
-                )
-            ],
-        ),
+        # 포탈: 난파선 잔해, 숲 입구
         # 5. 난파선 잔해 (이동 포인트)
         KeywordId.WRECKAGE: KeywordData(
             type=KeywordType.PORTAL,
             state=KeywordState.HIDDEN,
             interactions=[
-                # 처음 조사
+                # 1. 처음 조사 (기존 동일)
                 Interaction(
                     conditions=[Condition(type=ConditionType.STATE_IS, target="wreck_path_inspected", value=False)],
                     actions=[
@@ -143,10 +55,28 @@ CH1_SCENE1_DATA = SceneData(
                     ],
                     continue_matching=True,
                 ),
-                # 이동 여부 확인
+                # 2. [추가] 이동 시도 차단 (정수기가 없을 때)
                 Interaction(
                     conditions=[
                         Condition(type=ConditionType.STATE_IS, target="wreck_path_inspected", value=True),
+                        Condition(type=ConditionType.STATE_IS, target="distiller_built", value=False),  # 정수기 미완성
+                    ],
+                    actions=[
+                        Action(
+                            type=ActionType.PRINT_NARRATIVE,
+                            value=(
+                                "저 멀리까지 다녀오려면 땀을 비오듯 쏟을 것이다.\n\n"
+                                "돌아왔을 때 마실 물이 확보되지 않았다면, 그대로 탈진해버릴지도 모른다.\n\n"
+                                "먼저 베이스캠프에 확실한 식수원을 만들어두고 떠나는 게 안전하겠다."
+                            ),
+                        ),
+                    ],
+                ),
+                # 3. 이동 시도 허용 (정수기가 있을 때)
+                Interaction(
+                    conditions=[
+                        Condition(type=ConditionType.STATE_IS, target="wreck_path_inspected", value=True),
+                        Condition(type=ConditionType.STATE_IS, target="distiller_built", value=True),  # 정수기 완성됨
                     ],
                     actions=[
                         Action(
@@ -159,7 +89,7 @@ CH1_SCENE1_DATA = SceneData(
                                 "confirm_actions": [
                                     Action(
                                         type=ActionType.PRINT_NARRATIVE,
-                                        value="뜨거운 태양을 뚫고 난파선을 향해 걷기 시작합니다...",
+                                        value="베이스캠프에 물이 있다는 사실에 안심하며, 뜨거운 태양을 뚫고 난파선을 향해 걷기 시작합니다...",
                                     ),
                                     Action(type=ActionType.MODIFY_STAMINA, value=-2),
                                     Action(type=ActionType.MOVE_SCENE, value=SceneID.CH1_SCENE2),
@@ -176,7 +106,7 @@ CH1_SCENE1_DATA = SceneData(
                 ),
             ],
         ),
-        # 6. 숲 입구 (도끼로 길 뚫은 뒤 이동)
+        # 숲 입구 (도끼로 길 뚫은 뒤 이동)
         KeywordId.FOREST_ENTRY: KeywordData(
             type=KeywordType.PORTAL,
             state=KeywordState.HIDDEN,
@@ -270,8 +200,115 @@ CH1_SCENE1_DATA = SceneData(
                 ),
             ],
         ),
-
-        # 7. 야자수
+        # 1. 쓰레기 더미
+        KeywordId.TRASH_PILE: KeywordData(
+            type=KeywordType.OBJECT,
+            state=KeywordState.HIDDEN,
+            interactions=[
+                Interaction(
+                    conditions=[Condition(type=ConditionType.STATE_IS, target="searched_trash", value=False)],
+                    actions=[
+                        Action(
+                            type=ActionType.PRINT_NARRATIVE,
+                            value=(
+                                "역겨운 냄새를 참으며 쓰레기를 뒤진다.\n\n"
+                                "쓸만해 보이는 **[빈 페트병]**과 **[비닐]** 조각을 발견했다."
+                            ),
+                        ),
+                        Action(type=ActionType.MODIFY_STAMINA, value=-2),
+                        Action(
+                            type=ActionType.ADD_ITEM,
+                            value={"name": KeywordId.PLASTIC_BOTTLE, "description": "찌그러진 페트병이다."},
+                        ),
+                        Action(
+                            type=ActionType.ADD_ITEM,
+                            value={"name": KeywordId.VINYL, "description": "구멍 나지 않은 튼튼한 비닐이다."},
+                        ),
+                        Action(type=ActionType.UPDATE_STATE, value={"key": "searched_trash", "value": True}),
+                        Action(
+                            type=ActionType.UPDATE_STATE,
+                            value={"keyword": KeywordId.TRASH_PILE, "state": KeywordState.UNSEEN},
+                        ),
+                    ],
+                ),
+                Interaction(
+                    conditions=[Condition(type=ConditionType.STATE_IS, target="searched_trash", value=True)],
+                    actions=[
+                        Action(
+                            type=ActionType.PRINT_NARRATIVE,
+                            value="더 이상 쓸만한 건 없다.",
+                        )
+                    ],
+                ),
+            ],
+        ),
+        # 2. 바다 (물 뜨기 기능 추가)
+        KeywordId.SEA: KeywordData(
+            type=KeywordType.OBJECT,
+            state=KeywordState.HIDDEN,
+            interactions=[
+                Interaction(
+                    actions=[
+                        Action(
+                            type=ActionType.PRINT_NARRATIVE,
+                            value=(
+                                "보기만 해도 시원해 보인다. 하지만 이것은 염분 농도 3.5%의 수용액이다.\n\n"
+                                "마시면 삼투압 현상으로 탈수가 가속화된다는 건 상식이다.\n\n"
+                                "경험적으로든 이론적으로든, 다시는 입에 대고 싶지 않다."
+                            ),
+                        )
+                    ]
+                ),
+            ],
+        ),
+        # 3. 모래사장
+        KeywordId.SANDY_BEACH: KeywordData(
+            type=KeywordType.OBJECT,
+            state=KeywordState.HIDDEN,
+            description=(
+                "달궈진 모래의 열기는 식을 줄 모른다. 엉덩이를 붙이고 앉기 힘들 정도로 뜨겁다.\n\n"
+                "하지만 이 **고온**은 열역학적으로 볼 때 **증발**을 가속화하는 훌륭한 에너지원이다.\n\n"
+                "간이 정수기를 설치하기엔 더할 나위 없는 조건이다."
+            ),
+        ),
+        # 4. 정수기 제작
+        KeywordId.DISTILLER: KeywordData(
+            type=KeywordType.OBJECT,
+            state=KeywordState.INACTIVE,
+            description="모래 구덩이, 바닷물 병, 비닐 덮개로 만든 생존 과학의 결정체다.",
+            interactions=[
+                # Case 1: 아직 물이 안 고였을 때 (기본)
+                Interaction(
+                    conditions=[Condition(type=ConditionType.CHAPTER_STATE_IS, target="distiller_state", value=0)],
+                    actions=[
+                        Action(
+                            type=ActionType.PRINT_NARRATIVE,
+                            value=(
+                                "아직은 비닐에 물방울이 맺히지 않았다. 태양열로 물이 증류되려면 시간이 꽤 걸릴 것이다.\n\n"
+                                "지금 계속 쳐다봐야 소용없다. 다른 지역을 탐색하고 **나중에 다시 와보자**."
+                            ),
+                        )
+                    ],
+                ),
+                Interaction(
+                    conditions=[Condition(type=ConditionType.CHAPTER_STATE_IS, target="distiller_state", value=1)],
+                    actions=[
+                        Action(
+                            type=ActionType.PRINT_NARRATIVE,
+                            value=(
+                                "비닐 안쪽에 맑은 물방울이 충분히 맺혀 있다. 비닐을 톡 쳐서 컵에 모았다.\n"
+                                "미지근하지만, 말라비틀어진 목을 적시는 데는 충분하다. 그 어떤 음료수보다 달콤하다."
+                            ),
+                        ),
+                        Action(type=ActionType.MODIFY_STAMINA, value=15),  # 체력 회복
+                        Action(type=ActionType.PRINT_SYSTEM, value="갈증이 해소되고 체력이 크게 회복되었습니다."),
+                        # 물을 마셨으므로 다시 빈 상태로 변경
+                        Action(type=ActionType.UPDATE_CHAPTER_STATE, value={"key": "distiller_state", "value": 0}),
+                    ],
+                ),
+            ],
+        ),
+        # 5. 야자수
         KeywordId.PALM_TREE: KeywordData(
             type=KeywordType.OBJECT,
             state=KeywordState.HIDDEN,
@@ -323,7 +360,7 @@ CH1_SCENE1_DATA = SceneData(
                 ),
             ],
         ),
-        # 8. 양자 가마솥 (최종 수리 대상)
+        # 6. 양자 가마솥 (최종 수리 대상)
         KeywordId.QUANTUM_CAULDRON: KeywordData(
             type=KeywordType.OBJECT,
             state=KeywordState.DISCOVERED,
@@ -438,6 +475,57 @@ CH1_SCENE1_DATA = SceneData(
                 ),
             ],
         ),
+        # --- 배경/분위기용 UNSEEN 오브젝트 ---
+        "그늘": KeywordData(
+            type=KeywordType.OBJECT,
+            state=KeywordState.UNSEEN,
+            description="생와 사의 경계선이다. 이 선 밖으로 나가는 순간, 나는 '잘 익은 대학원생 구이'가 될 것이다.",
+        ),
+        "아지랑이": KeywordData(
+            type=KeywordType.OBJECT,
+            state=KeywordState.UNSEEN,
+            description="지면의 열기 때문에 공기가 흐물거린다. 내 멘탈도 저렇게 녹아서 흐물거리고 있다.",
+        ),
+        "갈증": KeywordData(
+            type=KeywordType.OBJECT,
+            state=KeywordState.UNSEEN,
+            description="목구멍이 사포로 문지른 것처럼 까끌거린다. 얼음 가득 채운 아이스 아메리카노 한 잔만 마실 수 있다면 영혼이라도 팔겠다.",
+        ),
+        "파도": KeywordData(
+            type=KeywordType.OBJECT,
+            state=KeywordState.UNSEEN,
+            description="철썩거리는 소리가 시원하게 들리지만 속지 않는다. 저건 마시는 순간 요단강 익스프레스를 타게 해줄 소금물이다.",
+        ),
+        "베이스캠프": KeywordData(
+            type=KeywordType.OBJECT,
+            state=KeywordState.UNSEEN,
+            description="거창하게 베이스캠프라고 불렀지만, 사실 야자수 한 그루와 찌그러진 솥단지 하나가 전부다. 내 인생처럼 초라하다.",
+        ),
+        "직사광선": KeywordData(
+            type=KeywordType.OBJECT,
+            state=KeywordState.UNSEEN,
+            description="살인적인 햇빛이다. 자외선 차단제도 안 발랐는데. 피부 노화가 걱정되는 걸 보니 아직 살만한가 보다.",
+        ),
+        "동쪽": KeywordData(
+            type=KeywordType.OBJECT,
+            state=KeywordState.UNSEEN,
+            description="난파선 잔해가 보인다. 보물선이면 좋겠지만, 확률적으로 고철 덩어리일 가능성이 99.9%다.",
+        ),
+        "북쪽": KeywordData(
+            type=KeywordType.OBJECT,
+            state=KeywordState.UNSEEN,
+            description="숲 입구가 보인다. 그늘은 있겠지만 뱀이나 벌레가 우글거릴 것이다. 연구실이나 정글이나 생존 경쟁이 치열한 건 매한가지다.",
+        ),
+        "땀": KeywordData(
+            type=KeywordType.OBJECT,
+            state=KeywordState.UNSEEN,
+            description="비 오듯 쏟아진다. 내 몸의 수분이 실시간으로 증발하고 있다. 이대로라면 곧 건어물이 될 것이다.",
+        ),
+        "안전": KeywordData(
+            type=KeywordType.OBJECT,
+            state=KeywordState.UNSEEN,
+            description="'일단은' 안전하다는 말만큼 불안한 말도 없다. 언제 머리 위로 코코넛이 떨어져 뇌진탕에 걸릴지 모르는 일이다.",
+        ),
     },
     combinations=[
         # 페트병에 바닷물 담기
@@ -490,14 +578,27 @@ CH1_SCENE1_DATA = SceneData(
         # 바닷물이 없는 병으로 시도했을 때의 피드백
         Combination(
             targets=[KeywordId.VINYL, KeywordId.PLASTIC_BOTTLE],
-            conditions=[
-                Condition(type=ConditionType.STATE_IS, target="distiller_built", value=False),
-                Condition(type=ConditionType.STATE_IS, target="has_saltwater", value=False),
-            ],
             actions=[
                 Action(
                     type=ActionType.PRINT_NARRATIVE,
                     value="정수기를 만들려면 증발시킬 물이 필요하다. 페트병에 먼저 바닷물을 담아와야 한다.",
+                ),
+            ],
+        ),
+        # 바닷물 병 + 모래사장 (비닐 없이) -> 네거티브 피드백
+        Combination(
+            targets=[KeywordId.SEAWATER_BOTTLE, KeywordId.SANDY_BEACH],
+            conditions=[
+                Condition(type=ConditionType.HAS_ITEM, target=KeywordId.SEAWATER_BOTTLE),
+            ],
+            actions=[
+                Action(
+                    type=ActionType.PRINT_NARRATIVE,
+                    value=(
+                        "뜨거운 모래 위에 바닷물을 그냥 붓겠다고? 그건 **천일염**을 만드는 방법이지 식수를 얻는 방법이 아니다.\n\n"
+                        "순식간에 증발해 버릴 수증기를 포집하려면, 위를 덮을 장치가 반드시 필요하다.\n\n"
+                        "귀한 물을 땅에 버리는 멍청한 짓은 하지 말자."
+                    ),
                 ),
             ],
         ),

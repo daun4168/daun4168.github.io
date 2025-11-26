@@ -10,10 +10,10 @@ CH1_SCENE1_DATA = SceneData(
         '"헥헥... 죽는 줄 알았네."\n\n'
         "당신은 젖 먹던 힘을 다해 양자 가마솥을 거대한 야자수 그늘 아래로 옮기는 데 성공했습니다.\n\n"
         "기계도 나도 더 이상 직사광선에 고통받지 않아도 됩니다. 이곳은 이제 나의 훌륭한 베이스캠프입니다.\n\n"
-        "그늘 밖은 여전히 용광로 같습니다.\n\n"
         "동쪽 해변 끝에는 난파선 잔해가 아지랑이 너머로 보이고, 북쪽에는 숲 입구가 보입니다.\n\n"
         "바로 앞에는 파도에 떠밀려온 쓰레기 더미가 쌓여 있고, 시원한 바다와 따뜻한 모래사장이 펼쳐져 있습니다.\n\n"
-        "일단은 안전합니다. 이제 어떻게 할까요?"
+        "일단은 안전합니다. 하지만 긴장이 풀리자마자 극심한 갈증이 밀려옵니다.\n\n"
+        "땀을 너무 많이 흘렸습니다. 바닷물은 마실 수 없으니, 어떻게든 식수를 구할 방법을 찾는 게 급선무입니다."
     ),
     initial_state={
         "wreck_path_inspected": False,
@@ -24,6 +24,7 @@ CH1_SCENE1_DATA = SceneData(
         "vines_collected": False,
         "forest_inspected": False,
         "quantum_inspected": False,  # 양자 가마솥 처음 조사 여부
+        "distiller_built": False,  # 정수기 설치 여부
         # 양자 가마솥 최종 수리용 상태
         "quantum_all_parts_gathered": False,  # 석영 조각 / 충전 배터리 / 전선 끝 세 개를 모두 들고 양자 가마솥를 확인했는지
         "quantum_quartz_connected": False,  # 석영 조각 연결 여부
@@ -32,23 +33,97 @@ CH1_SCENE1_DATA = SceneData(
         "quantum_launched": False,  # 최종 발진 여부 (플래그용)
     },
     keywords={
-        # 1. 모래사장 (안전 지대)
-        KeywordId.SAND: KeywordData(
+        KeywordId.SAND: KeywordData(type=KeywordType.ALIAS, target=KeywordId.SANDY_BEACH),
+        # 1. 쓰레기 더미
+        KeywordId.TRASH_PILE: KeywordData(
             type=KeywordType.OBJECT,
             state=KeywordState.HIDDEN,
-            description="그늘 아래의 모래는 적당히 따뜻하다. 밖의 모래는 용암처럼 뜨겁겠지만, 여기선 찜질방 수준이다. 안전하다.",
+            interactions=[
+                Interaction(
+                    conditions=[Condition(type=ConditionType.STATE_IS, target="searched_trash", value=False)],
+                    actions=[
+                        Action(
+                            type=ActionType.PRINT_NARRATIVE,
+                            value=(
+                                "역겨운 냄새를 참으며 쓰레기를 뒤진다. 베이스캠프 바로 앞이라 안전하게 파밍할 수 있다.\n"
+                                "쓸만해 보이는 **[빈 페트병]**과 **[비닐]** 조각을 발견했다."
+                            ),
+                        ),
+                        Action(type=ActionType.MODIFY_STAMINA, value=-2),
+                        Action(
+                            type=ActionType.ADD_ITEM,
+                            value={"name": KeywordId.PLASTIC_BOTTLE, "description": "찌그러진 페트병이다."},
+                        ),
+                        Action(
+                            type=ActionType.ADD_ITEM,
+                            value={"name": KeywordId.VINYL, "description": "구멍 나지 않은 튼튼한 비닐이다."},
+                        ),
+                        Action(type=ActionType.UPDATE_STATE, value={"key": "searched_trash", "value": True}),
+                        Action(
+                            type=ActionType.UPDATE_STATE,
+                            value={"keyword": KeywordId.TRASH_PILE, "state": KeywordState.UNSEEN},
+                        ),
+                    ],
+                ),
+                Interaction(
+                    conditions=[Condition(type=ConditionType.STATE_IS, target="searched_trash", value=True)],
+                    actions=[
+                        Action(
+                            type=ActionType.PRINT_NARRATIVE,
+                            value="더 이상 쓸만한 건 없다.",
+                        )
+                    ],
+                ),
+            ],
         ),
-        # 2. 바다
+        # 2. 바다 (물 뜨기 기능 추가)
         KeywordId.SEA: KeywordData(
             type=KeywordType.OBJECT,
             state=KeywordState.HIDDEN,
+            interactions=[
+                Interaction(
+                    actions=[
+                        Action(
+                            type=ActionType.PRINT_NARRATIVE,
+                            value=(
+                                "보기만 해도 시원해 보인다. 하지만 이것은 염분 농도 3.5%의 수용액이다.\n\n"
+                                "마시면 삼투압 현상으로 탈수가 가속화된다는 건 상식이다.\n\n"
+                                "경험적으로든 이론적으로든, 다시는 입에 대고 싶지 않다."
+                            ),
+                        )
+                    ]
+                ),
+            ],
+        ),
+        # 3. 모래사장
+        KeywordId.SANDY_BEACH: KeywordData(
+            type=KeywordType.OBJECT,
+            state=KeywordState.HIDDEN,
             description=(
-                "보기만 해도 시원해 보인다. 하지만 이것은 염분 농도 3.5%의 수용액이다. "
-                "마시면 삼투압 현상으로 탈수가 가속화된다는 건 상식이다. "
-                "경험적으로든 이론적으로든, 다시는 입에 대고 싶지 않다."
+                "달궈진 모래의 열기는 식을 줄 모른다. 엉덩이를 붙이고 앉기 힘들 정도로 뜨겁다.\n\n"
+                "하지만 이 **고온**은 열역학적으로 볼 때 **증발**을 가속화하는 훌륭한 에너지원이다.\n\n"
+                "간이 정수기를 설치하기엔 더할 나위 없는 조건이다."
             ),
         ),
-        # 3. 난파선 잔해 (이동 포인트)
+        # 4. 정수기 제작
+        KeywordId.DISTILLER: KeywordData(
+            type=KeywordType.OBJECT,
+            state=KeywordState.INACTIVE,  # 설치 전에는 비활성 상태
+            description="모래 구덩이, 바닷물 병, 비닐 덮개로 만든 생존 과학의 결정체다. 비닐 안쪽에 맑은 물방울이 맺혀 뚝뚝 떨어진다.",
+            interactions=[
+                Interaction(
+                    actions=[
+                        Action(
+                            type=ActionType.PRINT_NARRATIVE,
+                            value="비닐에 맺힌 맑은 증류수를 조심스럽게 모아 마셨다. 미지근하지만, 그 어떤 음료수보다 달콤하다.",
+                        ),
+                        Action(type=ActionType.MODIFY_STAMINA, value=15),  # 체력 회복
+                        Action(type=ActionType.PRINT_SYSTEM, value="갈증이 해소되고 체력이 크게 회복되었습니다."),
+                    ]
+                )
+            ],
+        ),
+        # 5. 난파선 잔해 (이동 포인트)
         KeywordId.WRECKAGE: KeywordData(
             type=KeywordType.PORTAL,
             state=KeywordState.HIDDEN,
@@ -195,7 +270,60 @@ CH1_SCENE1_DATA = SceneData(
                 ),
             ],
         ),
-        # 7. 양자 가마솥 (최종 수리 대상)
+
+        # 7. 야자수
+        KeywordId.PALM_TREE: KeywordData(
+            type=KeywordType.OBJECT,
+            state=KeywordState.HIDDEN,
+            interactions=[
+                # 첫 조사
+                Interaction(
+                    conditions=[
+                        Condition(type=ConditionType.STATE_IS, target="tree_inspected", value=False),
+                        Condition(type=ConditionType.STATE_IS, target="coconut_obtained", value=False),
+                    ],
+                    actions=[
+                        Action(
+                            type=ActionType.PRINT_NARRATIVE,
+                            value=(
+                                "매우 높다. 올라가는 건 불가능하다. 위를 보니 **[코코넛]**이 매달려 있다.\n\n"
+                                "무언가 도구로 충격을 주면 떨어질지도 모른다."
+                            ),
+                        ),
+                        Action(type=ActionType.UPDATE_STATE, value={"key": "tree_inspected", "value": True}),
+                    ],
+                ),
+                # 이후: 발로 차기
+                Interaction(
+                    conditions=[
+                        Condition(type=ConditionType.STATE_IS, target="tree_inspected", value=True),
+                        Condition(type=ConditionType.STATE_IS, target="coconut_obtained", value=False),
+                    ],
+                    actions=[
+                        Action(
+                            type=ActionType.PRINT_NARRATIVE,
+                            value="야자수를 있는 힘껏 발로 찼다! ...꿈쩍도 안 한다. 발가락이 부러질 것 같다.",
+                        ),
+                        Action(type=ActionType.MODIFY_STAMINA, value=-3),
+                        Action(
+                            type=ActionType.PRINT_SYSTEM,
+                            value="[경고] 맨몸으로 도전하다 체력이 감소했습니다.",
+                        ),
+                    ],
+                ),
+                # 코코넛을 얻은 이후
+                Interaction(
+                    conditions=[Condition(type=ConditionType.STATE_IS, target="coconut_obtained", value=True)],
+                    actions=[
+                        Action(
+                            type=ActionType.PRINT_NARRATIVE,
+                            value="이미 코코넛을 따버린 야자수다. 꼭대기에는 거대한 잎사귀만 무심하게 흔들리고 있다.",
+                        )
+                    ],
+                ),
+            ],
+        ),
+        # 8. 양자 가마솥 (최종 수리 대상)
         KeywordId.QUANTUM_CAULDRON: KeywordData(
             type=KeywordType.OBJECT,
             state=KeywordState.DISCOVERED,
@@ -208,8 +336,8 @@ CH1_SCENE1_DATA = SceneData(
                         Action(
                             type=ActionType.PRINT_NARRATIVE,
                             value=(
-                                "그늘에 두니 엔진 열기가 조금 식은 것 같다. 하지만 여전히 작동 불능이다."
-                                "거대한 야자수 그늘 아래에 세워둔 양자 가마솥는, 겉보기엔 조용히 식어 가는 고철 덩어리일 뿐이다.\n"
+                                "그늘에 두니 엔진 열기가 조금 식은 것 같다. 하지만 여전히 작동 불능이다.\n\n"
+                                "거대한 야자수 그늘 아래에 세워둔 양자 가마솥는, 겉보기엔 조용히 식어 가는 고철 덩어리일 뿐이다.\n\n"
                                 "하지만, 한 번쯤은 더, 당신을 어디론가 데려다 줄 힘이 남아 있을지도 모른다."
                             ),
                         ),
@@ -219,64 +347,31 @@ CH1_SCENE1_DATA = SceneData(
                         ),
                     ],
                 ),
-                Interaction(
-                    conditions=[
-                        Condition(type=ConditionType.STATE_IS, target="quantum_all_parts_gathered", value=False),
-                        Condition(type=ConditionType.NOT_HAS_ITEM, target=KeywordId.QUARTZ_SHARD),
-                    ],
-                    actions=[
-                        Action(
-                            type=ActionType.PRINT_NARRATIVE,
-                            value=(
-                                "양자 가마솥의 패널을 열어 보니, 석영 발진기와 주 전원, 외부 통신선을 꽂아야 할 자리가 텅 비어 있다.\n"
-                                "이대로는 아무리 버튼을 눌러도, 그저 조용한 철제 상자일 뿐이다.\n\n"
-                                "이 기계를 다시 깨우려면, 석영 조각, 완전히 충전된 배터리, 그리고 안테나와 이어진 전선이 필요할 것 같다.\n\n"
-                            ),
-                        ),
-                        Action(
-                            type=ActionType.PRINT_SYSTEM,
-                            value="지금은 양자 가마솥를 고칠 재료가 부족합니다. 세 가지 부품을 모두 모아 다시 점검해 보세요.",
-                        ),
-                    ],
-                ),
                 # (1) 아직 quantum_all_parts_gathered == False 이고, 세 부품이 모두 없는/부족한 상태
                 Interaction(
                     conditions=[
                         Condition(type=ConditionType.STATE_IS, target="quantum_all_parts_gathered", value=False),
-                        Condition(type=ConditionType.NOT_HAS_ITEM, target=KeywordId.CHARGED_HEAVY_BATTERY),
+                        Condition(
+                            type=ConditionType.NOT_HAS_ALL_ITEMS,
+                            target=[
+                                KeywordId.CHARGED_HEAVY_BATTERY,
+                                KeywordId.QUARTZ_SHARD,
+                                KeywordId.LONG_WIRE_FREE_END,
+                            ],
+                        ),
                     ],
                     actions=[
                         Action(
                             type=ActionType.PRINT_NARRATIVE,
                             value=(
-                                "양자 가마솥의 패널을 열어 보니, 석영 발진기와 주 전원, 외부 통신선을 꽂아야 할 자리가 텅 비어 있다.\n"
+                                "양자 가마솥의 패널을 열어 보니, 석영 발진기와 주 전원, 외부 통신선을 꽂아야 할 자리가 텅 비어 있다.\n\n"
                                 "이대로는 아무리 버튼을 눌러도, 그저 조용한 철제 상자일 뿐이다.\n\n"
                                 "이 기계를 다시 깨우려면, 석영 조각, 완전히 충전된 배터리, 그리고 안테나와 이어진 전선이 필요할 것 같다.\n\n"
                             ),
                         ),
                         Action(
                             type=ActionType.PRINT_SYSTEM,
-                            value="지금은 양자 가마솥를 고칠 재료가 부족합니다. 세 가지 부품을 모두 모아 다시 점검해 보세요.",
-                        ),
-                    ],
-                ),
-                Interaction(
-                    conditions=[
-                        Condition(type=ConditionType.STATE_IS, target="quantum_all_parts_gathered", value=False),
-                        Condition(type=ConditionType.NOT_HAS_ITEM, target=KeywordId.LONG_WIRE_FREE_END),
-                    ],
-                    actions=[
-                        Action(
-                            type=ActionType.PRINT_NARRATIVE,
-                            value=(
-                                "양자 가마솥의 패널을 열어 보니, 석영 발진기와 주 전원, 외부 통신선을 꽂아야 할 자리가 텅 비어 있다.\n"
-                                "이대로는 아무리 버튼을 눌러도, 그저 조용한 철제 상자일 뿐이다.\n\n"
-                                "이 기계를 다시 깨우려면, 석영 조각, 완전히 충전된 배터리, 그리고 안테나와 이어진 전선이 필요할 것 같다.\n\n"
-                            ),
-                        ),
-                        Action(
-                            type=ActionType.PRINT_SYSTEM,
-                            value="지금은 양자 가마솥를 고칠 재료가 부족합니다. 세 가지 부품을 모두 모아 다시 점검해 보세요.",
+                            value="지금은 양자 가마솥을 고칠 재료가 부족합니다. 세 가지 부품을 모두 모아 다시 점검해 보세요.",
                         ),
                     ],
                 ),
@@ -295,7 +390,7 @@ CH1_SCENE1_DATA = SceneData(
                                 "패널을 열어 내부를 확인하는 순간, 배낭 속에서 딸깍딸깍 서로 부딪히는 세 가지 부품의 감촉이 느껴진다.\n\n"
                                 "석영 조각, 완전히 충전된 산업용 배터리, 그리고 능선 위 안테나와 이어질 기다란 전선 끝.\n"
                                 "이 섬 구석구석에서 모아 온 조각들이, 이제 눈앞에서 하나의 퍼즐처럼 제자리를 기다리고 있다.\n\n"
-                                "이 정도면… 정말로 양자 가마솥를 고칠 준비가 된 것 같다."
+                                "이 정도면… 정말로 양자 가마솥을 고칠 준비가 된 것 같다."
                             ),
                         ),
                         Action(
@@ -335,7 +430,7 @@ CH1_SCENE1_DATA = SceneData(
                         Action(
                             type=ActionType.PRINT_NARRATIVE,
                             value=(
-                                "지금 이 양자 가마솥는 더 이상 ‘출발 전’ 상태가 아니다.\n"
+                                "지금 이 양자 가마솥는 더 이상 ‘출발 전’ 상태가 아니다.\n\n"
                                 "당신이 내린 마지막 선택은 이미 어딘가로 향해 버렸고, 이곳의 시간은 조용히 흘러갔을 뿐이다."
                             ),
                         )
@@ -343,111 +438,129 @@ CH1_SCENE1_DATA = SceneData(
                 ),
             ],
         ),
-        # 8. 쓰레기 더미
-        KeywordId.TRASH_PILE: KeywordData(
-            type=KeywordType.OBJECT,
-            state=KeywordState.HIDDEN,
-            interactions=[
-                Interaction(
-                    conditions=[Condition(type=ConditionType.STATE_IS, target="searched_trash", value=False)],
-                    actions=[
-                        Action(
-                            type=ActionType.PRINT_NARRATIVE,
-                            value=(
-                                "역겨운 냄새를 참으며 쓰레기를 뒤진다. 베이스캠프 바로 앞이라 안전하게 파밍할 수 있다.\n"
-                                "쓸만해 보이는 **[빈 페트병]**과 **[비닐]** 조각을 발견했다."
-                            ),
-                        ),
-                        Action(type=ActionType.MODIFY_STAMINA, value=-3),
-                        Action(
-                            type=ActionType.ADD_ITEM,
-                            value={"name": KeywordId.PLASTIC_BOTTLE, "description": "찌그러진 페트병이다."},
-                        ),
-                        Action(
-                            type=ActionType.ADD_ITEM,
-                            value={"name": KeywordId.VINYL, "description": "구멍 나지 않은 튼튼한 비닐이다."},
-                        ),
-                        Action(type=ActionType.UPDATE_STATE, value={"key": "searched_trash", "value": True}),
-                    ],
-                ),
-                Interaction(
-                    actions=[
-                        Action(
-                            type=ActionType.PRINT_NARRATIVE,
-                            value="더 이상 쓸만한 건 없다.",
-                        )
-                    ]
-                ),
-            ],
-        ),
-        # 9. 야자수
-        KeywordId.PALM_TREE: KeywordData(
-            type=KeywordType.OBJECT,
-            state=KeywordState.HIDDEN,
-            interactions=[
-                # 첫 조사
-                Interaction(
-                    conditions=[Condition(type=ConditionType.STATE_IS, target="tree_inspected", value=False)],
-                    actions=[
-                        Action(
-                            type=ActionType.PRINT_NARRATIVE,
-                            value=(
-                                "매우 높다. 올라가는 건 불가능하다. 위를 보니 **[코코넛]**이 매달려 있다.\n"
-                                "무언가 도구로 충격을 주면 떨어질지도 모른다."
-                            ),
-                        ),
-                        Action(type=ActionType.UPDATE_STATE, value={"key": "tree_inspected", "value": True}),
-                    ],
-                ),
-                # 이후: 발로 차기
-                Interaction(
-                    actions=[
-                        Action(
-                            type=ActionType.PRINT_NARRATIVE,
-                            value="야자수를 있는 힘껏 발로 찼다! ...꿈쩍도 안 한다. 발가락이 부러질 것 같다.",
-                        ),
-                        Action(type=ActionType.MODIFY_STAMINA, value=-3),
-                        Action(
-                            type=ActionType.PRINT_SYSTEM,
-                            value="[경고] 맨몸으로 도전하다 체력이 감소했습니다.",
-                        ),
-                    ]
-                ),
-            ],
-        ),
     },
     combinations=[
-        # 숲 입구 뚫기: 소방 도끼 + 숲 입구
+        # 페트병에 바닷물 담기
         Combination(
-            targets=[KeywordId.FOREST_ENTRY, KeywordId.FIRE_AXE],
+            targets=[KeywordId.SEA, KeywordId.PLASTIC_BOTTLE],
+            conditions=[
+                Condition(type=ConditionType.HAS_ITEM, target=KeywordId.PLASTIC_BOTTLE),
+            ],
             actions=[
                 Action(
                     type=ActionType.PRINT_NARRATIVE,
-                    value=(
-                        "손에 묵직한 **[소방 도끼]**를 쥐었다. 붉은 날이 햇빛을 받아 번뜩인다.\n\n"
-                        '"길이 없으면 만들면 그만이지."\n\n'
-                        "기합과 함께 도끼를 휘둘렀다. *퍼억! 툭!* 질긴 덩굴들이 허무하게 잘려 나간다.\n"
-                        "몇 번의 도끼질 끝에, 사람이 지나갈 만한 통로가 확보되었다."
-                    ),
+                    value="빈 페트병을 바닷물에 푹 담가 가득 채웠다. 묵직하다.\n\n그냥 마실 수는 없지만, 정수할 방법이 있을 것이다.",
                 ),
-                Action(type=ActionType.UPDATE_STATE, value={"key": "forest_cleared", "value": True}),
+                Action(type=ActionType.REMOVE_ITEM, value=KeywordId.PLASTIC_BOTTLE),  # 빈 병 제거
                 Action(
-                    type=ActionType.PRINT_SYSTEM,
-                    value="이제 **[숲 입구]**로 진입할 수 있습니다.",
+                    type=ActionType.ADD_ITEM,
+                    value={
+                        "name": KeywordId.SEAWATER_BOTTLE,  # "바닷물이 담긴 페트병"
+                        "description": "바닷물이 찰랑거리는 페트병이다. 뚜껑을 열면 짠 냄새가 진동한다. 그냥 마시면 탈수 증상이 올 것이다.",
+                    },
                 ),
             ],
         ),
-        # 스패너 + 야자수 → 코코넛 떨어뜨리기
+        # 비닐 + 바닷물이 담긴 페트병 = 간이 정수기 키트 제작 (인벤토리 아이템)
         Combination(
-            targets=[KeywordId.PALM_TREE, KeywordId.SPANNER],
+            targets=[KeywordId.VINYL, KeywordId.SEAWATER_BOTTLE],
             conditions=[
-                Condition(type=ConditionType.STATE_IS, target="coconut_obtained", value=False),
+                Condition(type=ConditionType.HAS_ITEM, target=KeywordId.VINYL),
+                Condition(type=ConditionType.HAS_ITEM, target=KeywordId.SEAWATER_BOTTLE),
             ],
             actions=[
                 Action(
                     type=ActionType.PRINT_NARRATIVE,
                     value=(
-                        "**[스패너]**를 던져 **[코코넛]**을 정확히 맞췄다.\n툭, 하고 열매가 떨어진다. 훌륭한 투구였다."
+                        "비닐과 바닷물이 든 페트병을 챙겨서 정수기를 만들 준비를 마쳤다.\n\n"
+                        "이제 볕이 좋은 곳에 설치하기만 하면 된다."
+                    ),
+                ),
+                Action(type=ActionType.REMOVE_ITEM, value=KeywordId.VINYL),
+                Action(type=ActionType.REMOVE_ITEM, value=KeywordId.SEAWATER_BOTTLE),
+                Action(
+                    type=ActionType.ADD_ITEM,
+                    value={
+                        "name": KeywordId.SIMPLE_DISTILLER_KIT,  # const.py에 추가 필요
+                        "description": "간이 정수기를 설치할 수 있는 재료 모음이다. (비닐 + 바닷물 병)",
+                    },
+                ),
+            ],
+        ),
+        # 바닷물이 없는 병으로 시도했을 때의 피드백
+        Combination(
+            targets=[KeywordId.VINYL, KeywordId.PLASTIC_BOTTLE],
+            conditions=[
+                Condition(type=ConditionType.STATE_IS, target="distiller_built", value=False),
+                Condition(type=ConditionType.STATE_IS, target="has_saltwater", value=False),
+            ],
+            actions=[
+                Action(
+                    type=ActionType.PRINT_NARRATIVE,
+                    value="정수기를 만들려면 증발시킬 물이 필요하다. 페트병에 먼저 바닷물을 담아와야 한다.",
+                ),
+            ],
+        ),
+        # 6) [신규] 간이 정수기 키트 + 모래 = 정수기 설치
+        Combination(
+            targets=[KeywordId.SIMPLE_DISTILLER_KIT, KeywordId.SANDY_BEACH],
+            conditions=[
+                Condition(type=ConditionType.HAS_ITEM, target=KeywordId.SIMPLE_DISTILLER_KIT),
+                Condition(type=ConditionType.STATE_IS, target="distiller_built", value=False),
+            ],
+            actions=[
+                Action(
+                    type=ActionType.PRINT_NARRATIVE,
+                    value=(
+                        "양지바른 모래사장에 구덩이를 파고, 바닷물이 든 페트병을 가운데 두었다.\n\n"
+                        "그 위를 비닐로 덮고 가장자리를 모래로 덮어 밀봉한 뒤, 중앙에 작은 돌을 올렸다.\n\n"
+                        "태양열 증류기가 완성되었다! 이제 기다리면 식수가 모일 것이다."
+                    ),
+                ),
+                Action(type=ActionType.REMOVE_ITEM, value=KeywordId.SIMPLE_DISTILLER_KIT),
+                Action(type=ActionType.UPDATE_STATE, value={"key": "distiller_built", "value": True}),
+                Action(type=ActionType.DISCOVER_KEYWORD, value=KeywordId.DISTILLER),
+                Action(
+                    type=ActionType.PRINT_SYSTEM,
+                    value="베이스캠프에 **[정수기]**가 설치되었습니다. 이제 물을 마실 수 있습니다.",
+                ),
+            ],
+        ),
+        # 1) [수정] 숲 입구 + 소방 도끼 = 덩굴 획득 & 길 개척
+        Combination(
+            targets=[KeywordId.FOREST_ENTRY, KeywordId.FIRE_AXE],
+            conditions=[Condition(type=ConditionType.STATE_IS, target="forest_cleared", value=False)],
+            actions=[
+                Action(
+                    type=ActionType.PRINT_NARRATIVE,
+                    value=(
+                        "**[소방 도끼]**를 휘둘러 억센 덩굴들을 베어냈다. *퍼억! 툭!*\n\n"
+                        "길을 막고 있던 덩굴들이 잘려나가며 사람이 지나갈 만한 통로가 확보되었다.\n\n"
+                        "바닥에 떨어진 **[덩굴 줄기]**는 쓸만해 보여서 몇 개 챙겼다."
+                    ),
+                ),
+                Action(
+                    type=ActionType.ADD_ITEM,
+                    value={
+                        "name": KeywordId.VINE_STEM,
+                        "description": "단단하고 질긴 덩굴 줄기다. 뭔가를 묶거나 임시 로프로 쓰기 좋다.",
+                    },
+                ),
+                Action(type=ActionType.UPDATE_STATE, value={"key": "forest_cleared", "value": True}),
+                Action(type=ActionType.UPDATE_STATE, value={"key": "vines_collected", "value": True}),
+                Action(type=ActionType.PRINT_SYSTEM, value="이제 **[숲 입구]**로 진입할 수 있습니다."),
+            ],
+        ),
+        # 2) [수정] 야자수 + 소방 도끼 = 코코넛 획득
+        Combination(
+            targets=[KeywordId.PALM_TREE, KeywordId.FIRE_AXE],
+            conditions=[Condition(type=ConditionType.STATE_IS, target="coconut_obtained", value=False)],
+            actions=[
+                Action(
+                    type=ActionType.PRINT_NARRATIVE,
+                    value=(
+                        "**[소방 도끼]**로 야자수 기둥을 힘껏 내리찍었다. *쾅!* \n\n"
+                        "나무 전체가 휘청거리더니, 꼭대기에서 **[코코넛]**이 툭 하고 떨어졌다."
                     ),
                 ),
                 Action(
@@ -455,10 +568,26 @@ CH1_SCENE1_DATA = SceneData(
                     value={"name": KeywordId.COCONUT, "description": "단단한 껍질의 열매."},
                 ),
                 Action(type=ActionType.UPDATE_STATE, value={"key": "coconut_obtained", "value": True}),
+                Action(
+                    type=ActionType.UPDATE_STATE, value={"keyword": KeywordId.PALM_TREE, "state": KeywordState.UNSEEN}
+                ),
+            ],
+        ),
+        # 3) [수정] 야자수 + 스패너 = 네거티브 피드백 (획득 불가)
+        Combination(
+            targets=[KeywordId.PALM_TREE, KeywordId.SPANNER],
+            actions=[
+                Action(
+                    type=ActionType.PRINT_NARRATIVE,
+                    value=(
+                        "**[스패너]**를 던져 보았지만, 야자수 껍질에 흠집만 내고 튕겨 나왔다.\n\n"
+                        "이 정도 충격으로는 열매가 떨어지지 않는다. 더 무겁고 강력한 도구가 필요하다."
+                    ),
+                ),
             ],
         ),
         Combination(
-            targets=[KeywordId.PALM_TREE, KeywordId.SPANNER],
+            targets=[KeywordId.PALM_TREE, KeywordId.FIRE_AXE],
             conditions=[
                 Condition(type=ConditionType.STATE_IS, target="coconut_obtained", value=True),
             ],

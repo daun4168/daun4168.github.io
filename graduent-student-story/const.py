@@ -39,17 +39,13 @@ class KeywordId(StrEnum):
     KEY = "열쇠"
     CLEANING_CABINET = "청소도구함"
     BROOM = "빗자루"
-
     WALL = "벽"
     WALL_ALIAS = "벽면"
     MEMO = "메모"
     COMPUTER = "컴퓨터"
     ORDER_LIST = "주문 내역"
-
-    MYSTERY_LIQUID = "의문의 액체"
     CABINET = "시약장"
     FLOOR = "바닥"
-
     ETHANOL = "에탄올"
 
     # CH0_SCENE2
@@ -66,15 +62,17 @@ class KeywordId(StrEnum):
     # CH1_SCENE1
     WRECKAGE = "난파선 잔해"
     FOREST_ENTRY = "숲 입구"
-    SHADE = "그늘막"
     PALM_TREE = "야자수"
     TRASH_PILE = "쓰레기 더미"
     COCONUT = "코코넛"
     PLASTIC_BOTTLE = "빈 페트병"
+    SEAWATER_BOTTLE = "바닷물이 담긴 페트병"
+    SIMPLE_DISTILLER_KIT = "간이 정수기 키트"
+    DISTILLER = "정수기"
     VINYL = "비닐"
-    WIRE = "전선"
 
     # CH1_SCENE2
+    WIRE = "전선"
     RUSTY_BUCKET = "녹슨 양동이"
     BEACH = "해변"
     BASECAMP = "베이스캠프"
@@ -322,6 +320,7 @@ class KeywordState(StrEnum):
 class ConditionType(StrEnum):
     HAS_ITEM = "has_item"
     NOT_HAS_ITEM = "not_has_item"
+    NOT_HAS_ALL_ITEMS = "not_has_all_items"
     STATE_IS = "state_is"
     STATE_NOT = "state_not"
     CHAPTER_STATE_IS = "chapter_state_is"

@@ -33,6 +33,15 @@ class NotHasItemHandler(ConditionHandler):
         return not scene.inventory.has(target)
 
 
+class NotHasAllItemsHandler(ConditionHandler):
+    def check(self, scene, target, value) -> bool:
+        has_all = True
+        for item in target:
+            if scene.inventory.has(item):
+                has_all = False
+        return has_all
+
+
 class StateIsHandler(ConditionHandler):
     def check(self, scene, target, value) -> bool:
         return scene.state.get(target) == value
@@ -244,6 +253,7 @@ class UpdateItemDataHandler(ActionHandler):
 CONDITION_HANDLERS = {
     ConditionType.HAS_ITEM: HasItemHandler(),
     ConditionType.NOT_HAS_ITEM: NotHasItemHandler(),
+    ConditionType.NOT_HAS_ALL_ITEMS: NotHasAllItemsHandler(),
     ConditionType.STATE_IS: StateIsHandler(),
     ConditionType.STATE_NOT: StateNotHandler(),
     ConditionType.STAMINA_MIN: StaminaMinHandler(),

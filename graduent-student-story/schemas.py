@@ -8,7 +8,7 @@ from pydantic import BaseModel, Field
 # (기존 Condition, Action, Interaction, KeywordData, Combination 유지)
 class Condition(BaseModel):
     type: ConditionType
-    target: str
+    target: str | list[str] = None
     value: Any = None
 
 

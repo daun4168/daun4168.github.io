@@ -116,11 +116,17 @@ CH0_SCENE1_DATA = SceneData(
                             },
                         ),
                         Action(type=ActionType.UPDATE_STATE, value={"key": "trash_step", "value": 3}),
+                    ],
+                ),
+                Interaction(
+                    conditions=[Condition(type=ConditionType.STATE_IS, target="trash_step", value=3)],
+                    actions=[
                         Action(
                             type=ActionType.UPDATE_STATE,
                             value={"keyword": KeywordId.TRASH_CAN, "state": KeywordState.UNSEEN},
                         ),
                     ],
+                    continue_matching=True,
                 ),
                 # [Step 3] 완료: 텅 빔
                 Interaction(
@@ -171,6 +177,16 @@ CH0_SCENE1_DATA = SceneData(
                     conditions=[Condition(type=ConditionType.STATE_IS, target="box_opened", value=True)],
                     actions=[
                         Action(
+                            type=ActionType.UPDATE_STATE,
+                            value={"keyword": KeywordId.BOX, "state": KeywordState.UNSEEN},
+                        ),
+                    ],
+                    continue_matching=True,
+                ),
+                Interaction(
+                    conditions=[Condition(type=ConditionType.STATE_IS, target="box_opened", value=True)],
+                    actions=[
+                        Action(
                             type=ActionType.PRINT_NARRATIVE,
                             value="이미 내용물을 꺼내고 남은 빈 박스다. 바닥에 뒹구는 테이프 조각들이 왠지 처량해 보인다.",
                         )
@@ -202,11 +218,17 @@ CH0_SCENE1_DATA = SceneData(
                             },
                         ),
                         Action(type=ActionType.UPDATE_STATE, value={"key": "key_found", "value": True}),
+                    ],
+                ),
+                Interaction(
+                    conditions=[Condition(type=ConditionType.STATE_IS, target="key_found", value=True)],
+                    actions=[
                         Action(
                             type=ActionType.UPDATE_STATE,
                             value={"keyword": KeywordId.LAB_COAT, "state": KeywordState.UNSEEN},
                         ),
                     ],
+                    continue_matching=True,
                 ),
                 Interaction(
                     conditions=[Condition(type=ConditionType.STATE_IS, target="key_found", value=True)],
@@ -239,6 +261,16 @@ CH0_SCENE1_DATA = SceneData(
                 ),
                 Interaction(
                     conditions=[Condition(type=ConditionType.STATE_IS, target="cleaning_cabinet_opened", value=True)],
+                    actions=[
+                        Action(
+                            type=ActionType.UPDATE_STATE,
+                            value={"keyword": KeywordId.CLEANING_CABINET, "state": KeywordState.UNSEEN},
+                            continue_matching=True,
+                        ),
+                    ],
+                ),
+                Interaction(
+                    conditions=[Condition(type=ConditionType.STATE_IS, target="cleaning_cabinet_opened", value=True)],
                     actions=[Action(type=ActionType.PRINT_NARRATIVE, value="이미 열려있다. 안은 텅 비었다.")],
                 ),
             ],
@@ -260,11 +292,17 @@ CH0_SCENE1_DATA = SceneData(
                             type=ActionType.DISCOVER_KEYWORD,
                             value=KeywordId.MEMO,
                         ),
+                    ],
+                ),
+                Interaction(
+                    conditions=[Condition(type=ConditionType.STATE_IS, target="wall_inspected", value=True)],
+                    actions=[
                         Action(
                             type=ActionType.UPDATE_STATE,
                             value={"keyword": KeywordId.WALL, "state": KeywordState.UNSEEN},
                         ),
                     ],
+                    continue_matching=True,
                 ),
                 Interaction(
                     conditions=[Condition(type=ConditionType.STATE_IS, target="wall_inspected", value=True)],
@@ -389,6 +427,15 @@ CH0_SCENE1_DATA = SceneData(
                     conditions=[Condition(type=ConditionType.STATE_IS, target="cabinet_unlocked", value=True)],
                     actions=[
                         Action(
+                            type=ActionType.UPDATE_STATE,
+                            value={"keyword": KeywordId.CABINET, "state": KeywordState.UNSEEN},
+                        ),
+                    ],
+                ),
+                Interaction(
+                    conditions=[Condition(type=ConditionType.STATE_IS, target="cabinet_unlocked", value=True)],
+                    actions=[
+                        Action(
                             type=ActionType.PRINT_NARRATIVE,
                             value="시약장 문이 열려있다. 안에는 위험해 보이는 약품들과 컵라면이 위태롭게 공존하고 있다.",
                         )
@@ -484,10 +531,6 @@ CH0_SCENE1_DATA = SceneData(
                 ),
                 Action(type=ActionType.DISCOVER_KEYWORD, value=KeywordId.LAB_COAT),
                 Action(type=ActionType.UPDATE_STATE, value={"key": "box_opened", "value": True}),
-                Action(
-                    type=ActionType.UPDATE_STATE,
-                    value={"keyword": KeywordId.BOX, "state": KeywordState.UNSEEN},
-                ),
             ],
         ),
         Combination(
@@ -507,10 +550,6 @@ CH0_SCENE1_DATA = SceneData(
                 ),
                 Action(type=ActionType.UPDATE_STATE, value={"key": "cleaning_cabinet_opened", "value": True}),
                 Action(type=ActionType.REMOVE_ITEM, value=KeywordId.KEY),
-                Action(
-                    type=ActionType.UPDATE_STATE,
-                    value={"keyword": KeywordId.CLEANING_CABINET, "state": KeywordState.UNSEEN},
-                ),
             ],
         ),
         # [네거티브 피드백] 스패너로 청소도구함 강제 개방 시도
@@ -561,9 +600,6 @@ CH0_SCENE1_DATA = SceneData(
                     },
                 ),
                 Action(type=ActionType.UPDATE_STATE, value={"key": "cabinet_unlocked", "value": True}),
-                Action(
-                    type=ActionType.UPDATE_STATE, value={"keyword": KeywordId.CABINET, "state": KeywordState.UNSEEN}
-                ),
                 Action(
                     type=ActionType.UPDATE_STATE, value={"keyword": KeywordId.COMPUTER, "state": KeywordState.UNSEEN}
                 ),

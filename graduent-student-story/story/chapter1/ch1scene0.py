@@ -151,6 +151,16 @@ CH1_SCENE0_DATA = SceneData(
                     conditions=[Condition(type=ConditionType.STATE_IS, target="sand_step", value=3)],
                     actions=[
                         Action(
+                            type=ActionType.UPDATE_STATE,
+                            value={"keyword": KeywordId.SANDY_BEACH, "state": KeywordState.UNSEEN},
+                        ),
+                    ],
+                    continue_maching=True,
+                ),
+                Interaction(
+                    conditions=[Condition(type=ConditionType.STATE_IS, target="sand_step", value=3)],
+                    actions=[
+                        Action(
                             type=ActionType.PRINT_NARRATIVE,
                             value="이미 **[안테나]**를 찾았다. 굳이 이 지옥불 같은 모래사장을 더 뒤지고 싶지는 않다.",
                         ),
@@ -185,10 +195,16 @@ CH1_SCENE0_DATA = SceneData(
                             value="[경고] 짠물을 마셔 체력이 감소했습니다. 갈증이 더 심해집니다.",
                         ),
                         Action(type=ActionType.UPDATE_STATE, value={"key": "sea_step", "value": 2}),
+                    ],
+                ),
+                Interaction(
+                    conditions=[Condition(type=ConditionType.STATE_IS, target="sea_step", value=2)],
+                    actions=[
                         Action(
                             type=ActionType.UPDATE_STATE, value={"keyword": KeywordId.SEA, "state": KeywordState.UNSEEN}
                         ),
                     ],
+                    continue_maching=True,
                 ),
                 Interaction(
                     conditions=[Condition(type=ConditionType.STATE_IS, target="sea_step", value=2)],
@@ -302,9 +318,6 @@ CH1_SCENE0_DATA = SceneData(
                 ),
                 Action(type=ActionType.UPDATE_STATE, value={"key": "antenna_found", "value": True}),
                 Action(type=ActionType.UPDATE_STATE, value={"key": "sand_step", "value": 3}),
-                Action(
-                    type=ActionType.UPDATE_STATE, value={"keyword": KeywordId.SANDY_BEACH, "state": KeywordState.UNSEEN}
-                ),
             ],
         ),
         # [수정] 안테나 + 통신기 = 이벤트 발생

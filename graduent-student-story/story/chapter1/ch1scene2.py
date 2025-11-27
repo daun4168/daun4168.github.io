@@ -22,6 +22,15 @@ CH1_SCENE2_DATA = SceneData(
         "bucket_found": False,  # [신규] 양동이 발견 여부
         "floor_wires_collected": False,  # 바닥 전선에서 구리선을 이미 챙겼는지 여부
     },
+    on_enter_actions=[
+        Action(
+            type=ActionType.ADD_ITEM,
+            value={
+                "name": "주기율표",
+                "description": '<img src="assets/chapter1/periodic_table.png" alt="주기율표" width="540">',
+            },
+        ),
+    ],
     keywords={
         KeywordId.BASECAMP: KeywordData(type=KeywordType.ALIAS, target=KeywordId.BEACH),
         KeywordId.CABINET: KeywordData(type=KeywordType.ALIAS, target=KeywordId.EMERGENCY_CABINET),

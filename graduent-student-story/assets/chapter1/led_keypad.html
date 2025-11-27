@@ -1,0 +1,72 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 480" width="320" height="480" role="img" aria-label="상단에 초록, 살구, 하늘, 노랑색 LED가 순서대로 박혀있는 낡은 금속 키패드"> <title>빈티지 컬러 시퀀스 키패드</title> <defs> <linearGradient id="worn-metal-grad" x1="0%" y1="0%" x2="100%" y2="100%"> <stop offset="0%" style="stop-color:#7a7a7a;stop-opacity:1" /> <stop offset="25%" style="stop-color:#9c9c9c;stop-opacity:1" /> <stop offset="50%" style="stop-color:#858585;stop-opacity:1" /> <stop offset="75%" style="stop-color:#6e6e6e;stop-opacity:1" /> <stop offset="100%" style="stop-color:#555555;stop-opacity:1" /> </linearGradient> <linearGradient id="button-worn-grad" x1="0%" y1="0%" x2="0%" y2="100%"> <stop offset="0%" style="stop-color:#c7c7c7;stop-opacity:1" /> <stop offset="10%" style="stop-color:#e0e0e0;stop-opacity:1" /> <stop offset="90%" style="stop-color:#a8a8a8;stop-opacity:1" /> <stop offset="100%" style="stop-color:#8a8a8a;stop-opacity:1" /> </linearGradient>
+
+
+    <radialGradient id="screw-grad" cx="50%" cy="50%" r="50%" fx="50%" fy="50%">
+  <stop offset="0%" style="stop-color:#999;stop-opacity:1" />
+  <stop offset="100%" style="stop-color:#444;stop-opacity:1" />
+</radialGradient>
+
+<filter id="led-glow" x="-50%" y="-50%" width="200%" height="200%">
+  <feGaussianBlur stdDeviation="4" result="blur"/>
+  <feMerge>
+    <feMergeNode in="blur"/>
+    <feMergeNode in="SourceGraphic"/>
+  </feMerge>
+</filter>
+
+<filter id="inset-shadow">
+  <feOffset dx="2" dy="4"/>
+  <feGaussianBlur stdDeviation="4" result="offset-blur"/>
+  <feComposite operator="out" in="SourceGraphic" in2="offset-blur" result="inverse"/>
+  <feFlood flood-color="black" flood-opacity="0.4" result="color"/>
+  <feComposite operator="in" in="color" in2="inverse" result="shadow"/>
+  <feComposite operator="over" in="shadow" in2="SourceGraphic"/>
+</filter>
+
+<filter id="engraved-text">
+  <feOffset dx="0" dy="1" in="SourceAlpha" result="shadowOffset" />
+  <feGaussianBlur stdDeviation="0.5" in="shadowOffset" result="shadowBlur" />
+  <feFlood flood-color="rgba(255,255,255,0.4)" result="highlightColor" />
+  <feComposite in="highlightColor" in2="shadowBlur" operator="in" result="highlight" />
+  <feOffset dx="0" dy="-1" in="SourceAlpha" result="highlightOffset" />
+  <feGaussianBlur stdDeviation="0.5" in="highlightOffset" result="highlightBlur" />
+  <feFlood flood-color="rgba(0,0,0,0.6)" result="shadowColor" />
+  <feComposite in="shadowColor" in2="highlightBlur" operator="in" result="shadow" />
+  <feMerge>
+    <feMergeNode in="shadow" />
+    <feMergeNode in="highlight" />
+    <feMergeNode in="SourceGraphic" />
+  </feMerge>
+</filter>
+
+<g id="screw">
+  <circle r="7" fill="url(#screw-grad)" stroke="#333" stroke-width="1"/>
+  <rect x="-5" y="-1" width="10" height="2" fill="#222" transform="rotate(45)"/>
+</g>
+
+    </defs>
+
+<rect x="10" y="10" width="300" height="460" rx="15" ry="15" fill="url(#worn-metal-grad)" stroke="#444" stroke-width="3" filter="url(#inset-shadow)"/>
+
+<use href="#screw" x="35" y="35" /> <use href="#screw" x="285" y="35" transform="rotate(90 285 35)"/> <use href="#screw" x="35" y="445" transform="rotate(180 35 445)"/> <use href="#screw" x="285" y="445" transform="rotate(-45 285 445)"/>
+
+<g transform="translate(40, 60)"> <rect x="0" y="0" width="240" height="60" rx="8" fill="#2a2a2a" stroke="#1a1a1a" stroke-width="2"/> <rect x="2" y="2" width="236" height="56" rx="6" fill="none" stroke="#000" stroke-width="2" opacity="0.3"/>
+
+
+    <g transform="translate(70, -25)">
+   <circle cx="0" cy="0" r="10" fill="#C3D9A5" stroke="#9ab07e" stroke-width="2" filter="url(#led-glow)"/>
+  <circle cx="0" cy="0" r="3" fill="white" opacity="0.5"/> <circle cx="35" cy="0" r="10" fill="#F4C7AB" stroke="#c79c85" stroke-width="2" filter="url(#led-glow)"/>
+  <circle cx="35" cy="0" r="3" fill="white" opacity="0.5"/>
+
+  <circle cx="70" cy="0" r="10" fill="#9FB9D9" stroke="#7a92b0" stroke-width="2" filter="url(#led-glow)"/>
+  <circle cx="70" cy="0" r="3" fill="white" opacity="0.5"/>
+
+  <circle cx="105" cy="0" r="10" fill="#F8D775" stroke="#bda35e" stroke-width="2" filter="url(#led-glow)"/>
+  <circle cx="105" cy="0" r="3" fill="white" opacity="0.5"/>
+</g>
+
+    </g>
+
+<g transform="translate(40, 140)" font-family="sans-serif, Arial" font-weight="bold" font-size="28" text-anchor="middle" dominant-baseline="central"> <g stroke="#555" stroke-width="2"> <rect x="0" y="0" width="70" height="60" rx="6" fill="url(#button-worn-grad)" /> <rect x="85" y="0" width="70" height="60" rx="6" fill="url(#button-worn-grad)" /> <rect x="170" y="0" width="70" height="60" rx="6" fill="url(#button-worn-grad)" /> <rect x="0" y="80" width="70" height="60" rx="6" fill="url(#button-worn-grad)" /> <rect x="85" y="80" width="70" height="60" rx="6" fill="url(#button-worn-grad)" /> <rect x="170" y="80" width="70" height="60" rx="6" fill="url(#button-worn-grad)" /> <rect x="0" y="160" width="70" height="60" rx="6" fill="url(#button-worn-grad)" /> <rect x="85" y="160" width="70" height="60" rx="6" fill="url(#button-worn-grad)" /> <rect x="170" y="160" width="70" height="60" rx="6" fill="url(#button-worn-grad)" /> <rect x="0" y="240" width="70" height="60" rx="6" fill="url(#button-worn-grad)" /> <rect x="85" y="240" width="70" height="60" rx="6" fill="url(#button-worn-grad)" /> <rect x="170" y="240" width="70" height="60" rx="6" fill="url(#button-worn-grad)" /> </g> <g fill="#333" filter="url(#engraved-text)"> <text x="35" y="30">1</text> <text x="120" y="30">2</text> <text x="205" y="30">3</text> <text x="35" y="110">4</text> <text x="120" y="110">5</text> <text x="205" y="110">6</text> <text x="35" y="190">7</text> <text x="120" y="190">8</text> <text x="205" y="190">9</text> <text x="35" y="270">*</text> <text x="120" y="270">0</text> <text x="205" y="270">#</text> </g> </g>
+
+</svg>

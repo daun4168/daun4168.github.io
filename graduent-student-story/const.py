@@ -18,6 +18,8 @@ class SceneID(StrEnum):
     CH1_SCENE2_1 = "ch1_scene2_1"  # 선원 숙소
     CH1_SCENE2_2 = "ch1_scene2_2"  # 선장실
     CH1_SCENE2_3 = "ch1_scene2_3"  # 선장실 선반
+    CH1_SCENE2_4 = "ch1_scene2_4"  # 갑판 뒷편
+    CH1_SCENE2_5 = "ch1_scene2_5"  # 화물칸 입구
 
     CH1_SCENE2 = "ch1_scene2"  # 난파선
     CH1_SCENE3 = "ch1_scene3"  # 난파선 내부
@@ -65,12 +67,27 @@ class KeywordId(StrEnum):
     SANDY_BEACH = "모래사장"
     SHADY_BEACH = "그늘진 해변"
 
+    WRECKAGE = "난파선 잔해"
+    FOREST_ENTRY = "숲 입구"
+    PALM_TREE = "야자수"
+    TRASH_PILE = "쓰레기 더미"
+    COCONUT = "코코넛"
+    PLASTIC_BOTTLE = "빈 페트병"
+    SEAWATER_BOTTLE = "바닷물이 담긴 페트병"
+    SIMPLE_DISTILLER_KIT = "간이 정수기 키트"
+    DISTILLER = "정수기"
+    VINYL = "비닐"
+
     # CH1_SCENE2_0
     SHIP_HALLWAY = "난파선 중앙 복도"
     CREW_QUARTERS = "선원 숙소"
     CAPTAIN_ROOM = "선장실"
     REAR_DECK = "갑판 뒷편"
+    REAR_DECK_DOOR = "갑판 뒷편 문"
+    DECK = "갑판"
     BASEMENT_ENTRANCE = "지하실 입구"
+    IRON_DOOR = "강철 격벽"  # 메인 퍼즐 장애물
+    BULKHEAD = "격벽"  # 메인 퍼즐 장애물
     BASECAMP = "베이스캠프"  # Alias
 
     # CH1_SCENE2_1
@@ -100,12 +117,26 @@ class KeywordId(StrEnum):
     FLARE = "조명탄"  # 보상 1
     SHELF = "선반"
 
-    BOTTLE_SHIP_GROUP = "유리병 배"  # 그룹 키워드
+    # CH1_SCENE2_3
     SHIP_RED = "붉은 용"
     SHIP_WHITE = "하얀 백조"
     SHIP_BLACK = "검은 유령"
     SHIP_YELLOW = "황금 독수리"
     DECK_KEY = "갑판 열쇠"  # 보상 3
+
+    # CH1_SCENE2_4
+    LION_CABINET = "사자 캐비닛"
+    BEAR_CABINET = "곰 캐비닛"
+    BROKEN_LOCK = "부서진 자물쇠"  # 곰 캐비닛 앞 바닥에 있는 것
+
+    # 배전함 퍼즐 관련
+    DISTRIBUTION_PANEL = "배전함"
+    SWITCH_1 = "스위치 1"
+    SWITCH_2 = "스위치 2"
+    SWITCH_3 = "스위치 3"
+    SWITCH_4 = "스위치 4"
+    SWITCH_5 = "스위치 5"
+    MAIN_LEVER = "메인 레버"
 
     # # 2. 오브젝트 (Objects)
     # BED = "침대"
@@ -134,24 +165,12 @@ class KeywordId(StrEnum):
     # FILLED_LANTERN = "채워진 랜턴"  # 휘발유를 채운 상태
     # LIT_LANTERN = "점화된 랜턴"  # 불을 붙인 상태 (최종 Key Item)
 
-    WRECKAGE = "난파선 잔해"
-    FOREST_ENTRY = "숲 입구"
-    PALM_TREE = "야자수"
-    TRASH_PILE = "쓰레기 더미"
-    COCONUT = "코코넛"
-    PLASTIC_BOTTLE = "빈 페트병"
-    SEAWATER_BOTTLE = "바닷물이 담긴 페트병"
-    SIMPLE_DISTILLER_KIT = "간이 정수기 키트"
-    DISTILLER = "정수기"
-    VINYL = "비닐"
-
     # CH1_SCENE2
     WIRE = "전선"
     RUSTY_BUCKET = "녹슨 양동이"
     BEACH = "해변"
     EMERGENCY_CABINET = "비상 캐비닛"  # 조명탄 파밍 장소
-    IRON_DOOR = "강화 격벽"  # 메인 퍼즐 장애물
-    BULKHEAD = "격벽"  # 메인 퍼즐 장애물
+
     UNDERGROUND_PASSAGE = "지하 통로"  # 문 열면 등장
     WARNING_SIGN = "경고문"
     PIPE = "파이프"
@@ -419,6 +438,8 @@ class ActionType(StrEnum):
     UPDATE_KEYWORD_DATA = "update_keyword_data"
     UPDATE_ITEM_DATA = "update_item_data"
     UPDATE_CHAPTER_STATE = "update_chapter_state"
+    TOGGLE_SWITCH = "toggle_switch"
+    PRINT_SWITCH = "print_switch"
 
 
 class KeywordType(StrEnum):

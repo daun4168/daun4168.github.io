@@ -164,6 +164,44 @@ class UpdateChapterStateHandler(ActionHandler):
             scene.chapter_state[value["key"]] = value["value"]
 
 
+class ToggleSwitchHandler(ActionHandler):
+    def execute(self, scene, value):
+        target = value
+        if target in scene.state:
+            scene.state[target] = not scene.state[target]
+
+
+class PrintSwitchHandler:  # ActionHandler를 상속받는다고 가정
+    def execute(self, scene, value):
+        """
+        value: list[bool] 형태의 스위치 5개 상태를 받아서 출력합니다.
+        예: [False, True, False, True, True]
+        """
+        output_parts = []
+        HINDI_NUMERALS = ["①", "②", "③", "④", "⑤"]
+
+        # value는 [sw1_state, sw2_state, ...] 순서로 들어온다고 가정
+        if not isinstance(value, list) or len(value) != 5:
+            # 오류 처리 로직
+            scene.ui.print_system_message("Error: PrintSwitchHandler requires a list of 5 boolean values.")
+            return
+
+        for i, target in enumerate(value):
+            if target in scene.state:
+                state = scene.state[target]
+                # 상태에 따라 ON/OFF 문자열 결정
+                status = "[ON]" if state else "[OFF]"
+
+                # ① [OFF] 형태로 포맷팅하여 리스트에 추가
+                output_parts.append(f"{HINDI_NUMERALS[i]} {status}")
+
+        # 전체 문자열을 ", "로 연결하고 마침표 추가
+        output_string = ", ".join(output_parts)
+
+        # 출력
+        scene.ui.print_narrative(output_string)
+
+
 class MoveSceneHandler(ActionHandler):
     def execute(self, scene, value):
         scene.game.scene_manager.switch_scene(value)
@@ -275,6 +313,8 @@ ACTION_HANDLERS = {
     ActionType.UPDATE_STATE: UpdateStateHandler(),
     ActionType.UPDATE_ITEM_DATA: UpdateItemDataHandler(),
     ActionType.UPDATE_CHAPTER_STATE: UpdateChapterStateHandler(),
+    ActionType.TOGGLE_SWITCH: ToggleSwitchHandler(),
+    ActionType.PRINT_SWITCH: PrintSwitchHandler(),
     # Game
     ActionType.MOVE_SCENE: MoveSceneHandler(),
     ActionType.SAVE_CHECKPOINT: SaveCheckpointHandler(),

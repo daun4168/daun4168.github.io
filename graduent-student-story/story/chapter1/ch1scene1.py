@@ -83,8 +83,8 @@ CH1_SCENE1_DATA = SceneData(
                             type=ActionType.REQUEST_CONFIRMATION,
                             value={
                                 "prompt": (
-                                    "**[난파선 잔해]**로 이동하시겠습니까?\n"
-                                    "뜨거운 모래사장을 건너야 하므로 **체력이 2 소모**됩니다. 진행하시겠습니까?"
+                                    "**[난파선 잔해]**로 이동하시겠습니까?\n\n"
+                                    "뜨거운 모래사장을 건너야 하므로 **체력이 2 소모**됩니다."
                                 ),
                                 "confirm_actions": [
                                     Action(
@@ -92,7 +92,7 @@ CH1_SCENE1_DATA = SceneData(
                                         value="베이스캠프에 물이 있다는 사실에 안심하며, 뜨거운 태양을 뚫고 난파선을 향해 걷기 시작합니다...",
                                     ),
                                     Action(type=ActionType.MODIFY_STAMINA, value=-2),
-                                    Action(type=ActionType.MOVE_SCENE, value=SceneID.CH1_SCENE2),
+                                    Action(type=ActionType.MOVE_SCENE, value=SceneID.CH1_SCENE2_0),
                                 ],
                                 "cancel_actions": [
                                     Action(

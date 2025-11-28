@@ -13,6 +13,12 @@ class SceneID(StrEnum):
 
     CH1_SCENE0 = "ch1_scene0"
     CH1_SCENE1 = "ch1_scene1"  # 베이스캠프
+
+    CH1_SCENE2_0 = "ch1_scene2_0"  # 난파선 복도
+    CH1_SCENE2_1 = "ch1_scene2_1"  # 선원 숙소
+    CH1_SCENE2_2 = "ch1_scene2_2"  # 선장실
+    CH1_SCENE2_3 = "ch1_scene2_3"  # 선장실 선반
+
     CH1_SCENE2 = "ch1_scene2"  # 난파선
     CH1_SCENE3 = "ch1_scene3"  # 난파선 내부
     CH1_SCENE4 = "ch1_scene4"  # 공명하는 숲 (생태 관측소)
@@ -59,7 +65,75 @@ class KeywordId(StrEnum):
     SANDY_BEACH = "모래사장"
     SHADY_BEACH = "그늘진 해변"
 
-    # CH1_SCENE1
+    # CH1_SCENE2_0
+    SHIP_HALLWAY = "난파선 중앙 복도"
+    CREW_QUARTERS = "선원 숙소"
+    CAPTAIN_ROOM = "선장실"
+    REAR_DECK = "갑판 뒷편"
+    BASEMENT_ENTRANCE = "지하실 입구"
+    BASECAMP = "베이스캠프"  # Alias
+
+    # CH1_SCENE2_1
+    HALLWAY = "복도"
+    DIARY_BUNDLE = "일기장"  # 3권 묶음 오브젝트
+    DIARY_BOATSWAIN = "갑판장의 기도문"
+    DIARY_NAVIGATOR = "항해사의 유서"
+    DIARY_RADIOMAN = "통신사의 끊긴 전문"
+
+    LOCKER_GROUP = "철제 사물함"  # 사물함 그룹
+    LOCKER = "사물함"  # 사물함 그룹
+    LOCKER_BOATSWAIN = "갑판장의 사물함"
+    LOCKER_NAVIGATOR = "항해사의 사물함"
+    LOCKER_RADIOMAN = "통신사의 사물함"
+
+    NOTE_1 = "갑판사의 쪽지"
+    NOTE_2 = "항해사의 쪽지"
+    NOTE_3 = "통신사의 쪽지"
+
+    # CH1_SCENE2_2
+    DESK = "책상"
+    MAHOGANY_DESK = "마호가니 책상"
+    BOOKSHELF = "책장"
+    PERIODIC_TABLE = "주기율표"
+    LOG_BOOK = "항해 일지"
+    BOOKSHELF_LOCKER = "보관함"  # 책장 아래 잠긴 칸
+    FLARE = "조명탄"  # 보상 1
+    SHELF = "선반"
+
+    BOTTLE_SHIP_GROUP = "유리병 배"  # 그룹 키워드
+    SHIP_RED = "붉은 용"
+    SHIP_WHITE = "하얀 백조"
+    SHIP_BLACK = "검은 유령"
+    SHIP_YELLOW = "황금 독수리"
+    DECK_KEY = "갑판 열쇠"  # 보상 3
+
+    # # 2. 오브젝트 (Objects)
+    # BED = "침대"
+    # LOCKER = "사물함"
+    # DESK = "책상"
+    # BOOKSHELF = "책장"
+    # BOTTLE_SHIP = "유리병 배"
+    # ELECTRONIC_SAFE = "전자 금고"
+    # ANIMAL_SAFE = "동물 금고"  # 또는 "동물 그림 보관함"
+    # GAS_CAN_OBJ = "휘발유 통"  # 맵에 놓인 오브젝트
+    # BULKHEAD = "강화 격벽"
+    #
+    # # 3. 아이템 (Items)
+    # DIARY_BUNDLE = "선원 일기장 묶음"
+    # ALIBI_NOTE = "알리바이 쪽지"
+    # SPANNER = "스패너"
+    #
+    # PERIODIC_TABLE = "주기율표"
+    # VITAMINS = "선장의 영양제"
+    # DECK_KEY = "갑판 열쇠"
+    # LOG_BOOK = "항해 일지"
+    # FLARE = "조명탄"
+    # AIR_DUSTER = "공업용 냉각 스프레이"
+    #
+    # EMPTY_LANTERN = "빈 방풍 랜턴"
+    # FILLED_LANTERN = "채워진 랜턴"  # 휘발유를 채운 상태
+    # LIT_LANTERN = "점화된 랜턴"  # 불을 붙인 상태 (최종 Key Item)
+
     WRECKAGE = "난파선 잔해"
     FOREST_ENTRY = "숲 입구"
     PALM_TREE = "야자수"
@@ -75,9 +149,7 @@ class KeywordId(StrEnum):
     WIRE = "전선"
     RUSTY_BUCKET = "녹슨 양동이"
     BEACH = "해변"
-    BASECAMP = "베이스캠프"
     EMERGENCY_CABINET = "비상 캐비닛"  # 조명탄 파밍 장소
-    FLARE = "조명탄"  # 가열 아이템
     IRON_DOOR = "강화 격벽"  # 메인 퍼즐 장애물
     BULKHEAD = "격벽"  # 메인 퍼즐 장애물
     UNDERGROUND_PASSAGE = "지하 통로"  # 문 열면 등장
@@ -103,7 +175,6 @@ class KeywordId(StrEnum):
     MEMO_VOLTAGE = "정비 메모"
     SCATTERED_SUPPLIES = "흩어진 보급품"
     SCATTERED_SUPPLIES_ALIAS = "보급품"
-    PERIODIC_TABLE = "주기율표"
     NOTE = "쪽지"
     PUZZLE_NOTE = "수수께끼 쪽지"
 

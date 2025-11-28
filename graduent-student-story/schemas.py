@@ -37,6 +37,7 @@ class Combination(BaseModel):
     type: CombinationType = CombinationType.DEFAULT
     targets: list[str]
     conditions: list[Condition] = Field(default_factory=list)
+    interactions: list[Interaction] = Field(default_factory=list)
     actions: list[Action]
 
 

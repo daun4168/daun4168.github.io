@@ -15,6 +15,10 @@ from story.chapter1 import (
     CH1_SCENE0_DATA,
     CH1_SCENE1_DATA,
     CH1_SCENE2_DATA,
+    CH1_SCENE2_0_DATA,
+    CH1_SCENE2_1_DATA,
+    CH1_SCENE2_2_DATA,
+    CH1_SCENE2_3_DATA,
     CH1_SCENE3_DATA,
     CH1_SCENE4_DATA,
     CH1_SCENE5_DATA,
@@ -123,6 +127,10 @@ class Game:
         factory.register_scene(SceneID.CH1_SCENE0, Scene, CH1_SCENE0_DATA, CH1_COMMON_DATA)
         factory.register_scene(SceneID.CH1_SCENE1, Scene, CH1_SCENE1_DATA, CH1_COMMON_DATA)
         factory.register_scene(SceneID.CH1_SCENE2, Scene, CH1_SCENE2_DATA, CH1_COMMON_DATA)
+        factory.register_scene(SceneID.CH1_SCENE2_0, Scene, CH1_SCENE2_0_DATA, CH1_COMMON_DATA)
+        factory.register_scene(SceneID.CH1_SCENE2_1, Scene, CH1_SCENE2_1_DATA, CH1_COMMON_DATA)
+        factory.register_scene(SceneID.CH1_SCENE2_2, Scene, CH1_SCENE2_2_DATA, CH1_COMMON_DATA)
+        factory.register_scene(SceneID.CH1_SCENE2_3, Scene, CH1_SCENE2_3_DATA, CH1_COMMON_DATA)
         factory.register_scene(SceneID.CH1_SCENE3, Scene, CH1_SCENE3_DATA, CH1_COMMON_DATA)
         factory.register_scene(SceneID.CH1_SCENE4, Scene, CH1_SCENE4_DATA, CH1_COMMON_DATA)
         factory.register_scene(SceneID.CH1_SCENE5, Scene, CH1_SCENE5_DATA, CH1_COMMON_DATA)

@@ -57,7 +57,7 @@ CH1_SCENE2_DATA = SceneData(
                         Action(
                             type=ActionType.REQUEST_CONFIRMATION,
                             value={
-                                "prompt": ("**[해변]**으로 돌아가시겠습니까?\n체력이 2 소모됩니다."),
+                                "prompt": ("**[해변]**으로 돌아가시겠습니까?\n\n체력이 2 소모됩니다."),
                                 "confirm_actions": [
                                     Action(
                                         type=ActionType.PRINT_NARRATIVE,

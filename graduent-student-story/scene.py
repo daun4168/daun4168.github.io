@@ -200,7 +200,18 @@ class Scene:
                     return False  # 보이지 않는 키워드라면 처리 실패.
 
                 if self._check_conditions(combo.conditions):  # 조합의 조건이 충족되면
-                    self.execute_actions(combo.actions)  # 해당 액션들을 실행합니다.
+                    # 키워드에 정의된 상호작용(interactions)을 순회하며 조건을 확인합니다.
+                    if combo.interactions:
+                        for interaction in combo.interactions:
+                            if self._check_conditions(interaction.conditions):  # 조건이 충족되면
+                                self.execute_actions(interaction.actions)  # 해당 액션들을 실행합니다.
+
+                                if interaction.continue_matching:
+                                    continue
+                                else:
+                                    return True
+                    else:
+                        self.execute_actions(combo.actions)  # 해당 액션들을 실행합니다.
                     return True  # 조합 처리 성공.
 
         return False  # 일치하는 조합이 없으면 처리 실패.

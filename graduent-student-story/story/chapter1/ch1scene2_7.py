@@ -7,8 +7,8 @@ CH1_SCENE2_7_DATA = SceneData(
     body=(
         '"으스스하네... 여긴 냉동 창고를 개조한 건가?"\n\n'
         "서늘한 냉기가 감도는 은밀한 연구실입니다. 벽면은 방음재로 덮여 있고, 알 수 없는 기계 장치들이 웅웅거립니다.\n"
-        "중앙에는 **[연구용 책상]**이 있고, 그 위에는 **[약품 트레이]**가 놓여 있습니다. 벽 쪽에는 기름때 묻은 **[작업대]**가 있습니다.\n\n"
-        "가장 안쪽 구석에는 육중한 **[전자 금고]**가 보이고, 반대편 벽에는 **[소방 도끼]**가 단단히 고정되어 있습니다.\n"
+        "중앙에는 연구용 책상이 있고, 그 위에는 약품 트레이가 놓여 있습니다. 벽 쪽에는 기름때 묻은 작업대가 있습니다.\n\n"
+        "가장 안쪽 구석에는 육중한 전자 금고가 보이고, 반대편 벽에는 소방 도끼가 단단히 고정되어 있습니다.\n"
     ),
     initial_state={
         "safe_powered": False,
@@ -23,6 +23,8 @@ CH1_SCENE2_7_DATA = SceneData(
         KeywordId.HALLWAY: KeywordData(type=KeywordType.ALIAS, target=KeywordId.TOXIC_CORRIDOR),
         KeywordId.AXE: KeywordData(type=KeywordType.ALIAS, target=KeywordId.FIRE_AXE),
         KeywordId.SAFE: KeywordData(type=KeywordType.ALIAS, target=KeywordId.ELECTRONIC_SAFE),
+        KeywordId.DESK: KeywordData(type=KeywordType.ALIAS, target=KeywordId.LAB_DESK),
+        KeywordId.TRAY: KeywordData(type=KeywordType.ALIAS, target=KeywordId.MEDICINE_TRAY),
         # 0. 나가는 길 (지하 복도)
         KeywordId.TOXIC_CORRIDOR: KeywordData(
             type=KeywordType.PORTAL,

@@ -175,6 +175,7 @@ class KeywordId(StrEnum):
 
     # CH1_SCENE2_7
     MEDICINE_TRAY = "약품 트레이"
+    TRAY = "트레이"
     # 오브젝트
     LAB_DESK = "책상"
     WORKBENCH = "작업대"

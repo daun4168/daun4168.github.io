@@ -247,13 +247,13 @@ CH1_SCENE2_0_DATA = SceneData(
                         Action(
                             type=ActionType.REQUEST_CONFIRMATION,
                             value={
-                                "prompt": "지하실에 불이 들어왔습니다. **[지하실]**로 내려가시겠습니까?",
+                                "prompt": "지하실에 불이 들어왔습니다. **[지하 복도]**로 내려가시겠습니까?",
                                 "confirm_actions": [
                                     Action(
                                         type=ActionType.PRINT_NARRATIVE,
                                         value="어둠이 걷히자 눅눅한 계단이 보입니다. 지하실로 내려갑니다...",
                                     ),
-                                    Action(type=ActionType.MOVE_SCENE, value=SceneID.CH1_SCENE3),  # 다음 씬 ID로 이동
+                                    Action(type=ActionType.MOVE_SCENE, value=SceneID.CH1_SCENE2_5),  # 다음 씬 ID로 이동
                                 ],
                                 "cancel_actions": [
                                     Action(
@@ -388,6 +388,7 @@ CH1_SCENE2_0_DATA = SceneData(
                     ),
                 ),
                 Action(type=ActionType.UPDATE_STATE, value={"key": "deck_unlocked", "value": True}),
+                Action(type=ActionType.REMOVE_ITEM, value=KeywordId.DECK_KEY),
             ],
         ),
         # 1. 가열: 조명탄 + 격벽

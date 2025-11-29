@@ -14,13 +14,14 @@ from story.chapter1 import (
     CH1_COMMON_DATA,
     CH1_SCENE0_DATA,
     CH1_SCENE1_DATA,
-    CH1_SCENE2_DATA,
     CH1_SCENE2_0_DATA,
     CH1_SCENE2_1_DATA,
     CH1_SCENE2_2_DATA,
     CH1_SCENE2_3_DATA,
     CH1_SCENE2_4_DATA,
-    CH1_SCENE3_DATA,
+    CH1_SCENE2_5_DATA,
+    CH1_SCENE2_6_DATA,
+    CH1_SCENE2_7_DATA,
     CH1_SCENE4_DATA,
     CH1_SCENE5_DATA,
     CH1_SCENE6_DATA,
@@ -127,13 +128,14 @@ class Game:
         # 챕터 1 씬 등록
         factory.register_scene(SceneID.CH1_SCENE0, Scene, CH1_SCENE0_DATA, CH1_COMMON_DATA)
         factory.register_scene(SceneID.CH1_SCENE1, Scene, CH1_SCENE1_DATA, CH1_COMMON_DATA)
-        factory.register_scene(SceneID.CH1_SCENE2, Scene, CH1_SCENE2_DATA, CH1_COMMON_DATA)
         factory.register_scene(SceneID.CH1_SCENE2_0, Scene, CH1_SCENE2_0_DATA, CH1_COMMON_DATA)
         factory.register_scene(SceneID.CH1_SCENE2_1, Scene, CH1_SCENE2_1_DATA, CH1_COMMON_DATA)
         factory.register_scene(SceneID.CH1_SCENE2_2, Scene, CH1_SCENE2_2_DATA, CH1_COMMON_DATA)
         factory.register_scene(SceneID.CH1_SCENE2_3, Scene, CH1_SCENE2_3_DATA, CH1_COMMON_DATA)
         factory.register_scene(SceneID.CH1_SCENE2_4, Scene, CH1_SCENE2_4_DATA, CH1_COMMON_DATA)
-        factory.register_scene(SceneID.CH1_SCENE3, Scene, CH1_SCENE3_DATA, CH1_COMMON_DATA)
+        factory.register_scene(SceneID.CH1_SCENE2_5, Scene, CH1_SCENE2_5_DATA, CH1_COMMON_DATA)
+        factory.register_scene(SceneID.CH1_SCENE2_6, Scene, CH1_SCENE2_6_DATA, CH1_COMMON_DATA)
+        factory.register_scene(SceneID.CH1_SCENE2_7, Scene, CH1_SCENE2_7_DATA, CH1_COMMON_DATA)
         factory.register_scene(SceneID.CH1_SCENE4, Scene, CH1_SCENE4_DATA, CH1_COMMON_DATA)
         factory.register_scene(SceneID.CH1_SCENE5, Scene, CH1_SCENE5_DATA, CH1_COMMON_DATA)
         factory.register_scene(SceneID.CH1_SCENE6, Scene, CH1_SCENE6_DATA, CH1_COMMON_DATA)

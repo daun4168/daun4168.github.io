@@ -350,7 +350,7 @@ CH0_SCENE1_DATA = SceneData(
                             type=ActionType.PRINT_NARRATIVE,
                             value=(
                                 "전원 버튼을 누르자, 이륙하는 비행기 같은 소음을 내며 팬이 돌아간다.\n"
-                                "키보드는 글자가 다 지워졌지만, **오른쪽 숫자 패드(Number Pad)**만큼은 손때가 타서 반질거린다.\n"
+                                "키보드는 글자가 다 지워졌지만, 오른쪽 **숫자 패드**만큼은 손때가 타서 반질거린다.\n"
                                 "Num Lock 키에 초록불이 깜빡이며 암호 입력창이 떴다.\n\n"
                                 "이런 복잡한 암호를 맨정신으로 외우고 다닐 리가 없다.\n"
                                 "분명 주변 어딘가, 눈에 잘 띄는 **벽** 같은 곳에 **메모**를 해뒀을 것이다."
@@ -427,18 +427,13 @@ CH0_SCENE1_DATA = SceneData(
                     conditions=[Condition(type=ConditionType.STATE_IS, target="cabinet_unlocked", value=True)],
                     actions=[
                         Action(
+                            type=ActionType.PRINT_NARRATIVE,
+                            value="시약장 문이 열려있다. 안에는 위험해 보이는 약품들과 컵라면이 위태롭게 공존하고 있다.",
+                        ),
+                        Action(
                             type=ActionType.UPDATE_STATE,
                             value={"keyword": KeywordId.CABINET, "state": KeywordState.UNSEEN},
                         ),
-                    ],
-                ),
-                Interaction(
-                    conditions=[Condition(type=ConditionType.STATE_IS, target="cabinet_unlocked", value=True)],
-                    actions=[
-                        Action(
-                            type=ActionType.PRINT_NARRATIVE,
-                            value="시약장 문이 열려있다. 안에는 위험해 보이는 약품들과 컵라면이 위태롭게 공존하고 있다.",
-                        )
                     ],
                 ),
             ],

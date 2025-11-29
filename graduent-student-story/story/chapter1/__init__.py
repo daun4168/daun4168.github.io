@@ -1,13 +1,16 @@
 from .ch1common import CH1_COMMON_DATA
 from .ch1scene0 import CH1_SCENE0_DATA
 from .ch1scene1 import CH1_SCENE1_DATA
-from .ch1scene2 import CH1_SCENE2_DATA
 from .ch1scene2_0 import CH1_SCENE2_0_DATA
 from .ch1scene2_1 import CH1_SCENE2_1_DATA
 from .ch1scene2_2 import CH1_SCENE2_2_DATA
 from .ch1scene2_3 import CH1_SCENE2_3_DATA
 from .ch1scene2_4 import CH1_SCENE2_4_DATA
-from .ch1scene3 import CH1_SCENE3_DATA
+from .ch1scene2_5 import CH1_SCENE2_5_DATA
+from .ch1scene2_6 import CH1_SCENE2_6_DATA
+from .ch1scene2_7 import CH1_SCENE2_7_DATA
+
+# from .ch1scene3 import CH1_SCENE3_DATA
 from .ch1scene4 import CH1_SCENE4_DATA
 from .ch1scene5 import CH1_SCENE5_DATA
 from .ch1scene6 import CH1_SCENE6_DATA

@@ -19,9 +19,10 @@ class SceneID(StrEnum):
     CH1_SCENE2_2 = "ch1_scene2_2"  # 선장실
     CH1_SCENE2_3 = "ch1_scene2_3"  # 선장실 선반
     CH1_SCENE2_4 = "ch1_scene2_4"  # 갑판 뒷편
-    CH1_SCENE2_5 = "ch1_scene2_5"  # 화물칸 입구
+    CH1_SCENE2_5 = "ch1_scene2_5"  # 지하 복도
+    CH1_SCENE2_6 = "ch1_scene2_6"  # 지하 주방
+    CH1_SCENE2_7 = "ch1_scene2_7"  # 지하 연구실
 
-    CH1_SCENE2 = "ch1_scene2"  # 난파선
     CH1_SCENE3 = "ch1_scene3"  # 난파선 내부
     CH1_SCENE4 = "ch1_scene4"  # 공명하는 숲 (생태 관측소)
     CH1_SCENE5 = "ch1_scene5"  # 늪지대
@@ -138,36 +139,67 @@ class KeywordId(StrEnum):
     SWITCH_5 = "스위치 5"
     MAIN_LEVER = "메인 레버"
 
-    # # 2. 오브젝트 (Objects)
-    # BED = "침대"
-    # LOCKER = "사물함"
-    # DESK = "책상"
-    # BOOKSHELF = "책장"
-    # BOTTLE_SHIP = "유리병 배"
-    # ELECTRONIC_SAFE = "전자 금고"
-    # ANIMAL_SAFE = "동물 금고"  # 또는 "동물 그림 보관함"
-    # GAS_CAN_OBJ = "휘발유 통"  # 맵에 놓인 오브젝트
-    # BULKHEAD = "강화 격벽"
-    #
-    # # 3. 아이템 (Items)
-    # DIARY_BUNDLE = "선원 일기장 묶음"
-    # ALIBI_NOTE = "알리바이 쪽지"
-    # SPANNER = "스패너"
-    #
-    # PERIODIC_TABLE = "주기율표"
-    # VITAMINS = "선장의 영양제"
-    # DECK_KEY = "갑판 열쇠"
-    # LOG_BOOK = "항해 일지"
-    # FLARE = "조명탄"
-    # AIR_DUSTER = "공업용 냉각 스프레이"
-    #
-    # EMPTY_LANTERN = "빈 방풍 랜턴"
-    # FILLED_LANTERN = "채워진 랜턴"  # 휘발유를 채운 상태
-    # LIT_LANTERN = "점화된 랜턴"  # 불을 붙인 상태 (최종 Key Item)
+    # CH1_SCENE2_5
+    TOXIC_CORRIDOR = "지하 복도"
+    CENTER_HALLWAY = "중앙 복도"
+    KITCHEN = "주방"
+    KITCHEN_DOOR = "주방 문"
+    BASEMENT_LAB = "지하 연구실"
+    BASEMENT_LAB_DOOR = "지하 연구실"
+    LAB = "연구실"
+    LAB_DOOR = "연구실 문"
+
+    ACID_PUDDLE = "산성 웅덩이"
+    PUDDLE = "웅덩이"
+    RUSTY_BUCKET_OBJ = "녹슨 양동이"
+    BUCKET_OBJ = "양동이"
+    # 아이템
+    RUSTY_BUCKET = "녹슨 양동이"
+    ACID_SOURCE = "산성 용액 소스통"
+
+    # CH1_SCENE2_6
+    COOKING_TABLE = "조리대"
+    CLEANING_LOCKER = "청소 도구함"
+    FLOUR_SACK = "터진 포대"  # [변경] 전분 획득 장소
+    FLOUR = "포대"  # [변경] 전분 획득 장소
+    POISON_SHELF = "약품 선반"  # [변경] 독약 병 관찰 장소
+    COURSE_MENU = "코스 요리 메뉴판"
+    CAUSTIC_SODA = "가성소다 포대"  # 오브젝트로 추가
+    FILLED_BUCKET = "가성소다 양동이"
+    BANANA_OBJ = "바나나"
+    PASTA_OBJ = "파스타"
+
+    # 아이템
+    SAUCE_BOTTLE = "빈 소스통"
+    POTATO_STARCH = "전분 가루"
+
+    # CH1_SCENE2_7
+    MEDICINE_TRAY = "약품 트레이"
+    # 오브젝트
+    LAB_DESK = "책상"
+    WORKBENCH = "작업대"
+    ELECTRONIC_SAFE = "전자 금고"
+    FIRE_AXE_WALL = "벽에 걸린 도끼"
+    RUSTY_CLAMP = "녹슨 클램프"
+    MULTIMETER = "멀티미터"
+    MEMO_VOLTAGE = "정비 메모"
+
+    # 아이템
+    BATTERY_CASE = "배터리 케이스"
+    BATTERY_1 = "건전지 1"
+    BATTERY_2 = "건전지 2"
+    BATTERY_3 = "건전지 3"
+    BATTERY_4 = "건전지 4"
+    BATTERY_5 = "건전지 5"
+    BATTERY_PACK = "배터리 팩"
+
+    AXE = "도끼"
+    ACID_GEL = "산성 젤"
+    FIRE_AXE = "소방 도끼"
+    PUZZLE_NOTE = "수수께끼 쪽지"
 
     # CH1_SCENE2
     WIRE = "전선"
-    RUSTY_BUCKET = "녹슨 양동이"
     BEACH = "해변"
     EMERGENCY_CABINET = "비상 캐비닛"  # 조명탄 파밍 장소
 
@@ -181,43 +213,28 @@ class KeywordId(StrEnum):
     SHIPWRECK_ENTRANCE = "난파선 입구"
 
     # 2. 환경 오브젝트 & Alias
-    ACID_PUDDLE = "산성 웅덩이"
+    # ACID_PUDDLE = "산성 웅덩이"
     ACID_PUDDLE_ALIAS = "웅덩이"
     WHITE_POWDER = "하얀 가루"
     WHITE_POWDER_ALIAS = "가루"
-    WORKBENCH = "작업대"
-    MULTIMETER = "멀티미터"
+    # WORKBENCH = "작업대"
+    # MULTIMETER = "멀티미터"
     SAFE = "전자 금고"
     SAFE_ALIAS = "금고"
-    RUSTY_CLAMP = "녹슨 클램프"
+    # RUSTY_CLAMP = "녹슨 클램프"
     RUSTY_CLAMP_ALIAS = "클램프"
-    MEMO_VOLTAGE = "정비 메모"
+
     SCATTERED_SUPPLIES = "흩어진 보급품"
     SCATTERED_SUPPLIES_ALIAS = "보급품"
     NOTE = "쪽지"
-    PUZZLE_NOTE = "수수께끼 쪽지"
 
     # 3. 아이템
-    EMPTY_BOTTLE = "빈 페트병"
-    STARCH = "전분 가루"
+    # EMPTY_BOTTLE = "빈 페트병"
+    # STARCH = "전분 가루"
+    #
+    # CAUSTIC_SODA_BUCKET = "가성소다 양동이"
+    # ACID_BOTTLE = "산성 용액 병"
 
-    CAUSTIC_SODA_BUCKET = "가성소다 양동이"
-    ACID_BOTTLE = "산성 용액 병"
-    ACID_GEL = "산성 젤"
-
-    # 4. 배터리 관련
-    BATTERY_CASE = "배터리 케이스"
-    BATTERY_PACK = "배터리 팩"
-
-    # 미확인 건전지 (ID는 하나로 유지)
-    BATTERY_1 = "건전지 1"
-    BATTERY_2 = "건전지 2"
-    BATTERY_3 = "건전지 3"
-    BATTERY_4 = "건전지 4"
-    BATTERY_5 = "건전지 5"
-
-    # 5. 최종 보상
-    FIRE_AXE = "소방 도끼"
     HEAVY_BATTERY = "산업용 배터리"
 
     # CH1_SCENE4: 공명하는 숲 (생태 관측소)
@@ -228,7 +245,7 @@ class KeywordId(StrEnum):
     BOTANIST_MURAL = "벽화"
     FLOWER_BED = "화단"
     BOTANY_NOTE = "관찰 일지"
-    LAB_DOOR = "관측소 문"
+    OBSERVATORY_DOOR = "관측소 문"
     SUPPLY_LOCKER = "보급품 로커"
     MICROPHONE = "마이크"
     LONG_PIPE = "긴 파이프"
@@ -396,7 +413,6 @@ class KeywordId(StrEnum):
     ANTENNA = "안테나"
 
     LAB_ROOM = "연구실"  # 연구실 전체
-    LAB_DESK = "책상"  # 연구실 책상/작업대
     ENDING_NOTE = "수상한 메모"  # 엔딩 떡밥 메모
 
 

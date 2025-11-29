@@ -203,12 +203,6 @@ CH1_SCENE0_DATA = SceneData(
                         Action(
                             type=ActionType.UPDATE_STATE, value={"keyword": KeywordId.SEA, "state": KeywordState.UNSEEN}
                         ),
-                    ],
-                    continue_maching=True,
-                ),
-                Interaction(
-                    conditions=[Condition(type=ConditionType.STATE_IS, target="sea_step", value=2)],
-                    actions=[
                         Action(
                             type=ActionType.PRINT_NARRATIVE,
                             value="정신을 차리고 생각해보니, 당연히 바닷물을 마시면 안 되는 거였다. 바닷물은 우리 몸의 혈액보다 염분 농도가 훨씬 높다.",

@@ -291,7 +291,7 @@ CH1_SCENE4_DATA = SceneData(
             ),
         ),
         # 관측소 문
-        KeywordId.LAB_DOOR: KeywordData(
+        KeywordId.OBSERVATORY_DOOR: KeywordData(
             type=KeywordType.OBJECT,
             state=KeywordState.INACTIVE,
             description=None,
@@ -826,7 +826,7 @@ CH1_SCENE4_DATA = SceneData(
                 Action(
                     type=ActionType.UPDATE_STATE,
                     value={
-                        "keyword": KeywordId.LAB_DOOR,
+                        "keyword": KeywordId.OBSERVATORY_DOOR,
                         "state": KeywordState.HIDDEN,
                     },
                 ),
@@ -856,7 +856,7 @@ CH1_SCENE4_DATA = SceneData(
         # 관측소 문 비밀번호: 1218
         Combination(
             type=CombinationType.PASSWORD,
-            targets=[KeywordId.LAB_DOOR, "1218"],
+            targets=[KeywordId.OBSERVATORY_DOOR, "1218"],
             actions=[
                 Action(
                     type=ActionType.PRINT_NARRATIVE,

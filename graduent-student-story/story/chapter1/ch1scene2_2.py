@@ -48,7 +48,7 @@ CH1_SCENE2_2_DATA = SceneData(
                         Action(
                             type=ActionType.REQUEST_CONFIRMATION,
                             value={
-                                "prompt": "안락한 선장실을 뒤로하고 복도]**로 나가시겠습니까?",
+                                "prompt": "안락한 선장실을 뒤로하고 **[복도]**로 나가시겠습니까?",
                                 "confirm_actions": [
                                     Action(
                                         type=ActionType.PRINT_NARRATIVE,

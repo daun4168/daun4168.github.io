@@ -59,7 +59,7 @@ CH1_SCENE3_DATA = SceneData(
                                     Action(
                                         type=ActionType.PRINT_NARRATIVE, value="화물칸을 빠져나와 통로로 돌아갑니다."
                                     ),
-                                    Action(type=ActionType.MOVE_SCENE, value=SceneID.CH1_SCENE2),  # 통로로 이동
+                                    Action(type=ActionType.MOVE_SCENE, value=SceneID.CH1_SCENE2_0),  # 통로로 이동
                                 ],
                                 "cancel_actions": [
                                     Action(type=ActionType.PRINT_NARRATIVE, value="아직 할 일이 남았습니다."),

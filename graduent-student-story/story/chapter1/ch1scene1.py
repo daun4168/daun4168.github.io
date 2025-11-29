@@ -374,7 +374,7 @@ CH1_SCENE1_DATA = SceneData(
                             type=ActionType.PRINT_NARRATIVE,
                             value=(
                                 "그늘에 두니 엔진 열기가 조금 식은 것 같다. 하지만 여전히 작동 불능이다.\n\n"
-                                "거대한 야자수 그늘 아래에 세워둔 양자 가마솥는, 겉보기엔 조용히 식어 가는 고철 덩어리일 뿐이다.\n\n"
+                                "거대한 야자수 그늘 아래에 세워둔 양자 가마솥은, 겉보기엔 조용히 식어 가는 고철 덩어리일 뿐이다.\n\n"
                                 "하지만, 한 번쯤은 더, 당신을 어디론가 데려다 줄 힘이 남아 있을지도 모른다."
                             ),
                         ),
@@ -623,7 +623,7 @@ CH1_SCENE1_DATA = SceneData(
                 Action(type=ActionType.DISCOVER_KEYWORD, value=KeywordId.DISTILLER),
                 Action(
                     type=ActionType.PRINT_SYSTEM,
-                    value="베이스캠프에 **[정수기]**가 설치되었습니다. 이제 물을 마실 수 있습니다.",
+                    value="베이스캠프에 **[정수기]**가 설치되었습니다. 이제 물을 모을 수 있습니다.",
                 ),
             ],
         ),

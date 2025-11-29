@@ -1,7 +1,4 @@
-from const import (
-    ActionType, CombinationType, ConditionType, KeywordId,
-    KeywordState, KeywordType, SceneID
-)
+from const import ActionType, CombinationType, ConditionType, KeywordId, KeywordState, KeywordType, SceneID
 from schemas import Action, Combination, Condition, Interaction, KeywordData, SceneData
 
 CH1_SCENE2_7_DATA = SceneData(
@@ -26,7 +23,6 @@ CH1_SCENE2_7_DATA = SceneData(
         KeywordId.HALLWAY: KeywordData(type=KeywordType.ALIAS, target=KeywordId.TOXIC_CORRIDOR),
         KeywordId.AXE: KeywordData(type=KeywordType.ALIAS, target=KeywordId.FIRE_AXE),
         KeywordId.SAFE: KeywordData(type=KeywordType.ALIAS, target=KeywordId.ELECTRONIC_SAFE),
-
         # 0. 나가는 길 (지하 복도)
         KeywordId.TOXIC_CORRIDOR: KeywordData(
             type=KeywordType.PORTAL,
@@ -41,7 +37,6 @@ CH1_SCENE2_7_DATA = SceneData(
                     ],
                     continue_matching=True,  # 설명 후 바로 이동 조건 체크로 넘어감
                 ),
-
                 # Case 2: 금고를 아직 안 열었을 때 (이동 차단)
                 Interaction(
                     conditions=[Condition(type=ConditionType.STATE_IS, target="safe_opened", value=False)],
@@ -51,11 +46,10 @@ CH1_SCENE2_7_DATA = SceneData(
                             value=(
                                 "아직 나갈 수 없습니다. 여기까지 와서 빈손으로 돌아갈 순 없습니다.\n\n"
                                 "반드시 금고를 열어보아야 합니다."
-                            )
+                            ),
                         )
-                    ]
+                    ],
                 ),
-
                 # Case 3: 금고를 열었을 때 (이동 허용)
                 Interaction(
                     conditions=[Condition(type=ConditionType.STATE_IS, target="safe_opened", value=True)],
@@ -69,15 +63,16 @@ CH1_SCENE2_7_DATA = SceneData(
                                     Action(type=ActionType.MOVE_SCENE, value=SceneID.CH1_SCENE2_5),
                                 ],
                                 "cancel_actions": [
-                                    Action(type=ActionType.PRINT_NARRATIVE, value="아직 더 살펴볼 게 남았는지 확인합니다.")
+                                    Action(
+                                        type=ActionType.PRINT_NARRATIVE, value="아직 더 살펴볼 게 남았는지 확인합니다."
+                                    )
                                 ],
                             },
                         )
-                    ]
+                    ],
                 ),
             ],
         ),
-
         # 1. 연구용 책상 (건전지 파밍)
         KeywordId.LAB_DESK: KeywordData(
             type=KeywordType.OBJECT,
@@ -88,29 +83,52 @@ CH1_SCENE2_7_DATA = SceneData(
                     actions=[
                         Action(
                             type=ActionType.PRINT_NARRATIVE,
-                            value="책상 서랍을 열자 **[건전지] 5개**와 **[배터리 케이스]**가 굴러다닙니다. 실험용으로 쓰던 것 같습니다."
+                            value="책상 서랍을 열자 **[건전지] 5개**와 **[배터리 케이스]**가 굴러다닙니다. 실험용으로 쓰던 것 같습니다.",
                         ),
-                        Action(type=ActionType.ADD_ITEM,
-                               value={"name": KeywordId.BATTERY_CASE, "description": "3구 직렬 배터리 홀더. `배터리 케이스 : 123` 처럼 건전지 번호를 입력해 조립한다."}),
-                        Action(type=ActionType.ADD_ITEM, value={"name": KeywordId.BATTERY_1, "description": "낡은 건전지."}),
-                        Action(type=ActionType.ADD_ITEM, value={"name": KeywordId.BATTERY_2, "description": "낡은 건전지.", 'silent' :True}),
-                        Action(type=ActionType.ADD_ITEM, value={"name": KeywordId.BATTERY_3, "description": "낡은 건전지.", 'silent' :True}),
-                        Action(type=ActionType.ADD_ITEM, value={"name": KeywordId.BATTERY_4, "description": "낡은 건전지.", 'silent' :True}),
-                        Action(type=ActionType.ADD_ITEM, value={"name": KeywordId.BATTERY_5, "description": "낡은 건전지.", 'silent' :True}),
+                        Action(
+                            type=ActionType.ADD_ITEM,
+                            value={
+                                "name": KeywordId.BATTERY_CASE,
+                                "description": "3구 직렬 배터리 홀더. `배터리 케이스 : 123` 처럼 건전지 번호를 입력해 조립한다.",
+                            },
+                        ),
+                        Action(
+                            type=ActionType.ADD_ITEM, value={"name": KeywordId.BATTERY_1, "description": "낡은 건전지."}
+                        ),
+                        Action(
+                            type=ActionType.ADD_ITEM,
+                            value={"name": KeywordId.BATTERY_2, "description": "낡은 건전지.", "silent": True},
+                        ),
+                        Action(
+                            type=ActionType.ADD_ITEM,
+                            value={"name": KeywordId.BATTERY_3, "description": "낡은 건전지.", "silent": True},
+                        ),
+                        Action(
+                            type=ActionType.ADD_ITEM,
+                            value={"name": KeywordId.BATTERY_4, "description": "낡은 건전지.", "silent": True},
+                        ),
+                        Action(
+                            type=ActionType.ADD_ITEM,
+                            value={"name": KeywordId.BATTERY_5, "description": "낡은 건전지.", "silent": True},
+                        ),
                         Action(type=ActionType.UPDATE_STATE, value={"key": "batteries_found", "value": True}),
-                        Action(type=ActionType.PRINT_SYSTEM, value="**[건전지 2], [건전지 3], [건전지 4], [건전지 5]**를 **주머니**에 넣었습니다."),
-                    ]
+                        Action(
+                            type=ActionType.PRINT_SYSTEM,
+                            value="**[건전지 2], [건전지 3], [건전지 4], [건전지 5]**를 **주머니**에 넣었습니다.",
+                        ),
+                    ],
                 ),
                 Interaction(
-                    actions=[Action(type=ActionType.PRINT_NARRATIVE, value="이미 다 챙겼습니다."),
-                             Action(
-                                 type=ActionType.UPDATE_STATE,
-                                 value={"keyword": KeywordId.LAB_DESK, "state": KeywordState.UNSEEN}
-                             ),
-                             ])
-            ]
+                    actions=[
+                        Action(type=ActionType.PRINT_NARRATIVE, value="이미 다 챙겼습니다."),
+                        Action(
+                            type=ActionType.UPDATE_STATE,
+                            value={"keyword": KeywordId.LAB_DESK, "state": KeywordState.UNSEEN},
+                        ),
+                    ]
+                ),
+            ],
         ),
-
         # [신규] 1-1. 약품 트레이 (금고 힌트)
         KeywordId.MEDICINE_TRAY: KeywordData(
             type=KeywordType.OBJECT,
@@ -121,7 +139,7 @@ CH1_SCENE2_7_DATA = SceneData(
                         Action(
                             type=ActionType.PRINT_NARRATIVE,
                             value=(
-'<img src="assets/chapter1/pills.png" alt="약" width="520">\n\n'
+                                '<img src="assets/chapter1/pills.png" alt="약" width="520">\n\n'
                                 "책상 위에 놓인 스테인리스 트레이입니다.\n\n"
                                 "옆에 [실험 노트]가 놓여 있습니다."
                             ),
@@ -129,13 +147,12 @@ CH1_SCENE2_7_DATA = SceneData(
                         Action(
                             type=ActionType.DISCOVER_KEYWORD,
                             value=KeywordId.LAB_NOTE,
-                        )
+                        ),
                     ]
                 )
-            ]
+            ],
         ),
-
-KeywordId.LAB_NOTE: KeywordData(
+        KeywordId.LAB_NOTE: KeywordData(
             type=KeywordType.OBJECT,
             state=KeywordState.INACTIVE,
             interactions=[
@@ -144,18 +161,17 @@ KeywordId.LAB_NOTE: KeywordData(
                         Action(
                             type=ActionType.PRINT_NARRATIVE,
                             value=(
- '노트에는 비커 그림과 함께 실험 결과가 적혀 있습니다. \n\n'
- '**[침전 반응 테스트]**\n\n'
- '단일 입자는 가벼워 표면에 뜬다.\n\n'
- '이중 결합된 입자는 그 아래에 부유한다.\n\n'
- '일곱 이상의 입자는 무거워 바닥에 가라앉는다.\n\n'
+                                "노트에는 비커 그림과 함께 실험 결과가 적혀 있습니다. \n\n"
+                                "**[침전 반응 테스트]**\n\n"
+                                "단일 입자는 가벼워 표면에 뜬다.\n\n"
+                                "이중 결합된 입자는 그 아래에 부유한다.\n\n"
+                                "일곱 이상의 입자는 무거워 바닥에 가라앉는다.\n\n"
                             ),
                         ),
                     ]
                 )
-            ]
+            ],
         ),
-
         # 2. 작업대 (멀티미터)
         KeywordId.WORKBENCH: KeywordData(
             type=KeywordType.OBJECT,
@@ -166,31 +182,34 @@ KeywordId.LAB_NOTE: KeywordData(
                     actions=[
                         Action(
                             type=ActionType.PRINT_NARRATIVE,
-                            value="기름에 찌든 작업대입니다. 벽에는 고정된 **[멀티미터]**와 **[정비 메모]**가 붙어 있습니다."
+                            value="기름에 찌든 작업대입니다. 벽에는 고정된 **[멀티미터]**와 **[정비 메모]**가 붙어 있습니다.",
                         ),
-                        Action(type=ActionType.UPDATE_STATE,
-                               value={"keyword": KeywordId.MULTIMETER, "state": KeywordState.DISCOVERED}),
-                        Action(type=ActionType.UPDATE_STATE,
-                               value={"keyword": KeywordId.MEMO_VOLTAGE, "state": KeywordState.DISCOVERED}),
+                        Action(
+                            type=ActionType.UPDATE_STATE,
+                            value={"keyword": KeywordId.MULTIMETER, "state": KeywordState.DISCOVERED},
+                        ),
+                        Action(
+                            type=ActionType.UPDATE_STATE,
+                            value={"keyword": KeywordId.MEMO_VOLTAGE, "state": KeywordState.DISCOVERED},
+                        ),
                         Action(type=ActionType.UPDATE_STATE, value={"key": "workbench_inspected", "value": True}),
-                    ]
+                    ],
                 ),
-
                 Interaction(
                     conditions=[Condition(type=ConditionType.STATE_IS, target="workbench_inspected", value=True)],
                     actions=[
                         Action(
                             type=ActionType.PRINT_NARRATIVE,
-                            value="기름에 찌든 작업대입니다. 벽에는 고정된 **[멀티미터]**와 **[정비 메모]**가 붙어 있습니다."
+                            value="기름에 찌든 작업대입니다. 벽에는 고정된 **[멀티미터]**와 **[정비 메모]**가 붙어 있습니다.",
                         ),
-                    ]
-                )
-            ]
+                    ],
+                ),
+            ],
         ),
         KeywordId.MULTIMETER: KeywordData(
             type=KeywordType.OBJECT,
             state=KeywordState.INACTIVE,
-            description="전압 측정기입니다. 건전지를 갖다 대면 전압을 알 수 있습니다."
+            description="전압 측정기입니다. 건전지를 갖다 대면 전압을 알 수 있습니다.",
         ),
         KeywordId.MEMO_VOLTAGE: KeywordData(
             type=KeywordType.OBJECT,
@@ -201,7 +220,6 @@ KeywordId.LAB_NOTE: KeywordData(
                 '순서가 틀리거나 전압이 맞지 않으면 역전류로 인해 감전될 수 있음."'
             ),
         ),
-
         # 3. 전자 금고 (키패드 + LED)
         KeywordId.ELECTRONIC_SAFE: KeywordData(
             type=KeywordType.OBJECT,
@@ -209,10 +227,13 @@ KeywordId.LAB_NOTE: KeywordData(
             interactions=[
                 Interaction(
                     conditions=[Condition(type=ConditionType.STATE_IS, target="safe_opened", value=True)],
-                    actions=[Action(type=ActionType.PRINT_NARRATIVE, value="금고가 열려 있습니다."),
-                             Action(type=ActionType.UPDATE_STATE,
-                                    value={"keyword": KeywordId.ELECTRONIC_SAFE, "state": KeywordState.UNSEEN}),
-                             ]
+                    actions=[
+                        Action(type=ActionType.PRINT_NARRATIVE, value="금고가 열려 있습니다."),
+                        Action(
+                            type=ActionType.UPDATE_STATE,
+                            value={"keyword": KeywordId.ELECTRONIC_SAFE, "state": KeywordState.UNSEEN},
+                        ),
+                    ],
                 ),
                 Interaction(
                     conditions=[Condition(type=ConditionType.STATE_IS, target="safe_powered", value=True)],
@@ -220,22 +241,26 @@ KeywordId.LAB_NOTE: KeywordData(
                         Action(
                             type=ActionType.PRINT_NARRATIVE,
                             value=(
-'<img src="assets/chapter1/led_keypad.png" alt="키패드" width="220">\n\n'
+                                '<img src="assets/chapter1/led_keypad.png" alt="키패드" width="220">\n\n'
                                 "전원이 켜지자 4개의 LED에 빨간 불이 들어왔습니다.\n"
                                 "숫자 키패드가 활성화되었습니다."
-                            )
+                            ),
                         ),
-Action(
+                        Action(
                             type=ActionType.PRINT_SYSTEM,
                             value=f"암호를 알아내어 `{KeywordId.ELECTRONIC_SAFE} : [비밀번호]` 형식으로 입력해 보세요.",
                         ),
-                    ]
+                    ],
                 ),
                 Interaction(
                     actions=[
-                        Action(type=ActionType.PRINT_NARRATIVE, value="전원이 꺼져 있습니다. 4개의 LED가 모두 꺼져 있고 키패드도 반응하지 않습니다.")]
-                )
-            ]
+                        Action(
+                            type=ActionType.PRINT_NARRATIVE,
+                            value="전원이 꺼져 있습니다. 4개의 LED가 모두 꺼져 있고 키패드도 반응하지 않습니다.",
+                        )
+                    ]
+                ),
+            ],
         ),
         # 6. 소방 도끼 (오브젝트 - 벽에 붙어있는 상태)
         KeywordId.FIRE_AXE: KeywordData(
@@ -267,13 +292,13 @@ Action(
                     actions=[
                         Action(
                             type=ActionType.PRINT_NARRATIVE,
-                            value="산성 젤이 닿은 부분이 하얗게 부식되어 녹아내렸습니다. 클램프는 힘없이 입을 벌리고 있습니다."
+                            value="산성 젤이 닿은 부분이 하얗게 부식되어 녹아내렸습니다. 클램프는 힘없이 입을 벌리고 있습니다.",
                         ),
                         Action(
                             type=ActionType.UPDATE_STATE,
-                            value={"keyword": KeywordId.RUSTY_CLAMP, "state": KeywordState.UNSEEN}
+                            value={"keyword": KeywordId.RUSTY_CLAMP, "state": KeywordState.UNSEEN},
                         ),
-                    ]
+                    ],
                 ),
                 # Case 2: 녹 제거 전 (기본 상태)
                 Interaction(
@@ -284,11 +309,11 @@ Action(
                                 "**[소방 도끼]**를 꽉 물고 있는 고정 장치입니다.\n\n"
                                 "붉은 녹이 슬어 꿈쩍도 안 합니다.\n\n"
                                 "화학적으로 녹을 제거해야 합니다."
-                            )
+                            ),
                         )
                     ]
-                )
-            ]
+                ),
+            ],
         ),
         # --- UNSEEN 오브젝트 (지하 연구실) ---
         "냉동 창고": KeywordData(
@@ -328,9 +353,9 @@ Action(
             actions=[
                 Action(
                     type=ActionType.PRINT_NARRATIVE,
-                    value='녹슨 클램프에 산성 용액을 그대로 부었습니다.\n\n'
-                          '용액은 주르륵 흘러내려 바닥으로 떨어졌고, 그중 일부가 당신의 손등에 튀었습니다!\n\n'
-                          '"으악! 타는 것 같아!"',
+                    value="녹슨 클램프에 산성 용액을 그대로 부었습니다.\n\n"
+                    "용액은 주르륵 흘러내려 바닥으로 떨어졌고, 그중 일부가 당신의 손등에 튀었습니다!\n\n"
+                    '"으악! 타는 것 같아!"',
                 ),
                 Action(type=ActionType.MODIFY_STAMINA, value=-2),
                 Action(
@@ -339,21 +364,24 @@ Action(
                 ),
             ],
         ),
-
         # 2. 도끼 획득
         Combination(
             conditions=[Condition(type=ConditionType.STATE_IS, target="axe_obtained", value=False)],
             targets=[KeywordId.RUSTY_CLAMP, KeywordId.ACID_GEL],
             actions=[
-                Action(type=ActionType.PRINT_NARRATIVE, value="산성 젤을 발라 녹을 녹였습니다. 클램프가 풀리고 **[소방 도끼]**를 손에 넣었습니다!"),
+                Action(
+                    type=ActionType.PRINT_NARRATIVE,
+                    value="산성 젤을 발라 녹을 녹였습니다. 클램프가 풀리고 **[소방 도끼]**를 손에 넣었습니다!",
+                ),
                 Action(type=ActionType.REMOVE_ITEM, value=KeywordId.ACID_GEL),
                 Action(type=ActionType.REMOVE_KEYWORD, value=KeywordId.FIRE_AXE),
-                Action(type=ActionType.ADD_ITEM,
-                       value={"name": KeywordId.FIRE_AXE, "description": "무엇이든 부술 수 있는 붉은 도끼."}),
+                Action(
+                    type=ActionType.ADD_ITEM,
+                    value={"name": KeywordId.FIRE_AXE, "description": "무엇이든 부술 수 있는 붉은 도끼."},
+                ),
                 Action(type=ActionType.UPDATE_STATE, value={"key": "axe_obtained", "value": True}),
-            ]
+            ],
         ),
-
         # 3. 배터리 측정 및 조립 (기존 로직 유지)
         # --- [퍼즐 3] 배터리 전압 (멀티미터) ---
         # 1: 9V, 2: 6V, 3: 5V, 4: 4V, 5: 2V
@@ -451,13 +479,16 @@ Action(
                     value={"name": KeywordId.BATTERY_PACK, "description": "안정적인 19V 전원."},
                 ),
                 Action(
-                    type=ActionType.UPDATE_STATE, value={"keyword": KeywordId.WORKBENCH, "state": KeywordState.UNSEEN},
+                    type=ActionType.UPDATE_STATE,
+                    value={"keyword": KeywordId.WORKBENCH, "state": KeywordState.UNSEEN},
                 ),
                 Action(
-                    type=ActionType.UPDATE_STATE, value={"keyword": KeywordId.MEMO_VOLTAGE, "state": KeywordState.UNSEEN},
+                    type=ActionType.UPDATE_STATE,
+                    value={"keyword": KeywordId.MEMO_VOLTAGE, "state": KeywordState.UNSEEN},
                 ),
-Action(
-                    type=ActionType.UPDATE_STATE, value={"keyword": KeywordId.MULTIMETER, "state": KeywordState.UNSEEN},
+                Action(
+                    type=ActionType.UPDATE_STATE,
+                    value={"keyword": KeywordId.MULTIMETER, "state": KeywordState.UNSEEN},
                 ),
             ],
         ),
@@ -502,7 +533,7 @@ Action(
                 Action(type=ActionType.PRINT_NARRATIVE, value="전원이 들어옵니다. LED가 깜빡입니다."),
                 Action(type=ActionType.REMOVE_ITEM, value=KeywordId.BATTERY_PACK),
                 Action(type=ActionType.UPDATE_STATE, value={"key": "safe_powered", "value": True}),
-            ]
+            ],
         ),
         Combination(
             type=CombinationType.PASSWORD,
@@ -512,9 +543,9 @@ Action(
                 Action(
                     type=ActionType.PRINT_NARRATIVE,
                     value="*띠리릭- 철컥!* 정답입니다.\n\n"
-                          "금고 문이 열렸습니다.\n\n"
-                          "안에서 묵직한 **[산업용 배터리]**를 발견했습니다!\n\n"
-                          "이제 탈출뿐입니다."
+                    "금고 문이 열렸습니다.\n\n"
+                    "안에서 묵직한 **[산업용 배터리]**를 발견했습니다!\n\n"
+                    "이제 탈출뿐입니다.",
                 ),
                 Action(
                     type=ActionType.ADD_ITEM,
@@ -522,12 +553,19 @@ Action(
                 ),
                 Action(type=ActionType.UPDATE_STATE, value={"key": "safe_opened", "value": True}),
                 Action(type=ActionType.REMOVE_ITEM, value=KeywordId.PERIODIC_TABLE),
-                Action(type=ActionType.UPDATE_STATE, value={"keyword": KeywordId.LAB_NOTE, "state": KeywordState.UNSEEN}),
-                Action(type=ActionType.UPDATE_STATE, value={"keyword": KeywordId.MEDICINE_TRAY, "state": KeywordState.UNSEEN}),
-
+                Action(
+                    type=ActionType.UPDATE_STATE, value={"keyword": KeywordId.LAB_NOTE, "state": KeywordState.UNSEEN}
+                ),
+                Action(
+                    type=ActionType.UPDATE_STATE,
+                    value={"keyword": KeywordId.MEDICINE_TRAY, "state": KeywordState.UNSEEN},
+                ),
                 Action(type=ActionType.UPDATE_CHAPTER_STATE, value={"key": "distiller_state", "value": 1}),
-Action(type=ActionType.PRINT_SYSTEM, value="시간이 꽤나 지난 것 같네요. 도끼를 얻었다면 베이스캠프로 돌아가보는 것이 좋겠습니다."),
-            ]
+                Action(
+                    type=ActionType.PRINT_SYSTEM,
+                    value="시간이 꽤나 지난 것 같네요. 도끼를 얻었다면 베이스캠프로 돌아가보는 것이 좋겠습니다.",
+                ),
+            ],
         ),
-    ]
+    ],
 )

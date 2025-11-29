@@ -58,12 +58,17 @@ CH1_COMMON_DATA = ChapterData(
         Combination(
             targets=[KeywordId.ACID_SOURCE, KeywordId.POTATO_STARCH],
             actions=[
-                Action(type=ActionType.PRINT_NARRATIVE, value="소스통에 든 황산과 전분을 섞어 끈적한 **[산성 젤]**을 만들었습니다. 냄새가 지독합니다."),
+                Action(
+                    type=ActionType.PRINT_NARRATIVE,
+                    value="소스통에 든 황산과 전분을 섞어 끈적한 **[산성 젤]**을 만들었습니다. 냄새가 지독합니다.",
+                ),
                 Action(type=ActionType.REMOVE_ITEM, value=KeywordId.ACID_SOURCE),
                 Action(type=ActionType.REMOVE_ITEM, value=KeywordId.POTATO_STARCH),
-                Action(type=ActionType.ADD_ITEM,
-                       value={"name": KeywordId.ACID_GEL, "description": "흘러내리지 않는 고점도 산성 물질."}),
-            ]
+                Action(
+                    type=ActionType.ADD_ITEM,
+                    value={"name": KeywordId.ACID_GEL, "description": "흘러내리지 않는 고점도 산성 물질."},
+                ),
+            ],
         ),
         # [준비용 조합] 고무 + 전선 = 절연 전선
         Combination(

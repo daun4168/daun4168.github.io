@@ -167,7 +167,9 @@ class SceneManager:
         if self.current_scene:
             # 1. 비밀번호 입력 처리 (콜론 ':' 사용) -> Type: PASSWORD
             if ":" in command:
-                parts = [p.strip().lower() for p in command.split(":")]
+                # [수정] .strip() 대신 .replace(" ", "")를 사용하여 사이 공백까지 모두 제거
+                parts = [p.replace(" ", "").lower() for p in command.split(":")]
+
                 if len(parts) == 2:
                     part1, part2 = parts
 
@@ -177,13 +179,11 @@ class SceneManager:
                     if success:
                         return
 
-                    # [수정] process_combination 호출 시 match_type을 PASSWORD로 지정
                     success = await self.current_scene.process_combination(
                         part1, part2, match_type=CombinationType.PASSWORD
                     )
 
                     if not success:
-                        # 실패 시 피드백 (첫 번째 제안 반영)
                         self.ui.print_system_message("비밀번호가 일치하지 않거나, 대상을 찾을 수 없습니다.")
                 else:
                     self.ui.print_system_message("잘못된 입력 형식입니다. `대상 : 비밀번호` 형식으로 입력해주세요.")
@@ -191,11 +191,12 @@ class SceneManager:
 
             # 2. 아이템 조합 명령 처리 (더하기 '+' 사용) -> Type: DEFAULT
             if "+" in command:
-                parts = [p.strip().lower() for p in command.split("+")]
+                # [수정] .strip() 대신 .replace(" ", "")를 사용하여 사이 공백까지 모두 제거
+                parts = [p.replace(" ", "").lower() for p in command.split("+")]
+
                 if len(parts) == 2:
                     part1, part2 = parts
 
-                    # [수정] process_combination 호출 시 match_type을 DEFAULT로 지정 (기본값)
                     success = await self.current_scene.process_combination(
                         part1, part2, match_type=CombinationType.DEFAULT
                     )

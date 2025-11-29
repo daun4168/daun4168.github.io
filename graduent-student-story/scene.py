@@ -77,23 +77,43 @@ class Scene:
 
     def resolve_alias(self, keyword: str) -> str:
         """
-        주어진 키워드가 별칭(Alias)인 경우, 실제 대상 키워드를 찾아 반환합니다.
-        별칭이 아니거나 찾을 수 없으면 원래 키워드를 반환합니다.
-
-        Args:
-            keyword (str): 사용자가 입력한 키워드.
-
-        Returns:
-            str: 실제 대상 키워드 또는 원래 키워드.
+        주어진 키워드가 별칭(Alias)인 경우 실제 대상 키워드를,
+        일반 키워드인 경우 해당 키워드의 원본 이름(공백 포함)을 반환합니다.
+        입력값과 저장된 키 모두 공백을 제거하고 비교하여 띄어쓰기 유연성을 확보합니다.
         """
-        cmd_lower = keyword.lower()
+        # 1. 입력받은 키워드: 공백 제거 및 소문자화 (예: "빈 페트병" -> "빈페트병")
+        cmd_norm = keyword.replace(" ", "").lower()
+        # 2. 씬에 등록된 모든 키워드 순회
         for k, v in self.scene_data.keywords.items():
-            if k.lower() == cmd_lower:
-                # 키워드가 별칭 타입인 경우, target을 반환하고 없으면 원래 키워드를 반환합니다.
+            # 3. 데이터에 있는 키(k): 공백 제거 및 소문자화 (예: "빈 페트병" -> "빈페트병")
+            k_norm = k.replace(" ", "").lower()
+
+            # 4. 정규화된 형태끼리 비교
+            if k_norm == cmd_norm:
+                # 일치함!
+
+                # 별칭(ALIAS)이면 -> 별칭의 목표(target)를 반환
                 if v.type == KeywordType.ALIAS:
                     return v.target or k
-                return k  # 별칭이 아니면 해당 키워드를 반환합니다.
-        return keyword  # 일치하는 키워드가 없으면 원래 키워드를 반환합니다.
+
+                # 일반 아이템/오브젝트면 -> **원본 키(k)**를 반환 (예: "빈 페트병")
+                return k
+
+        if self.chapter_data is not None:
+            for combo in self.chapter_data.combinations:
+                for k in combo.targets:
+                    k_norm = k.replace(" ", "").lower()
+                    if k_norm == cmd_norm:
+                        return k
+
+        for combo in self.scene_data.combinations:
+            for k in combo.targets:
+                k_norm = k.replace(" ", "").lower()
+                if k_norm == cmd_norm:
+                    return k
+
+        # 5. 매칭되는 게 없으면 입력한 그대로 반환
+        return keyword
 
     async def process_keyword(self, keyword: str) -> bool:
         """

@@ -192,6 +192,8 @@ class KeywordId(StrEnum):
     BATTERY_4 = "건전지 4"
     BATTERY_5 = "건전지 5"
     BATTERY_PACK = "배터리 팩"
+    SAFE = "금고"
+    LAB_NOTE = "실험 노트"
 
     AXE = "도끼"
     ACID_GEL = "산성 젤"
@@ -219,8 +221,7 @@ class KeywordId(StrEnum):
     WHITE_POWDER_ALIAS = "가루"
     # WORKBENCH = "작업대"
     # MULTIMETER = "멀티미터"
-    SAFE = "전자 금고"
-    SAFE_ALIAS = "금고"
+
     # RUSTY_CLAMP = "녹슨 클램프"
     RUSTY_CLAMP_ALIAS = "클램프"
 

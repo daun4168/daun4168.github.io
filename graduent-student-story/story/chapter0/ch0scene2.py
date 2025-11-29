@@ -17,6 +17,8 @@ CH0_SCENE2_DATA = SceneData(
         "card_returned": False,  # 카드가 반납되었는지 여부
     },
     keywords={
+        KeywordId.QUANTUM: KeywordData(type=KeywordType.ALIAS, target=KeywordId.QUANTUM_CAULDRON),
+        KeywordId.CAULDRON: KeywordData(type=KeywordType.ALIAS, target=KeywordId.QUANTUM_CAULDRON),
         KeywordId.PROFESSOR: KeywordData(
             type=KeywordType.NPC,
             state=KeywordState.DISCOVERED,

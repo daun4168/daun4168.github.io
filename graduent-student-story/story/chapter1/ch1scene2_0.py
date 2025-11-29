@@ -153,7 +153,7 @@ CH1_SCENE2_0_DATA = SceneData(
         # 4. 갑판 뒷편
         KeywordId.REAR_DECK: KeywordData(
             type=KeywordType.PORTAL,
-            state=KeywordState.DISCOVERED,
+            state=KeywordState.HIDDEN,
             interactions=[
                 # Case 1: 잠금 해제됨 (이동 가능)
                 Interaction(
@@ -194,7 +194,7 @@ CH1_SCENE2_0_DATA = SceneData(
                         ),
                         Action(
                             type=ActionType.PRINT_SYSTEM,
-                            value=f"암호를 알아내어 `{KeywordId.REAR_DECK} : [비밀번호]` 형식으로 입력해 보세요.",
+                            value=f"암호를 알아내어 `{KeywordId.REAR_DECK} : [비밀번호 4자리]` 형식으로 입력해 보세요.",
                         ),
                     ],
                 ),

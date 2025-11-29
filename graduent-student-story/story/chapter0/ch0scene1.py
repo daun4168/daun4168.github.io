@@ -350,7 +350,8 @@ CH0_SCENE1_DATA = SceneData(
                             type=ActionType.PRINT_NARRATIVE,
                             value=(
                                 "전원 버튼을 누르자, 이륙하는 비행기 같은 소음을 내며 팬이 돌아간다.\n"
-                                "키보드는 글자가 다 지워졌지만, 오른쪽 **숫자 패드**만큼은 손때가 타서 반질거린다.\n"
+                                "키보드는 글자가 다 지워졌지만, 오른쪽 **숫자 패드**만큼은 손때가 타서 반질거린다.\n\n"
+                                '<img src="assets/chapter0/computer_keypad.png" alt="키패드" width="300">\n\n'
                                 "Num Lock 키에 초록불이 깜빡이며 암호 입력창이 떴다.\n\n"
                                 "이런 복잡한 암호를 맨정신으로 외우고 다닐 리가 없다.\n"
                                 "분명 주변 어딘가, 눈에 잘 띄는 **벽** 같은 곳에 **메모**를 해뒀을 것이다."
@@ -418,7 +419,7 @@ CH0_SCENE1_DATA = SceneData(
                         ),
                         Action(
                             type=ActionType.PRINT_SYSTEM,
-                            value="`시약장 : [비밀번호]` 형식으로 열 수 있을 것 같다.",
+                            value="암호를 알아내어 `시약장 : [비밀번호 4자리]` 형식으로 입력해 보세요.",
                         ),
                     ],
                 ),

@@ -148,7 +148,7 @@ CH1_SCENE2_6_DATA = SceneData(
                         Action(type=ActionType.DISCOVER_KEYWORD, value=KeywordId.COURSE_MENU),
                         Action(
                             type=ActionType.PRINT_SYSTEM,
-                            value=f"암호를 알아내어 `{KeywordId.CLEANING_LOCKER} : [비밀번호]` 형식으로 입력해 보세요.",
+                            value=f"암호를 알아내어 `{KeywordId.CLEANING_LOCKER} : [비밀번호 6자리]` 형식으로 입력해 보세요.",
                         ),
                     ]
                 ),
@@ -160,7 +160,7 @@ CH1_SCENE2_6_DATA = SceneData(
             state=KeywordState.INACTIVE,
             description=(
                 '"내 주방의 도구를 탐내는 자여, 접시 위의 진실을 보라."\n\n<br>'
-                "① Appetizer: 바나나. 오직 노란 부분만 달콤하지.\n\n"
+                "① Appetizer: 바나나. 오직 신선한 부분만.\n\n"
                 "② Main: 파스타. 가장 양이 적은 접시 하나면 충분하다.\n\n"
                 "③ Dessert: 독약. 붉은 피가 담긴 것만이 진정한 끝을 선사한다."
             ),
@@ -190,19 +190,19 @@ CH1_SCENE2_6_DATA = SceneData(
             type=KeywordType.OBJECT,
             state=KeywordState.INACTIVE,  # 조리대 봐야 나옴
             description=(
-                "도마 위에 바나나 하나가 칼로 정확히 **3등분** 되어 있습니다.\n\n"
+                "도마 위에 바나나 하나가 칼로 정확히 3등분 되어 있습니다.\n\n"
                 "양쪽 끝부분은 시커멓게 썩어 문드러졌지만, \n\n"
-                "**가운데 토막**만은 노랗고 신선해 보입니다."
+                "가운데 토막만은 신선해 보입니다."
             ),
         ),
-        # 5-2. 파스타 (힌트: P-Au-Ta 중 가장 작은 것 = P = 15)
+        # 5-2. 파스타 (힌트: P-As-Ta 중 가장 작은 것 = P = 15)
         KeywordId.PASTA_OBJ: KeywordData(
             type=KeywordType.OBJECT,
             state=KeywordState.INACTIVE,
             description=(
                 "세 개의 접시에 파스타가 담겨 있습니다.\n\n"
                 "가운데와 오른쪽 접시는 면이 산더미처럼 쌓여 있는데,\n\n"
-                "**왼쪽 접시**만 양이 다른 접시의 절반도 안 되게 적습니다."
+                "왼쪽 접시만 양이 다른 접시의 절반 정도로 적습니다."
             ),
         ),
         # 6. 약품 선반 (힌트: P-O-I-S-O-N 중 3번째 = I = 53)
@@ -259,11 +259,6 @@ CH1_SCENE2_6_DATA = SceneData(
             type=KeywordType.OBJECT,
             state=KeywordState.UNSEEN,
             description="쥐와 벌레들을 위한 5성급 호텔 뷔페다. 내가 여기 계속 서 있다간 '오늘의 특선 고기'가 될지도 모른다.",
-        ),
-        "조리대": KeywordData(
-            type=KeywordType.OBJECT,
-            state=KeywordState.UNSEEN,
-            description="피... 아니, 케첩 자국이 낭자하다. 여기서 요리를 한 건지 수술을 한 건지 모르겠다.",
         ),
         "셰프": KeywordData(
             type=KeywordType.OBJECT,

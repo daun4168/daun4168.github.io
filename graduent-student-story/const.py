@@ -59,6 +59,8 @@ class KeywordId(StrEnum):
 
     # CH0_SCENE2
     QUANTUM_CAULDRON = "양자 가마솥"
+    QUANTUM = "양자"
+    CAULDRON = "가마솥"
     HATCH = "탑승구"
 
     # CH1_SCENE0
@@ -69,7 +71,9 @@ class KeywordId(StrEnum):
     SHADY_BEACH = "그늘진 해변"
 
     WRECKAGE = "난파선 잔해"
+    WRECKAGE_ALIAS = "난파선"
     FOREST_ENTRY = "숲 입구"
+    FOREST = "숲"
     PALM_TREE = "야자수"
     TRASH_PILE = "쓰레기 더미"
     COCONUT = "코코넛"

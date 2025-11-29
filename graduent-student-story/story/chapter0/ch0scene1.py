@@ -330,8 +330,8 @@ CH0_SCENE1_DATA = SceneData(
                         Action(
                             type=ActionType.PRINT_NARRATIVE,
                             value=(
-                                "커피 얼룩이 묻은 낡은 포스트잇이다.\n"
-                                "알 수 없는 기하학적인 그림이 그려져 있다. 암호인가? 아니면 그냥 낙서인가?\n"
+                                "커피 얼룩이 묻은 낡은 포스트잇이다.\n\n"
+                                "알 수 없는 기하학적인 그림이 그려져 있다. 암호인가? 아니면 그냥 낙서인가?"
                             ),
                         ),
                     ]
@@ -358,7 +358,7 @@ CH0_SCENE1_DATA = SceneData(
                         ),
                         Action(
                             type=ActionType.PRINT_SYSTEM,
-                            value="암호를 알아내어 `컴퓨터 : [비밀번호]` 형식으로 입력해 보세요.",
+                            value=f"암호를 알아내어 `{KeywordId.COMPUTER} : [비밀번호 6자리]` 형식으로 입력해 보세요.",
                         ),
                     ],
                 ),
@@ -560,7 +560,7 @@ CH0_SCENE1_DATA = SceneData(
         ),
         Combination(
             type=CombinationType.PASSWORD,
-            targets=[KeywordId.COMPUTER, "12365478"],
+            targets=[KeywordId.COMPUTER, "136478"],
             actions=[
                 Action(
                     type=ActionType.PRINT_NARRATIVE,

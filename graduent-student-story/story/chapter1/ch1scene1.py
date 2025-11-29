@@ -34,6 +34,8 @@ CH1_SCENE1_DATA = SceneData(
     },
     keywords={
         KeywordId.SAND: KeywordData(type=KeywordType.ALIAS, target=KeywordId.SANDY_BEACH),
+        KeywordId.WRECKAGE_ALIAS: KeywordData(type=KeywordType.ALIAS, target=KeywordId.WRECKAGE),
+        KeywordId.FOREST: KeywordData(type=KeywordType.ALIAS, target=KeywordId.FOREST_ENTRY),
         # 포탈: 난파선 잔해, 숲 입구
         # 5. 난파선 잔해 (이동 포인트)
         KeywordId.WRECKAGE: KeywordData(

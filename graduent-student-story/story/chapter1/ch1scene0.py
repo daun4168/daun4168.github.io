@@ -36,6 +36,8 @@ CH1_SCENE0_DATA = SceneData(
     ],
     keywords={
         KeywordId.SAND: KeywordData(type=KeywordType.ALIAS, target=KeywordId.SANDY_BEACH),
+        KeywordId.QUANTUM: KeywordData(type=KeywordType.ALIAS, target=KeywordId.QUANTUM_CAULDRON),
+        KeywordId.CAULDRON: KeywordData(type=KeywordType.ALIAS, target=KeywordId.QUANTUM_CAULDRON),
         KeywordId.QUANTUM_CAULDRON: KeywordData(
             type=KeywordType.OBJECT,
             state=KeywordState.HIDDEN,

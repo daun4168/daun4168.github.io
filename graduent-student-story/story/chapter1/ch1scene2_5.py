@@ -206,6 +206,31 @@ CH1_SCENE2_5_DATA = SceneData(
             state=KeywordState.UNSEEN,
             description="나의 소중한 생명줄이다. 당장이라도 도망치고 싶지만, 빈손으로 돌아가면 굶어 죽는다. 진퇴양난이다.",
         ),
+        "화학 약품": KeywordData(
+            type=KeywordType.OBJECT,
+            state=KeywordState.UNSEEN,
+            description="MSDS(물질안전보건자료)를 안 봐도 알겠다. '흡입 시 치명적임', '피부 접촉 시 화상'. 분명 이렇게 적혀있을 냄새다.",
+        ),
+        "공기": KeywordData(
+            type=KeywordType.OBJECT,
+            state=KeywordState.UNSEEN,
+            description="무겁고 끈적하다. 산소보다 유독가스의 비율이 더 높은 것 같다. 숨을 쉴 때마다 폐가 절여지는 기분이다.",
+        ),
+        "구석": KeywordData(
+            type=KeywordType.OBJECT,
+            state=KeywordState.UNSEEN,
+            description="어둠과 먼지, 그리고 정체불명의 곰팡이가 삼위일체를 이루고 있다. 저기엔 바퀴벌레도 살지 못할 것이다.",
+        ),
+        "조명": KeywordData(
+            type=KeywordType.OBJECT,
+            state=KeywordState.UNSEEN,
+            description="전압이 불안정한지 계속 깜빡거린다. 공포 영화 클리셰가 완벽하게 갖춰져 있다. 귀신이 나와도 이상하지 않다.",
+        ),
+        "중앙": KeywordData(
+            type=KeywordType.OBJECT,
+            state=KeywordState.UNSEEN,
+            description="가장 중요한 길목을 황산 웅덩이가 점거하고 있다. 레벨 디자이너가 누군지 몰라도 악취미가 분명하다.",
+        ),
     },
     combinations=[
         # 1. 산성 용액 채취 (소스통 + 웅덩이)

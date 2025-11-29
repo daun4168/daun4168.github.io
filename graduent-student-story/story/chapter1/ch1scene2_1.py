@@ -315,6 +315,36 @@ CH1_SCENE2_1_DATA = SceneData(
             state=KeywordState.UNSEEN,
             description="녹이 슬어 붉게 변했다. 긁히면 패혈증으로 요단강을 건널 수 있는 훌륭한 생물학적 무기다.",
         ),
+        "곰팡이": KeywordData(
+            type=KeywordType.OBJECT,
+            state=KeywordState.UNSEEN,
+            description="배양기에 방치된 페트리 접시 속 균사체처럼 화려하게 피어있다. 이걸 긁어가면 신종 발견으로 논문을 쓸 수 있을까? 아니, 그전에 내 폐가 먼저 썩을 것이다.",
+        ),
+        "지진": KeywordData(
+            type=KeywordType.OBJECT,
+            state=KeywordState.UNSEEN,
+            description="진도 7.0의 강진이 휩쓸고 지나간 듯하다. 물론 진짜 지진은 아니고, 그냥 관리가 안 된 거다. 내 자취방 풍경과 묘하게 겹쳐 보인다.",
+        ),
+        "진동": KeywordData(
+            type=KeywordType.OBJECT,
+            state=KeywordState.UNSEEN,
+            description="물리적 진동이 아니라, 후각적 타격감이 고막까지 울리는 기분이다. 냄새가 소리로 들린다면 분명 데스메탈일 것이다.",
+        ),
+        "철제": KeywordData(
+            type=KeywordType.OBJECT,
+            state=KeywordState.UNSEEN,
+            description="한때는 튼튼한 강철이었겠지만, 지금은 산화철 덩어리다. 화학적으로 매우 안정한 상태... 즉, 더 이상 쓸모없다는 뜻이다.",
+        ),
+        "위태": KeywordData(
+            type=KeywordType.OBJECT,
+            state=KeywordState.UNSEEN,
+            description="금방이라도 떨어질 듯 아슬아슬하게 매달려 있다. 교수님 눈밖에 난 내 처지와 데칼코마니처럼 닮았다.",
+        ),
+        "우욱": KeywordData(
+            type=KeywordType.OBJECT,
+            state=KeywordState.UNSEEN,
+            description="위장이 요동친다. 어제 먹은 라면이 역류하려는 걸 간신히 참았다. 여기서 토하면 위생 점수가 마이너스 무한대가 될 것이다.",
+        ),
     },
     combinations=[
         # 갑판장 사물함 해제 (9271) -> 쪽지 1 획득

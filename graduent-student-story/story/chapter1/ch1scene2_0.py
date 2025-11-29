@@ -371,6 +371,42 @@ CH1_SCENE2_0_DATA = SceneData(
             state=KeywordState.UNSEEN,
             description="길이가 길어 보인다. 누가 뒤에서 쫓아오면 죽어라 달려도 도망 못 갈 것 같다.",
         ),
+        "냄새": KeywordData(
+            type=KeywordType.OBJECT,
+            state=KeywordState.UNSEEN,
+            description="후각 세포가 파업을 선언했다. 더 이상 숨을 쉬는 행위가 생명 연장이 아니라 수명 단축처럼 느껴진다.",
+        ),
+        "콧구멍": KeywordData(
+            type=KeywordType.OBJECT,
+            state=KeywordState.UNSEEN,
+            description="필터가 필요하다. 휴지라도 꽂아두고 싶지만, 입으로 숨을 쉬면 이 냄새를 맛보게 될까 봐 두렵다.",
+        ),
+        "난파선": KeywordData(
+            type=KeywordType.OBJECT,
+            state=KeywordState.UNSEEN,
+            description="타이타닉의 로맨스는 없고, 파상풍의 위험만 가득한 고철 덩어리다.",
+        ),
+        "분위기": KeywordData(
+            type=KeywordType.OBJECT,
+            state=KeywordState.UNSEEN,
+            description="B급 공포 영화 세트장 같다. 갑자기 튀어나오는 건 귀신일까, 아니면 마감 기한을 넘긴 내 죄책감일까.",
+        ),
+        "문": KeywordData(
+            type=KeywordType.OBJECT,
+            state=KeywordState.UNSEEN,
+            description="어느 문을 열어도 '판도라의 상자'일 것 같은 불길한 예감이 든다.",
+        ),
+        "왼쪽": KeywordData(
+            type=KeywordType.OBJECT,
+            state=KeywordState.UNSEEN,
+            description="문짝이 덜렁거리는 선원 숙소다. 붕괴 직전인 내 멘탈 상태와 비슷해 보여 묘한 친근감이 든다.",
+        ),
+        "오른쪽": KeywordData(
+            type=KeywordType.OBJECT,
+            state=KeywordState.UNSEEN,
+            description="선장실이다. '있어 보인다'는 건 루팅 할 아이템이 있다는 뜻일까? 잠시 희망 회로를 돌려본다.",
+        ),
+
     },
     combinations=[
         # 갑판 잠금 해제 (갑판 열쇠 : 3817)
@@ -444,5 +480,6 @@ CH1_SCENE2_0_DATA = SceneData(
                 ),
             ],
         ),
+
     ],
 )

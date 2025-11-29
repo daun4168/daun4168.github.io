@@ -256,6 +256,51 @@ CH1_SCENE2_2_DATA = SceneData(
             state=KeywordState.UNSEEN,
             description="항해 일지와 지도가 빼곡하다. 나도 연구실 벽면을 논문으로 도배했었는데... 갑자기 눈물이 난다.",
         ),
+        "캡틴": KeywordData(
+            type=KeywordType.OBJECT,
+            state=KeywordState.UNSEEN,
+            description="그는 지금 어디에 있을까? 배가 이 지경이 되도록 혼자만 좋은 의자에 앉아 있었던 게 분명하다. 우리 교수님과 겹쳐 보이는 건 기분 탓일까.",
+        ),
+        "클래스": KeywordData(
+            type=KeywordType.OBJECT,
+            state=KeywordState.UNSEEN,
+            description="자본주의의 맛이다. 연구비 횡령 의혹이 들 정도로 호화롭다. 내 연구실 책상은 합판인데...",
+        ),
+        "가죽": KeywordData(
+            type=KeywordType.OBJECT,
+            state=KeywordState.UNSEEN,
+            description="진짜 가죽이다. 내 지갑보다 비싸 보인다. 앉아보니 허리를 감싸는 착좌감이 인체공학적이다.",
+        ),
+        "종이": KeywordData(
+            type=KeywordType.OBJECT,
+            state=KeywordState.UNSEEN,
+            description="오래된 책에서 나는 쿰쿰한 냄새다. 도서관 지하 서고에서 밤새울 때 맡던 그 냄새와 비슷해 졸음이 밀려온다.",
+        ),
+        "시가": KeywordData(
+            type=KeywordType.OBJECT,
+            state=KeywordState.UNSEEN,
+            description="성공한 남자의 상징이라지만, 내 코에는 그저 비싼 발암 물질 태우는 냄새일 뿐이다.",
+        ),
+        "유리병": KeywordData(
+            type=KeywordType.OBJECT,
+            state=KeywordState.UNSEEN,
+            description="흔들리는 배 선반 위에 유리를 올려두다니. '안전 불감증'의 교과서적인 예시다. 떨어지면 내 머리는 박살 날 것이다.",
+        ),
+        "배": KeywordData(
+            type=KeywordType.OBJECT,
+            state=KeywordState.UNSEEN,
+            description="유리병 속에 갇힌 작은 배들이다. 좁은 병에 갇혀 나가지도 못하는 꼴이 대학원생 신세와 똑같다.",
+        ),
+        "머리 위": KeywordData(
+            type=KeywordType.OBJECT,
+            state=KeywordState.UNSEEN,
+            description="언제 흉기가 되어 떨어질지 모르는 데드존(Dead Zone)이다. 빨리 헬멧이라도 구해야 하나.",
+        ),
+        "폼": KeywordData(
+            type=KeywordType.OBJECT,
+            state=KeywordState.UNSEEN,
+            description="잠시 선장 흉내를 내봤지만, 거울에 비친 건 꾀죄죄한 조난자일 뿐이다. 현타가 온다.",
+        ),
     },
     combinations=[
         # 1. 책장 보관함 + 54215 -> 조명탄

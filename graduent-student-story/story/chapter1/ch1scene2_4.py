@@ -424,6 +424,31 @@ CH1_SCENE2_4_DATA = SceneData(
             state=KeywordState.UNSEEN,
             description="단단한 강철이 엿가락처럼 휘었다니, 대체 얼마나 강한 폭풍우가 몰아쳤던 걸까? 상상조차 하기 싫다.",
         ),
+        "머리": KeywordData(
+            type=KeywordType.OBJECT,
+            state=KeywordState.UNSEEN,
+            description="이미 미역 줄기 꼴이다. 탈모가 올 것 같다. 안 그래도 스트레스 때문에 많이 빠졌는데...",
+        ),
+        "중앙": KeywordData(
+            type=KeywordType.OBJECT,
+            state=KeywordState.UNSEEN,
+            description="태풍의 눈처럼 캐비닛 두 개가 떡하니 버티고 있다. 왜 하필 중앙일까? 풍수지리설이라도 따랐나.",
+        ),
+        "왼쪽": KeywordData(
+            type=KeywordType.OBJECT,
+            state=KeywordState.UNSEEN,
+            description="굳게 닫힌 사자 캐비닛이 있다. 안에 사자가 들어있진 않겠지? 슈뢰딩거의 사자인가?",
+        ),
+        "오른쪽": KeywordData(
+            type=KeywordType.OBJECT,
+            state=KeywordState.UNSEEN,
+            description="활짝 열린 곰 캐비닛이 있다. 곰이 탈출했다면 지금쯤 어디에 있을까? 제발 바다로 수영하러 갔길 바란다.",
+        ),
+        "선수": KeywordData(
+            type=KeywordType.OBJECT,
+            state=KeywordState.UNSEEN,
+            description="사자가 나오기 전에 내가 먼저 선수를 친다? 말은 쉽지. 물리면 파상풍 주사도 못 맞는데.",
+        ),
     },
     combinations=[
         # 사자 캐비닛 잠금 해제 (Li=3, O=8, N=7 -> 387)

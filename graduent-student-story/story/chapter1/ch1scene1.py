@@ -302,7 +302,7 @@ CH1_SCENE1_DATA = SceneData(
                                 "미지근하지만, 말라비틀어진 목을 적시는 데는 충분하다. 그 어떤 음료수보다 달콤하다."
                             ),
                         ),
-                        Action(type=ActionType.MODIFY_STAMINA, value=15),  # 체력 회복
+                        Action(type=ActionType.MODIFY_STAMINA, value=20),  # 체력 회복
                         Action(type=ActionType.PRINT_SYSTEM, value="갈증이 해소되고 체력이 크게 회복되었습니다."),
                         # 물을 마셨으므로 다시 빈 상태로 변경
                         Action(type=ActionType.UPDATE_CHAPTER_STATE, value={"key": "distiller_state", "value": 0}),
@@ -469,7 +469,7 @@ CH1_SCENE1_DATA = SceneData(
                         Action(
                             type=ActionType.PRINT_NARRATIVE,
                             value=(
-                                "지금 이 양자 가마솥는 더 이상 ‘출발 전’ 상태가 아니다.\n\n"
+                                "지금 이 양자 가마솥은 더 이상 ‘출발 전’ 상태가 아니다.\n\n"
                                 "당신이 내린 마지막 선택은 이미 어딘가로 향해 버렸고, 이곳의 시간은 조용히 흘러갔을 뿐이다."
                             ),
                         )
@@ -528,6 +528,37 @@ CH1_SCENE1_DATA = SceneData(
             state=KeywordState.UNSEEN,
             description="'일단은' 안전하다는 말만큼 불안한 말도 없다. 언제 머리 위로 코코넛이 떨어져 뇌진탕에 걸릴지 모르는 일이다.",
         ),
+        "젖 먹던 힘": KeywordData(
+            type=KeywordType.OBJECT,
+            state=KeywordState.UNSEEN,
+            description="내 근섬유 하나하나가 비명을 지르고 있다. 평소에 운동 좀 할걸. '코딩은 체력전'이라는 교수님의 말씀이 이제야 뼈저리게 이해된다.",
+        ),
+        "기계": KeywordData(
+            type=KeywordType.OBJECT,
+            state=KeywordState.UNSEEN,
+            description="한때는 첨단 과학의 정수였지만, 지금은 야자수 그늘 아래 퍼져있는 무거운 쇳덩이다. 그래도 내가 가진 유일한 희망이다.",
+        ),
+        "나": KeywordData(
+            type=KeywordType.OBJECT,
+            state=KeywordState.UNSEEN,
+            description="땀에 절고 모래 범벅이 된 꼴이 가관이다. 대학원 면접 날 이후로 이렇게 엉망인 모습은 처음이다.",
+        ),
+        "고통": KeywordData(
+            type=KeywordType.OBJECT,
+            state=KeywordState.UNSEEN,
+            description="온몸이 욱신거린다. 하지만 살아있다는 증거라고 생각하니... 그래도 아픈 건 아픈 거다.",
+        ),
+        "긴장": KeywordData(
+            type=KeywordType.OBJECT,
+            state=KeywordState.UNSEEN,
+            description="아드레날린 분비가 멈추자 급격한 피로가 몰려온다. 밤새 논문 쓰고 제출 버튼 누른 직후의 그 기분이다.",
+        ),
+        "식수": KeywordData(
+            type=KeywordType.OBJECT,
+            state=KeywordState.UNSEEN,
+            description="인간의 몸은 70%가 물이다. 지금 나는 65% 정도로 떨어지고 있는 것 같다. 빨리 보충하지 않으면 시스템이 종료될 것이다.",
+        ),
+
     },
     combinations=[
         # 페트병에 바닷물 담기
@@ -941,6 +972,39 @@ CH1_SCENE1_DATA = SceneData(
                 Action(
                     type=ActionType.PRINT_SYSTEM,
                     value="모든 부품을 연결한 뒤에 마지막 조임을 진행하세요. (석영, 배터리, 전선 끝이 모두 연결되어야 합니다.)",
+                ),
+            ],
+        ),
+
+        Combination(
+            targets=[KeywordId.SANDY_BEACH, KeywordId.AIR_DUSTER],
+            conditions=[Condition(type=ConditionType.HAS_ITEM, target=KeywordId.AIR_DUSTER)],
+            actions=[
+                Action(
+                    type=ActionType.PRINT_NARRATIVE,
+                    value=(
+                        "치익-! 뜨거운 모래사장을 향해 비장하게 먼지 제거제를 분사했다.\n\n"
+                        "모래알이 사방으로 튀어 오르며 내 얼굴을 강타했다.\n\n"
+                        "이 광활한 해변의 모래를 이걸로 다 치우려면, 우주가 멸망할 때까지 뿌려도 모자랄 것이다.\n\n"
+                        "괜히 눈에 모래만 들어갔다."
+                    ),
+                ),
+            ],
+        ),
+
+        # [신규] 먼지 제거제 + 양자 가마솥 (실패)
+        Combination(
+            targets=[KeywordId.QUANTUM_CAULDRON, KeywordId.AIR_DUSTER],
+            conditions=[Condition(type=ConditionType.HAS_ITEM, target=KeywordId.AIR_DUSTER)],
+            actions=[
+                Action(
+                    type=ActionType.PRINT_NARRATIVE,
+                    value=(
+                        "기계 틈새의 먼지라도 털어볼까 싶어 '치익-' 하고 뿌려보았다.\n\n"
+                        "검은 연기가 잠시 흩어지나 싶더니, 매캐한 그을음이 역류해서 뿜어져 나왔다. 쿨럭!\n\n"
+                        "이건 먼지 문제가 아니다. 물리적으로 '박살'이 난 거다.\n\n"
+                        "본체 케이스가 찌그러졌는데 먼지를 털어봤자 성능은 그대로다."
+                    ),
                 ),
             ],
         ),

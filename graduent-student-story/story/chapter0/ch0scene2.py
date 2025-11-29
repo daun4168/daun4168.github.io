@@ -132,6 +132,31 @@ CH0_SCENE2_DATA = SceneData(
             state=KeywordState.UNSEEN,
             description="내 몸무게를 쌀 단위로 환산하다니. 21세기에 걸맞은 최첨단 도량형이다.",
         ),
+        "땀": KeywordData(
+            type=KeywordType.OBJECT,
+            state=KeywordState.UNSEEN,
+            description="평소 숨쉬기 운동만 하던 교수님이 육수를 뽑아내고 있다. 저 땀방울 하나하나가 다 내가 벌어온 연구비로 만들어진 것일 텐데.",
+        ),
+        "역작": KeywordData(
+            type=KeywordType.OBJECT,
+            state=KeywordState.UNSEEN,
+            description="프랑켄슈타인 박사도 자신의 피조물을 그렇게 불렀을 것이다. 그 소설의 결말이 파멸이었던 건 기억 못 하시는 걸까.",
+        ),
+        "직접": KeywordData(
+            type=KeywordType.OBJECT,
+            state=KeywordState.UNSEEN,
+            description="'수제(Handmade)'라는 단어가 이렇게 공포스럽게 다가온 적은 없었다. 장인의 숨결 대신 어설픈 납땜 냄새만 진동한다.",
+        ),
+        "밥": KeywordData(
+            type=KeywordType.OBJECT,
+            state=KeywordState.UNSEEN,
+            description="이름이 가마솥이라서 진짜 밥 짓는 소리가 나는 건가? 취사가 완료되면 나도 갓 지은 햅쌀밥처럼 고슬고슬해지는 건 아니겠지.",
+        ),
+        "테스트": KeywordData(
+            type=KeywordType.OBJECT,
+            state=KeywordState.UNSEEN,
+            description="말은 좋아서 테스트지, 실상은 '임상 실험' 혹은 '마루타'다. 생명윤리위원회 승인은 받고 하는 건지 의문이다.",
+        ),
     },
     combinations=[
         # [수정] 스패너로 탑승구 수리 시도 (카드를 아직 안 줬을 때 -> 방해 이벤트 발생)

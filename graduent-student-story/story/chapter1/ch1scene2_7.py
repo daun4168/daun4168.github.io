@@ -348,6 +348,41 @@ CH1_SCENE2_7_DATA = SceneData(
             state=KeywordState.UNSEEN,
             description="도끼가 걸려 있어 살벌하다. 인테리어 점수는 0점, 생존 점수는 100점이다.",
         ),
+        "개조": KeywordData(
+            type=KeywordType.OBJECT,
+            state=KeywordState.UNSEEN,
+            description="불법 개조의 냄새가 난다. 건축법과 소방법을 가볍게 무시한 설계다. 구청에 신고하면 포상금을 받을 수 있을까?",
+        ),
+        "천장": KeywordData(
+            type=KeywordType.OBJECT,
+            state=KeywordState.UNSEEN,
+            description="낮고 압박감이 든다. 정체불명의 액체가 결로현상처럼 맺혀 뚝뚝 떨어진다. 맞으면 머리가 벗겨질까 봐 피하고 싶다.",
+        ),
+        "바닥": KeywordData(
+            type=KeywordType.OBJECT,
+            state=KeywordState.UNSEEN,
+            description="차가운 금속 타일이다. 냉기가 신발 밑창을 뚫고 올라와 척추를 얼리고 있다. 수면 양말이 간절하다.",
+        ),
+        "소리": KeywordData(
+            type=KeywordType.OBJECT,
+            state=KeywordState.UNSEEN,
+            description="웅웅거리는 저주파 소음이 이명처럼 들린다. 계속 듣고 있으면 정신이 피폐해질 것 같은 '공대 기숙사 냉장고' 소리다.",
+        ),
+        "조명": KeywordData(
+            type=KeywordType.OBJECT,
+            state=KeywordState.UNSEEN,
+            description="창백한 형광등 불빛이다. 안 그래도 안 좋은 내 안색을 더욱 시체처럼 보이게 만든다.",
+        ),
+        "전선": KeywordData(
+            type=KeywordType.OBJECT,
+            state=KeywordState.UNSEEN,
+            description="기계 뒤편에 스파게티 면처럼 엉켜 있다. 선정리를 해주고 싶은 강박이 들지만, 건드리면 100% 감전될 것이다.",
+        ),
+        "은밀": KeywordData(
+            type=KeywordType.OBJECT,
+            state=KeywordState.UNSEEN,
+            description="지하 깊은 곳에 숨겨진 연구실이라니. 여기서 무슨 불법 실험을 자행했을지 상상조차 하기 싫다.",
+        ),
     },
     combinations=[
         Combination(

@@ -222,6 +222,46 @@ CH1_SCENE2_3_DATA = SceneData(
             state=KeywordState.UNSEEN,
             description="병 안은 멸균 상태일까? 저 안에 갇힌 선원 모형들은 숨이 막히겠지. 졸업이 막힌 내 처지와 다를 게 없다.",
         ),
+        "코앞": KeywordData(
+            type=KeywordType.OBJECT,
+            state=KeywordState.UNSEEN,
+            description="초근접 접사 촬영 모드다. 내 시력이 2.0은 아니지만, 먼지 한 톨 없는 건 확실히 알겠다.",
+        ),
+        "도구": KeywordData(
+            type=KeywordType.OBJECT,
+            state=KeywordState.UNSEEN,
+            description="가방에 든 스패너가 무겁게 느껴진다. 교수님이 '도구는 손의 연장'이라고 하셨는데, 지금은 '파괴의 연장'이 될 것 같다.",
+        ),
+        "뒤": KeywordData(
+            type=KeywordType.OBJECT,
+            state=KeywordState.UNSEEN,
+            description="돌아갈 곳이 있다는 건 안도감을 주지만, 빈손으로 돌아가는 건 패배감을 준다. 뭐라도 건져야 한다.",
+        ),
+        "배 밑바닥": KeywordData(
+            type=KeywordType.OBJECT,
+            state=KeywordState.UNSEEN,
+            description="붉은 액체가 찰랑거린다. 피일까? 와인일까? 아니면 그냥 색소 탄 물일까? 굳이 찍어 먹어보고 싶진 않다.",
+        ),
+        "금속 광택": KeywordData(
+            type=KeywordType.OBJECT,
+            state=KeywordState.UNSEEN,
+            description="인공적인 빛 반사다. 자연에서는 볼 수 없는 날카로운 빛. 저게 내가 찾는 열쇠이길 간절히 바란다.",
+        ),
+        "해골": KeywordData(
+            type=KeywordType.OBJECT,
+            state=KeywordState.UNSEEN,
+            description="전형적인 해적 깃발이다. '나 위험해요'라고 광고하는 꼴이다. 오히려 너무 뻔해서 함정 같기도 하다.",
+        ),
+        "금박": KeywordData(
+            type=KeywordType.OBJECT,
+            state=KeywordState.UNSEEN,
+            description="손톱으로 긁으면 벗겨질 것 같은 싸구려다. 겉만 번지르르한 게 딱 내 졸업 논문 초안 같다.",
+        ),
+        "정교": KeywordData(
+            type=KeywordType.OBJECT,
+            state=KeywordState.UNSEEN,
+            description="장인의 손길이 느껴진다. 이 배를 만든 사람은 분명 대학원생이었을 것이다. 그렇지 않고서야 이런 디테일에 집착할 리가 없다.",
+        ),
     },
     combinations=[
         # ==========================================================

@@ -290,6 +290,51 @@ CH1_SCENE0_DATA = SceneData(
             state=KeywordState.UNSEEN,
             description="주머니 속의 잡동사니들. 이 야생의 세계에서 내가 '문명인'임을 증명해 줄 유일한 도구들이다.",
         ),
+        "굉음": KeywordData(
+            type=KeywordType.OBJECT,
+            state=KeywordState.UNSEEN,
+            description="귀에서 삐- 소리가 난다. 코딩하다가 컴파일 에러 100개 떴을 때 들리던 그 환청과 비슷하다.",
+        ),
+        "고통": KeywordData(
+            type=KeywordType.OBJECT,
+            state=KeywordState.UNSEEN,
+            description="욱신거린다. 하지만 대학원 생활 2년 차, 이 정도 육체적 고통은 '휴가'에 가깝다. 정신적 고통이 없으니까.",
+        ),
+        "전두엽": KeywordData(
+            type=KeywordType.OBJECT,
+            state=KeywordState.UNSEEN,
+            description="뇌가 흔들렸다. 하지만 괜찮다. 어차피 대학원생의 뇌는 교수가 명령어를 입력하기 위한 '터미널'일 뿐이니까. 하드웨어 손상은 없다.",
+        ),
+        "충격": KeywordData(
+            type=KeywordType.OBJECT,
+            state=KeywordState.UNSEEN,
+            description="물리 엔진 버그가 아니다. 진짜 충격이다. 내 인생 자체가 충격의 연속이었지만 이건 스케일이 다르다.",
+        ),
+        "천장": KeywordData(
+            type=KeywordType.OBJECT,
+            state=KeywordState.UNSEEN,
+            description="텍스쳐가 깨진 것 같다. 아니, 여긴 텍스쳐가 없는 '오픈 월드'다. 석면 가루 날리던 그 회색 텍스 보드가 사무치게 그립다.",
+        ),
+        "속": KeywordData(
+            type=KeywordType.OBJECT,
+            state=KeywordState.UNSEEN,
+            description="멀미가 난다. 차원 이동의 부작용인가, 아니면 어제 먹은 컵라면이 양자 분해되어 역류하는 것인가.",
+        ),
+        "에어컨": KeywordData(
+            type=KeywordType.OBJECT,
+            state=KeywordState.UNSEEN,
+            description="그 시끄럽고 물 뚝뚝 떨어지는 고물 에어컨이 사무치게 그립다. 인류 최고의 발명품은 AI가 아니라 에어컨이다.",
+        ),
+        "8월": KeywordData(
+            type=KeywordType.OBJECT,
+            state=KeywordState.UNSEEN,
+            description="서버도 뻗고 대학원생도 뻗는 잔인한 계절. 하지만 여긴 8월보다 더한 '지옥불 반도'의 확장팩 같다.",
+        ),
+        "주머니": KeywordData(
+            type=KeywordType.OBJECT,
+            state=KeywordState.UNSEEN,
+            description="도라에몽 주머니는 아니지만, 지금 상황에선 내 생명줄이다. 구멍이 안 나서 다행이다.",
+        ),
     },
     combinations=[
         # [수정] 모래 + 스패너 = 안테나 획득

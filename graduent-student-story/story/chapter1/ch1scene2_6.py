@@ -285,6 +285,21 @@ CH1_SCENE2_6_DATA = SceneData(
             state=KeywordState.UNSEEN,
             description="밟을 때마다 '찌걱' 소리가 난다. 신발 밑창에 껌이 붙은 기분보다 백 배는 더 찝찝하고 불쾌하다.",
         ),
+        "구석": KeywordData(
+            type=KeywordType.OBJECT,
+            state=KeywordState.UNSEEN,
+            description="어둠 속에서 무언가 번뜩인다. 라따뚜이의 주인공을 기대하기엔 위생 상태가 너무 절망적이다.",
+        ),
+        "코스 요리": KeywordData(
+            type=KeywordType.OBJECT,
+            state=KeywordState.UNSEEN,
+            description="보기만 해도 배가 아프다. 파인다이닝(Fine Dining)이 아니라 다잉(Dying)이다. 먹는 순간 요단강 뷰를 감상하게 될 것이다.",
+        ),
+        "우웩": KeywordData(
+            type=KeywordType.OBJECT,
+            state=KeywordState.UNSEEN,
+            description="조건반사다. 파블로프의 개처럼, 이 냄새를 맡자마자 위장이 수축 운동을 시작했다.",
+        ),
     },
     combinations=[
         # 1. 도구함 암호 해제

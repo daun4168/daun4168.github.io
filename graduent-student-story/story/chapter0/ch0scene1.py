@@ -514,6 +514,51 @@ CH0_SCENE1_DATA = SceneData(
             state=KeywordState.UNSEEN,
             description="녹슨 청소도구함이 구원자라니. 내 인생의 구원자가 로또가 아니라 빗자루라는 사실을 받아들여야 한다.",
         ),
+        "향기": KeywordData(
+            type=KeywordType.OBJECT,
+            state=KeywordState.UNSEEN,
+            description="향기라니, 당치도 않다. 이건 묵은 먼지, 곰팡이, 그리고 식어버린 컵라면 국물이 섞인 '절망'의 냄새다. 샤넬 No.5 대신 'Lab No.2' 향수를 런칭해도 되겠다.",
+        ),
+        "콧속": KeywordData(
+            type=KeywordType.OBJECT,
+            state=KeywordState.UNSEEN,
+            description="비염이 도질 것 같다. 이곳의 공기 청정도는 '매우 나쁨'이 확실하다. 마스크를 쓰고 들어올 걸 그랬다.",
+        ),
+        "구석": KeywordData(
+            type=KeywordType.OBJECT,
+            state=KeywordState.UNSEEN,
+            description="어둠이 내려앉은 공간이다. 먼지 뭉치들이 자기들끼리 문명을 이룩하고 있다. 저 깊은 곳에 잃어버린 내 USB가 있을지도 모른다.",
+        ),
+        "벽면": KeywordData(
+            type=KeywordType.OBJECT,
+            state=KeywordState.UNSEEN,
+            description="원래 무슨 색이었는지 짐작조차 가지 않는다. 곳곳에 테이프 자국과 정체모를 얼룩이 추상화처럼 그려져 있다.",
+        ),
+        "봉인": KeywordData(
+            type=KeywordType.OBJECT,
+            state=KeywordState.UNSEEN,
+            description="부적으로 봉인한 게 아니다. 귀차니즘과 공포로 봉인된 것이다. 저걸 여는 순간 무슨 일이 벌어질지 아무도 책임지고 싶어 하지 않는다.",
+        ),
+        "주인": KeywordData(
+            type=KeywordType.OBJECT,
+            state=KeywordState.UNSEEN,
+            description="이 짐들을 두고 떠난 선배는 과연 무사히 졸업했을까? 아니면 야반도주했을까? 전자이길 간절히 바랄 뿐이다.",
+        ),
+        "소리": KeywordData(
+            type=KeywordType.OBJECT,
+            state=KeywordState.UNSEEN,
+            description="'끼루룩... 위이잉...' 하드디스크가 비명을 지르고 있다. 제발 백업은 해뒀기를.",
+        ),
+        "정체": KeywordData(
+            type=KeywordType.OBJECT,
+            state=KeywordState.UNSEEN,
+            description="알려고 하지 마라. 화학식이 복잡할수록, 혹은 유통기한이 오래 지날수록 정신 건강에 해롭다. 그냥 '치워야 할 무언가'로 정의하는 편이 낫다.",
+        ),
+        "혼돈": KeywordData(
+            type=KeywordType.OBJECT,
+            state=KeywordState.UNSEEN,
+            description="엔트로피 증가 법칙을 눈으로 확인하고 싶다면 이곳이 최적의 장소다. 무질서가 지배하는 세상, 그게 바로 여기다.",
+        ),
     },
     combinations=[
         Combination(

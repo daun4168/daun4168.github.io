@@ -141,7 +141,7 @@ CH1_SCENE2_7_DATA = SceneData(
                         Action(
                             type=ActionType.PRINT_NARRATIVE,
                             value=(
-                                '<img src="assets/chapter1/pills.png" alt="약" width="520">\n\n'
+                                '<img src="assets/chapter1/pills2.png" alt="약" width="520">\n\n'
                                 "책상 위에 놓인 스테인리스 트레이입니다.\n\n"
                                 "옆에 [실험 노트]가 놓여 있습니다."
                             ),

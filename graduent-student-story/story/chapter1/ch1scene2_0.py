@@ -11,7 +11,7 @@ CH1_SCENE2_0_DATA = SceneData(
         '"으악! 이게 무슨 냄새야? 코가 삐뚤어질 것 같네."\n\n'
         "난파선 안으로 들어오니 썩은 생선이랑 녹슨 쇠를 믹서기에 갈아 넣은 듯한 냄새가 콧구멍을 강타합니다.\n"
         "어두침침한 복도를 둘러보니 문이 몇 개 보입니다.\n\n"
-        "왼쪽엔 문짝이 덜렁거리는 선원 숙소, 오른쪽엔 왠지 있어 보이는 선장실.\n"
+        "오른쪽엔 왠지 있어 보이는 선장실, 왼쪽엔 문짝이 덜렁거리는 선원 숙소.\n"
         "저 안쪽에는 쇠사슬로 칭칭 감긴 갑판 뒷편 문이 있고, 그 옆엔 아래로 내려가는 길을 육중하게 가로막은 강철 격벽이 보입니다.\n\n"
         "으스스한 게 딱 귀신 나오기 좋은 분위기지만, 살려면 뭐라도 뒤져봐야겠지요.\n"
         "뒤로 나가면 나의 소중한 스위트 홈, 베이스캠프로 돌아갈 수 있습니다."
@@ -72,42 +72,101 @@ CH1_SCENE2_0_DATA = SceneData(
                 ),
             ],
         ),
-        # 2. 선원 숙소
-        KeywordId.CREW_QUARTERS: KeywordData(
+        # 5. 지하실 입구
+        KeywordId.BASEMENT_ENTRANCE: KeywordData(
             type=KeywordType.PORTAL,
-            state=KeywordState.HIDDEN,
+            state=KeywordState.INACTIVE,
             interactions=[
+                # 1. 전력 복구 안 됨 (Still Dark)
                 Interaction(
-                    conditions=[Condition(type=ConditionType.STATE_IS, target="crew_path_inspected", value=False)],
+                    conditions=[
+                        Condition(type=ConditionType.CHAPTER_STATE_IS, target="basement_power_restored", value=False)
+                    ],
                     actions=[
                         Action(
                             type=ActionType.PRINT_NARRATIVE,
-                            value='"문짝 꼬라지 하고는..."\n\n문이 반쯤 부서져 있어 안이 훤히 들여다보입니다. 퀴퀴한 곰팡이 냄새가 풀풀 풍깁니다.',
+                            value=(
+                                "강철 격벽은 산산조각 나 문은 열려 있지만, 계단 아래는 칠흑 같은 어둠입니다.\n\n"
+                                "이렇게 어두운 곳에서는 한 발짝도 움직일 수 없습니다. 추락할 위험이 있습니다.\n\n"
+                                "지하실의 전력을 복구해야 합니다."
+                            ),
                         ),
-                        Action(type=ActionType.UPDATE_STATE, value={"key": "crew_path_inspected", "value": True}),
                     ],
-                    continue_matching=True,
                 ),
+                # 2. 전력 복구됨 (Lights ON - 진입 가능)
                 Interaction(
-                    conditions=[Condition(type=ConditionType.STATE_IS, target="crew_path_inspected", value=True)],
+                    conditions=[
+                        Condition(type=ConditionType.CHAPTER_STATE_IS, target="basement_power_restored", value=True)
+                    ],
                     actions=[
                         Action(
                             type=ActionType.REQUEST_CONFIRMATION,
                             value={
-                                "prompt": "**[선원 숙소]**를 조사하시겠습니까?",
+                                "prompt": "지하실에 불이 들어왔습니다. **[지하 복도]**로 내려가시겠습니까?",
                                 "confirm_actions": [
                                     Action(
                                         type=ActionType.PRINT_NARRATIVE,
-                                        value="코를 막고 선원 숙소 안으로 들어갑니다.",
+                                        value="어둠이 걷히자 눅눅한 계단이 보입니다. 지하실로 내려갑니다...",
                                     ),
-                                    Action(type=ActionType.MOVE_SCENE, value=SceneID.CH1_SCENE2_1),  # 연결될 씬 ID
+                                    Action(type=ActionType.MOVE_SCENE, value=SceneID.CH1_SCENE2_5),  # 다음 씬 ID로 이동
                                 ],
                                 "cancel_actions": [
-                                    Action(type=ActionType.PRINT_NARRATIVE, value="다른 곳을 먼저 둘러봅니다."),
+                                    Action(
+                                        type=ActionType.PRINT_NARRATIVE,
+                                        value="일단 복도로 돌아와 다른 곳을 마저 확인합니다.",
+                                    ),
                                 ],
                             },
                         ),
                     ],
+                ),
+            ],
+        ),
+        # 6. 강화 격벽 (메인 퍼즐)
+        KeywordId.IRON_DOOR: KeywordData(
+            type=KeywordType.OBJECT,
+            state=KeywordState.HIDDEN,
+            description="군용 수송선급의 두꺼운 격벽입니다. 잠금 휠은 녹슬어 본체와 한 몸이 되었습니다. 물리적인 힘으로 여는 건 불가능해 보입니다. 재질은 고장력강(High Tensile Steel). 열역학적으로 접근해야 할 것 같습니다.",
+            interactions=[
+                Interaction(
+                    conditions=[Condition(type=ConditionType.STATE_IS, target="door_opened", value=True)],
+                    actions=[
+                        Action(
+                            type=ActionType.PRINT_NARRATIVE,
+                            value="잠금장치가 산산조각 나 문이 열려 있습니다. 어두운 **[지하실 입구]**가 보입니다.",
+                        ),
+                        Action(
+                            type=ActionType.UPDATE_STATE,
+                            value={"keyword": KeywordId.IRON_DOOR, "state": KeywordState.UNSEEN},
+                        ),
+                    ],
+                ),
+                Interaction(
+                    conditions=[Condition(type=ConditionType.STATE_IS, target="door_frozen", value=True)],
+                    actions=[
+                        Action(
+                            type=ActionType.PRINT_NARRATIVE,
+                            value="하얗게 성에가 낀 문에서 '쩡, 쩡' 하는 금속 비명 소리가 들립니다. 미세한 균열이 보입니다. 지금이라면 충격을 주어 깰 수 있을 것 같습니다.",
+                        ),
+                    ],
+                ),
+                Interaction(
+                    conditions=[Condition(type=ConditionType.STATE_IS, target="door_heated", value=True)],
+                    actions=[
+                        Action(
+                            type=ActionType.PRINT_NARRATIVE,
+                            value="시뻘겋게 달아올라 엄청난 열기를 내뿜고 있습니다. 금속이 팽창해 터질 듯합니다. 지금 식혀야 합니다... 아주 급격하게.",
+                        ),
+                        Action(type=ActionType.PRINT_SYSTEM, value="급속 냉각 수단이 필요합니다."),
+                    ],
+                ),
+                Interaction(
+                    actions=[
+                        Action(
+                            type=ActionType.PRINT_NARRATIVE,
+                            value="꿈쩍도 안 합니다. 틈새가 없어 지렛대도 들어가지 않습니다. 금속의 성질을 변화시켜야 합니다.",
+                        ),
+                    ]
                 ),
             ],
         ),
@@ -217,101 +276,42 @@ CH1_SCENE2_0_DATA = SceneData(
                 ),
             ],
         ),
-        # 5. 지하실 입구
-        KeywordId.BASEMENT_ENTRANCE: KeywordData(
+        # 2. 선원 숙소
+        KeywordId.CREW_QUARTERS: KeywordData(
             type=KeywordType.PORTAL,
-            state=KeywordState.INACTIVE,
+            state=KeywordState.HIDDEN,
             interactions=[
-                # 1. 전력 복구 안 됨 (Still Dark)
                 Interaction(
-                    conditions=[
-                        Condition(type=ConditionType.CHAPTER_STATE_IS, target="basement_power_restored", value=False)
-                    ],
+                    conditions=[Condition(type=ConditionType.STATE_IS, target="crew_path_inspected", value=False)],
                     actions=[
                         Action(
                             type=ActionType.PRINT_NARRATIVE,
-                            value=(
-                                "강철 격벽은 산산조각 나 문은 열려 있지만, 계단 아래는 칠흑 같은 어둠입니다.\n\n"
-                                "이렇게 어두운 곳에서는 한 발짝도 움직일 수 없습니다. 추락할 위험이 있습니다.\n\n"
-                                "지하실의 전력을 복구해야 합니다."
-                            ),
+                            value='"문짝 꼬라지 하고는..."\n\n문이 반쯤 부서져 있어 안이 훤히 들여다보입니다. 퀴퀴한 곰팡이 냄새가 풀풀 풍깁니다.',
                         ),
+                        Action(type=ActionType.UPDATE_STATE, value={"key": "crew_path_inspected", "value": True}),
                     ],
+                    continue_matching=True,
                 ),
-                # 2. 전력 복구됨 (Lights ON - 진입 가능)
                 Interaction(
-                    conditions=[
-                        Condition(type=ConditionType.CHAPTER_STATE_IS, target="basement_power_restored", value=True)
-                    ],
+                    conditions=[Condition(type=ConditionType.STATE_IS, target="crew_path_inspected", value=True)],
                     actions=[
                         Action(
                             type=ActionType.REQUEST_CONFIRMATION,
                             value={
-                                "prompt": "지하실에 불이 들어왔습니다. **[지하 복도]**로 내려가시겠습니까?",
+                                "prompt": "**[선원 숙소]**를 조사하시겠습니까?",
                                 "confirm_actions": [
                                     Action(
                                         type=ActionType.PRINT_NARRATIVE,
-                                        value="어둠이 걷히자 눅눅한 계단이 보입니다. 지하실로 내려갑니다...",
+                                        value="코를 막고 선원 숙소 안으로 들어갑니다.",
                                     ),
-                                    Action(type=ActionType.MOVE_SCENE, value=SceneID.CH1_SCENE2_5),  # 다음 씬 ID로 이동
+                                    Action(type=ActionType.MOVE_SCENE, value=SceneID.CH1_SCENE2_1),  # 연결될 씬 ID
                                 ],
                                 "cancel_actions": [
-                                    Action(
-                                        type=ActionType.PRINT_NARRATIVE,
-                                        value="일단 복도로 돌아와 다른 곳을 마저 확인합니다.",
-                                    ),
+                                    Action(type=ActionType.PRINT_NARRATIVE, value="다른 곳을 먼저 둘러봅니다."),
                                 ],
                             },
                         ),
                     ],
-                ),
-            ],
-        ),
-        # 6. 강화 격벽 (메인 퍼즐)
-        KeywordId.IRON_DOOR: KeywordData(
-            type=KeywordType.OBJECT,
-            state=KeywordState.HIDDEN,
-            description="군용 수송선급의 두꺼운 격벽입니다. 잠금 휠은 녹슬어 본체와 한 몸이 되었습니다. 물리적인 힘으로 여는 건 불가능해 보입니다. 재질은 고장력강(High Tensile Steel). 열역학적으로 접근해야 할 것 같습니다.",
-            interactions=[
-                Interaction(
-                    conditions=[Condition(type=ConditionType.STATE_IS, target="door_opened", value=True)],
-                    actions=[
-                        Action(
-                            type=ActionType.PRINT_NARRATIVE,
-                            value="잠금장치가 산산조각 나 문이 열려 있습니다. 어두운 **[지하실 입구]**가 보입니다.",
-                        ),
-                        Action(
-                            type=ActionType.UPDATE_STATE,
-                            value={"keyword": KeywordId.IRON_DOOR, "state": KeywordState.UNSEEN},
-                        ),
-                    ],
-                ),
-                Interaction(
-                    conditions=[Condition(type=ConditionType.STATE_IS, target="door_frozen", value=True)],
-                    actions=[
-                        Action(
-                            type=ActionType.PRINT_NARRATIVE,
-                            value="하얗게 성에가 낀 문에서 '쩡, 쩡' 하는 금속 비명 소리가 들립니다. 미세한 균열이 보입니다. 지금이라면 충격을 주어 깰 수 있을 것 같습니다.",
-                        ),
-                    ],
-                ),
-                Interaction(
-                    conditions=[Condition(type=ConditionType.STATE_IS, target="door_heated", value=True)],
-                    actions=[
-                        Action(
-                            type=ActionType.PRINT_NARRATIVE,
-                            value="시뻘겋게 달아올라 엄청난 열기를 내뿜고 있습니다. 금속이 팽창해 터질 듯합니다. 지금 식혀야 합니다... 아주 급격하게.",
-                        ),
-                        Action(type=ActionType.PRINT_SYSTEM, value="급속 냉각 수단이 필요합니다."),
-                    ],
-                ),
-                Interaction(
-                    actions=[
-                        Action(
-                            type=ActionType.PRINT_NARRATIVE,
-                            value="꿈쩍도 안 합니다. 틈새가 없어 지렛대도 들어가지 않습니다. 금속의 성질을 변화시켜야 합니다.",
-                        ),
-                    ]
                 ),
             ],
         ),
@@ -406,7 +406,6 @@ CH1_SCENE2_0_DATA = SceneData(
             state=KeywordState.UNSEEN,
             description="선장실이다. '있어 보인다'는 건 루팅 할 아이템이 있다는 뜻일까? 잠시 희망 회로를 돌려본다.",
         ),
-
     },
     combinations=[
         # 갑판 잠금 해제 (갑판 열쇠 : 3817)
@@ -480,6 +479,5 @@ CH1_SCENE2_0_DATA = SceneData(
                 ),
             ],
         ),
-
     ],
 )

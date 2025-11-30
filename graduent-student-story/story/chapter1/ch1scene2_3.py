@@ -289,7 +289,7 @@ CH1_SCENE2_3_DATA = SceneData(
                     value={
                         "name": KeywordId.DECK_KEY,
                         "description": (
-                            '<img src="assets/chapter1/3817_key.png" alt="갑판 열쇠" width="540">\n\n'
+                            '\n\n<img src="assets/chapter1/3817_key2.png" alt="갑판 열쇠" width="400">\n\n'
                             "갑판 뒷편으로 가는 녹슨 열쇠. 모양이 신기하다."
                         ),
                     },

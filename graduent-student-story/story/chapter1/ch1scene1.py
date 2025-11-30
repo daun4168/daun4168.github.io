@@ -558,7 +558,6 @@ CH1_SCENE1_DATA = SceneData(
             state=KeywordState.UNSEEN,
             description="인간의 몸은 70%가 물이다. 지금 나는 65% 정도로 떨어지고 있는 것 같다. 빨리 보충하지 않으면 시스템이 종료될 것이다.",
         ),
-
     },
     combinations=[
         # 페트병에 바닷물 담기
@@ -975,7 +974,6 @@ CH1_SCENE1_DATA = SceneData(
                 ),
             ],
         ),
-
         Combination(
             targets=[KeywordId.SANDY_BEACH, KeywordId.AIR_DUSTER],
             conditions=[Condition(type=ConditionType.HAS_ITEM, target=KeywordId.AIR_DUSTER)],
@@ -991,7 +989,6 @@ CH1_SCENE1_DATA = SceneData(
                 ),
             ],
         ),
-
         # [신규] 먼지 제거제 + 양자 가마솥 (실패)
         Combination(
             targets=[KeywordId.QUANTUM_CAULDRON, KeywordId.AIR_DUSTER],

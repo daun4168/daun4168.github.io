@@ -334,7 +334,7 @@ CH1_SCENE2_4_DATA = SceneData(
                             value=(
                                 "우웅- 쾅!!\n\n"
                                 "레버를 올리자 5개의 전구에서 눈부신 녹색 빛이 뿜어져 나옵니다.\n\n"
-                                "배 전체에 웅장한 진동이 울립니다. 지하실 격벽의 전자 잠금장치가 해제되었습니다!"
+                                "배 전체에 웅장한 진동이 울립니다. 어딘가에 전기가 들어온 것 같습니다!"
                             ),
                         ),
                         Action(type=ActionType.UPDATE_STATE, value={"key": "puzzle_solved", "value": True}),

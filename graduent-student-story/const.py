@@ -23,7 +23,12 @@ class SceneID(StrEnum):
     CH1_SCENE2_6 = "ch1_scene2_6"  # 지하 주방
     CH1_SCENE2_7 = "ch1_scene2_7"  # 지하 연구실
 
-    CH1_SCENE3 = "ch1_scene3"  # 난파선 내부
+    CH1_SCENE3_0 = "ch1_scene3_0"  # 생태 관측소 외부
+    CH1_SCENE3_1 = "ch1_scene3_1"  # 생태 관측소 외부
+    CH1_SCENE3_2 = "ch1_scene3_2"  # 생태 관측소 외부
+    CH1_SCENE3_3 = "ch1_scene3_3"  # 생태 관측소 외부
+    CH1_SCENE3_4 = "ch1_scene3_4"  # 생태 관측소 외부
+
     CH1_SCENE4 = "ch1_scene4"  # 공명하는 숲 (생태 관측소)
     CH1_SCENE5 = "ch1_scene5"  # 늪지대
     CH1_SCENE6 = "ch1_scene6"  # 동굴
@@ -172,15 +177,12 @@ class KeywordId(StrEnum):
     FILLED_BUCKET = "가성소다 양동이"
     BANANA_OBJ = "바나나"
     PASTA_OBJ = "파스타"
-
-    # 아이템
     SAUCE_BOTTLE = "빈 소스통"
     POTATO_STARCH = "전분 가루"
 
     # CH1_SCENE2_7
     MEDICINE_TRAY = "약품 트레이"
     TRAY = "트레이"
-    # 오브젝트
     LAB_DESK = "책상"
     WORKBENCH = "작업대"
     ELECTRONIC_SAFE = "전자 금고"
@@ -204,59 +206,58 @@ class KeywordId(StrEnum):
     ACID_GEL = "산성 젤"
     FIRE_AXE = "소방 도끼"
     PUZZLE_NOTE = "수수께끼 쪽지"
-
-    # CH1_SCENE2
-    WIRE = "전선"
-    BEACH = "해변"
-    EMERGENCY_CABINET = "비상 캐비닛"  # 조명탄 파밍 장소
-
-    UNDERGROUND_PASSAGE = "지하 통로"  # 문 열면 등장
-    WARNING_SIGN = "경고문"
-    PIPE = "파이프"
-    FLOOR_WIRES = "전선"  # 바닥에 널린 전선들 (아이템 아님)
-
-    # --- [Scene 3: 화물칸 (위험물 적재소)] ---
-    # 1. 지역 및 이동
-    SHIPWRECK_ENTRANCE = "난파선 입구"
-
-    # 2. 환경 오브젝트 & Alias
-    # ACID_PUDDLE = "산성 웅덩이"
-    ACID_PUDDLE_ALIAS = "웅덩이"
-    WHITE_POWDER = "하얀 가루"
-    WHITE_POWDER_ALIAS = "가루"
-    # WORKBENCH = "작업대"
-    # MULTIMETER = "멀티미터"
-
-    # RUSTY_CLAMP = "녹슨 클램프"
-    RUSTY_CLAMP_ALIAS = "클램프"
-
-    SCATTERED_SUPPLIES = "흩어진 보급품"
-    SCATTERED_SUPPLIES_ALIAS = "보급품"
-    NOTE = "쪽지"
-
-    # 3. 아이템
-    # EMPTY_BOTTLE = "빈 페트병"
-    # STARCH = "전분 가루"
-    #
-    # CAUSTIC_SODA_BUCKET = "가성소다 양동이"
-    # ACID_BOTTLE = "산성 용액 병"
-
     HEAVY_BATTERY = "산업용 배터리"
 
-    # CH1_SCENE4: 공명하는 숲 (생태 관측소)
-    ECO_OBSERVATORY = "생태 관측소"
+    # CH1_SCENE3_0
+    # 텃밭 관련 (코드에서 FLOWERBED로 사용 중, 표시 이름은 텃밭)
+    GARDEN = "텃밭"
+
+    # 배전함 퍼즐
+    DISTRIBUTION_BOX = "배전함"
+    CIRCUIT_PANEL = "배전함 패널"
+
+    # 문 & 자물쇠
+    LOCK = "자물쇠"
+    WOODEN_DOOR = "나무 문"
+    OBSERVATORY_DOOR = "관측소 문"  # 요청하신 변수명
+
+    # 아이템
+    SEAWATER_FILLED_COCONUT = "바닷물이 담긴 코코넛 껍질"
+    OBSERVATORY_KEY = "관측소 열쇠"
+
+    # [CH1_SCENE4 / CH2: 관측소 내부 및 기타 요청 키워드]
     OBSERVATORY_INSIDE = "관측소 내부"
+
     VINE = "덩굴"
     VINE_STEM = "덩굴 줄기"
+
     BOTANIST_MURAL = "벽화"
-    FLOWER_BED = "화단"
     BOTANY_NOTE = "관찰 일지"
-    OBSERVATORY_DOOR = "관측소 문"
+
     SUPPLY_LOCKER = "보급품 로커"
+
+    # 소리/공명 퍼즐 관련 추정
     MICROPHONE = "마이크"
     LONG_PIPE = "긴 파이프"
     SHORT_PIPE = "짧은 파이프"
+
     TREE = "나무"
+
+    # CH1_SCENE4: 공명하는 숲 (생태 관측소)
+    ECO_OBSERVATORY = "생태 관측소"
+    # OBSERVATORY_INSIDE = "관측소 내부"
+    # VINE = "덩굴"
+    # VINE_STEM = "덩굴 줄기"
+    # BOTANIST_MURAL = "벽화"
+    FLOWER_BED = "화단"
+    # BOTANY_NOTE = "관찰 일지"
+    # OBSERVATORY_DOOR = "관측소 문"
+    # SUPPLY_LOCKER = "보급품 로커"
+    # MICROPHONE = "마이크"
+    # LONG_PIPE = "긴 파이프"
+    # SHORT_PIPE = "짧은 파이프"
+    # TREE = "나무"
+    WIRE = "전선"
 
     SWAMP_PATH = "늪지대로 가는 길"
     SWAMP_PATH_ALIAS = "늪지대"

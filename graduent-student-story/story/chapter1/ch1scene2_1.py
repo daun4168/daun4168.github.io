@@ -255,7 +255,7 @@ CH1_SCENE2_1_DATA = SceneData(
                         Action(
                             type=ActionType.PRINT_NARRATIVE,
                             value="통신사의 사물함입니다. 얇고 긴 쇠고리가 달린 자물쇠가 걸려 있습니다.\n\n"
-                                "자물쇠의 마지막 숫자는 8로 고정되어 움직이지 않습니다.",
+                            "자물쇠의 마지막 숫자는 8로 고정되어 움직이지 않습니다.",
                         ),
                         Action(
                             type=ActionType.PRINT_SYSTEM,

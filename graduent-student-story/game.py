@@ -22,6 +22,7 @@ from story.chapter1 import (
     CH1_SCENE2_5_DATA,
     CH1_SCENE2_6_DATA,
     CH1_SCENE2_7_DATA,
+    CH1_SCENE3_0_DATA,
     CH1_SCENE4_DATA,
     CH1_SCENE5_DATA,
     CH1_SCENE6_DATA,
@@ -136,7 +137,8 @@ class Game:
         factory.register_scene(SceneID.CH1_SCENE2_5, Scene, CH1_SCENE2_5_DATA, CH1_COMMON_DATA)
         factory.register_scene(SceneID.CH1_SCENE2_6, Scene, CH1_SCENE2_6_DATA, CH1_COMMON_DATA)
         factory.register_scene(SceneID.CH1_SCENE2_7, Scene, CH1_SCENE2_7_DATA, CH1_COMMON_DATA)
-        factory.register_scene(SceneID.CH1_SCENE4, Scene, CH1_SCENE4_DATA, CH1_COMMON_DATA)
+        factory.register_scene(SceneID.CH1_SCENE3_0, Scene, CH1_SCENE3_0_DATA, CH1_COMMON_DATA)
+        # factory.register_scene(SceneID.CH1_SCENE4, Scene, CH1_SCENE4_DATA, CH1_COMMON_DATA)
         factory.register_scene(SceneID.CH1_SCENE5, Scene, CH1_SCENE5_DATA, CH1_COMMON_DATA)
         factory.register_scene(SceneID.CH1_SCENE6, Scene, CH1_SCENE6_DATA, CH1_COMMON_DATA)
         factory.register_scene(SceneID.CH1_SCENE7, Scene, CH1_SCENE7_DATA, CH1_COMMON_DATA)

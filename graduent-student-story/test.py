@@ -808,8 +808,8 @@ class TestRunner:
         - `test0-2`: 0번부터 2번까지 순차 실행
         """
         # 1. 실행 환경 및 명령어 체크
-        if "localhost" not in window.location.hostname or not command.startswith("test"):
-            return False
+        # if "localhost" not in window.location.hostname or not command.startswith("test"):
+        #     return False
 
         if not self.game:
             print("TestRunner Error: Game object is not set.")

@@ -29,6 +29,9 @@ class SceneID(StrEnum):
     CH1_SCENE3_3 = "ch1_scene3_3"  # 서재
     CH1_SCENE3_4 = "ch1_scene3_4"  # 컴퓨터실
 
+    CH1_SCENE4_0 = "ch1_scene4_0"  # 정글
+    CH1_SCENE5_0 = "ch1_scene5_0"  # 동굴
+
     CH1_SCENE4 = "ch1_scene4"  # 공명하는 숲 (생태 관측소)
     CH1_SCENE5 = "ch1_scene5"  # 늪지대
     CH1_SCENE6 = "ch1_scene6"  # 동굴
@@ -263,9 +266,31 @@ class KeywordId(StrEnum):
     # [아이템]
     BRASS_VALVE = "황동 밸브"
 
+    # [KeywordId] 섹션에 추가
+    # --- Scene 4: 정글 입구 ---
+    ECO_OBSERVATORY = "생태 관측소"
+    JUNGLE_PATH = "좁은 길"  # 정글로 가는 길 (Scene 3에서 보이는 이름)
+    JUNGLE_ENTRANCE = "정글"  # 정글 입구 (Scene 3 포탈 이름)
+    Y_TREE = "Y자 나무"  # Y자 나무
+    TREE = "나무"
+    FIRE_ANT_HILL = "불개미집"  # 불개미집
+    SWAMP_RIVER = "늪지대"  # 늪지대
+    CROCODILE = "악어"  # 악어
+    TRAVEL_BAG = "여행 가방"  # 여행 가방 (파밍 포인트)
+
+    # 아이템 및 조합 결과물
+    DUCT_TAPE = "청테이프"  # 청테이프
+    RUBBER_DUCK = "러버덕"  # 러버덕
+    NET = "그물망"  # 그물망
+    FIRE_ANTS = "불개미"  # 불개미 (채집됨)
+    COCONUT_SHELL_WITH_ANTS = "불개미가 든 코코넛 껍질"
+    SEALED_ANT_BOMB = "개미 폭탄"  # 밀봉된 개미 폭탄
+    SLINGSHOT_BASE = "새총"  # 새총틀
+    RUBBER_DUCK_BRIDGE = "러버덕 다리"  # 러버덕 다리 (수정됨)
+
     # CH1_SCENE4: 공명하는 숲 (생태 관측소)
     OBSERVATORY_DOOR = "관측소 문"  # 요청하신 변수명
-    ECO_OBSERVATORY = "생태 관측소"
+
     OBSERVATORY_INSIDE = "관측소 내부"
     VINE = "덩굴"
     BOTANIST_MURAL = "벽화"
@@ -274,7 +299,7 @@ class KeywordId(StrEnum):
     MICROPHONE = "마이크"
     LONG_PIPE = "긴 파이프"
     SHORT_PIPE = "짧은 파이프"
-    TREE = "나무"
+
     # OBSERVATORY_INSIDE = "관측소 내부"
     # VINE = "덩굴"
     # VINE_STEM = "덩굴 줄기"

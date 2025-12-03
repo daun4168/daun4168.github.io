@@ -15,6 +15,7 @@ from .ch1scene3_1 import CH1_SCENE3_1_DATA
 from .ch1scene3_2 import CH1_SCENE3_2_DATA
 from .ch1scene3_3 import CH1_SCENE3_3_DATA
 from .ch1scene3_4 import CH1_SCENE3_4_DATA
+from .ch1scene4_0 import CH1_SCENE4_0_DATA
 from .ch1scene4 import CH1_SCENE4_DATA
 from .ch1scene5 import CH1_SCENE5_DATA
 from .ch1scene6 import CH1_SCENE6_DATA

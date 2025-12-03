@@ -12,13 +12,16 @@ CH1_SCENE3_0_DATA = SceneData(
         '<img src="assets/chapter1/observatory_0.png" alt="생태 관측소" width="530">\n\n'
         "거대한 원통형 목조 건물이 숲과 하나가 된 듯 서 있습니다.\n\n"
         "지붕과 벽면은 온통 푸른 이끼와 덩굴로 뒤덮여 있고, 입구의 낡은 나무 문은 쇠사슬로 칭칭 감겨 있습니다.\n\n"
-        "계단 옆 덤불 속에는 배전함이 숨겨져 있고, 길가에는 관리가 안 된 텃밭이 덩그러니 놓여 있습니다."
+        "계단 옆 덤불 속에는 배전함이 숨겨져 있고, 길가에는 관리가 안 된 텃밭이 덩그러니 놓여 있습니다.\n\n"
+        "뒤편으로는 습한 공기와 썩은 물 냄새가 희미하게 풍기는 좁은 길이 나 있는데,\n\n"
+        "아마도 정글로 가는 길인 것 같습니다."
     ),
     initial_state={
         "garden_step": 0,  # 텃밭 상태 (0: 메마름, 1: 촉촉, 2: 새싹, 3: 꽃)
         "box_opened": False,  # 배전함 열림 여부
         "door_step": 0,
         "beach_path_inspected": False,  # 베이스캠프 경로 확인
+        "jungle_path_inspected": False,  # 베이스캠프 경로 확인
         "panel_inspected": False,
         "puzzle_solved": False,
         # 스위치 상태 (True: ON/초록불, False: OFF/빨간불)
@@ -31,6 +34,7 @@ CH1_SCENE3_0_DATA = SceneData(
     on_enter_actions=[],
     keywords={
         KeywordId.DOOR: KeywordData(type=KeywordType.ALIAS, target=KeywordId.WOODEN_DOOR),
+        KeywordId.JUNGLE_PATH: KeywordData(type=KeywordType.ALIAS, target=KeywordId.JUNGLE_ENTRANCE),
         # 0. 베이스캠프 (이동)
         KeywordId.BASECAMP: KeywordData(
             type=KeywordType.PORTAL,
@@ -75,6 +79,74 @@ CH1_SCENE3_0_DATA = SceneData(
                                 ],
                             },
                         )
+                    ],
+                ),
+            ],
+        ),
+        # [신규] 정글 입구 (이동)
+        KeywordId.JUNGLE_ENTRANCE: KeywordData(
+            type=KeywordType.PORTAL,
+            state=KeywordState.HIDDEN,
+            interactions=[
+                Interaction(
+                    conditions=[Condition(type=ConditionType.STATE_IS, target="jungle_path_inspected", value=False)],
+                    actions=[
+                        Action(
+                            type=ActionType.PRINT_NARRATIVE,
+                            value=(
+                                "관측소 건물 옆으로 난 좁은 샛길입니다.\n"
+                                "사람의 발길이 닿지 않은 듯 수풀이 우거져 있고, 안쪽에서 습하고 축축한 바람이 불어옵니다.\n"
+                                "마치 깊은 정글로 이어지는 입구 같습니다."
+                            ),
+                        ),
+                        Action(type=ActionType.UPDATE_STATE, value={"key": "jungle_path_inspected", "value": True}),
+                    ],
+                    continue_matching=True,
+                ),
+                # 2. 이동 시도 (조건 충족: 3색 캐비닛 모두 오픈 시)
+                Interaction(
+                    conditions=[
+                        Condition(type=ConditionType.CHAPTER_STATE_IS, target="green_cabinet_opened", value=True),
+                        Condition(type=ConditionType.CHAPTER_STATE_IS, target="red_cabinet_opened", value=True),
+                        Condition(type=ConditionType.CHAPTER_STATE_IS, target="yellow_cabinet_opened", value=True),
+                    ],
+                    actions=[
+                        Action(
+                            type=ActionType.REQUEST_CONFIRMATION,
+                            value={
+                                "prompt": "**[정글]**로 진입하시겠습니까?\n습하고 위험할 수도 있습니다.",
+                                "confirm_actions": [
+                                    Action(
+                                        type=ActionType.PRINT_NARRATIVE,
+                                        value="우거진 수풀을 헤치고 샛길을 따라 더 깊은 숲속으로 들어갑니다.",
+                                    ),
+                                    Action(
+                                        type=ActionType.MOVE_SCENE,
+                                        value=SceneID.CH1_SCENE4_0,
+                                    ),
+                                ],
+                                "cancel_actions": [
+                                    Action(
+                                        type=ActionType.PRINT_NARRATIVE,
+                                        value="아직은 관측소 주변을 더 조사하는 게 좋겠습니다.",
+                                    )
+                                ],
+                            },
+                        )
+                    ],
+                ),
+                # 3. 이동 시도 (조건 불충족: 준비 부족)
+                Interaction(
+                    conditions=[Condition(type=ConditionType.STATE_IS, target="jungle_path_inspected", value=True)],
+                    actions=[
+                        Action(
+                            type=ActionType.PRINT_NARRATIVE,
+                            value=(
+                                "정글로 들어가기에는 아직 준비가 부족한 것 같습니다.\n\n"
+                                "건물 내부에서 필요한 물품을 챙겼는지 확인해야 합니다.\n\n"
+                                "준비 없이 들어갔다가는 위험할 수도 있습니다."
+                            ),
+                        ),
                     ],
                 ),
             ],

@@ -189,7 +189,10 @@ CH1_SCENE3_3_DATA = SceneData(
                             type=ActionType.PRINT_NARRATIVE,
                             value="연구 책상 위에는 **[생태 조사 기록]**이 펼쳐져 있습니다.",
                         ),
-                        Action(type=ActionType.UPDATE_STATE, value={"keyword": KeywordId.RESEARCH_DESK, "state": KeywordState.UNSEEN}),
+                        Action(
+                            type=ActionType.UPDATE_STATE,
+                            value={"keyword": KeywordId.RESEARCH_DESK, "state": KeywordState.UNSEEN},
+                        ),
                     ],
                 ),
             ],

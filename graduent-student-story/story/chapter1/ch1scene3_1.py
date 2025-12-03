@@ -240,7 +240,8 @@ CH1_SCENE3_1_DATA = SceneData(
                     actions=[
                         Action(
                             type=ActionType.PRINT_NARRATIVE,
-                            value=" 초록색 캐비닛이 열려 있습니다. (획득한 아이템 묘사)",
+                            value='<img src="assets/chapter1/cabinet_green_open.png" alt="초록 캐비닛" width="500">\n\n'
+                            "초록색 캐비닛이 열려 있습니다. 청테이프를 챙겼습니다.",
                         ),
                         Action(
                             type=ActionType.UPDATE_STATE,
@@ -277,7 +278,8 @@ CH1_SCENE3_1_DATA = SceneData(
                     actions=[
                         Action(
                             type=ActionType.PRINT_NARRATIVE,
-                            value=" 빨간색 캐비닛이 열려 있습니다. (획득한 아이템 묘사)",
+                            value='<img src="assets/chapter1/cabinet_red_open.png" alt="빨강 캐비닛" width="500">\n\n'
+                            "빨간색 캐비닛이 열려 있습니다. 그물망을 챙겼습니다.",
                         ),
                         Action(
                             type=ActionType.UPDATE_STATE,
@@ -313,7 +315,8 @@ CH1_SCENE3_1_DATA = SceneData(
                     actions=[
                         Action(
                             type=ActionType.PRINT_NARRATIVE,
-                            value=" 노란색 캐비닛이 열려 있습니다. (획득한 아이템 묘사)",
+                            value='<img src="assets/chapter1/cabinet_yellow_open.png" alt="노랑 캐비닛" width="500">\n\n'
+                            "노란색 캐비닛이 열려 있습니다. 러버덕을 챙겼습니다.",
                         ),
                         Action(
                             type=ActionType.UPDATE_STATE,
@@ -439,7 +442,19 @@ CH1_SCENE3_1_DATA = SceneData(
             actions=[
                 Action(
                     type=ActionType.PRINT_NARRATIVE,
-                    value="철컥! 매미 소리의 리듬을 맞추자 자물쇠가 풀립니다.\n\n초록색 캐비닛 안에서 **[아이템 이름]**을 발견했습니다.",
+                    value=(
+                        '<img src="assets/chapter1/cabinet_green_open.png" alt="초록 캐비닛" width="500">\n\n'
+                        "철컥! 매미 소리의 리듬을 맞추자 자물쇠가 풀립니다.\n\n"
+                        "초록색 캐비닛 안에는 **[청테이프]**가 산더미처럼 쌓여 있습니다.\n\n"
+                        "'모든 것은 테이프로 해결된다'는 공대생의 영혼이 느껴집니다. 하나 챙겨두면 쓸모가 있을 겁니다."
+                    ),
+                ),
+                Action(
+                    type=ActionType.ADD_ITEM,
+                    value={
+                        "name": KeywordId.DUCT_TAPE,
+                        "description": "강력한 접착력을 가진 초록색 테이프. 뭐든지 붙일 수 있을 것 같다.",
+                    },
                 ),
                 Action(type=ActionType.UPDATE_STATE, value={"key": "green_opened", "value": True}),
                 Action(
@@ -466,6 +481,13 @@ CH1_SCENE3_1_DATA = SceneData(
                         "scene_id": SceneID.CH1_SCENE3_2,
                     },
                 ),
+                Action(
+                    type=ActionType.UPDATE_CHAPTER_STATE,
+                    value={
+                        "key": "green_cabinet_opened",
+                        "value": True,
+                    },
+                ),
                 # Action(type=ActionType.ADD_ITEM, value={...}), # 보상 아이템 추가 필요
             ],
         ),
@@ -477,7 +499,19 @@ CH1_SCENE3_1_DATA = SceneData(
             actions=[
                 Action(
                     type=ActionType.PRINT_NARRATIVE,
-                    value="달그락! 생물들의 이름 속에 숨겨진 로마 숫자가 정답이었습니다.\n\n빨간색 캐비닛 문이 열리고 **[아이템 이름]**이 나옵니다.",
+                    value=(
+                        '<img src="assets/chapter1/cabinet_red_open.png" alt="빨강 캐비닛" width="500">\n\n'
+                        "달그락! 생물들의 이름 속에 숨겨진 로마 숫자가 정답이었습니다.\n\n"
+                        "빨간색 캐비닛이 열리자 촘촘하게 짜인 **[그물망]**이 쏟아져 나옵니다.\n\n"
+                        "야생 동물 포획용으로 쓰던 것 같습니다. 꽤 튼튼해 보입니다."
+                    ),
+                ),
+                Action(
+                    type=ActionType.ADD_ITEM,
+                    value={
+                        "name": KeywordId.NET,
+                        "description": "질기고 튼튼한 그물망. 물건을 묶기에 좋다.",
+                    },
                 ),
                 Action(type=ActionType.UPDATE_STATE, value={"key": "red_opened", "value": True}),
                 Action(
@@ -504,6 +538,13 @@ CH1_SCENE3_1_DATA = SceneData(
                         "scene_id": SceneID.CH1_SCENE3_3,
                     },
                 ),
+                Action(
+                    type=ActionType.UPDATE_CHAPTER_STATE,
+                    value={
+                        "key": "red_cabinet_opened",
+                        "value": True,
+                    },
+                ),
                 # Action(type=ActionType.ADD_ITEM, value={...}), # 보상 아이템 추가 필요
             ],
         ),
@@ -515,7 +556,22 @@ CH1_SCENE3_1_DATA = SceneData(
             actions=[
                 Action(
                     type=ActionType.PRINT_NARRATIVE,
-                    value="띠리릭! 별의 노래와 DNA의 결합 법칙이 맞아떨어졌습니다.\n\n노란색 캐비닛이 열리며 **[아이템 이름]**을 획득했습니다.",
+                    value=(
+                        '<img src="assets/chapter1/cabinet_yellow_open.png" alt="노랑 캐비닛" width="500">\n\n'
+                        "띠리릭! 별의 노래와 DNA의 결합 법칙이 맞아떨어졌습니다.\n\n"
+                        "노란색 캐비닛 문을 열자마자 노란색 파도가 밀려옵니다. **[러버덕]**입니다!\n\n"
+                        "한두 마리가 아니라 수백 마리가 와르르 쏟아져 내 발등을 덮칩니다.\n\n"
+                        "'삑- 삑-'\n\n"
+                        "바닥에 떨어진 오리들이 비명을 지르는 것 같습니다.\n"
+                        "여기 있던 과학자는 오리 군단으로 세계 정복이라도 꿈꿨던 걸까요?\n\n"
+                    ),
+                ),
+                Action(
+                    type=ActionType.ADD_ITEM,
+                    value={
+                        "name": KeywordId.RUBBER_DUCK,
+                        "description": "귀여운 노란색 오리 인형. 물에 아주 잘 뜬다.",
+                    },
                 ),
                 Action(type=ActionType.UPDATE_STATE, value={"key": "yellow_opened", "value": True}),
                 Action(
@@ -574,7 +630,20 @@ CH1_SCENE3_1_DATA = SceneData(
                         "scene_id": SceneID.CH1_SCENE3_3,
                     },
                 ),
-                # Action(type=ActionType.ADD_ITEM, value={...}), # 보상 아이템 추가 필요
+                Action(
+                    type=ActionType.UPDATE_CHAPTER_STATE,
+                    value={
+                        "key": "yellow_cabinet_opened",
+                        "value": True,
+                    },
+                ),
+                Action(
+                    type=ActionType.ADD_ITEM,
+                    value={
+                        "name": KeywordId.RUBBER_DUCK,
+                        "description": "한도는 초과되어 긁히지 않습니다. 하지만 모서리가 날카로워 무기나 도구로는 쓸 수 있을 것 같습니다.",
+                    },
+                ),
             ],
         ),
         # (기존 배관 점검구 + 스패너 조합 등은 유지)

@@ -375,6 +375,37 @@ CH1_SCENE3_1_DATA = SceneData(
                 ),
             ],
         ),
+        # --- UNSEEN 오브젝트 (연구동 중앙 복도) ---
+        "먼지": KeywordData(
+            type=KeywordType.OBJECT,
+            state=KeywordState.UNSEEN,
+            description="회색 눈이 내린 것처럼 소복하다. 내 폐가 공기청정기 역할을 하고 있는 것 같아 기분이 나쁘다.",
+        ),
+        "발자국": KeywordData(
+            type=KeywordType.OBJECT,
+            state=KeywordState.UNSEEN,
+            description="내 발자국이 선명하게 찍혔다. 범죄 현장에 증거를 남기는 기분이라 영 찜찜하다.",
+        ),
+        "천장": KeywordData(
+            type=KeywordType.OBJECT,
+            state=KeywordState.UNSEEN,
+            description="군데군데 텍스이 뜯겨져 나갔다. 저 어두운 구멍 안에서 누군가 날 내려다보고 있을 것만 같다.",
+        ),
+        "바닥": KeywordData(
+            type=KeywordType.OBJECT,
+            state=KeywordState.UNSEEN,
+            description="싸구려 리놀륨 바닥이다. 걸을 때마다 쩍쩍 달라붙는 소리가 복도를 울린다.",
+        ),
+        "조명": KeywordData(
+            type=KeywordType.OBJECT,
+            state=KeywordState.UNSEEN,
+            description="대부분 깨지거나 나갔다. 간신히 살아있는 형광등 하나가 '살려줘'라고 신호를 보내듯 깜빡거린다.",
+        ),
+        "벽": KeywordData(
+            type=KeywordType.OBJECT,
+            state=KeywordState.UNSEEN,
+            description="페인트가 피부병처럼 일어나 있다. 무심코 기대었다가는 옷 버리기 딱 좋다.",
+        ),
     },
     combinations=[
         # 점검구 + 스패너 = 밸브 획득

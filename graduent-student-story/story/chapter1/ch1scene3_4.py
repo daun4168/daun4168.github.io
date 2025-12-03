@@ -5,7 +5,7 @@ CH1_SCENE3_4_DATA = SceneData(
     id=SceneID.CH1_SCENE3_4,
     name="통제실",
     body=(
-        "모니터 불빛 하나 없는 어두운 통제실입니다. 거대한 서버 랙들이 웅웅거리는 소리도 들리지 않습니다.\n\n"
+        "모니터 불빛 하나 없는 어두운 통제실입니다.\n\n"
         "중앙에 컴퓨터가 놓여 있고, 모니터 귀퉁이에는 노란색 접착 메모가 붙어 있습니다.\n\n"
         "이곳의 시스템을 복구해야 연구소의 비밀을 풀 수 있을 것 같습니다."
     ),
@@ -163,6 +163,17 @@ CH1_SCENE3_4_DATA = SceneData(
                 "**Phase 4 (폭주/광란): 35℃**\n"
                 " - 임계점 초과. 비선형적 패턴 발생."
             ),
+        ),
+        # --- UNSEEN 오브젝트 (통제실) ---
+        "모니터": KeywordData(
+            type=KeywordType.OBJECT,
+            state=KeywordState.UNSEEN,
+            description="꺼진 화면은 검은 거울 같다. 꾀죄죄한 내 얼굴이 비쳐서 깜짝 놀랐다. 귀신인 줄 알았네.",
+        ),
+        "비밀": KeywordData(
+            type=KeywordType.OBJECT,
+            state=KeywordState.UNSEEN,
+            description="이 컴퓨터 안에 모든 진실이 잠들어 있다. 판도라의 상자다. 열면 희망이 나올까, 아니면 또 다른 절망이 나올까?",
         ),
     },
     combinations=[

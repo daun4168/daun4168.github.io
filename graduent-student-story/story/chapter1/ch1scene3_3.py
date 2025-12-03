@@ -204,6 +204,22 @@ CH1_SCENE3_3_DATA = SceneData(
                 '소란스러운 포식자들의 하루가 저물어가는 물가에는, 붓꽃만이 고요히 뿌리를 내린 채 습지의 저녁을 맞이하고 있었습니다."'
             ),
         ),
+        # --- UNSEEN 오브젝트 (자료실) ---
+        "냄새": KeywordData(
+            type=KeywordType.OBJECT,
+            state=KeywordState.UNSEEN,
+            description="오래된 종이와 잉크, 그리고 곰팡이가 섞인 냄새. 도서관 사서들이 맡는다는 '지식의 향기'인가? 내겐 비염 유발제일 뿐이다.",
+        ),
+        "탑": KeywordData(
+            type=KeywordType.OBJECT,
+            state=KeywordState.UNSEEN,
+            description="바닥에 위태롭게 쌓여 있다. 젠가 고수가 쌓은 게 분명하다. 하나라도 건드리면 무너져서 압사당할지도 모른다.",
+        ),
+        "책장": KeywordData(
+            type=KeywordType.OBJECT,
+            state=KeywordState.UNSEEN,
+            description="천장까지 닿을 듯 높다. 왼쪽, 오른쪽 책장을 각각 살펴보는게 좋겠다.",
+        ),
     },
     combinations=[],
 )

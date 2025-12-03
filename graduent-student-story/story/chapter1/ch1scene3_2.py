@@ -202,6 +202,22 @@ CH1_SCENE3_2_DATA = SceneData(
                 ),
             ],
         ),
+        # --- UNSEEN 오브젝트 (배양실) ---
+        "유리관": KeywordData(
+            type=KeywordType.OBJECT,
+            state=KeywordState.UNSEEN,
+            description="내 키보다 큰 거대한 시험관들이다. 안에 든 게 외계인이 아니라 매미라니, 스케일이 큰 건지 작은 건지 모르겠다.",
+        ),
+        "흙": KeywordData(
+            type=KeywordType.OBJECT,
+            state=KeywordState.UNSEEN,
+            description="유리관 안을 가득 채우고 있다. 단면도로 개미집을 관찰하는 기분이다. 물론 개미 대신 징그러운 유충들이 있지만.",
+        ),
+        "벽": KeywordData(
+            type=KeywordType.OBJECT,
+            state=KeywordState.UNSEEN,
+            description="결로 현상 때문에 물방울이 맺혀 있다. 건물이 울고 있는 것 같다. 나도 울고 싶다.",
+        ),
     },
     # 조합 (수리 로직)
     combinations=[

@@ -276,7 +276,6 @@ class KeywordId(StrEnum):
     FIRE_ANT_HILL = "불개미집"  # 불개미집
     SWAMP_RIVER = "늪지대"  # 늪지대
     CROCODILE = "악어"  # 악어
-    TRAVEL_BAG = "여행 가방"  # 여행 가방 (파밍 포인트)
 
     # 아이템 및 조합 결과물
     DUCT_TAPE = "청테이프"  # 청테이프
@@ -285,8 +284,7 @@ class KeywordId(StrEnum):
     FIRE_ANTS = "불개미"  # 불개미 (채집됨)
     COCONUT_SHELL_WITH_ANTS = "불개미가 든 코코넛 껍질"
     SEALED_ANT_BOMB = "개미 폭탄"  # 밀봉된 개미 폭탄
-    SLINGSHOT_BASE = "새총"  # 새총틀
-    RUBBER_DUCK_BRIDGE = "러버덕 다리"  # 러버덕 다리 (수정됨)
+    RUBBER_DUCK_BRIDGE = "러버덕 뭉치"  # 러버덕 다리 (수정됨)
 
     # CH1_SCENE4: 공명하는 숲 (생태 관측소)
     OBSERVATORY_DOOR = "관측소 문"  # 요청하신 변수명

@@ -6,6 +6,7 @@ CH1_COMMON_DATA = ChapterData(
     initial_state={
         "distiller_state": 0,
         "basement_power_restored": False,
+        "observatory_power_restored": False,
     },
     combinations=[
         # [공통 조합] 스패너 + 코코넛 = 섭취

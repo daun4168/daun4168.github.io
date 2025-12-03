@@ -306,6 +306,7 @@ CH1_SCENE2_2_DATA = SceneData(
         # 1. 책장 보관함 + 54215 -> 조명탄
         Combination(
             type=CombinationType.PASSWORD,
+            conditions=[Condition(type=ConditionType.STATE_IS, target="bookshelf_unlocked", value=False)],
             targets=["보관함", "54215"],
             actions=[
                 Action(

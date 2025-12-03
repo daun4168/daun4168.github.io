@@ -24,10 +24,10 @@ class SceneID(StrEnum):
     CH1_SCENE2_7 = "ch1_scene2_7"  # 지하 연구실
 
     CH1_SCENE3_0 = "ch1_scene3_0"  # 생태 관측소 외부
-    CH1_SCENE3_1 = "ch1_scene3_1"  # 생태 관측소 외부
-    CH1_SCENE3_2 = "ch1_scene3_2"  # 생태 관측소 외부
-    CH1_SCENE3_3 = "ch1_scene3_3"  # 생태 관측소 외부
-    CH1_SCENE3_4 = "ch1_scene3_4"  # 생태 관측소 외부
+    CH1_SCENE3_1 = "ch1_scene3_1"  # 복도
+    CH1_SCENE3_2 = "ch1_scene3_2"  # 매미방
+    CH1_SCENE3_3 = "ch1_scene3_3"  # 서재
+    CH1_SCENE3_4 = "ch1_scene3_4"  # 컴퓨터실
 
     CH1_SCENE4 = "ch1_scene4"  # 공명하는 숲 (생태 관측소)
     CH1_SCENE5 = "ch1_scene5"  # 늪지대
@@ -58,7 +58,7 @@ class KeywordId(StrEnum):
     MEMO = "메모"
     COMPUTER = "컴퓨터"
     ORDER_LIST = "주문 내역"
-    CABINET = "시약장"
+    REAGENT_CABINET = "시약장"
     FLOOR = "바닥"
     ETHANOL = "에탄올"
 
@@ -87,6 +87,8 @@ class KeywordId(StrEnum):
     SIMPLE_DISTILLER_KIT = "간이 정수기 키트"
     DISTILLER = "정수기"
     VINYL = "비닐"
+    VINE_STEM = "덩굴 줄기"
+    SEAWATER_FILLED_COCONUT = "바닷물이 담긴 코코넛 껍질"
 
     # CH1_SCENE2_0
     SHIP_HALLWAY = "난파선 중앙 복도"
@@ -211,40 +213,68 @@ class KeywordId(StrEnum):
     # CH1_SCENE3_0
     # 텃밭 관련 (코드에서 FLOWERBED로 사용 중, 표시 이름은 텃밭)
     GARDEN = "텃밭"
-
-    # 배전함 퍼즐
     DISTRIBUTION_BOX = "배전함"
     CIRCUIT_PANEL = "배전함 패널"
-
-    # 문 & 자물쇠
-    LOCK = "자물쇠"
     WOODEN_DOOR = "나무 문"
-    OBSERVATORY_DOOR = "관측소 문"  # 요청하신 변수명
-
-    # 아이템
-    SEAWATER_FILLED_COCONUT = "바닷물이 담긴 코코넛 껍질"
     OBSERVATORY_KEY = "관측소 열쇠"
 
-    # [CH1_SCENE4 / CH2: 관측소 내부 및 기타 요청 키워드]
+    # [3-1 연구동 복도]
+    CABINET = " 캐비닛"
+    RESEARCH_HALLWAY = "연구동 복도"
+    GREEN_CABINET = "초록색 캐비닛"
+    RED_CABINET = "빨간색 캐비닛"
+    YELLOW_CABINET = "노란색 캐비닛"
+    INCUBATION_ROOM_DOOR = "배양실 문"
+    REFERENCE_ROOM_DOOR = "자료실 문"
+    CONTROL_ROOM_DOOR = "통제실 문"
+
+    # [3-2 배양실]
+    INCUBATION_ROOM = "배양실"
+    THERMOSTAT = "온도 조절기"
+    CICADA_CAGE = "매미 사육장"
+    CAGE = "사육장"
+    RESEARCH_LOG = "연구 일지"  # 힌트 오브젝트
+    LOG = "일지"  # 힌트 오브젝트
+
+    # [3-3 자료실]
+    REFERENCE_ROOM = "자료실"
+    LEFT_BOOKSHELF = "왼쪽 책장"
+    RIGHT_BOOKSHELF = "오른쪽 책장"
+    RESEARCH_DESK = "연구 책상"
+    SHEET_MUSIC_COLLECTION = "악보집"
+    ECOLOGY_BOOK = "생태학 서적"
+    SURVEY_LOG = "생태 조사 기록"
+    SHEET_MUSIC_1 = "떴다 떴다 비행기"
+    SHEET_MUSIC_2 = "반짝반짝 작은 별"
+    SHEET_MUSIC_3 = "곰 세 마리"
+
+    # [3-4 통제실]
+    CONTROL_ROOM = "통제실"
+    MAIN_COMPUTER = "메인 컴퓨터"
+    STICKY_NOTE = "접착 메모"
+    FILE_DNA = "DNA_상보결합.pdf"
+    FILE_MUSIC = "계이름_표기법.png"
+    FILE_TEMP = "매미_반응_임계점.txt"
+
+    # [신규 오브젝트: 밸브 파밍 장소]
+    PLUMBING_HATCH = "배관 점검구"
+    ACCESS_PANEL = "점검구"
+
+    # [아이템]
+    BRASS_VALVE = "황동 밸브"
+
+    # CH1_SCENE4: 공명하는 숲 (생태 관측소)
+    OBSERVATORY_DOOR = "관측소 문"  # 요청하신 변수명
+    ECO_OBSERVATORY = "생태 관측소"
     OBSERVATORY_INSIDE = "관측소 내부"
-
     VINE = "덩굴"
-    VINE_STEM = "덩굴 줄기"
-
     BOTANIST_MURAL = "벽화"
     BOTANY_NOTE = "관찰 일지"
-
     SUPPLY_LOCKER = "보급품 로커"
-
-    # 소리/공명 퍼즐 관련 추정
     MICROPHONE = "마이크"
     LONG_PIPE = "긴 파이프"
     SHORT_PIPE = "짧은 파이프"
-
     TREE = "나무"
-
-    # CH1_SCENE4: 공명하는 숲 (생태 관측소)
-    ECO_OBSERVATORY = "생태 관측소"
     # OBSERVATORY_INSIDE = "관측소 내부"
     # VINE = "덩굴"
     # VINE_STEM = "덩굴 줄기"

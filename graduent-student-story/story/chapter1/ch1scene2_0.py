@@ -412,6 +412,7 @@ CH1_SCENE2_0_DATA = SceneData(
         # 3817이라는 비밀번호는 갑판 열쇠 아이템이나 쪽지에서 힌트로 얻었다고 가정
         Combination(
             type=CombinationType.PASSWORD,
+            conditions=[Condition(type=ConditionType.STATE_IS, target="deck_unlocked", value=False)],
             targets=[KeywordId.REAR_DECK, "3817"],
             actions=[
                 Action(
@@ -429,6 +430,10 @@ CH1_SCENE2_0_DATA = SceneData(
         # 1. 가열: 조명탄 + 격벽
         Combination(
             targets=[KeywordId.IRON_DOOR, KeywordId.FLARE],
+            conditions=[
+                Condition(type=ConditionType.STATE_IS, target="door_heated", value=False),
+                Condition(type=ConditionType.HAS_ITEM, target=KeywordId.FLARE),
+            ],
             actions=[
                 Action(
                     type=ActionType.PRINT_NARRATIVE,
@@ -441,7 +446,10 @@ CH1_SCENE2_0_DATA = SceneData(
         # 2. 급랭: 먼지제거제 + 격벽
         Combination(
             targets=[KeywordId.IRON_DOOR, KeywordId.AIR_DUSTER],
-            conditions=[Condition(type=ConditionType.STATE_IS, target="door_heated", value=True)],
+            conditions=[
+                Condition(type=ConditionType.STATE_IS, target="door_heated", value=True),
+                Condition(type=ConditionType.HAS_ITEM, target=KeywordId.AIR_DUSTER),
+            ],
             actions=[
                 Action(
                     type=ActionType.PRINT_NARRATIVE,
@@ -465,7 +473,10 @@ CH1_SCENE2_0_DATA = SceneData(
         # 3. 파괴: 스패너 + 격벽 (지하 통로 등장)
         Combination(
             targets=[KeywordId.IRON_DOOR, KeywordId.SPANNER],
-            conditions=[Condition(type=ConditionType.STATE_IS, target="door_frozen", value=True)],
+            conditions=[
+                Condition(type=ConditionType.STATE_IS, target="door_frozen", value=True),
+                Condition(type=ConditionType.STATE_IS, target="door_opened", value=False),
+            ],
             actions=[
                 Action(
                     type=ActionType.PRINT_NARRATIVE,

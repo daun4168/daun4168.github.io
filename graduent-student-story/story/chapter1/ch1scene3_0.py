@@ -9,7 +9,7 @@ CH1_SCENE3_0_DATA = SceneData(
     name="생태 관측소 외부",
     body=(
         '"이런 깊은 숲 속에 연구소라니..."\n\n'
-        '<img src="assets/chapter1/observatory_0.png" alt="생태 관측소" width="600">\n\n'
+        '<img src="assets/chapter1/observatory_0.png" alt="생태 관측소" width="530">\n\n'
         "거대한 원통형 목조 건물이 숲과 하나가 된 듯 서 있습니다.\n\n"
         "지붕과 벽면은 온통 푸른 이끼와 덩굴로 뒤덮여 있고, 입구의 낡은 나무 문은 쇠사슬로 칭칭 감겨 있습니다.\n\n"
         "계단 옆 덤불 속에는 배전함이 숨겨져 있고, 길가에는 관리가 안 된 텃밭이 덩그러니 놓여 있습니다."
@@ -30,6 +30,7 @@ CH1_SCENE3_0_DATA = SceneData(
     },
     on_enter_actions=[],
     keywords={
+        KeywordId.DOOR: KeywordData(type=KeywordType.ALIAS, target=KeywordId.WOODEN_DOOR),
         # 0. 베이스캠프 (이동)
         KeywordId.BASECAMP: KeywordData(
             type=KeywordType.PORTAL,
@@ -337,6 +338,10 @@ CH1_SCENE3_0_DATA = SceneData(
                             ),
                         ),
                         Action(type=ActionType.UPDATE_STATE, value={"key": "puzzle_solved", "value": True}),
+                        Action(
+                            type=ActionType.UPDATE_CHAPTER_STATE,
+                            value={"key": "observatory_power_restored", "value": True},
+                        ),
                         # 스위치 상호작용 비활성화 (깔끔하게)
                         Action(
                             type=ActionType.UPDATE_STATE,
@@ -390,11 +395,10 @@ CH1_SCENE3_0_DATA = SceneData(
                 ),
             ],
         ),
-
         # 5. 나무 문
         KeywordId.WOODEN_DOOR: KeywordData(
             type=KeywordType.PORTAL,
-            state=KeywordState.DISCOVERED,
+            state=KeywordState.HIDDEN,
             interactions=[
                 Interaction(
                     conditions=[
@@ -413,7 +417,7 @@ CH1_SCENE3_0_DATA = SceneData(
                 ),
                 Interaction(
                     conditions=[
-Condition(type=ConditionType.STATE_IS, target="door_step", value=0),
+                        Condition(type=ConditionType.STATE_IS, target="door_step", value=0),
                         Condition(type=ConditionType.HAS_ITEM, target=KeywordId.OBSERVATORY_KEY),
                     ],
                     actions=[
@@ -433,7 +437,7 @@ Condition(type=ConditionType.STATE_IS, target="door_step", value=0),
                 ),
                 Interaction(
                     conditions=[
-Condition(type=ConditionType.STATE_IS, target="door_step", value=1),
+                        Condition(type=ConditionType.STATE_IS, target="door_step", value=1),
                     ],
                     actions=[
                         Action(
@@ -452,26 +456,23 @@ Condition(type=ConditionType.STATE_IS, target="door_step", value=1),
                         Action(
                             type=ActionType.REQUEST_CONFIRMATION,
                             value={
-                                "prompt": "문이 열려 있습니다. **[관측소 내부]**로 들어가시겠습니까?",
+                                # Prompt: 문이 단순히 열린 게 아니라 '박살'났음을 명시
+                                "prompt": "도끼로 자물쇠를 박살 냈습니다. 너덜너덜해진 문틈으로 **[관측소 내부]**에 진입하시겠습니까?",
                                 "confirm_actions": [
                                     Action(
-                                        type=ActionType.PRINT_NARRATIVE, value="끼이익... 낡은 문을 열고 들어갑니다."
+                                        # Narrative: 파괴의 흔적(나무 파편)과 주인공의 심리(야만인/범죄) 묘사
+                                        type=ActionType.PRINT_NARRATIVE,
+                                        value="날카로운 나무 파편을 피해 조심스럽게 안으로 들어갑니다. 졸지에 주거침입자가 된 기분입니다.",
                                     ),
                                     Action(type=ActionType.MOVE_SCENE, value=SceneID.CH1_SCENE3_1),
                                 ],
                                 "cancel_actions": [
-                                    Action(type=ActionType.PRINT_NARRATIVE, value="잠시 밖을 더 둘러봅니다.")
+                                    Action(
+                                        type=ActionType.PRINT_NARRATIVE,
+                                        value="부서진 문을 보니 양심의 가책이 느껴져 잠시 망설입니다.",
+                                    )
                                 ],
                             },
-                        ),
-                    ],
-                ),
-                Interaction(
-                    conditions=[Condition(type=ConditionType.STATE_IS, target="door_unlocked", value=True)],
-                    actions=[
-                        Action(
-                            type=ActionType.PRINT_NARRATIVE,
-                            value="자물쇠는 풀렸지만 나무 문은 꿈쩍도 하지 않습니다. 들어갈 방법을 찾아야 합니다.",
                         ),
                     ],
                 ),

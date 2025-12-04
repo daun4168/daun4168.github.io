@@ -89,20 +89,6 @@ CH1_SCENE3_4_DATA = SceneData(
                         Condition(type=ConditionType.STATE_IS, target="file_discovered", value=False),
                     ],
                     actions=[
-                        Action(type=ActionType.DISCOVER_KEYWORD, value=KeywordId.FILE_MUSIC),
-                        Action(type=ActionType.DISCOVER_KEYWORD, value=KeywordId.FILE_DNA),
-                        Action(type=ActionType.DISCOVER_KEYWORD, value=KeywordId.FILE_TEMP),
-                        Action(type=ActionType.UPDATE_STATE, value={"key": "file_discovered", "value": True}),
-                    ],
-                    continue_matching=True,
-                ),
-                # Case 2: 전력 ON, 잠금 해제됨
-                Interaction(
-                    conditions=[
-                        Condition(type=ConditionType.CHAPTER_STATE_IS, target="observatory_power_restored", value=True),
-                        Condition(type=ConditionType.STATE_IS, target="computer_unlocked", value=True),
-                    ],
-                    actions=[
                         Action(
                             type=ActionType.PRINT_NARRATIVE,
                             value=(
@@ -110,7 +96,66 @@ CH1_SCENE3_4_DATA = SceneData(
                                 f"① **[{KeywordId.FILE_MUSIC}]**\n\n"
                                 f"② **[{KeywordId.FILE_DNA}]**\n\n"
                                 f"③ **[{KeywordId.FILE_TEMP}]**\n\n"
+                                f"파일을 인쇄해 두면 쓸모가 있을 것 같습니다."
                             ),
+                        ),
+                        Action(
+                            type=ActionType.ADD_ITEM,
+                            value={
+                                "name": KeywordId.FILE_MUSIC,
+                                "description": '<img src="assets/chapter1/CDEFGAB2.png" alt="계이름 표기법" width="530">\n\n',
+                            },
+                        ),
+                        Action(
+                            type=ActionType.ADD_ITEM,
+                            value={
+                                "name": KeywordId.FILE_DNA,
+                                "description": '<img src="assets/chapter1/DNA.png" alt="DNA" width="530">\n\n',
+                            },
+                        ),
+                        Action(
+                            type=ActionType.ADD_ITEM,
+                            value={
+                                "name": KeywordId.FILE_TEMP,
+                                "description": (
+                "\n\n< 실험체 303 반응 임계점 로그 >\n\n"
+                "가상의 4분할 지점에서 도출된 최적의 반응 온도를 기록함.\n\n"
+                "온도 조절기 오차 수정 완료.\n\n"
+                "**Phase 1 (동면/침묵): 5℃**\n"
+                " - 생체 활동 정지. 완전한 고요.\n\n"
+                "**Phase 2 (각성/단음): 20℃**\n"
+                " - 활동 개시. 간헐적 신호 발생.\n\n"
+                "**Phase 3 (활동/장음): 30℃**\n"
+                " - 정상 활동 범위. 지속적 신호 발생.\n\n"
+                "**Phase 4 (폭주/광란): 35℃**\n"
+                " - 임계점 초과. 비선형적 패턴 발생."
+            ),
+                            },
+                        ),
+                        Action(type=ActionType.UPDATE_STATE, value={"key": "file_discovered", "value": True}),
+                    ],
+                ),
+                # Case 2: 전력 ON, 잠금 해제됨
+                Interaction(
+                    conditions=[
+                        Condition(type=ConditionType.CHAPTER_STATE_IS, target="observatory_power_restored", value=True),
+                        Condition(type=ConditionType.STATE_IS, target="computer_unlocked", value=True),
+                        Condition(type=ConditionType.STATE_IS, target="file_discovered", value=True),
+                    ],
+                    actions=[
+                        Action(
+                            type=ActionType.PRINT_NARRATIVE,
+                            value=(
+                                "필요한 파일은 모두 인쇄한 것 같습니다. 더 이상 할 일이 없어 보입니다.\n\n"
+                                "컴퓨터를 종료하고 통제실을 나가도 좋을 것 같습니다."
+                            ),
+                        ),
+                        Action(
+                            type=ActionType.UPDATE_STATE,
+                            value={
+                                "keyword": KeywordId.COMPUTER,
+                                "state": KeywordState.UNSEEN,
+                            },
                         ),
                     ],
                 ),
@@ -135,34 +180,6 @@ CH1_SCENE3_4_DATA = SceneData(
                     ],
                 ),
             ],
-        ),
-        # 3. 파일들
-        KeywordId.FILE_MUSIC: KeywordData(
-            type=KeywordType.OBJECT,
-            state=KeywordState.INACTIVE,
-            description=('<img src="assets/chapter1/CDEFGAB2.png" alt="계이름 표기법" width="530">\n\n'),
-        ),
-        KeywordId.FILE_DNA: KeywordData(
-            type=KeywordType.OBJECT,
-            state=KeywordState.INACTIVE,
-            description=('<img src="assets/chapter1/DNA.png" alt="DNA" width="530">\n\n'),
-        ),
-        KeywordId.FILE_TEMP: KeywordData(
-            type=KeywordType.OBJECT,
-            state=KeywordState.INACTIVE,
-            description=(
-                "< 실험체 303 반응 임계점 로그 >\n\n"
-                "가상의 4분할 지점에서 도출된 최적의 반응 온도를 기록함.\n\n"
-                "온도 조절기 오차 수정 완료.\n\n"
-                "**Phase 1 (동면/침묵): 5℃**\n"
-                " - 생체 활동 정지. 완전한 고요.\n\n"
-                "**Phase 2 (각성/단음): 20℃**\n"
-                " - 활동 개시. 간헐적 신호 발생.\n\n"
-                "**Phase 3 (활동/장음): 30℃**\n"
-                " - 정상 활동 범위. 지속적 신호 발생.\n\n"
-                "**Phase 4 (폭주/광란): 35℃**\n"
-                " - 임계점 초과. 비선형적 패턴 발생."
-            ),
         ),
         # --- UNSEEN 오브젝트 (통제실) ---
         "모니터": KeywordData(

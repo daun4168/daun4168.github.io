@@ -458,12 +458,8 @@ CH1_SCENE3_1_DATA = SceneData(
                 ),
                 Action(type=ActionType.UPDATE_STATE, value={"key": "green_opened", "value": True}),
                 Action(
-                    type=ActionType.UPDATE_STATE,
-                    value={
-                        "keyword": KeywordId.FILE_TEMP,
-                        "state": KeywordState.UNSEEN,
-                        "scene_id": SceneID.CH1_SCENE3_4,
-                    },
+                    type=ActionType.REMOVE_ITEM,
+                    value=KeywordId.FILE_TEMP,
                 ),
                 Action(
                     type=ActionType.UPDATE_STATE,
@@ -525,7 +521,7 @@ CH1_SCENE3_1_DATA = SceneData(
                 Action(
                     type=ActionType.UPDATE_STATE,
                     value={
-                        "keyword": KeywordId.ECOLOGY_BOOK,
+                        "keyword": KeywordId.ECOLOGY_BOOK_TITLE,
                         "state": KeywordState.UNSEEN,
                         "scene_id": SceneID.CH1_SCENE3_3,
                     },
@@ -533,7 +529,15 @@ CH1_SCENE3_1_DATA = SceneData(
                 Action(
                     type=ActionType.UPDATE_STATE,
                     value={
-                        "keyword": KeywordId.RIGHT_BOOKSHELF,
+                        "keyword": KeywordId.ECOLOGY_BOOK_INDEX,
+                        "state": KeywordState.UNSEEN,
+                        "scene_id": SceneID.CH1_SCENE3_3,
+                    },
+                ),
+                Action(
+                    type=ActionType.UPDATE_STATE,
+                    value={
+                        "keyword": KeywordId.ECOLOGY_BOOK_BODY,
                         "state": KeywordState.UNSEEN,
                         "scene_id": SceneID.CH1_SCENE3_3,
                     },
@@ -575,20 +579,12 @@ CH1_SCENE3_1_DATA = SceneData(
                 ),
                 Action(type=ActionType.UPDATE_STATE, value={"key": "yellow_opened", "value": True}),
                 Action(
-                    type=ActionType.UPDATE_STATE,
-                    value={
-                        "keyword": KeywordId.FILE_MUSIC,
-                        "state": KeywordState.UNSEEN,
-                        "scene_id": SceneID.CH1_SCENE3_4,
-                    },
+                    type=ActionType.REMOVE_ITEM,
+                    value=KeywordId.FILE_MUSIC,
                 ),
                 Action(
-                    type=ActionType.UPDATE_STATE,
-                    value={
-                        "keyword": KeywordId.FILE_DNA,
-                        "state": KeywordState.UNSEEN,
-                        "scene_id": SceneID.CH1_SCENE3_4,
-                    },
+                    type=ActionType.REMOVE_ITEM,
+                    value=KeywordId.FILE_DNA,
                 ),
                 Action(
                     type=ActionType.UPDATE_STATE,
@@ -618,14 +614,6 @@ CH1_SCENE3_1_DATA = SceneData(
                     type=ActionType.UPDATE_STATE,
                     value={
                         "keyword": KeywordId.SHEET_MUSIC_3,
-                        "state": KeywordState.UNSEEN,
-                        "scene_id": SceneID.CH1_SCENE3_3,
-                    },
-                ),
-                Action(
-                    type=ActionType.UPDATE_STATE,
-                    value={
-                        "keyword": KeywordId.LEFT_BOOKSHELF,
                         "state": KeywordState.UNSEEN,
                         "scene_id": SceneID.CH1_SCENE3_3,
                     },

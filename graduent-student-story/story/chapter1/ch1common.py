@@ -415,5 +415,41 @@ CH1_COMMON_DATA = ChapterData(
                 )
             ],
         ),
+        # [신규 추가] 산성 용액 + 가성소다 양동이 (위험한 중화 반응 경고)
+        Combination(
+            targets=[KeywordId.ACID_SOURCE, KeywordId.FILLED_BUCKET],
+            conditions=[
+                Condition(type=ConditionType.HAS_ITEM, target=KeywordId.ACID_SOURCE),
+                Condition(type=ConditionType.HAS_ITEM, target=KeywordId.FILLED_BUCKET),
+            ],
+            actions=[
+                Action(
+                    type=ActionType.PRINT_NARRATIVE,
+                    value=(
+                        "황산 소스통을 가성소다 양동이에 붓는 상상을 해보았다.\n\n"
+                        "강산과 강염기가 만나면 격렬한 발열 반응이 일어나 폭발하듯 끓어오를 것이다.\n\n"
+                        "자살 행위나 다름없다."
+                    ),
+                )
+            ],
+        ),
+        # [신규 추가] 산성 젤 + 가성소다 양동이 (재료 낭비 경고)
+        Combination(
+            targets=[KeywordId.ACID_GEL, KeywordId.FILLED_BUCKET],
+            conditions=[
+                Condition(type=ConditionType.HAS_ITEM, target=KeywordId.ACID_GEL),
+                Condition(type=ConditionType.HAS_ITEM, target=KeywordId.FILLED_BUCKET),
+            ],
+            actions=[
+                Action(
+                    type=ActionType.PRINT_NARRATIVE,
+                    value=(
+                        "힘들게 만든 산성 젤을 가성소다 양동이에 넣으면 어떻게 될까?\n\n"
+                        "중화 반응으로 인해 젤은 녹아버리고, 뜨거운 소금물과 유독 가스만 남을 것이다.\n\n"
+                        "아까운 재료를 버리지 말자."
+                    ),
+                )
+            ],
+        ),
     ],
 )

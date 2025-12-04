@@ -4,6 +4,7 @@ from schemas import Action, Combination, Condition, Interaction, KeywordData, Sc
 CH1_SCENE2_2_DATA = SceneData(
     id=SceneID.CH1_SCENE2_2,
     name="선장실",
+    initial_text="---\n## 선장실\n---\n\n",
     body=(
         '"오오... 역시 캡틴의 방은 클래스가 다르구만!"\n\n'
         "문짝부터 남다른 선장실입니다. 바닥은 기울어졌지만, 중후한 마호가니 책상과 가죽 의자는 여전히 권위를 뽐내고 있습니다.\n"
@@ -214,7 +215,7 @@ CH1_SCENE2_2_DATA = SceneData(
                         ),
                         Action(
                             type=ActionType.PRINT_SYSTEM,
-                            value=f"암호를 알아내어 `{KeywordId.BOOKSHELF_LOCKER} : [비밀번호]` 형식으로 입력해 보세요.",
+                            value=f"암호를 알아내어 `{KeywordId.BOOKSHELF_LOCKER} : [비밀번호 5자리]` 형식으로 입력해 보세요.",
                         ),
                     ]
                 ),

@@ -1,5 +1,5 @@
 from const import ActionType, ConditionType, KeywordId, KeywordState, KeywordType, SceneID
-from schemas import Action, Combination, Condition, Interaction, KeywordData, SceneData
+from schemas import Action, Condition, Interaction, KeywordData, SceneData
 
 ENDING_MESSAGE = """
 # **【엔딩】**

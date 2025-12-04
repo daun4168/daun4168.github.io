@@ -1,9 +1,10 @@
-from const import ActionType, CombinationType, ConditionType, KeywordId, KeywordState, KeywordType, SceneID
-from schemas import Action, Combination, Condition, Interaction, KeywordData, SceneData
+from const import ActionType, ConditionType, KeywordId, KeywordState, KeywordType, SceneID
+from schemas import Action, Condition, Interaction, KeywordData, SceneData
 
 CH1_SCENE3_3_DATA = SceneData(
     id=SceneID.CH1_SCENE3_3,
     name="자료실",
+    initial_text="---\n## 자료실\n---\n\n",
     body=(
         '"책 냄새... 논문 쓸 때 맡던 그 지긋지긋한 냄새다."\n\n'
         "벽면 가득 책장이 들어찬 자료실입니다. 바닥에는 읽다 만 책들이 탑처럼 쌓여 있습니다.\n\n"
@@ -137,7 +138,6 @@ CH1_SCENE3_3_DATA = SceneData(
                             value=(
                                 "생물학 서적들이 빽빽합니다. 그중 유독 낡아서 제본이 뜯어진 책 한 권을 발견했습니다.\n\n"
                                 "집어 들자마자 **[생태학 책 표지]**, **[생태학 책 목차]**, **[생태학 책 본문]**으로 분해되어 우수수 떨어집니다."
-
                             ),
                         ),
                         Action(type=ActionType.UPDATE_STATE, value={"key": "right_shelf_inspected", "value": True}),
@@ -152,9 +152,7 @@ CH1_SCENE3_3_DATA = SceneData(
                     actions=[
                         Action(
                             type=ActionType.PRINT_NARRATIVE,
-                            value=(
-                                "남은 책들은 너무 전문적인 내용이라 봐도 모르겠습니다."
-                            ),
+                            value=("남은 책들은 너무 전문적인 내용이라 봐도 모르겠습니다."),
                         ),
                         Action(
                             type=ActionType.UPDATE_STATE,
@@ -172,7 +170,6 @@ CH1_SCENE3_3_DATA = SceneData(
                 "표지에 'ECOLOGY: A Holistic Approach'라고 적혀 있습니다."
             ),
         ),
-
         KeywordId.ECOLOGY_BOOK_INDEX: KeywordData(
             type=KeywordType.OBJECT,
             state=KeywordState.INACTIVE,
@@ -181,7 +178,6 @@ CH1_SCENE3_3_DATA = SceneData(
                 "책을 펼치니 동물들의 학명이 나옵니다.\n\n"
             ),
         ),
-
         KeywordId.ECOLOGY_BOOK_BODY: KeywordData(
             type=KeywordType.OBJECT,
             state=KeywordState.INACTIVE,
@@ -192,7 +188,6 @@ CH1_SCENE3_3_DATA = SceneData(
                 "정보로서의 가치는 없어 보입니다."
             ),
         ),
-
         # =================================================================
         # 3. 연구 책상 (조사 기록)
         # =================================================================

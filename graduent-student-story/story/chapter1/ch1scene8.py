@@ -1,3 +1,5 @@
+import json
+
 from const import (
     ActionType,
     CombinationType,
@@ -8,7 +10,6 @@ from const import (
     SceneID,
 )
 from schemas import Action, Combination, Condition, Interaction, KeywordData, SceneData
-import json
 
 CH1_SCENE8_DATA = SceneData(
     id=SceneID.CH1_SCENE8,
@@ -1133,7 +1134,8 @@ CH1_SCENE8_DATA = SceneData(
                     value={
                         "keyword": KeywordId.CLIMBING_ROPE,
                         "field": "description",
-                        "value": "등반용 로프다. 사람 한 명쯤 매달려도 버틸 만큼 튼튼해 보인다. 한쪽 끝은 도르래를 통과시키고, 나머지 부분은 몸과 바위에 고정해야 제대로 힘을 쓸 수 있다.",
+                        "value": "등반용 로프다. 사람 한 명쯤 매달려도 버틸 만큼 튼튼해 보인다. "
+                                 "한쪽 끝은 도르래를 통과시키고, 나머지 부분은 몸과 바위에 고정해야 제대로 힘을 쓸 수 있다.",
                     },
                 ),
             ],

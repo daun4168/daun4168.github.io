@@ -2,7 +2,7 @@ import asyncio
 import copy
 
 # const에서 KeywordState, KeywordType 추가 임포트 (필수)
-from const import CommandType, SceneID, KeywordState, KeywordType, ChapterID
+from const import ChapterID, CommandType, KeywordState, KeywordType, SceneID
 from entity import Entity, Inventory, Player
 from pyscript import document
 from scene import Scene
@@ -28,7 +28,6 @@ from story.chapter1 import (
     CH1_SCENE3_3_DATA,
     CH1_SCENE3_4_DATA,
     CH1_SCENE4_0_DATA,
-    CH1_SCENE4_DATA,
     CH1_SCENE5_DATA,
     CH1_SCENE6_DATA,
     CH1_SCENE7_DATA,

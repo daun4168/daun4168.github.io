@@ -1,6 +1,5 @@
 from const import ActionType, ConditionType, KeywordId, KeywordState, KeywordType, SceneID
 from schemas import Action, Condition, Interaction, KeywordData, SceneData
-from const import CommandType
 
 UNSEEN_INSPECTED_INTERACTIONS = [
     Interaction(
@@ -10,7 +9,7 @@ UNSEEN_INSPECTED_INTERACTIONS = [
                 type=ActionType.PRINT_SYSTEM,
                 value=(
                     "어떤 **[키워드]**는 시야나 주머니에 추가되지 않습니다.\n\n"
-                    "이러한 **환경 요소**는 이야기의 흐름을 바꾸지는 않지만, \n\n"
+                    "이러한 **환경 요소**는 이야기의 흐름을 바꾸지는 않지만,\n\n"
                     "이야기를 더 깊이 이해하고 느낄 수 있도록 해줍니다."
                 ),
             ),
@@ -46,9 +45,9 @@ CH0_SCENE0_DATA = SceneData(
             type=ActionType.PRINT_SYSTEM,
             value=(
                 "이제부터 상호작용 방식을 알려드리겠습니다.\n\n"
-                "본문에 등장하는 **[키워드]**를 직접 입력하여 탐색하세요.\n\n"
+                "이야기에 등장하는 **[키워드]**를 직접 입력하여 탐색하세요.\n\n"
                 "예를 들어, `교수님`을 입력해볼까요?\n\n"
-                f"`둘러보기`를 입력하면 본문을 다시 볼 수 있습니다."
+                "`둘러보기`를 입력하면 이야기를 다시 볼 수 있습니다."
             ),
         )
     ],
@@ -67,8 +66,8 @@ CH0_SCENE0_DATA = SceneData(
                         Action(
                             type=ActionType.PRINT_SYSTEM,
                             value=(
-                                "좋습니다! 이런식으로 본문에 나온 **[키워드]**를 찾으면, 시야의 **[?]**가 찾아낸 키워드로 바뀝니다.\n\n"
-                                "모든 **[키워드]**는 항상 본문 안에 숨어 있습니다. \n\n"
+                                "좋습니다! 이런식으로 이야기에 나온 **[키워드]**를 찾으면, 시야의 **[?]**가 찾아낸 키워드로 바뀝니다.\n\n"
+                                "모든 **[키워드]**는 항상 이야기 안에 숨어 있습니다.\n\n"
                                 "띄어쓰기가 포함된 경우도 있으니, 다양하게 입력해서 찾아보세요.\n\n"
                                 "시야에 **[?]**로 표시된 모든 **[키워드]**를 찾아보세요."
                             ),
@@ -151,9 +150,9 @@ CH0_SCENE0_DATA = SceneData(
                 Interaction(
                     actions=[
                         Action(
-                            type=ActionType.PRINT_SYSTEM,
+                            type=ActionType.PRINT_NARRATIVE,
                             value="그냥 나갔다가는 다시 불려 올 것이다. 교수님이 챙기라고 한 **물건**이 있지 않았나?",
-                        )
+                        ),
                     ]
                 ),
             ],
@@ -170,6 +169,12 @@ CH0_SCENE0_DATA = SceneData(
             state=KeywordState.UNSEEN,
             interactions=UNSEEN_INSPECTED_INTERACTIONS,
             description="교수님의 책상이다. 각종 서류와 논문이 어지럽게 널려있다.",
+        ),
+        "안경": KeywordData(
+            type=KeywordType.OBJECT,
+            state=KeywordState.UNSEEN,
+            interactions=UNSEEN_INSPECTED_INTERACTIONS,
+            description="교수님의 안경알이 빛을 번뜩인다. 저 너머의 눈은 웃고 있는지, 화를 내고 있는지 알 수 없다.",
         ),
         "안경알": KeywordData(
             type=KeywordType.OBJECT,
@@ -278,6 +283,36 @@ CH0_SCENE0_DATA = SceneData(
             state=KeywordState.UNSEEN,
             interactions=UNSEEN_INSPECTED_INTERACTIONS,
             description="땀 빼고 식혜 마시는 미팅도 업무의 연장이라 주장하실 게 뻔하다.",
+        ),
+        "10년": KeywordData(
+            type=KeywordType.OBJECT,
+            state=KeywordState.UNSEEN,
+            interactions=UNSEEN_INSPECTED_INTERACTIONS,
+            description="강산도 변한다는 세월이다. 그 긴 시간 동안 변한 건 내 늘어난 뱃살과 줄어든 머리숱, 그리고 더 이상 눈물을 흘리지 않는 건조한 안구뿐이다.",
+        ),
+        "일취월장": KeywordData(
+            type=KeywordType.OBJECT,
+            state=KeywordState.UNSEEN,
+            interactions=UNSEEN_INSPECTED_INTERACTIONS,
+            description="연구 실력이 늘어야 하는데, 쪽잠 자는 스킬과 교수님 피해 다니는 은신술만 만렙을 찍었다. 인류 발전에 하등 도움이 안 되는 재능이다.",
+        ),
+        "외부": KeywordData(
+            type=KeywordType.OBJECT,
+            state=KeywordState.UNSEEN,
+            interactions=UNSEEN_INSPECTED_INTERACTIONS,
+            description="연구실 창문 너머의 세상. 그곳에는 '주말'과 '저녁이 있는 삶'이라는 신화 속 개념이 실제로 존재한다고 들었다.",
+        ),
+        "준비": KeywordData(
+            type=KeywordType.OBJECT,
+            state=KeywordState.UNSEEN,
+            interactions=UNSEEN_INSPECTED_INTERACTIONS,
+            description="'미팅 준비'라고 쓰고 '사우나 갈 채비'라고 읽는다. 교수님의 한국어 사전은 일반인의 것과 정의가 다른 게 분명하다.",
+        ),
+        "물건": KeywordData(
+            type=KeywordType.OBJECT,
+            state=KeywordState.UNSEEN,
+            interactions=UNSEEN_INSPECTED_INTERACTIONS,
+            description="한도 초과된 카드로 살 수 있는 물건이 대체 뭐가 있단 말인가? 편의점 폐기 도시락 정도면 가능할지도 모르겠다.",
         ),
     },
 )

@@ -1,10 +1,9 @@
 import markdown
 
 # const에서 Enum 임포트 (타입 비교용)
-from const import KeywordState, KeywordType
-from pyscript import document
-from const import CommandType
+from const import CommandType, KeywordState, KeywordType
 from pyodide.ffi import create_proxy
+from pyscript import document
 
 
 def get_josa(word: str, josa_pair: str) -> str:

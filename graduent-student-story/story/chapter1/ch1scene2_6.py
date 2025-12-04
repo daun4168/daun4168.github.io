@@ -4,6 +4,7 @@ from schemas import Action, Combination, Condition, Interaction, KeywordData, Sc
 CH1_SCENE2_6_DATA = SceneData(
     id=SceneID.CH1_SCENE2_6,
     name="난파선 주방",
+    initial_text="---\n## 난파선 주방\n---\n\n",
     body=(
         '"우웩! 썩은 치즈랑 식초를 끓인 냄새가 나!"\n\n'
         "난파선 주방입니다. 한때는 요리를 했겠지만, 지금은 쥐들의 뷔페가 되었습니다.\n\n"
@@ -288,7 +289,7 @@ CH1_SCENE2_6_DATA = SceneData(
         "코스 요리": KeywordData(
             type=KeywordType.OBJECT,
             state=KeywordState.UNSEEN,
-            description="보기만 해도 배가 아프다. 파인다이닝(Fine Dining)이 아니라 다잉(Dying)이다. 먹는 순간 요단강 뷰를 감상하게 될 것이다.",
+            description="보기만 해도 배가 아프다. 파인다이닝이 아니라 다잉이다. 먹는 순간 요단강 뷰를 감상하게 될 것이다.",
         ),
         "우웩": KeywordData(
             type=KeywordType.OBJECT,

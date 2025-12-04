@@ -4,6 +4,7 @@ from schemas import Action, Combination, Condition, Interaction, KeywordData, Sc
 CH1_SCENE2_1_DATA = SceneData(
     id=SceneID.CH1_SCENE2_1,
     name="선원 숙소",
+    initial_text="---\n## 선원 숙소\n---\n\n",
     body=(
         '"우욱... 곰팡이 냄새가 진동을 하네."\n\n'
         "문짝이 덜렁거리는 선원 숙소 내부입니다. 바닥에는 썩은 물이 발목까지 차올라 찰랑거리고,\n\n"
@@ -194,7 +195,7 @@ CH1_SCENE2_1_DATA = SceneData(
                         ),
                         Action(
                             type=ActionType.PRINT_SYSTEM,
-                            value=f"암호를 알아내어 `{KeywordId.LOCKER_BOATSWAIN} : [비밀번호]` 형식으로 입력해 보세요.",
+                            value=f"암호를 알아내어 `{KeywordId.LOCKER_BOATSWAIN} : [비밀번호 4자리]` 형식으로 입력해 보세요.",
                         ),
                     ]
                 ),
@@ -226,7 +227,7 @@ CH1_SCENE2_1_DATA = SceneData(
                         ),
                         Action(
                             type=ActionType.PRINT_SYSTEM,
-                            value=f"암호를 알아내어 `{KeywordId.LOCKER_NAVIGATOR} : [비밀번호]` 형식으로 입력해 보세요.",
+                            value=f"암호를 알아내어 `{KeywordId.LOCKER_NAVIGATOR} : [비밀번호 4자리]` 형식으로 입력해 보세요.",
                         ),
                     ]
                 ),
@@ -259,7 +260,7 @@ CH1_SCENE2_1_DATA = SceneData(
                         ),
                         Action(
                             type=ActionType.PRINT_SYSTEM,
-                            value=f"암호를 알아내어 `{KeywordId.LOCKER_RADIOMAN} : [비밀번호]` 형식으로 입력해 보세요.",
+                            value=f"암호를 알아내어 `{KeywordId.LOCKER_RADIOMAN} : [비밀번호 4자리]` 형식으로 입력해 보세요.",
                         ),
                     ]
                 ),
@@ -345,6 +346,26 @@ CH1_SCENE2_1_DATA = SceneData(
             type=KeywordType.OBJECT,
             state=KeywordState.UNSEEN,
             description="위장이 요동친다. 어제 먹은 라면이 역류하려는 걸 간신히 참았다. 여기서 토하면 위생 점수가 마이너스 무한대가 될 것이다.",
+        ),
+        "침대": KeywordData(
+            type=KeywordType.OBJECT,
+            state=KeywordState.UNSEEN,
+            description="잠을 자는 가구가 아니라 척추 측만증 유발 장치처럼 생겼다. 눕는 순간 가위에 눌릴 것 같은 비주얼이다.",
+        ),
+        "물": KeywordData(
+            type=KeywordType.OBJECT,
+            state=KeywordState.UNSEEN,
+            description="화학적으로 H2O라고 부르기 민망한 액체다. 온갖 유기물이 부패하며 만들어낸 '죽음의 칵테일'이다.",
+        ),
+        "녹": KeywordData(
+            type=KeywordType.OBJECT,
+            state=KeywordState.UNSEEN,
+            description="산화철(Fe2O3). 이 배의 진정한 지배자는 선장이 아니라 산소와 습기였던 모양이다.",
+        ),
+        "내부": KeywordData(
+            type=KeywordType.OBJECT,
+            state=KeywordState.UNSEEN,
+            description="들어오지 말았어야 했다. '호기심이 대학원생을 죽인다'는 속담을 새로 만들어야 할 판이다.",
         ),
     },
     combinations=[

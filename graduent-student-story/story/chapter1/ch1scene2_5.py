@@ -1,9 +1,10 @@
-from const import ActionType, CombinationType, ConditionType, KeywordId, KeywordState, KeywordType, SceneID
+from const import ActionType, ConditionType, KeywordId, KeywordState, KeywordType, SceneID
 from schemas import Action, Combination, Condition, Interaction, KeywordData, SceneData
 
 CH1_SCENE2_5_DATA = SceneData(
     id=SceneID.CH1_SCENE2_5,
     name="지하 복도",
+    initial_text="---\n## 지하 복도\n---\n\n",
     body=(
         "지하로 내려오자마자 매캐한 화학 약품 냄새가 코를 찌릅니다.\n\n"
         "바닥 곳곳이 녹아내려 걷기 힘듭니다.\n\n"

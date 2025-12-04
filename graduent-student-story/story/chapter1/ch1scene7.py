@@ -9,7 +9,6 @@ from const import (
 )
 from schemas import Action, Combination, Condition, Interaction, KeywordData, SceneData
 
-
 CH1_SCENE7_DATA = SceneData(
     id=SceneID.CH1_SCENE7,
     name="지하 호수 (폭포 동굴)",

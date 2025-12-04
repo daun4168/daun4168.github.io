@@ -386,7 +386,7 @@ CH0_SCENE1_DATA = SceneData(
                         Action(
                             type=ActionType.PRINT_NARRATIVE,
                             value=(
-                                "웹 브라우저에 '랩-마켓(Lab-Market)' 최근 주문 내역이 띄워져 있다.\n"
+                                "웹 브라우저에 '랩-마켓(Lab-Market)' 최근 주문 내역이 띄워져 있다.\n\n"
                                 "배송 상태가 **배송 완료**로 되어 있는 최근 4건의 목록이다.\n\n"
                                 "· [실험] 공업용 에탄올 (99%) ------- **2** Box\n\n"
                                 "· [기자재] 백금 코팅 비커 세트 ------ **0** Set (주문 취소됨: 사유-예산 초과)\n\n"
@@ -419,7 +419,7 @@ CH0_SCENE1_DATA = SceneData(
                         ),
                         Action(
                             type=ActionType.PRINT_SYSTEM,
-                            value="암호를 알아내어 `시약장 : [비밀번호 4자리]` 형식으로 입력해 보세요.",
+                            value=f"암호를 알아내어 `{KeywordId.REAGENT_CABINET} : [비밀번호 4자리]` 형식으로 입력해 보세요.",
                         ),
                     ],
                 ),
@@ -560,6 +560,26 @@ CH0_SCENE1_DATA = SceneData(
             state=KeywordState.UNSEEN,
             description="엔트로피 증가 법칙을 눈으로 확인하고 싶다면 이곳이 최적의 장소다. 무질서가 지배하는 세상, 그게 바로 여기다.",
         ),
+        "판도라": KeywordData(
+            type=KeywordType.OBJECT,
+            state=KeywordState.UNSEEN,
+            description="호기심에 열었다가 '재앙'이 쏟아져 나온 그 상자다. 물론 대학원생에게 재앙이란 '추가 실험'을 의미한다.",
+        ),
+        "의문의 액체": KeywordData(
+            type=KeywordType.OBJECT,
+            state=KeywordState.UNSEEN,
+            description="색깔은 영롱한 형광 초록색이다. 닿으면 슈퍼 히어로가 되거나, 아니면 9시 뉴스 사회면에 나오거나 둘 중 하나일 것이다.",
+        ),
+        "액체": KeywordData(
+            type=KeywordType.OBJECT,
+            state=KeywordState.UNSEEN,
+            description="물리적 성질은 액체지만, 화학적 성질은 '맹독'에 가깝다. 섣불리 만지지 않는 게 상책이다.",
+        ),
+        "책상": KeywordData(
+            type=KeywordType.OBJECT,
+            state=KeywordState.UNSEEN,
+            description="본래 나무 색이었던 것 같지만, 지금은 각종 시약 얼룩과 먼지로 인해 추상화 작품처럼 변했다. 컴퓨터를 지탱하고 있는 것이 기적이다.",
+        ),
     },
     combinations=[
         Combination(
@@ -668,7 +688,7 @@ CH0_SCENE1_DATA = SceneData(
             actions=[
                 Action(
                     type=ActionType.PRINT_NARRATIVE,
-                    value="**[먼지 제거제]**를 뒤집어 액체 질소처럼 뿌려보았다.\n치익- 소리와 함께 액체가 하얗게 얼어붙었지만, 3초 뒤 다시 녹아 끈적해졌다.\n단순한 물리적 냉각으로는 해결되지 않는다. 화학적인 중화제가 필요하다.",
+                    value="**[먼지 제거제]**를 뒤집어 액체 질소처럼 뿌려보았다.\n\n치익- 소리와 함께 액체가 하얗게 얼어붙었지만, 3초 뒤 다시 녹아 끈적해졌다.\n단순한 물리적 냉각으로는 해결되지 않는다. 화학적인 중화제가 필요하다.",
                 )
             ],
         ),
@@ -731,6 +751,144 @@ CH0_SCENE1_DATA = SceneData(
                 ),
                 Action(type=ActionType.REMOVE_ITEM, value=KeywordId.BROOM),
                 Action(type=ActionType.MOVE_SCENE, value=SceneID.CH0_SCENE2),
+            ],
+        ),
+        # 1. 스패너 + 컴퓨터 (물리적 충격 요법 시도)
+        Combination(
+            targets=[KeywordId.COMPUTER, KeywordId.SPANNER],
+            conditions=[Condition(type=ConditionType.HAS_ITEM, target=KeywordId.SPANNER)],
+            actions=[
+                Action(
+                    type=ActionType.PRINT_NARRATIVE,
+                    value=(
+                        "**[스패너]**를 들어 컴퓨터 본체를 노려보았다. 옛말에 기계는 때리면 고쳐진다지만,\n\n"
+                        "이 고물 컴퓨터는 한 대 치면 영원히 잠들 것 같다.\n\n"
+                        "내 논문 데이터가 인질로 잡혀있으니 참기로 했다."
+                    ),
+                )
+            ],
+        ),
+        # 2. 법인카드 + 쓰레기통 (카드 버리기 시도)
+        Combination(
+            targets=[KeywordId.TRASH_CAN, KeywordId.CORP_CARD],
+            conditions=[Condition(type=ConditionType.HAS_ITEM, target=KeywordId.CORP_CARD)],
+            actions=[
+                Action(
+                    type=ActionType.PRINT_NARRATIVE,
+                    value=(
+                        "한도 초과된 **[법인카드]**를 홧김에 **[쓰레기통]**에 던져버리고 싶다.\n\n"
+                        "하지만 그랬다간 행정실 선생님과 1:1 면담을 해야 한다. 조용히 카드를 다시 주머니에 넣었다."
+                    ),
+                )
+            ],
+        ),
+        # 3. 법인카드 + 청소도구함 (영화처럼 문 따기 시도)
+        Combination(
+            targets=[KeywordId.CLEANING_CABINET, KeywordId.CORP_CARD],
+            conditions=[Condition(type=ConditionType.HAS_ITEM, target=KeywordId.CORP_CARD)],
+            actions=[
+                Action(
+                    type=ActionType.PRINT_NARRATIVE,
+                    value=(
+                        "첩보 영화 주인공처럼 **[법인카드]**를 캐비닛 틈새에 찔러 넣어 보았다.\n\n"
+                        "플라스틱이 휘어지며 '우지끈' 비명을 지른다. 역시 영화와 현실은 다르다. 카드가 부러지기 전에 그만두었다."
+                    ),
+                )
+            ],
+        ),
+        # 4. 박스(이미 열림) + 법인카드 (의미 없는 행동)
+        Combination(
+            targets=[KeywordId.BOX, KeywordId.CORP_CARD],
+            conditions=[
+                Condition(type=ConditionType.HAS_ITEM, target=KeywordId.CORP_CARD),
+                Condition(type=ConditionType.STATE_IS, target="box_opened", value=True),
+            ],
+            actions=[
+                Action(
+                    type=ActionType.PRINT_NARRATIVE,
+                    value="이미 내용물을 꺼낸 빈 **[박스]**다. 괜히 더 긁었다가 카드 마그네틱만 손상될라. 그만두자.",
+                )
+            ],
+        ),
+        # 5. 스패너 + 시약장 (물리적 파괴 시도)
+        Combination(
+            targets=[KeywordId.REAGENT_CABINET, KeywordId.SPANNER],
+            conditions=[
+                Condition(type=ConditionType.HAS_ITEM, target=KeywordId.SPANNER),
+                Condition(type=ConditionType.STATE_IS, target="cabinet_unlocked", value=False),
+            ],
+            actions=[
+                Action(
+                    type=ActionType.PRINT_NARRATIVE,
+                    value=(
+                        "**[스패너]**를 들어 유리창을 깰까 잠시 고민했다.\n\n"
+                        "하지만 안에는 폭발성 화학물질이 들어있다. 뼈가 녹거나, 연구실이 날아가거나, "
+                        "무엇보다 내 **월급**에서 유리창 값이 차감될 것이다.\n"
+                        "이건 최후의 수단으로 남겨두자."
+                    ),
+                )
+            ],
+        ),
+        # 6. 열쇠 + 시약장 (잘못된 열쇠 사용)
+        Combination(
+            targets=[KeywordId.REAGENT_CABINET, KeywordId.KEY],
+            conditions=[
+                Condition(type=ConditionType.HAS_ITEM, target=KeywordId.KEY),
+                Condition(type=ConditionType.STATE_IS, target="cabinet_unlocked", value=False),
+            ],
+            actions=[
+                Action(
+                    type=ActionType.PRINT_NARRATIVE,
+                    value=(
+                        "**[열쇠]** 구멍을 찾아보았지만, 아무래도 이 자물쇠는 숫자 비밀번호를 맞춰서 풀어야 할 것 같다.\n\n"
+                        "게다가 이 작고 조잡한 열쇠는 시약장 같은 비싼 가구에는 어울리지 않는다."
+                    ),
+                )
+            ],
+        ),
+        # 7. 먼지 제거제 + 컴퓨터 (굳이 할 필요 없음)
+        Combination(
+            targets=[KeywordId.COMPUTER, KeywordId.AIR_DUSTER],
+            conditions=[Condition(type=ConditionType.HAS_ITEM, target=KeywordId.AIR_DUSTER)],
+            actions=[
+                Action(
+                    type=ActionType.PRINT_NARRATIVE,
+                    value=(
+                        "컴퓨터 팬 소리가 요란하긴 하지만, 굳이 본체 내부까지 뜯어서 청소할 필요는 없어 보인다.\n\n"
+                        "내 목표는 방을 치우는 거지, 골동품 PC를 복원하는 게 아니다.\n\n"
+                        "괜히 부지런 떨다가 고장이라도 나면 내 책임이 된다. 못 본 척하기로 했다."
+                    ),
+                )
+            ],
+        ),
+        # 8. 에탄올 + 쓰레기통 (위험한 소각 시도)
+        Combination(
+            targets=[KeywordId.TRASH_CAN, KeywordId.ETHANOL],
+            conditions=[Condition(type=ConditionType.HAS_ITEM, target=KeywordId.ETHANOL)],
+            actions=[
+                Action(
+                    type=ActionType.PRINT_NARRATIVE,
+                    value=(
+                        "쓰레기 더미에 인화성 **[에탄올]**을 부어버릴까?\n\n"
+                        "확실히 쓰레기는 사라지겠지만, 화재 경보기가 울리면 소방차와 함께 교수님이 출동할 것이다.\n\n"
+                        "청소하려다 인생을 태워먹을 순 없다."
+                    ),
+                )
+            ],
+        ),
+        # 9. 에탄올 + 컴퓨터 (전자기기에 액체 투척)
+        Combination(
+            targets=[KeywordId.COMPUTER, KeywordId.ETHANOL],
+            conditions=[Condition(type=ConditionType.HAS_ITEM, target=KeywordId.ETHANOL)],
+            actions=[
+                Action(
+                    type=ActionType.PRINT_NARRATIVE,
+                    value=(
+                        "키보드와 마우스를 **[에탄올]**로 소독하고 싶다.\n\n"
+                        "하지만 99% 공업용 에탄올을 그냥 부었다간 플라스틱이 녹거나 회로가 망가질 수 있다.\n\n"
+                        "일단 컴퓨터 내부의 데이터부터 확인하는 게 급선무다."
+                    ),
+                )
             ],
         ),
     ],

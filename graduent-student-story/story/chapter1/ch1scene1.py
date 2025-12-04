@@ -915,13 +915,9 @@ CH1_SCENE1_DATA = SceneData(
                     type=ActionType.PRINT_NARRATIVE,
                     value=(
                         "스패너를 쥐고 양자 가마솥의 패널을 바라보다가, 당신은 손을 멈춘다.\n\n"
-                        "아직은 몇 군데 소켓이 비어 있고, 전선이 연결되지 않은 단자가 남아 있다.\n"
+                        "아직은 몇 군데 소켓이 비어 있고, 전선이 연결되지 않은 단자가 남아 있다.\n\n"
                         "지금 볼트를 조여 버리면, 이 기계는 반쯤만 깨어난 채 다시 잠들지도 모른다."
                     ),
-                ),
-                Action(
-                    type=ActionType.PRINT_SYSTEM,
-                    value="모든 부품을 연결한 뒤에 마지막 조임을 진행하세요. (석영, 배터리, 전선 끝이 모두 연결되어야 합니다.)",
                 ),
             ],
         ),
@@ -992,6 +988,50 @@ CH1_SCENE1_DATA = SceneData(
                         "차라리 저 넘실거리는 바닷물을 한가득 퍼 나르는 용도로 쓰는 게 낫겠습니다."
                     ),
                 ),
+            ],
+        ),
+        # [요청 1] 스패너 + 숲 입구 (베기 시도)
+        Combination(
+            targets=[KeywordId.FOREST_ENTRY, KeywordId.SPANNER],
+            conditions=[
+                Condition(type=ConditionType.HAS_ITEM, target=KeywordId.SPANNER),
+                Condition(type=ConditionType.STATE_IS, target="forest_cleared", value=False),
+            ],
+            actions=[
+                Action(
+                    type=ActionType.PRINT_NARRATIVE,
+                    value=(
+                        "**[스패너]**를 휘둘러 덩굴을 내리쳐 보았다. *퍽!* \n\n"
+                        "덩굴은 끄떡없고 손바닥만 얼얼하다.\n\n"
+                        "스패너는 '조이는' 도구지 '베는' 도구가 아니다. 날카로운 날붙이가 필요하다."
+                    ),
+                )
+            ],
+        ),
+        # [요청 3] 모래사장 + 빈 페트병 (녹음 주의)
+        Combination(
+            targets=[KeywordId.SANDY_BEACH, KeywordId.PLASTIC_BOTTLE],
+            conditions=[Condition(type=ConditionType.HAS_ITEM, target=KeywordId.PLASTIC_BOTTLE)],
+            actions=[
+                Action(
+                    type=ActionType.PRINT_NARRATIVE,
+                    value=(
+                        "**[빈 페트병]**을 뜨거운 모래 위에 올려두었다.\n\n"
+                        "안에 액체가 없어서 금방이라도 쭈글쭈글하게 녹아버릴 것 같다.\n\n"
+                        "정수기를 만들 생각이라면, 먼저 증발시킬 바닷물을 채워와야 한다."
+                    ),
+                )
+            ],
+        ),
+        # [요청 4] 모래사장 + 비닐 (단독 사용 불가)
+        Combination(
+            targets=[KeywordId.SANDY_BEACH, KeywordId.VINYL],
+            conditions=[Condition(type=ConditionType.HAS_ITEM, target=KeywordId.VINYL)],
+            actions=[
+                Action(
+                    type=ActionType.PRINT_NARRATIVE,
+                    value=("**[비닐]**을 모래 위에 그냥 펼쳐 보았다.\n\n이건 그냥 '비닐 돗자리'다."),
+                )
             ],
         ),
     ],

@@ -4,6 +4,7 @@ from schemas import Action, Combination, Condition, Interaction, KeywordData, Sc
 CH1_SCENE3_4_DATA = SceneData(
     id=SceneID.CH1_SCENE3_4,
     name="통제실",
+    initial_text="---\n## 통제실\n---\n\n",
     body=(
         "모니터 불빛 하나 없는 어두운 통제실입니다.\n\n"
         "중앙에 컴퓨터가 놓여 있고, 모니터 귀퉁이에는 노란색 접착 메모가 붙어 있습니다.\n\n"
@@ -118,18 +119,18 @@ CH1_SCENE3_4_DATA = SceneData(
                             value={
                                 "name": KeywordId.FILE_TEMP,
                                 "description": (
-                "\n\n< 실험체 303 반응 임계점 로그 >\n\n"
-                "가상의 4분할 지점에서 도출된 최적의 반응 온도를 기록함.\n\n"
-                "온도 조절기 오차 수정 완료.\n\n"
-                "**Phase 1 (동면/침묵): 5℃**\n"
-                " - 생체 활동 정지. 완전한 고요.\n\n"
-                "**Phase 2 (각성/단음): 20℃**\n"
-                " - 활동 개시. 간헐적 신호 발생.\n\n"
-                "**Phase 3 (활동/장음): 30℃**\n"
-                " - 정상 활동 범위. 지속적 신호 발생.\n\n"
-                "**Phase 4 (폭주/광란): 35℃**\n"
-                " - 임계점 초과. 비선형적 패턴 발생."
-            ),
+                                    "\n\n< 실험체 303 반응 임계점 로그 >\n\n"
+                                    "가상의 4분할 지점에서 도출된 최적의 반응 온도를 기록함.\n\n"
+                                    "온도 조절기 오차 수정 완료.\n\n"
+                                    "**Phase 1 (동면/침묵): 5℃**\n"
+                                    " - 생체 활동 정지. 완전한 고요.\n\n"
+                                    "**Phase 2 (각성/단음): 20℃**\n"
+                                    " - 활동 개시. 간헐적 신호 발생.\n\n"
+                                    "**Phase 3 (활동/장음): 30℃**\n"
+                                    " - 정상 활동 범위. 지속적 신호 발생.\n\n"
+                                    "**Phase 4 (폭주/광란): 35℃**\n"
+                                    " - 임계점 초과. 비선형적 패턴 발생."
+                                ),
                             },
                         ),
                         Action(type=ActionType.UPDATE_STATE, value={"key": "file_discovered", "value": True}),

@@ -1,9 +1,10 @@
-from const import ActionType, CombinationType, ConditionType, KeywordId, KeywordState, KeywordType, SceneID
+from const import ActionType, ConditionType, KeywordId, KeywordState, KeywordType, SceneID
 from schemas import Action, Combination, Condition, Interaction, KeywordData, SceneData
 
 CH1_SCENE4_0_DATA = SceneData(
     id=SceneID.CH1_SCENE4_0,
     name="정글 입구",
+    initial_text="---\n## 정글 입구\n---\n\n",
     body=(
         '"여긴 습도가 장난이 아니네... 찜질방 수준이야."\n\n'
         "울창한 숲을 지나자 끈적한 습기가 느껴지는 정글 입구가 나타났습니다.\n\n"

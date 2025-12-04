@@ -1,8 +1,8 @@
+import json
 from abc import ABC, abstractmethod
 
 from const import ActionType, ConditionType, KeywordState
 from entity import Item
-import json
 from ui import get_josa
 
 # --- Base Interfaces ---

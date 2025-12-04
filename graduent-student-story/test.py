@@ -1,8 +1,6 @@
 import asyncio
 import re
 
-from js import window
-
 # --- 테스트 시나리오 데이터 ---
 # 새로운 챕터나 테스트 케이스를 추가할 때는 이 딕셔너리에만 추가하면 됩니다.
 TEST_SCENARIOS = {

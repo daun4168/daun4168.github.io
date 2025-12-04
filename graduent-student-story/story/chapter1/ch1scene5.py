@@ -1,7 +1,6 @@
 from const import ActionType, ConditionType, KeywordId, KeywordState, KeywordType, SceneID
 from schemas import Action, Combination, Condition, Interaction, KeywordData, SceneData
 
-
 CH1_SCENE5_DATA = SceneData(
     id=SceneID.CH1_SCENE5,
     name="죽음의 늪 (맹독의 길목)",

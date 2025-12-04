@@ -1,9 +1,10 @@
-from const import ActionType, CombinationType, ConditionType, KeywordId, KeywordState, KeywordType, SceneID
+from const import ActionType, ConditionType, KeywordId, KeywordState, KeywordType, SceneID
 from schemas import Action, Combination, Condition, Interaction, KeywordData, SceneData
 
 CH1_SCENE2_3_DATA = SceneData(
     id=SceneID.CH1_SCENE2_3,
     name="선장실 선반",
+    initial_text="---\n## 선장실 선반\n---\n\n",
     body=(
         "당신은 까치발을 들고 선반 위의 유리병들을 코앞에서 들여다봅니다.\n\n"
         "먼지 하나 없는 투명한 유리병 속에 정교하게 만들어진 배 모형들이 들어 있습니다.\n\n"
@@ -11,7 +12,7 @@ CH1_SCENE2_3_DATA = SceneData(
         "왼쪽부터 순서대로 **[붉은 용]**, **[하얀 백조]**, **[검은 유령]**, 그리고 **[황금 독수리]**입니다.\n\n"
         "선원 숙소에서 얻은 단서들을 조합해 진짜 배를 찾아내야 합니다.\n\n"
         "유리가 매우 두꺼워 보여서, 깨뜨리려면 무겁고 단단한 도구를 사용해야 합니다.\n\n"
-        "뒤로 물러나면 다시 **[선장실]**로 돌아갑니다."
+        "뒤로 물러나면 다시 선장실로 돌아갑니다."
     ),
     initial_state={
         "room_inspected": False,

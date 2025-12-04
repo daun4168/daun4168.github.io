@@ -8,6 +8,7 @@ INITIAL_DECK_STATE = {
     "lion_opened": False,  # 사자 금고 개방 여부
     "puzzle_solved": False,  # 배전함 퍼즐 해결 여부
     "panel_inspected": False,
+    "bear_inspected": False,  # 곰 캐비닛 최초 조사 여부
     # 스위치 상태 (True: ON/초록불, False: OFF/빨간불)
     "sw1": False,
     "sw2": False,
@@ -19,6 +20,7 @@ INITIAL_DECK_STATE = {
 CH1_SCENE2_4_DATA = SceneData(
     id=SceneID.CH1_SCENE2_4,
     name="갑판 뒷편",
+    initial_text="---\n## 갑판 뒷편\n---\n\n",
     body=(
         '"으아악! 내 머리! 미역 줄기 되는 줄 알았네!"\n\n'
         "문을 열자마자 소금기 머금은 강풍이 따귀를 때립니다. 난간은 엿가락처럼 휘어져 있고, "
@@ -73,31 +75,49 @@ CH1_SCENE2_4_DATA = SceneData(
             ],
         ),
         # 1. 곰 캐비닛 (열려 있음 - 힌트/맥거핀)
+        # [수정] 1. 곰 캐비닛 (자물쇠 발견 로직 분리)
         KeywordId.BEAR_CABINET: KeywordData(
             type=KeywordType.OBJECT,
             state=KeywordState.DISCOVERED,
             interactions=[
+                # Case 1: 처음 조사할 때 (자물쇠 발견)
                 Interaction(
+                    conditions=[Condition(type=ConditionType.STATE_IS, target="bear_inspected", value=False)],
                     actions=[
                         Action(
                             type=ActionType.PRINT_NARRATIVE,
                             value=(
-                                "문이 덜컹거리며 열려 있습니다. 안은 텅 비었고, 바닥에 **[부서진 자물쇠]**만 굴러다닙니다.\n\n"
-                                "누군가 이 거대한 캐비닛을 열고 곰을 풀어줬나 봅니다."
+                                "오른쪽 곰 캐비닛을 살펴봅니다.\n\n"
+                                "문이 덜컹거리며 열려 있고, 안은 텅 비었습니다.\n\n"
+                                "바닥을 자세히 보니 누군가 부수고 간 **[부서진 자물쇠]**가 굴러다닙니다."
                             ),
                         ),
                         Action(
                             type=ActionType.DISCOVER_KEYWORD,
                             value=KeywordId.BROKEN_LOCK,
                         ),
-                    ]
-                )
+                        Action(
+                            type=ActionType.UPDATE_STATE,
+                            value={"key": "bear_inspected", "value": True},
+                        ),
+                    ],
+                ),
+                # Case 2: 이미 조사한 후
+                Interaction(
+                    conditions=[Condition(type=ConditionType.STATE_IS, target="bear_inspected", value=True)],
+                    actions=[
+                        Action(
+                            type=ActionType.PRINT_NARRATIVE,
+                            value="이미 텅 빈 캐비닛입니다. 곰은 떠났고, 남은 건 바닥의 먼지뿐입니다.",
+                        ),
+                    ],
+                ),
             ],
         ),
         KeywordId.BROKEN_LOCK: KeywordData(
             type=KeywordType.OBJECT,
             state=KeywordState.INACTIVE,
-            description="이미 망가진 자물쇠다. 다이얼의 첫 번째 숫자는 보이지 않고, 나머지 두 개는 '18'에 멈춰 있다.",
+            description="이미 망가진 자물쇠. 다이얼의 첫 번째 숫자는 보이지 않고, 나머지 두 개는 '18'에 멈춰 있습니다.",
         ),
         # 2. 사자 캐비닛 (잠김 -> 배전함)
         KeywordId.LION_CABINET: KeywordData(
@@ -130,7 +150,7 @@ CH1_SCENE2_4_DATA = SceneData(
                         ),
                         Action(
                             type=ActionType.PRINT_SYSTEM,
-                            value=f"암호를 알아내어 `{KeywordId.LION_CABINET} : [비밀번호]` 형식으로 입력해 보세요.",
+                            value=f"암호를 알아내어 `{KeywordId.LION_CABINET} : [비밀번호 3자리]` 형식으로 입력해 보세요.",
                         ),
                     ]
                 ),
@@ -448,6 +468,21 @@ CH1_SCENE2_4_DATA = SceneData(
             type=KeywordType.OBJECT,
             state=KeywordState.UNSEEN,
             description="사자가 나오기 전에 내가 먼저 선수를 친다? 말은 쉽지. 물리면 파상풍 주사도 못 맞는데.",
+        ),
+        "곰": KeywordData(
+            type=KeywordType.OBJECT,
+            state=KeywordState.UNSEEN,
+            description="곰은 이미 탈출했다. 녀석이 남긴 흔적은 '열려 있는 캐비닛' 안에 있을 것이다. 거기서 단서를 찾아야 한다.",
+        ),
+        "사자": KeywordData(
+            type=KeywordType.OBJECT,
+            state=KeywordState.UNSEEN,
+            description="굳게 닫힌 캐비닛 문에 사자가 그려져 있다. 열린 캐비닛을 먼저 뒤져서 힌트를 얻지 못하면, 이 사자는 영원히 입을 다물고 있을 것이다.",
+        ),
+        "캐비닛": KeywordData(
+            type=KeywordType.OBJECT,
+            state=KeywordState.UNSEEN,
+            description="두 개의 캐비닛이 있다. 하나는 열렸고, 하나는 잠겼다. 열린 곳을 먼저 조사하는게 좋겠다.",
         ),
     },
     combinations=[

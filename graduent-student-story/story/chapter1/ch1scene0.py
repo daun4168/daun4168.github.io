@@ -1,4 +1,4 @@
-from const import ActionType, CombinationType, ConditionType, KeywordId, KeywordState, KeywordType, SceneID
+from const import ActionType, ConditionType, KeywordId, KeywordState, KeywordType, SceneID
 from schemas import Action, Combination, Condition, Interaction, KeywordData, SceneData
 
 CH1_SCENE0_DATA = SceneData(
@@ -260,6 +260,11 @@ CH1_SCENE0_DATA = SceneData(
             state=KeywordState.UNSEEN,
             description="욱신거린다. 맨날 의자에 앉아 코딩만 하느라 빈약해진 내 엉덩이가 비명을 지르고 있다. 꼬리뼈가 무사한지 모르겠다.",
         ),
+        "바닷물": KeywordData(
+            type=KeywordType.OBJECT,
+            state=KeywordState.UNSEEN,
+            description="겉보기엔 청량음료, 실상은 독약이다. 마시는 순간 삼투압의 노예가 되어 말라비틀어질 것이다.",
+        ),
         "태양": KeywordData(
             type=KeywordType.OBJECT,
             state=KeywordState.UNSEEN,
@@ -271,6 +276,11 @@ CH1_SCENE0_DATA = SceneData(
             description="구름 한 점 없이 맑다. 너무 광활해서 오히려 공포감이 든다. 교수가 없는 하늘은 이렇게나 넓구나.",
         ),
         "연기": KeywordData(
+            type=KeywordType.OBJECT,
+            state=KeywordState.UNSEEN,
+            description="매캐한 플라스틱 타는 냄새가 난다. 지난번 딥러닝 모델 돌리다가 과열로 태워 먹은 GPU 냄새와 똑같다.",
+        ),
+        "검은 연기": KeywordData(
             type=KeywordType.OBJECT,
             state=KeywordState.UNSEEN,
             description="매캐한 플라스틱 타는 냄새가 난다. 지난번 딥러닝 모델 돌리다가 과열로 태워 먹은 GPU 냄새와 똑같다.",
@@ -369,12 +379,13 @@ CH1_SCENE0_DATA = SceneData(
                 Action(
                     type=ActionType.PRINT_NARRATIVE,
                     value=(
-                        "부러진 **[안테나]**를 통신기 홈에 맞춰 끼워 넣자마자, 갑자기 기계가 웅웅거리며 작동하기 시작한다!\n\n"
-                        '교수님: "아아, 들리냐? 야! 양자 가마솥 상태 어때? **배터리 충전하고, 발진기 고치고, 통신선만 연결하면** 다시 날아오를 수 있어!"\n\n'
-                        '나: "교수님! 그게 무슨...!"\n\n'
+                        "부러진 **[안테나]**를 **[통신기]** 홈에 맞춰 끼워 넣자마자, 갑자기 기계가 웅웅거리며 작동하기 시작한다!\n\n"
+                        '"아아! 들리나? 자네 살아있군! 다행이야, 연구비 날릴 뻔했네!\n\n'
+                        "잘 들어! 그 깡통... 아니, 양자 가마솥은 아직 살릴 수 있어.\n\n"
+                        '**배터리** 새로 넣고, **발진기** 고치고, **통신선**, 이 세 가지만 구해서 연결해!"\n\n'
+                        '"교수님! 그게 문제가 아니라 구조대부터...!"\n\n'
                         "**퍼버벅-!!!**\n\n"
-                        "말이 끝나기도 전에 통신기에서 시커먼 연기와 함께 불꽃이 튀었다.\n"
-                        '교수님: "어? 야! 잠깐만! 통신기 꺼야... 끊긴다! 살아남아라!"\n\n'
+                        "말이 끝나기도 전에 통신기에서 시커먼 연기와 함께 불꽃이 튀었다."
                         "통신 모듈이 완전히 새까맣게 타버렸다. 구조 요청의 희망이 사라졌다.\n\n"
                         "하지만 절망할 시간도 없다. 태양은 점점 더 뜨거워진다.\n\n"
                         "일단 살고 봐야 한다. 저 멀리 보이는 **[그늘진 해변]**으로 가마솥을 옮겨야 한다."
@@ -382,9 +393,87 @@ CH1_SCENE0_DATA = SceneData(
                 ),
                 Action(type=ActionType.REMOVE_ITEM, value=KeywordId.ANTENNA),
                 Action(type=ActionType.UPDATE_STATE, value={"key": "comms_exploded", "value": True}),
-                Action(type=ActionType.PRINT_SYSTEM, value="[목표 갱신] 1. **[그늘진 해변]**으로 가마솥 옮기기"),
-                # [로직 수정 3] 키워드 ID 통일성 확인 필요 (여기선 문자열 사용 가정)
                 Action(type=ActionType.DISCOVER_KEYWORD, value=KeywordId.SHADY_BEACH),
+            ],
+        ),
+        # [요청 1] 먼지 제거제 + 통신기
+        Combination(
+            targets=[KeywordId.COMMS, KeywordId.AIR_DUSTER],
+            conditions=[
+                Condition(type=ConditionType.HAS_ITEM, target=KeywordId.AIR_DUSTER),
+            ],
+            actions=[
+                Action(
+                    type=ActionType.PRINT_NARRATIVE,
+                    value=(
+                        "**[통신기]**의 기판 틈새에 **[먼지 제거제]**를 뿌려보았다. 치익-\n\n"
+                        "먼지는 말끔히 사라졌고 기계는 아주 깨끗해졌다.\n\n"
+                        "하지만 깨끗한 고철이 되었을 뿐, 신호가 잡히지 않는 건 매한가지다."
+                    ),
+                )
+            ],
+        ),
+        # [요청 2] 양자 가마솥 + 통신기
+        Combination(
+            targets=[KeywordId.QUANTUM_CAULDRON, KeywordId.COMMS],
+            conditions=[Condition(type=ConditionType.HAS_ITEM, target=KeywordId.COMMS)],
+            actions=[
+                Action(
+                    type=ActionType.PRINT_NARRATIVE,
+                    value=(
+                        "**[통신기]**를 **[양자 가마솥]** 안테나 쪽에 갖다 대 보았다.\n\n"
+                        "혹시나 양자 증폭 효과로 신호가 잡힐까 기대했지만, 스피커에선 '지지직' 하는 기분 나쁜 노이즈만 커졌다.\n\n"
+                        "서로 호환되는 주파수 대역이 전혀 아니다. 포기하자."
+                    ),
+                )
+            ],
+        ),
+        Combination(
+            targets=[KeywordId.SANDY_BEACH, KeywordId.AIR_DUSTER],
+            conditions=[Condition(type=ConditionType.HAS_ITEM, target=KeywordId.AIR_DUSTER)],
+            actions=[
+                Action(
+                    type=ActionType.PRINT_NARRATIVE,
+                    value=(
+                        "치익-! 뜨거운 모래사장을 향해 비장하게 먼지 제거제를 분사했다.\n\n"
+                        "모래알이 사방으로 튀어 오르며 내 얼굴을 강타했다.\n\n"
+                        "이 광활한 해변의 모래를 이걸로 다 치우려면, 우주가 멸망할 때까지 뿌려도 모자랄 것이다.\n\n"
+                        "괜히 눈에 모래만 들어갔다."
+                    ),
+                ),
+            ],
+        ),
+        # [신규] 먼지 제거제 + 양자 가마솥 (실패)
+        Combination(
+            targets=[KeywordId.QUANTUM_CAULDRON, KeywordId.AIR_DUSTER],
+            conditions=[Condition(type=ConditionType.HAS_ITEM, target=KeywordId.AIR_DUSTER)],
+            actions=[
+                Action(
+                    type=ActionType.PRINT_NARRATIVE,
+                    value=(
+                        "기계 틈새의 먼지라도 털어볼까 싶어 '치익-' 하고 뿌려보았다.\n\n"
+                        "검은 연기가 잠시 흩어지나 싶더니, 매캐한 그을음이 역류해서 뿜어져 나왔다. 쿨럭!\n\n"
+                        "이건 먼지 문제가 아니다. 물리적으로 '박살'이 난 거다.\n\n"
+                        "본체 케이스가 찌그러졌는데 먼지를 털어봤자 성능은 그대로다."
+                    ),
+                ),
+            ],
+        ),
+        # [요청 2] 스패너 + 양자 가마솥 (의미 없는 타격)
+        Combination(
+            targets=[KeywordId.QUANTUM_CAULDRON, KeywordId.SPANNER],
+            conditions=[
+                Condition(type=ConditionType.HAS_ITEM, target=KeywordId.SPANNER),
+            ],
+            actions=[
+                Action(
+                    type=ActionType.PRINT_NARRATIVE,
+                    value=(
+                        "**[스패너]**로 솥단지... 아니, 가마솥 본체를 깡! 하고 때렸다.\n\n"
+                        "맑고 고운 소리가 해변에 울려 퍼진다. 스트레스는 좀 풀리는데, 기계는 여전히 먹통이다.\n\n"
+                        "지금 필요한 건 무작정 조이는 게 아니라, 없어진 **핵심 부품**들을 찾아오는 것이다."
+                    ),
+                )
             ],
         ),
     ],

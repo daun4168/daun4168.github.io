@@ -4,6 +4,7 @@ from schemas import Action, Combination, Condition, Interaction, KeywordData, Sc
 CH1_SCENE3_1_DATA = SceneData(
     id=SceneID.CH1_SCENE3_1,
     name="연구동 중앙 복도",
+    initial_text="---\n## 연구동 중앙 복도\n---\n\n",
     body=(
         '"먼지 쌓인 복도... 발자국 소리가 너무 크게 울려."\n\n'
         "연구소 내부 복도입니다. 벽을 따라 캐비닛들이 늘어서 있고, 각기 다른 방으로 향하는 문들이 보입니다.\n\n"

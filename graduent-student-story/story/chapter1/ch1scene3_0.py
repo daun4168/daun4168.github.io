@@ -7,6 +7,7 @@ from schemas import Action, Combination, Condition, Interaction, KeywordData, Sc
 CH1_SCENE3_0_DATA = SceneData(
     id=SceneID.CH1_SCENE3_0,
     name="생태 관측소 외부",
+    initial_text="---\n## 생태 관측소 외부\n---\n\n",
     body=(
         '"이런 깊은 숲 속에 연구소라니..."\n\n'
         '<img src="assets/chapter1/observatory_0.png" alt="생태 관측소" width="530">\n\n'
@@ -248,7 +249,7 @@ CH1_SCENE3_0_DATA = SceneData(
                         ),
                         Action(
                             type=ActionType.PRINT_SYSTEM,
-                            value=f"암호를 알아내어  `{KeywordId.DISTRIBUTION_BOX} : [비밀번호]` 형식으로 입력해 보세요.",
+                            value=f"암호를 알아내어  `{KeywordId.DISTRIBUTION_BOX} : [비밀번호 4자리]` 형식으로 입력해 보세요.",
                         ),
                     ],
                 ),
@@ -503,7 +504,7 @@ CH1_SCENE3_0_DATA = SceneData(
                         ),
                         Action(
                             type=ActionType.PRINT_SYSTEM,
-                            value=f"암호를 알아내어  `{KeywordId.WOODEN_DOOR} : [비밀번호]` 형식으로 입력해 보세요.",
+                            value=f"암호를 알아내어  `{KeywordId.WOODEN_DOOR} : [비밀번호 4자리]` 형식으로 입력해 보세요.",
                         ),
                     ],
                 ),

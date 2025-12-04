@@ -96,6 +96,7 @@ class KeywordId(StrEnum):
     # CH1_SCENE2_0
     SHIP_HALLWAY = "난파선 중앙 복도"
     CREW_QUARTERS = "선원 숙소"
+    QUARTERS = "숙소"
     CAPTAIN_ROOM = "선장실"
     REAR_DECK = "갑판 뒷편"
     REAR_DECK_DOOR = "갑판 뒷편 문"

@@ -1,4 +1,4 @@
-from const import ActionType, CombinationType, ConditionType, KeywordId, KeywordState, KeywordType, SceneID
+from const import ActionType, ConditionType, KeywordId, KeywordState, KeywordType, SceneID
 from schemas import Action, Combination, Condition, Interaction, KeywordData, SceneData
 
 CH0_SCENE2_DATA = SceneData(
@@ -158,6 +158,31 @@ CH0_SCENE2_DATA = SceneData(
             type=KeywordType.OBJECT,
             state=KeywordState.UNSEEN,
             description="말은 좋아서 테스트지, 실상은 '임상 실험' 혹은 '마루타'다. 생명윤리위원회 승인은 받고 하는 건지 의문이다.",
+        ),
+        "청소": KeywordData(
+            type=KeywordType.OBJECT,
+            state=KeywordState.UNSEEN,
+            description="방금 전까지 바닥을 박박 닦았는데, 거대한 고철 덩어리가 들어오는 순간 도루묵이 되었다. 내 인생이 늘 그렇다.",
+        ),
+        "소리": KeywordData(
+            type=KeywordType.OBJECT,
+            state=KeywordState.UNSEEN,
+            description="'웅웅'거리는 소리가 들린다. 기계가 작동하는 소리라기보다는, 터지기 직전의 비명소리에 가깝다.",
+        ),
+        "장치": KeywordData(
+            type=KeywordType.OBJECT,
+            state=KeywordState.UNSEEN,
+            description="이름은 '초공간 양자 전송 장치'지만, 아무리 봐도 시골 장터에서 뻥튀기를 튀기는 기계처럼 생겼다.",
+        ),
+        "직구": KeywordData(
+            type=KeywordType.OBJECT,
+            state=KeywordState.UNSEEN,
+            description="교수님은 배송비를 아꼈다고 좋아하시지만, 그 대가로 내 안전이 '헐값' 취급을 받고 있다.",
+        ),
+        "웅웅": KeywordData(
+            type=KeywordType.OBJECT,
+            state=KeywordState.UNSEEN,
+            description="불안감을 증폭시키는 소리다. 마치 치과 드릴 소리나, 마감 직전 교수의 발걸음 소리와 비슷한 주파수다.",
         ),
     },
     combinations=[

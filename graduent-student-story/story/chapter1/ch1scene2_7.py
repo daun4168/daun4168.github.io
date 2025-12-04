@@ -4,6 +4,7 @@ from schemas import Action, Combination, Condition, Interaction, KeywordData, Sc
 CH1_SCENE2_7_DATA = SceneData(
     id=SceneID.CH1_SCENE2_7,
     name="지하 연구실",
+    initial_text="---\n## 지하 연구실\n---\n\n",
     body=(
         '"으스스하네... 여긴 냉동 창고를 개조한 건가?"\n\n'
         "서늘한 냉기가 감도는 은밀한 연구실입니다. 벽면은 방음재로 덮여 있고, 알 수 없는 기계 장치들이 웅웅거립니다.\n"
@@ -250,7 +251,7 @@ CH1_SCENE2_7_DATA = SceneData(
                         ),
                         Action(
                             type=ActionType.PRINT_SYSTEM,
-                            value=f"암호를 알아내어 `{KeywordId.ELECTRONIC_SAFE} : [비밀번호]` 형식으로 입력해 보세요.",
+                            value=f"암호를 알아내어 `{KeywordId.ELECTRONIC_SAFE} : [비밀번호 4자리]` 형식으로 입력해 보세요.",
                         ),
                     ],
                 ),
@@ -327,6 +328,41 @@ CH1_SCENE2_7_DATA = SceneData(
             type=KeywordType.OBJECT,
             state=KeywordState.UNSEEN,
             description="에어컨 18도 설정해놓고 이불 덮고 있는 느낌이다. 단지 이불이 없을 뿐.",
+        ),
+        "냉기": KeywordData(
+            type=KeywordType.OBJECT,
+            state=KeywordState.UNSEEN,
+            description="살갗이 따가울 정도로 차갑다. 물리적인 온도가 낮은 건지, 이곳에 서린 원한이 깊은 건지 구분이 안 간다.",
+        ),
+        "벽면": KeywordData(
+            type=KeywordType.OBJECT,
+            state=KeywordState.UNSEEN,
+            description="방음재로 빈틈없이 덮여 있다. 안에서의 비명은 밖으로 새어 나가지 못하고, 밖에서의 구조 요청도 안으로 들어오지 못할 것이다.",
+        ),
+        "연구실": KeywordData(
+            type=KeywordType.OBJECT,
+            state=KeywordState.UNSEEN,
+            description="이런 밀실에서 연구를 했다니. 연구 윤리 위원회가 알면 거품 물고 쓰러질 환경이다.",
+        ),
+        "중앙": KeywordData(
+            type=KeywordType.OBJECT,
+            state=KeywordState.UNSEEN,
+            description="연구용 책상이 덩그러니 놓여 있다. 마치 수술대처럼 보여서 기분이 묘하다.",
+        ),
+        "구석": KeywordData(
+            type=KeywordType.OBJECT,
+            state=KeywordState.UNSEEN,
+            description="어둠이 가장 짙게 깔린 곳이다. 그곳에 육중한 금고가 웅크리고 있다.",
+        ),
+        "안쪽": KeywordData(
+            type=KeywordType.OBJECT,
+            state=KeywordState.UNSEEN,
+            description="깊숙한 곳. 본능적으로 가까이 가기 싫은 기운이 뿜어져 나온다.",
+        ),
+        "으스스": KeywordData(
+            type=KeywordType.OBJECT,
+            state=KeywordState.UNSEEN,
+            description="등골이 오싹하다. 귀신보다 더 무서운 건, 여기서 평생 못 나갈지도 모른다는 공포다.",
         ),
         "방음재": KeywordData(
             type=KeywordType.OBJECT,

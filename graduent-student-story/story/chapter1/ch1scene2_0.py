@@ -1,12 +1,10 @@
-from const import ActionType, ConditionType, KeywordId, KeywordState, KeywordType, SceneID
-from schemas import Action, Condition, Interaction, KeywordData, SceneData
 from const import ActionType, CombinationType, ConditionType, KeywordId, KeywordState, KeywordType, SceneID
 from schemas import Action, Combination, Condition, Interaction, KeywordData, SceneData
-
 
 CH1_SCENE2_0_DATA = SceneData(
     id=SceneID.CH1_SCENE2_0,  # 혹은 SceneID.CH1_SCENE2_0 (정의에 따라 변경)
     name="난파선 중앙 복도",
+    initial_text="---\n## 난파선 중앙 복도\n---\n\n",
     body=(
         '"으악! 이게 무슨 냄새야? 코가 삐뚤어질 것 같네."\n\n'
         "난파선 안으로 들어오니 썩은 생선이랑 녹슨 쇠를 믹서기에 갈아 넣은 듯한 냄새가 콧구멍을 강타합니다.\n"
@@ -32,6 +30,7 @@ CH1_SCENE2_0_DATA = SceneData(
         KeywordId.DECK: KeywordData(type=KeywordType.ALIAS, target=KeywordId.REAR_DECK),
         KeywordId.REAR_DECK_DOOR: KeywordData(type=KeywordType.ALIAS, target=KeywordId.REAR_DECK),
         KeywordId.BULKHEAD: KeywordData(type=KeywordType.ALIAS, target=KeywordId.IRON_DOOR),
+        KeywordId.QUARTERS: KeywordData(type=KeywordType.ALIAS, target=KeywordId.CREW_QUARTERS),
         # 1. 베이스캠프 - 제공해주신 코드 그대로 적용
         KeywordId.BASECAMP: KeywordData(
             type=KeywordType.PORTAL,
@@ -326,6 +325,11 @@ CH1_SCENE2_0_DATA = SceneData(
             state=KeywordState.UNSEEN,
             description="모든 악취의 근원. 혹시 이걸 먹으면 힘이 날까? (미친 생각이다. 그냥 굶어 죽자.)",
         ),
+        "생선": KeywordData(
+            type=KeywordType.OBJECT,
+            state=KeywordState.UNSEEN,
+            description="냄새의 주범이다. 이걸 먹느니 차라리 굶는 게 낫다. 아니, 먹으면 식중독으로 졸업하기 전에 요절할 것이다.",
+        ),
         "녹슨 쇠": KeywordData(
             type=KeywordType.OBJECT,
             state=KeywordState.UNSEEN,
@@ -406,10 +410,20 @@ CH1_SCENE2_0_DATA = SceneData(
             state=KeywordState.UNSEEN,
             description="선장실이다. '있어 보인다'는 건 루팅 할 아이템이 있다는 뜻일까? 잠시 희망 회로를 돌려본다.",
         ),
+        "안쪽": KeywordData(
+            type=KeywordType.OBJECT,
+            state=KeywordState.UNSEEN,
+            description="더 깊은 어둠이 기다리고 있다. 저기로 가려면 용기나 무모함, 둘 중 하나는 필요하다.",
+        ),
+        "길": KeywordData(
+            type=KeywordType.OBJECT,
+            state=KeywordState.UNSEEN,
+            description="아래로 내려가는 길이다. 하지만 육중한 격벽이 '너는 못 지나간다'고 온몸으로 거부하고 있다.",
+        ),
     },
     combinations=[
         # 갑판 잠금 해제 (갑판 열쇠 : 3817)
-        # 3817이라는 비밀번호는 갑판 열쇠 아이템이나 쪽지에서 힌트로 얻었다고 가정
+        # 3817이라는 비밀번호는 갑판 열쇠 아이템에서 힌트로 얻었다고 가정
         Combination(
             type=CombinationType.PASSWORD,
             conditions=[Condition(type=ConditionType.STATE_IS, target="deck_unlocked", value=False)],
@@ -425,6 +439,27 @@ CH1_SCENE2_0_DATA = SceneData(
                 ),
                 Action(type=ActionType.UPDATE_STATE, value={"key": "deck_unlocked", "value": True}),
                 Action(type=ActionType.REMOVE_ITEM, value=KeywordId.DECK_KEY),
+            ],
+        ),
+        Combination(
+            targets=[KeywordId.REAR_DECK, KeywordId.DECK_KEY],
+            conditions=[
+                Condition(type=ConditionType.HAS_ITEM, target=KeywordId.DECK_KEY),
+                Condition(type=ConditionType.STATE_IS, target="deck_unlocked", value=False),
+            ],
+            actions=[
+                Action(
+                    type=ActionType.PRINT_NARRATIVE,
+                    value=(
+                        "비장하게 **[갑판 열쇠]**를 꺼내 들었지만, 꽂을 구멍이 없습니다.\n\n"
+                        "자물쇠에는 열쇠 구멍 대신 낡은 번호 키패드만 달려 있습니다.\n\n"
+                        "이 열쇠는 이곳에 맞는 게 아닌 모양입니다. **비밀번호**가 필요합니다."
+                    ),
+                ),
+                Action(
+                    type=ActionType.PRINT_SYSTEM,
+                    value=f"암호를 알아내어 `{KeywordId.REAR_DECK} : [비밀번호 4자리]` 형식으로 입력해 보세요.",
+                ),
             ],
         ),
         # 1. 가열: 조명탄 + 격벽

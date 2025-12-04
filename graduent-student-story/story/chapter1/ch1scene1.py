@@ -36,6 +36,7 @@ CH1_SCENE1_DATA = SceneData(
         KeywordId.SAND: KeywordData(type=KeywordType.ALIAS, target=KeywordId.SANDY_BEACH),
         KeywordId.WRECKAGE_ALIAS: KeywordData(type=KeywordType.ALIAS, target=KeywordId.WRECKAGE),
         KeywordId.FOREST: KeywordData(type=KeywordType.ALIAS, target=KeywordId.FOREST_ENTRY),
+        KeywordId.TRASH: KeywordData(type=KeywordType.ALIAS, target=KeywordId.TRASH_PILE),
         # 포탈: 난파선 잔해, 숲 입구
         # 5. 난파선 잔해 (이동 포인트)
         KeywordId.WRECKAGE: KeywordData(
@@ -553,7 +554,7 @@ CH1_SCENE1_DATA = SceneData(
                     type=ActionType.ADD_ITEM,
                     value={
                         "name": KeywordId.SIMPLE_DISTILLER_KIT,  # const.py에 추가 필요
-                        "description": "간이 정수기를 설치할 수 있는 재료 모음이다. (비닐 + 바닷물 병)",
+                        "description": "간이 정수기를 설치할 수 있는 재료 모음이다.",
                     },
                 ),
             ],

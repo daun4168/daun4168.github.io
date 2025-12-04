@@ -23,7 +23,15 @@ class SceneID(StrEnum):
     CH1_SCENE2_6 = "ch1_scene2_6"  # 지하 주방
     CH1_SCENE2_7 = "ch1_scene2_7"  # 지하 연구실
 
-    CH1_SCENE3 = "ch1_scene3"  # 난파선 내부
+    CH1_SCENE3_0 = "ch1_scene3_0"  # 생태 관측소 외부
+    CH1_SCENE3_1 = "ch1_scene3_1"  # 복도
+    CH1_SCENE3_2 = "ch1_scene3_2"  # 매미방
+    CH1_SCENE3_3 = "ch1_scene3_3"  # 서재
+    CH1_SCENE3_4 = "ch1_scene3_4"  # 컴퓨터실
+
+    CH1_SCENE4_0 = "ch1_scene4_0"  # 정글
+    CH1_SCENE5_0 = "ch1_scene5_0"  # 동굴
+
     CH1_SCENE4 = "ch1_scene4"  # 공명하는 숲 (생태 관측소)
     CH1_SCENE5 = "ch1_scene5"  # 늪지대
     CH1_SCENE6 = "ch1_scene6"  # 동굴
@@ -53,7 +61,7 @@ class KeywordId(StrEnum):
     MEMO = "메모"
     COMPUTER = "컴퓨터"
     ORDER_LIST = "주문 내역"
-    CABINET = "시약장"
+    REAGENT_CABINET = "시약장"
     FLOOR = "바닥"
     ETHANOL = "에탄올"
 
@@ -82,6 +90,8 @@ class KeywordId(StrEnum):
     SIMPLE_DISTILLER_KIT = "간이 정수기 키트"
     DISTILLER = "정수기"
     VINYL = "비닐"
+    VINE_STEM = "덩굴 줄기"
+    SEAWATER_FILLED_COCONUT = "바닷물이 담긴 코코넛 껍질"
 
     # CH1_SCENE2_0
     SHIP_HALLWAY = "난파선 중앙 복도"
@@ -172,15 +182,12 @@ class KeywordId(StrEnum):
     FILLED_BUCKET = "가성소다 양동이"
     BANANA_OBJ = "바나나"
     PASTA_OBJ = "파스타"
-
-    # 아이템
     SAUCE_BOTTLE = "빈 소스통"
     POTATO_STARCH = "전분 가루"
 
     # CH1_SCENE2_7
     MEDICINE_TRAY = "약품 트레이"
     TRAY = "트레이"
-    # 오브젝트
     LAB_DESK = "책상"
     WORKBENCH = "작업대"
     ELECTRONIC_SAFE = "전자 금고"
@@ -204,59 +211,108 @@ class KeywordId(StrEnum):
     ACID_GEL = "산성 젤"
     FIRE_AXE = "소방 도끼"
     PUZZLE_NOTE = "수수께끼 쪽지"
-
-    # CH1_SCENE2
-    WIRE = "전선"
-    BEACH = "해변"
-    EMERGENCY_CABINET = "비상 캐비닛"  # 조명탄 파밍 장소
-
-    UNDERGROUND_PASSAGE = "지하 통로"  # 문 열면 등장
-    WARNING_SIGN = "경고문"
-    PIPE = "파이프"
-    FLOOR_WIRES = "전선"  # 바닥에 널린 전선들 (아이템 아님)
-
-    # --- [Scene 3: 화물칸 (위험물 적재소)] ---
-    # 1. 지역 및 이동
-    SHIPWRECK_ENTRANCE = "난파선 입구"
-
-    # 2. 환경 오브젝트 & Alias
-    # ACID_PUDDLE = "산성 웅덩이"
-    ACID_PUDDLE_ALIAS = "웅덩이"
-    WHITE_POWDER = "하얀 가루"
-    WHITE_POWDER_ALIAS = "가루"
-    # WORKBENCH = "작업대"
-    # MULTIMETER = "멀티미터"
-
-    # RUSTY_CLAMP = "녹슨 클램프"
-    RUSTY_CLAMP_ALIAS = "클램프"
-
-    SCATTERED_SUPPLIES = "흩어진 보급품"
-    SCATTERED_SUPPLIES_ALIAS = "보급품"
-    NOTE = "쪽지"
-
-    # 3. 아이템
-    # EMPTY_BOTTLE = "빈 페트병"
-    # STARCH = "전분 가루"
-    #
-    # CAUSTIC_SODA_BUCKET = "가성소다 양동이"
-    # ACID_BOTTLE = "산성 용액 병"
-
     HEAVY_BATTERY = "산업용 배터리"
 
-    # CH1_SCENE4: 공명하는 숲 (생태 관측소)
+    # CH1_SCENE3_0
+    # 텃밭 관련 (코드에서 FLOWERBED로 사용 중, 표시 이름은 텃밭)
+    GARDEN = "텃밭"
+    DISTRIBUTION_BOX = "배전함"
+    CIRCUIT_PANEL = "배전함 패널"
+    WOODEN_DOOR = "나무 문"
+    OBSERVATORY_KEY = "관측소 열쇠"
+
+    # [3-1 연구동 복도]
+    CABINET = " 캐비닛"
+    RESEARCH_HALLWAY = "연구동 복도"
+    GREEN_CABINET = "초록색 캐비닛"
+    RED_CABINET = "빨간색 캐비닛"
+    YELLOW_CABINET = "노란색 캐비닛"
+    INCUBATION_ROOM_DOOR = "배양실 문"
+    REFERENCE_ROOM_DOOR = "자료실 문"
+    CONTROL_ROOM_DOOR = "통제실 문"
+
+    # [3-2 배양실]
+    INCUBATION_ROOM = "배양실"
+    THERMOSTAT = "온도 조절기"
+    CICADA_CAGE = "매미 사육장"
+    CAGE = "사육장"
+    RESEARCH_LOG = "연구 일지"  # 힌트 오브젝트
+    LOG = "일지"  # 힌트 오브젝트
+
+    # [3-3 자료실]
+    REFERENCE_ROOM = "자료실"
+    LEFT_BOOKSHELF = "왼쪽 책장"
+    RIGHT_BOOKSHELF = "오른쪽 책장"
+    RESEARCH_DESK = "연구 책상"
+    SHEET_MUSIC_COLLECTION = "악보집"
+    ECOLOGY_BOOK_INDEX = "생태학 책 목차"
+    ECOLOGY_BOOK_TITLE = "생태학 책 표지"
+    ECOLOGY_BOOK_BODY = "생태학 책 본문"
+    SURVEY_LOG = "생태 조사 기록"
+    SHEET_MUSIC_1 = "떴다 떴다 비행기"
+    SHEET_MUSIC_2 = "반짝반짝 작은 별"
+    SHEET_MUSIC_3 = "곰 세 마리"
+
+    # [3-4 통제실]
+    CONTROL_ROOM = "통제실"
+    MAIN_COMPUTER = "메인 컴퓨터"
+    STICKY_NOTE = "접착 메모"
+    FILE_DNA = "dna_상보결합.pdf"
+    FILE_MUSIC = "계이름_표기법.png"
+    FILE_TEMP = "매미_반응_임계점.txt"
+
+    # [신규 오브젝트: 밸브 파밍 장소]
+    PLUMBING_HATCH = "배관 점검구"
+    ACCESS_PANEL = "점검구"
+
+    # [아이템]
+    BRASS_VALVE = "황동 밸브"
+
+    # [KeywordId] 섹션에 추가
+    # --- Scene 4: 정글 입구 ---
     ECO_OBSERVATORY = "생태 관측소"
+    JUNGLE_PATH = "좁은 길"  # 정글로 가는 길 (Scene 3에서 보이는 이름)
+    JUNGLE_ENTRANCE = "정글"  # 정글 입구 (Scene 3 포탈 이름)
+    Y_TREE = "Y자 나무"  # Y자 나무
+    TREE = "나무"
+    FIRE_ANT_HILL = "불개미집"  # 불개미집
+    SWAMP_RIVER = "늪지대"  # 늪지대
+    CROCODILE = "악어"  # 악어
+
+    # 아이템 및 조합 결과물
+    DUCT_TAPE = "청테이프"  # 청테이프
+    RUBBER_DUCK = "러버덕"  # 러버덕
+    NET = "그물망"  # 그물망
+    FIRE_ANTS = "불개미"  # 불개미 (채집됨)
+    COCONUT_SHELL_WITH_ANTS = "불개미가 든 코코넛 껍질"
+    SEALED_ANT_BOMB = "개미 폭탄"  # 밀봉된 개미 폭탄
+    RUBBER_DUCK_BRIDGE = "러버덕 뭉치"  # 러버덕 다리 (수정됨)
+
+    # CH1_SCENE4: 공명하는 숲 (생태 관측소)
+    OBSERVATORY_DOOR = "관측소 문"  # 요청하신 변수명
+
     OBSERVATORY_INSIDE = "관측소 내부"
     VINE = "덩굴"
-    VINE_STEM = "덩굴 줄기"
     BOTANIST_MURAL = "벽화"
-    FLOWER_BED = "화단"
     BOTANY_NOTE = "관찰 일지"
-    OBSERVATORY_DOOR = "관측소 문"
     SUPPLY_LOCKER = "보급품 로커"
     MICROPHONE = "마이크"
     LONG_PIPE = "긴 파이프"
     SHORT_PIPE = "짧은 파이프"
-    TREE = "나무"
+
+    # OBSERVATORY_INSIDE = "관측소 내부"
+    # VINE = "덩굴"
+    # VINE_STEM = "덩굴 줄기"
+    # BOTANIST_MURAL = "벽화"
+    FLOWER_BED = "화단"
+    # BOTANY_NOTE = "관찰 일지"
+    # OBSERVATORY_DOOR = "관측소 문"
+    # SUPPLY_LOCKER = "보급품 로커"
+    # MICROPHONE = "마이크"
+    # LONG_PIPE = "긴 파이프"
+    # SHORT_PIPE = "짧은 파이프"
+    # TREE = "나무"
+    WIRE = "전선"
 
     SWAMP_PATH = "늪지대로 가는 길"
     SWAMP_PATH_ALIAS = "늪지대"

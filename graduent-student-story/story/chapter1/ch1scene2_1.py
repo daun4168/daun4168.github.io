@@ -254,7 +254,8 @@ CH1_SCENE2_1_DATA = SceneData(
                     actions=[
                         Action(
                             type=ActionType.PRINT_NARRATIVE,
-                            value="통신사의 사물함입니다. 얇고 긴 쇠고리가 달린 자물쇠가 걸려 있습니다.",
+                            value="통신사의 사물함입니다. 얇고 긴 쇠고리가 달린 자물쇠가 걸려 있습니다.\n\n"
+                            "자물쇠의 마지막 숫자는 8로 고정되어 움직이지 않습니다.",
                         ),
                         Action(
                             type=ActionType.PRINT_SYSTEM,
@@ -350,6 +351,7 @@ CH1_SCENE2_1_DATA = SceneData(
         # 갑판장 사물함 해제 (9271) -> 쪽지 1 획득
         Combination(
             type=CombinationType.PASSWORD,
+            conditions=[Condition(type=ConditionType.STATE_IS, target="locker_boatswain_opened", value=False)],
             targets=[KeywordId.LOCKER_BOATSWAIN, "9271"],
             actions=[
                 Action(
@@ -377,6 +379,7 @@ CH1_SCENE2_1_DATA = SceneData(
         # 항해사 사물함 해제 (1682) -> 쪽지 2 획득
         Combination(
             type=CombinationType.PASSWORD,
+            conditions=[Condition(type=ConditionType.STATE_IS, target="locker_navigator_opened", value=False)],
             targets=[KeywordId.LOCKER_NAVIGATOR, "1682"],
             actions=[
                 Action(
@@ -404,6 +407,7 @@ CH1_SCENE2_1_DATA = SceneData(
         # 통신사 사물함 해제 (3578) -> 쪽지 3 획득
         Combination(
             type=CombinationType.PASSWORD,
+            conditions=[Condition(type=ConditionType.STATE_IS, target="locker_radioman_opened", value=False)],
             targets=[KeywordId.LOCKER_RADIOMAN, "3578"],
             actions=[
                 Action(

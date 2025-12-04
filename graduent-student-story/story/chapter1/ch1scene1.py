@@ -117,7 +117,6 @@ CH1_SCENE1_DATA = SceneData(
                 Interaction(
                     conditions=[
                         Condition(type=ConditionType.STATE_IS, target="forest_cleared", value=False),
-                        Condition(type=ConditionType.STATE_IS, target="vines_collected", value=False),
                     ],
                     actions=[
                         Action(
@@ -129,57 +128,9 @@ CH1_SCENE1_DATA = SceneData(
                         ),
                     ],
                 ),
-                # 숲길 개척 + 아직 덩굴 안 챙김
                 Interaction(
                     conditions=[
                         Condition(type=ConditionType.STATE_IS, target="forest_cleared", value=True),
-                        Condition(type=ConditionType.STATE_IS, target="vines_collected", value=False),
-                    ],
-                    actions=[
-                        Action(
-                            type=ActionType.PRINT_NARRATIVE,
-                            value=(
-                                "도끼로 잘려 나간 덩굴들이 입구 주변에 수북이 쌓여 있다.\n"
-                                "당신은 그중에서 비교적 탄탄한 **[덩굴 줄기]** 몇 가닥을 골라 잘라 챙겨 둔다."
-                            ),
-                        ),
-                        Action(
-                            type=ActionType.ADD_ITEM,
-                            value={
-                                "name": KeywordId.VINE_STEM,
-                                "description": "단단하고 질긴 덩굴 줄기다. 뭔가를 묶거나 임시 로프로 쓰기 좋다.",
-                            },
-                        ),
-                        Action(
-                            type=ActionType.UPDATE_STATE,
-                            value={"key": "vines_collected", "value": True},
-                        ),
-                        Action(
-                            type=ActionType.REQUEST_CONFIRMATION,
-                            value={
-                                "prompt": "**[숲 입구]**로 진입하시겠습니까?",
-                                "confirm_actions": [
-                                    Action(
-                                        type=ActionType.PRINT_NARRATIVE,
-                                        value="잘려 나간 덩굴 사이로 난 길을 따라 울창한 숲속으로 들어갑니다.",
-                                    ),
-                                    Action(type=ActionType.MOVE_SCENE, value=SceneID.CH1_SCENE4),
-                                ],
-                                "cancel_actions": [
-                                    Action(
-                                        type=ActionType.PRINT_NARRATIVE,
-                                        value="덩굴 줄기를 한 번 더 살펴보다가, 일단은 들어가지 않기로 합니다.",
-                                    ),
-                                ],
-                            },
-                        ),
-                    ],
-                ),
-                # 숲길 개척 + 덩굴 이미 챙김
-                Interaction(
-                    conditions=[
-                        Condition(type=ConditionType.STATE_IS, target="forest_cleared", value=True),
-                        Condition(type=ConditionType.STATE_IS, target="vines_collected", value=True),
                     ],
                     actions=[
                         Action(
@@ -191,7 +142,7 @@ CH1_SCENE1_DATA = SceneData(
                                         type=ActionType.PRINT_NARRATIVE,
                                         value="잘려 나간 덩굴 사이로 난 길을 따라 울창한 숲속으로 들어갑니다.",
                                     ),
-                                    Action(type=ActionType.MOVE_SCENE, value=SceneID.CH1_SCENE4),
+                                    Action(type=ActionType.MOVE_SCENE, value=SceneID.CH1_SCENE3_0),
                                 ],
                                 "cancel_actions": [
                                     Action(type=ActionType.PRINT_NARRATIVE, value="아직 준비가 덜 된 것 같다."),
@@ -1001,6 +952,44 @@ CH1_SCENE1_DATA = SceneData(
                         "검은 연기가 잠시 흩어지나 싶더니, 매캐한 그을음이 역류해서 뿜어져 나왔다. 쿨럭!\n\n"
                         "이건 먼지 문제가 아니다. 물리적으로 '박살'이 난 거다.\n\n"
                         "본체 케이스가 찌그러졌는데 먼지를 털어봤자 성능은 그대로다."
+                    ),
+                ),
+            ],
+        ),
+        # [신규] 코코넛 껍질에 바닷물 담기
+        Combination(
+            targets=[KeywordId.SEA, KeywordId.COCONUT_SHELL],
+            conditions=[
+                Condition(type=ConditionType.HAS_ITEM, target=KeywordId.COCONUT_SHELL),
+            ],
+            actions=[
+                Action(
+                    type=ActionType.PRINT_NARRATIVE,
+                    value="코코넛 껍질을 바닷물에 담가 찰랑거리게 채웠습니다. 꽤 튼튼한 그릇 역할을 합니다.",
+                ),
+                Action(type=ActionType.REMOVE_ITEM, value=KeywordId.COCONUT_SHELL),
+                Action(
+                    type=ActionType.ADD_ITEM,
+                    value={
+                        "name": KeywordId.SEAWATER_FILLED_COCONUT,  # "바닷물이 담긴 코코넛 껍질"
+                        "description": "바닷물이 가득 담긴 코코넛 껍질입니다. 짭짤한 냄새가 납니다.",
+                    },
+                ),
+            ],
+        ),
+        # [신규] 정수기 + 코코넛 껍질 (실패 - 용도 부적합)
+        Combination(
+            targets=[KeywordId.DISTILLER, KeywordId.COCONUT_SHELL],
+            conditions=[
+                Condition(type=ConditionType.STATE_IS, target="distiller_built", value=True),
+            ],
+            actions=[
+                Action(
+                    type=ActionType.PRINT_NARRATIVE,
+                    value=(
+                        "정수기에서 떨어지는 물방울은 겨우 한 모금 분량입니다.\n\n"
+                        "이 커다란 코코넛 껍질을 채우기엔 턱없이 부족합니다.\n\n"
+                        "차라리 저 넘실거리는 바닷물을 한가득 퍼 나르는 용도로 쓰는 게 낫겠습니다."
                     ),
                 ),
             ],

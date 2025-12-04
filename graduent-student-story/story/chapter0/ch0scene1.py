@@ -400,7 +400,7 @@ CH0_SCENE1_DATA = SceneData(
             ],
         ),
         # --- 7. 시약장 비밀번호 잠금 해제, 에탄올 획득 ---
-        KeywordId.CABINET: KeywordData(
+        KeywordId.REAGENT_CABINET: KeywordData(
             type=KeywordType.OBJECT,
             state=KeywordState.HIDDEN,
             interactions=[
@@ -433,7 +433,7 @@ CH0_SCENE1_DATA = SceneData(
                         ),
                         Action(
                             type=ActionType.UPDATE_STATE,
-                            value={"keyword": KeywordId.CABINET, "state": KeywordState.UNSEEN},
+                            value={"keyword": KeywordId.REAGENT_CABINET, "state": KeywordState.UNSEEN},
                         ),
                     ],
                 ),
@@ -564,7 +564,10 @@ CH0_SCENE1_DATA = SceneData(
     combinations=[
         Combination(
             targets=[KeywordId.BOX, KeywordId.CORP_CARD],
-            conditions=[Condition(type=ConditionType.HAS_ITEM, target=KeywordId.CORP_CARD)],
+            conditions=[
+                Condition(type=ConditionType.HAS_ITEM, target=KeywordId.CORP_CARD),
+                Condition(type=ConditionType.STATE_IS, target="box_opened", value=False),
+            ],
             actions=[
                 Action(
                     type=ActionType.PRINT_NARRATIVE,
@@ -606,6 +609,9 @@ CH0_SCENE1_DATA = SceneData(
         ),
         Combination(
             type=CombinationType.PASSWORD,
+            conditions=[
+                Condition(type=ConditionType.STATE_IS, target="computer_solved", value=False),
+            ],
             targets=[KeywordId.COMPUTER, "136478"],
             actions=[
                 Action(
@@ -623,7 +629,10 @@ CH0_SCENE1_DATA = SceneData(
         ),
         Combination(
             type=CombinationType.PASSWORD,
-            targets=[KeywordId.CABINET, "1029"],  # 킴와이프(1)-비커(0)-에탄올(2)-컵라면(9)
+            conditions=[
+                Condition(type=ConditionType.STATE_IS, target="cabinet_unlocked", value=False),
+            ],
+            targets=[KeywordId.REAGENT_CABINET, "1029"],  # 킴와이프(1)-비커(0)-에탄올(2)-컵라면(9)
             actions=[
                 Action(
                     type=ActionType.PRINT_NARRATIVE,

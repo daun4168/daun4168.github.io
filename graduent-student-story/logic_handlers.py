@@ -147,6 +147,14 @@ class RemoveKeywordHandler(ActionHandler):
 
 class UpdateStateHandler(ActionHandler):
     def execute(self, scene, value):
+        if "scene_id" in value:
+            scene_id = value["scene_id"]
+            scenes = scene.game.scene_manager.scenes
+            if scene_id in scenes:
+                scene = scenes[scene_id]
+            else:
+                return
+
         if "key" in value:
             scene.state[value["key"]] = value["value"]
 
@@ -154,7 +162,9 @@ class UpdateStateHandler(ActionHandler):
             k_name = value["keyword"]
             if k_name in scene.scene_data.keywords:
                 scene.scene_data.keywords[k_name].state = value["state"]
-                scene.ui.update_sight_status(scene.scene_data.keywords)
+
+        if "scene_id" not in value:
+            scene.ui.update_sight_status(scene.scene_data.keywords)
 
 
 class UpdateChapterStateHandler(ActionHandler):

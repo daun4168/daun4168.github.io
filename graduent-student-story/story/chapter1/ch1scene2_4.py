@@ -159,7 +159,7 @@ CH1_SCENE2_4_DATA = SceneData(
         # 3. 배전함 (퍼즐 본체)
         KeywordId.DISTRIBUTION_PANEL: KeywordData(
             type=KeywordType.OBJECT,
-            state=KeywordState.HIDDEN,  # LION_CABINET이 열릴 때 DISCOVERED로 변경됨
+            state=KeywordState.INACTIVE,  # LION_CABINET이 열릴 때 DISCOVERED로 변경됨
             interactions=[
                 # Case 1: 이미 해결된 경우
                 Interaction(

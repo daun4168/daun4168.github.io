@@ -84,6 +84,7 @@ class KeywordId(StrEnum):
     FOREST = "숲"
     PALM_TREE = "야자수"
     TRASH_PILE = "쓰레기 더미"
+    TRASH = "쓰레기"
     COCONUT = "코코넛"
     PLASTIC_BOTTLE = "빈 페트병"
     SEAWATER_BOTTLE = "바닷물이 담긴 페트병"

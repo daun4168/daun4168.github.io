@@ -274,7 +274,7 @@ CH1_SCENE3_0_DATA = SceneData(
                 ),
                 # 성공 상태
                 Interaction(
-                    conditions=[Condition(type=ConditionType.STATE_IS, target="power_restored", value=True)],
+                    conditions=[Condition(type=ConditionType.STATE_IS, target="puzzle_solved", value=True)],
                     actions=[
                         Action(
                             type=ActionType.PRINT_NARRATIVE,
@@ -292,7 +292,7 @@ CH1_SCENE3_0_DATA = SceneData(
                         Action(
                             type=ActionType.PRINT_NARRATIVE,
                             value=(
-                                '<img src="assets/chapter1/panel_wire2.png" alt="배전반" width="500">\n\n'
+                                '<img src="assets/chapter1/panel_wire2.png" alt="배전반" width="350">\n\n'
                                 "전력 공급 장치입니다. 5개의 토글 스위치가 있습니다.\n\n"
                                 "초록색으로 연결되는 스위치만 켜고 **[메인 레버]**를 당겨야 전력이 복구될 것 같습니다."
                             ),

@@ -162,7 +162,9 @@ class UpdateStateHandler(ActionHandler):
             k_name = value["keyword"]
             if k_name in scene.scene_data.keywords:
                 scene.scene_data.keywords[k_name].state = value["state"]
-                scene.ui.update_sight_status(scene.scene_data.keywords)
+
+        if "scene_id" not in value:
+            scene.ui.update_sight_status(scene.scene_data.keywords)
 
 
 class UpdateChapterStateHandler(ActionHandler):

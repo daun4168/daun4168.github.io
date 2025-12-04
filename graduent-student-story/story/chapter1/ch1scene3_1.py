@@ -637,13 +637,6 @@ CH1_SCENE3_1_DATA = SceneData(
                         "value": True,
                     },
                 ),
-                Action(
-                    type=ActionType.ADD_ITEM,
-                    value={
-                        "name": KeywordId.RUBBER_DUCK,
-                        "description": "한도는 초과되어 긁히지 않습니다. 하지만 모서리가 날카로워 무기나 도구로는 쓸 수 있을 것 같습니다.",
-                    },
-                ),
             ],
         ),
         # (기존 배관 점검구 + 스패너 조합 등은 유지)

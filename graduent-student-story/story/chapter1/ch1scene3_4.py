@@ -140,7 +140,7 @@ CH1_SCENE3_4_DATA = SceneData(
         KeywordId.FILE_MUSIC: KeywordData(
             type=KeywordType.OBJECT,
             state=KeywordState.INACTIVE,
-            description=('<img src="assets/chapter1/CDEFGAB.png" alt="계이름 표기법" width="530">\n\n'),
+            description=('<img src="assets/chapter1/CDEFGAB2.png" alt="계이름 표기법" width="530">\n\n'),
         ),
         KeywordId.FILE_DNA: KeywordData(
             type=KeywordType.OBJECT,

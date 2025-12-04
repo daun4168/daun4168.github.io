@@ -93,7 +93,11 @@ CH1_SCENE3_3_DATA = SceneData(
                         Action(
                             type=ActionType.PRINT_NARRATIVE,
                             value="동요 악보집이 꽂혀 있습니다. 이미 필요한 악보들은 확인했습니다.",
-                        )
+                        ),
+                        Action(
+                            type=ActionType.UPDATE_STATE,
+                            value={"keyword": KeywordId.LEFT_BOOKSHELF, "state": KeywordState.UNSEEN},
+                        ),
                     ],
                 ),
             ],
@@ -102,7 +106,7 @@ CH1_SCENE3_3_DATA = SceneData(
         KeywordId.SHEET_MUSIC_1: KeywordData(
             type=KeywordType.OBJECT,
             state=KeywordState.INACTIVE,
-            description='<img src="assets/chapter1/sheet_music1.png" alt="악보" width="530">\n\n'
+            description='<img src="assets/chapter1/sheet_music1_2.png" alt="악보" width="530">\n\n'
             "<떴다 떴다 비행기> 악보입니다. 이 섬에도 비행기 한번 떠 주면 좋을텐데요.",
         ),
         KeywordId.SHEET_MUSIC_2: KeywordData(

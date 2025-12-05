@@ -117,6 +117,12 @@ class UIManager:
     def print_narrative(self, text: str, is_markdown: bool = True):
         self._create_text_element(self.main_text_output, text, ["narrative-text"], is_markdown=is_markdown)
 
+    def print_plain(self, text: str, is_markdown: bool = True):
+        """
+        왼쪽 테두리(인용 바) 없이 내러티브 텍스트와 유사한 스타일로 출력합니다.
+        """
+        self._create_text_element(self.main_text_output, text, ["narrative-plain"], is_markdown=is_markdown)
+
     def scroll_to_bottom(self):
         scroll_area = document.getElementById("content-scroll-area")
         scroll_area.scrollTop = scroll_area.scrollHeight

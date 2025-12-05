@@ -168,7 +168,7 @@ class Game:
         asyncio.ensure_future(self.run_intro())
 
     async def run_intro(self):
-        self.ui.print_narrative(INTRO_TEXT, is_markdown=True)
+        self.ui.print_plain(INTRO_TEXT, is_markdown=True)
 
         self.ui.print_system_message(f"`{CommandType.WAKE_UP}`를 입력하면 눈을 뜹니다...")
         self.user_input.disabled = False
@@ -237,6 +237,42 @@ class Game:
                 result.append(char)
         return "".join(result)
 
+    def _is_hangul_prefix_match(self, input_str: str, candidate_str: str) -> bool:
+        """
+        한글 입력 중간 단계(받침 미완성)를 포함하여 prefix가 일치하는지 확인합니다.
+        예: '두' -> '둘러보기' (Match), '가바' -> '가방' (Match)
+        """
+        if len(input_str) > len(candidate_str):
+            return False
+
+        # 1. 마지막 글자를 제외한 앞부분이 정확히 일치하는지 확인
+        if input_str[:-1] != candidate_str[:len(input_str) - 1]:
+            return False
+
+        # 2. 마지막 글자 비교
+        last_in = input_str[-1]
+        last_cand = candidate_str[len(input_str) - 1]
+
+        # 정확히 일치하면 True (예: '둘' -> '둘러보기')
+        if last_in == last_cand:
+            return True
+
+        # 3. 한글 유니코드 로직을 이용한 '초성+중성' 일치 확인
+        # 입력된 마지막 글자가 받침이 없는 한글(가~힣)인지 확인
+        code_in = ord(last_in)
+        if 0xAC00 <= code_in <= 0xD7A3:
+            # (코드 - 0xAC00) % 28 == 0 이면 종성(받침)이 없는 글자임
+            if (code_in - 0xAC00) % 28 == 0:
+                # 후보 글자(last_cand)가 입력 글자(last_in)로부터
+                # 같은 초성+중성 그룹(0~27 범위 내)에 있는지 확인
+                # 예: '두'(base) ~ '둫'(base+27) 사이에 '둘'(base+8)이 포함됨
+                code_cand = ord(last_cand)
+                diff = code_cand - code_in
+                if 0 <= diff < 28:
+                    return True
+
+        return False
+
     def _handle_keydown(self, event):
         """
         키보드 입력 핸들러
@@ -250,11 +286,11 @@ class Game:
             event.preventDefault()
             origin_user_input: str = self.user_input.value
 
-            # '+' 기호가 있다면 그 뒤의 텍스트만 자동완성 대상으로 함
+            # '+' 기호 처리 (기존 코드 유지)
             idx = origin_user_input.rfind("+")
             if idx != -1:
                 left = origin_user_input[:idx] + "+ "
-                right = origin_user_input[idx + 1 :]  # 마지막 '+' 뒤
+                right = origin_user_input[idx + 1:]
             else:
                 left = ""
                 right = origin_user_input
@@ -267,20 +303,24 @@ class Game:
                 candidates = self._get_autocomplete_candidates()
                 self.original_prefix = right
 
-                # [자음 검색 판단] 입력값의 첫 글자가 자음 범위(ㄱ ~ ㅎ)에 있는지 확인
-                # 'ㄱ'(0x3131) ~ 'ㅎ'(0x314E)
+                # [자음 검색 판단] (기존 코드 유지)
                 is_chosung_search = False
                 if self.original_prefix and 0x3131 <= ord(self.original_prefix[0]) <= 0x314E:
                     is_chosung_search = True
 
                 self.tab_matches = []
                 for c in candidates:
-                    # 1. 일반적인 '시작하는 단어' 매칭 (예: '가' -> '가방')
+                    # [수정된 부분] 매칭 조건 3가지
+                    # 1. 완전한 prefix 일치 (startswith)
+                    # 2. 한글 받침 미완성 매칭 ('두' -> '둘') [NEW]
+                    # 3. 초성 매칭 ('ㄷ' -> '둘')
+
                     if c.startswith(self.original_prefix):
                         self.tab_matches.append(c)
 
-                    # 2. 초성 매칭 (예: 'ㄱ' -> '가방')
-                    # 입력값이 자음이고, 후보의 초성이 입력값으로 시작할 때
+                    elif self._is_hangul_prefix_match(self.original_prefix, c):
+                        self.tab_matches.append(c)
+
                     elif is_chosung_search:
                         c_chosung = self._get_chosung(c)
                         if c_chosung.startswith(self.original_prefix):

@@ -52,7 +52,7 @@ body {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    height: 32px; /* 높이 고정으로 요소들 수직 중앙 정렬 */
+    height: 24px; /* 높이 고정으로 요소들 수직 중앙 정렬 */
     margin-bottom: 8px;
 }
 
@@ -121,6 +121,16 @@ body {
     border-left: 3px solid #ccc;
     background-color: #fcfcfc;
     border-radius: 0 4px 4px 0;
+}
+
+.narrative-plain {
+    margin-bottom: 1em;
+    font-weight: 400;
+    color: #555;
+    padding: 8px 10px;
+    /* border-left: 3px solid #ccc;  <-- 이 부분이 제거됨 */
+    background-color: #fbfbfb; /* 배경색은 유지 (원하면 transparent로 변경 가능) */
+    border-radius: 4px; /* 왼쪽 테두리가 없으므로 네 모서리 모두 둥글게 처리 */
 }
 
 .system-message {

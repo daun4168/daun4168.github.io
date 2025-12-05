@@ -232,6 +232,7 @@ class SceneManager:
             # 게임 시작 전 (기존과 동일)
             if command.lower() == CommandType.WAKE_UP:
                 self.scene_factory.game.start_game()
+                self.ui.start_game_timer()
             else:
                 self.ui.print_system_message(f"`{CommandType.WAKE_UP}`를 입력해야 합니다.")
 

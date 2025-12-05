@@ -47,11 +47,46 @@ body {
     flex-shrink: 0;
 }
 
+/* 상단 바 레이아웃: 양 끝 정렬 */
 #location-container {
     display: flex;
-    justify-content: space-between; /* 양 끝 정렬 */
-    align-items: baseline; /* 텍스트 베이스라인 정렬 */
-    margin-bottom: 4px;
+    justify-content: space-between;
+    align-items: center;
+    height: 32px; /* 높이 고정으로 요소들 수직 중앙 정렬 */
+    margin-bottom: 8px;
+}
+
+/* 오른쪽 상태창 그룹 (체력 + 타이머) */
+#status-container {
+    display: flex;
+    align-items: center;
+    gap: 8px; /* 체력과 타이머 사이 간격 */
+}
+
+/* [수정] 체력 스타일: 배지(Badge) 형태로 예쁘게 변경 */
+#stamina-status {
+    font-family: 'Courier New', monospace; /* 숫자 흔들림 없는 고정폭 폰트 */
+    font-size: 0.85em;       /* 글자 크기 적당히 */
+    font-weight: 500;       /* 굵게 */
+    background-color: rgba(0, 0, 0, 0.2); /* 반투명 어두운 배경 */
+    color: rgba(255, 255, 255, 0.9); /* 약간 투명한 흰색 */
+    padding: 4px 8px;      /* 내부 여백 */
+    border-radius: 6px;    /* 둥근 알약 모양 */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+/* [수정] 타이머 스타일: 폰트 줄이고 깔끔하게 */
+#play-timer {
+    font-family: 'Courier New', monospace; /* 숫자 흔들림 없는 고정폭 폰트 */
+    font-size: 0.85em;      /* 폰트 크기 축소 (요청사항 반영) */
+    font-weight: 600;
+    color: rgba(255, 255, 255, 0.9);
+    background-color: rgba(0, 0, 0, 0.2); /* 반투명 어두운 배경 */
+    padding: 4px 8px;
+    border-radius: 6px;
+    letter-spacing: 0.5px;  /* 자간 살짝 넓힘 */
 }
 
 #location-name {

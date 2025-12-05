@@ -4,7 +4,8 @@ import markdown
 from const import CommandType, KeywordState, KeywordType
 from pyodide.ffi import create_proxy
 from pyscript import document
-
+import time
+import asyncio
 
 def get_josa(word: str, josa_pair: str) -> str:
     particles = josa_pair.split("/")
@@ -27,6 +28,11 @@ class UIManager:
         # [추가] 체력 UI 바인딩
         self.stamina_status = document.getElementById("stamina-status")
 
+        # [추가] 타이머 엘리먼트 및 변수 초기화
+        self.play_timer = document.getElementById("play-timer")
+        self.start_time = None
+        self.timer_task = None
+
     def set_location_name(self, name: str):
         self.location_name.innerText = f"지역: {name}" if name else ""
 
@@ -41,12 +47,12 @@ class UIManager:
                 self.stamina_status.style.fontWeight = "bold"
             else:
                 self.stamina_status.style.color = "rgba(255, 255, 255, 0.9)"  # 기본색 복구
-                self.stamina_status.style.fontWeight = "400"
+                self.stamina_status.style.fontWeight = "500"
 
     def toggle_stamina_ui(self, show: bool):
         """체력 UI의 표시 여부를 결정합니다."""
         if self.stamina_status:
-            self.stamina_status.style.display = "block" if show else "none"
+            self.stamina_status.style.display = "flex" if show else "none"
 
     def update_sight_status(self, keywords: dict):
         if not keywords:
@@ -114,3 +120,43 @@ class UIManager:
     def scroll_to_bottom(self):
         scroll_area = document.getElementById("content-scroll-area")
         scroll_area.scrollTop = scroll_area.scrollHeight
+
+    # [추가] 타이머 시작 메서드
+    def start_game_timer(self):
+        """'일어나기' 입력 후 타이머를 시작합니다."""
+        if self.timer_task:
+            return  # 이미 실행 중이면 무시
+
+        self.start_time = time.time()
+        self.play_timer.style.display = "block"  # UI 표시
+
+        # 비동기 루프 시작 (메인 스레드를 막지 않음)
+        self.timer_task = asyncio.create_task(self._timer_loop())
+
+    # [추가] 내부 타이머 루프
+    async def _timer_loop(self):
+        while True:
+            if self.start_time is None:
+                break
+
+            # 경과 시간 계산
+            elapsed = int(time.time() - self.start_time)
+            minutes, seconds = divmod(elapsed, 60)
+            hours, minutes = divmod(minutes, 60)
+
+            # 텍스트 업데이트 (시:분:초 또는 분:초)
+            if hours > 0:
+                time_str = f"{hours:02}:{minutes:02}:{seconds:02}"
+            else:
+                time_str = f"{minutes:02}:{seconds:02}"
+
+            self.play_timer.innerText = time_str
+
+            # 1초 대기 (await를 써야 화면이 멈추지 않음)
+            await asyncio.sleep(1)
+
+    # [선택] 타이머 멈춤 기능 (엔딩 등에서 사용)
+    def stop_game_timer(self):
+        if self.timer_task:
+            self.timer_task.cancel()
+            self.timer_task = None

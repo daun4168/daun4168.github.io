@@ -958,6 +958,7 @@ CH1_SCENE1_DATA = SceneData(
             targets=[KeywordId.SEA, KeywordId.COCONUT_SHELL],
             conditions=[
                 Condition(type=ConditionType.HAS_ITEM, target=KeywordId.COCONUT_SHELL),
+                Condition(type=ConditionType.CHAPTER_STATE_IS, target="garden_flower", value=False),
             ],
             actions=[
                 Action(
@@ -971,6 +972,22 @@ CH1_SCENE1_DATA = SceneData(
                         "name": KeywordId.SEAWATER_FILLED_COCONUT,  # "바닷물이 담긴 코코넛 껍질"
                         "description": "바닷물이 가득 담긴 코코넛 껍질입니다. 짭짤한 냄새가 납니다.",
                     },
+                ),
+            ],
+        ),
+        # [신규] 코코넛 껍질 + 바닷물 (garden_flower가 True일 때 -> 거절)
+        Combination(
+            targets=[KeywordId.SEA, KeywordId.COCONUT_SHELL],
+            conditions=[
+                Condition(type=ConditionType.HAS_ITEM, target=KeywordId.COCONUT_SHELL),
+                Condition(type=ConditionType.CHAPTER_STATE_IS, target="garden_flower", value=True),
+            ],
+            actions=[
+                Action(
+                    type=ActionType.PRINT_NARRATIVE,
+                    value=(
+                        "벌써 꽃이 화창하게 피었습니다. 바닷물은 더 이상 필요하지 않을 것 같습니다."
+                    ),
                 ),
             ],
         ),

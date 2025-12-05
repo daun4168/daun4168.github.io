@@ -10,6 +10,7 @@ CH1_COMMON_DATA = ChapterData(
         "green_cabinet_opened": False,
         "red_cabinet_opened": False,
         "yellow_cabinet_opened": False,
+        "garden_flower": False,
     },
     combinations=[
         # [공통 조합] 스패너 + 코코넛 = 섭취

@@ -256,8 +256,7 @@ CH1_SCENE3_1_DATA = SceneData(
                             type=ActionType.PRINT_NARRATIVE,
                             value=(
                                 '<img src="assets/chapter1/cabinet_green.png" alt="초록 캐비닛" width="500">\n\n'
-                                "매미의 일생이 그려진 초록색 캐비닛입니다.\n\n"
-                                "동면, 우화, 구애, 자유... 네 장면이 순서대로 그려져 있습니다.\n\n"
+                                "매미와 마이크가 그려진 초록색 캐비닛입니다.\n\n"
                                 "하단에는 **4자리 숫자 자물쇠**가 굳게 잠겨 있습니다."
                             ),
                         ),

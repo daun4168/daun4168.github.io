@@ -157,7 +157,6 @@ CH1_SCENE3_0_DATA = SceneData(
         KeywordId.GARDEN: KeywordData(
             type=KeywordType.OBJECT,
             state=KeywordState.HIDDEN,
-            name=KeywordId.GARDEN,  # 표시 이름 변경
             interactions=[
                 # Step 0: 메마름 + 소금빵 팻말
                 Interaction(
@@ -169,7 +168,7 @@ CH1_SCENE3_0_DATA = SceneData(
                                 '<img src="assets/chapter1/before_flower_1.png" alt="텃밭" width="540">\n\n'
                                 "바짝 마른 흙먼지만 날리는 텃밭입니다. 식물은커녕 잡초도 말라 죽었습니다.\n\n"
                                 "텃밭 한가운데 팻말이 꽂혀 있습니다. 글씨 대신 그림이 그려져 있네요.\n\n"
-                                "물을 주면 빵이라도 열리는 걸까요? 배가 고프니 별생각이 다 듭니다."
+                                "물을 주면 소금빵이라도 열리는 걸까요? 물을 한번 줘 봐야겠습니다."
                             ),
                         ),
                     ],
@@ -677,6 +676,7 @@ CH1_SCENE3_0_DATA = SceneData(
                     ),
                 ),
                 Action(type=ActionType.UPDATE_STATE, value={"key": "garden_step", "value": 3}),
+                Action(type=ActionType.UPDATE_CHAPTER_STATE, value={"key": "garden_flower", "value": True}),
                 Action(type=ActionType.REMOVE_ITEM, value=KeywordId.SEAWATER_FILLED_COCONUT),
                 Action(
                     type=ActionType.ADD_ITEM,

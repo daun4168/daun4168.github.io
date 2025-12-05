@@ -65,7 +65,6 @@ CH1_SCENE3_2_DATA = SceneData(
         KeywordId.RESEARCH_LOG: KeywordData(
             type=KeywordType.OBJECT,
             state=KeywordState.HIDDEN,
-            name="연구 일지",
             description=(
                 "< 연구 소장의 메모 >\n\n"
                 "세상은 멍청한 구분선들로 가득 차 있다.\n\n"
@@ -127,7 +126,6 @@ CH1_SCENE3_2_DATA = SceneData(
             ],
         ),
         # 3. 매미 사육장 (반응)
-        # 3. 매미 사육장 (temp_step에 따른 반응 분기)
         KeywordId.CICADA_CAGE: KeywordData(
             type=KeywordType.OBJECT,
             state=KeywordState.HIDDEN,
@@ -266,7 +264,7 @@ CH1_SCENE3_2_DATA = SceneData(
                 Action(type=ActionType.UPDATE_STATE, value={"key": "temp_step", "value": 1}),
             ],
         ),
-        # [온도 조절] 2단계: 25도 (소리 패턴 A)
+        # [온도 조절] 2단계: 20도 (소리 패턴 A)
         Combination(
             type=CombinationType.PASSWORD,
             targets=[KeywordId.THERMOSTAT, "20"],

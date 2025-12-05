@@ -251,7 +251,7 @@ CH1_SCENE2_7_DATA = SceneData(
                         ),
                         Action(
                             type=ActionType.PRINT_SYSTEM,
-                            value=f"암호를 알아내어 `{KeywordId.ELECTRONIC_SAFE} : [비밀번호 4자리]` 형식으로 입력해 보세요.",
+                            value=f"암호를 알아내어 `{KeywordId.ELECTRONIC_SAFE} : [비밀번호 8자리]` 형식으로 입력해 보세요.",
                         ),
                     ],
                 ),

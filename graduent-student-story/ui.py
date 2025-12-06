@@ -39,7 +39,7 @@ class UIManager:
     def update_stamina_status(self, current: int, maximum: int):
         """체력 상태 UI를 업데이트합니다."""
         if self.stamina_status:
-            self.stamina_status.innerText = f"체력: {current} / {maximum}"
+            self.stamina_status.innerText = f"체력: {current}/{maximum}"
 
             # 체력이 30% 이하일 때 붉은색으로 경고 표시
             if current <= (maximum * 0.3):

@@ -628,14 +628,6 @@ CH1_SCENE3_0_DATA = SceneData(
                     ),
                 ),
                 Action(type=ActionType.UPDATE_STATE, value={"key": "garden_step", "value": 1}),
-                Action(type=ActionType.REMOVE_ITEM, value=KeywordId.SEAWATER_FILLED_COCONUT),
-                Action(
-                    type=ActionType.ADD_ITEM,
-                    value={
-                        "name": KeywordId.COCONUT_SHELL,
-                        "description": "속을 다 비운 코코넛 껍질이다. 잘 말리면 그릇이나 수차 날개로 쓸 수 있을 것 같다.",
-                    },
-                ),
             ],
         ),
         # [물 주기 2단계]: 1 -> 2 (새싹)
@@ -652,14 +644,6 @@ CH1_SCENE3_0_DATA = SceneData(
                     ),
                 ),
                 Action(type=ActionType.UPDATE_STATE, value={"key": "garden_step", "value": 2}),
-                Action(type=ActionType.REMOVE_ITEM, value=KeywordId.SEAWATER_FILLED_COCONUT),
-                Action(
-                    type=ActionType.ADD_ITEM,
-                    value={
-                        "name": KeywordId.COCONUT_SHELL,
-                        "description": "속을 다 비운 코코넛 껍질이다. 잘 말리면 그릇이나 수차 날개로 쓸 수 있을 것 같다.",
-                    },
-                ),
             ],
         ),
         # [물 주기 3단계]: 2 -> 3 (개화)

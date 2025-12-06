@@ -75,6 +75,7 @@ body {
     display: flex;
     align-items: center;
     justify-content: center;
+    letter-spacing: 2.0px;  /* 자간 살짝 넓힘 */
 }
 
 /* [수정] 타이머 스타일: 폰트 줄이고 깔끔하게 */
